@@ -122,6 +122,19 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'd31imnhf2odj2c',
+#         'USER': 'qkzpywhavypyrp',
+#         'PASSWORD': '0abf6b42a991af247918dc46d06d49886e16332294f0ac2e2111beac9932937c',
+#         'HOST': 'ec2-34-250-16-127.eu-west-1.compute.amazonaws.com',
+#         'PORT': '5432',
+#     }
+# }
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
