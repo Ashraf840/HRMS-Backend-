@@ -1,10 +1,11 @@
 from .models import User
-from rest_framework.permissions import AllowAny, BasePermission, SAFE_METHODS
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from . import serializers
 from rest_framework import status, generics
+from rest_framework.permissions import AllowAny, SAFE_METHODS, IsAuthenticated, IsAuthenticatedOrReadOnly, \
+    BasePermission, IsAdminUser, DjangoModelPermissions
 
 
 class CustomUserCreate(APIView):
@@ -34,6 +35,7 @@ class BlacklistTokenUpdateView(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
+# user authentication verification
 class UserLoginPermissionView(BasePermission):
     message = 'Editing profile is restricted to the author only.'
 
@@ -41,10 +43,18 @@ class UserLoginPermissionView(BasePermission):
         if request.method in SAFE_METHODS:
             return True
 
-        return obj.user == request.user
+        return obj.email == request.user
 
 
-class UserDetails(generics.RetrieveUpdateDestroyAPIView, UserLoginPermissionView):
+class UserListView(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticated,IsAdminUser]
+    queryset = User.objects.all()
+    serializer_class = serializers.UserSerializer
+
+
+
+
+class UserDetailView(generics.RetrieveUpdateDestroyAPIView, UserLoginPermissionView):
     permission_classes = [UserLoginPermissionView]
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
