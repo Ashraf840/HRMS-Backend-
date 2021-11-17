@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
 
     # Installed Apps
-    'Authentication_App',
+    'User_App',
 
 ]
 
@@ -61,10 +61,10 @@ MIDDLEWARE = [
 
 # Simple JWT’s behavior customization
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': False,
-    'BLACKLIST_AFTER_ROTATION': True,
+    'BLACKLIST_AFTER_ROTATION': False,
     'UPDATE_LAST_LOGIN': True,
 
     'ALGORITHM': 'HS256',
@@ -141,6 +141,10 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 # Restframework authentication file
 REST_FRAMEWORK = {
+    # 'DEFAULT_PERMISSION_CLASSES':[
+    #     'rest_framework.permissions.AllowAny',
+    # ],
+
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
@@ -163,7 +167,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-AUTH_USER_MODEL = 'Authentication_App.User'
+AUTH_USER_MODEL = 'User_App.User'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/

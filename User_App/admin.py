@@ -1,5 +1,5 @@
 from django.contrib import admin
-from Authentication_App.models import User, UserDesignationModel, UserDepartmentModel, UserInfoModel
+from User_App.models import User, UserDesignationModel, UserDepartmentModel, UserInfoModel
 from django.contrib.auth.admin import UserAdmin
 
 
