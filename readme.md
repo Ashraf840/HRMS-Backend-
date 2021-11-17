@@ -2,7 +2,7 @@
 ## Commands to run
 ### Clone
 ```commandline
-git clone https://github.com/nhridoy/TFHRM.git
+git clone https://github.com/imzulkar/TFHRM_.git
 ```
 ### Create Branch
 ```commandline
