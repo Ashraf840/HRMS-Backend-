@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_cleanup',
     'rest_framework_simplejwt',
+    'django_cors_headers'
 
     # Installed Apps
     'User_App',
@@ -116,23 +117,23 @@ WSGI_APPLICATION = 'TFHRM.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'dbdaaoqq4cgvm',
-        'USER': 'cjfglljlmnmjag',
-        'PASSWORD': 'e140cf1105c3ff061e04c4d59895fb5b41ae979020257bdd7e4b662e99470870',
-        'HOST': 'ec2-54-74-60-70.eu-west-1.compute.amazonaws.com',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'dbdaaoqq4cgvm',
+#         'USER': 'cjfglljlmnmjag',
+#         'PASSWORD': 'e140cf1105c3ff061e04c4d59895fb5b41ae979020257bdd7e4b662e99470870',
+#         'HOST': 'ec2-54-74-60-70.eu-west-1.compute.amazonaws.com',
+#         'PORT': '5432',
+#     }
+# }
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SECURE_SSL_REDIRECT = True
