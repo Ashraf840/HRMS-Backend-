@@ -33,13 +33,18 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-# user authentication model
+
+# Custom User model
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=100, verbose_name='Email', unique=True, blank=False)
     full_name = models.CharField(verbose_name='Full Name', max_length=100)
 
     profile_pic = models.ImageField(upload_to='users/', default='users/default.jpg')
-    birth_date = models.DateField(verbose_name='Birth Date', blank=True, null=True)
+    phoneNumber = models.IntegerField(null=True)
+    nid = models.IntegerField(null=True)
+    nationality = models.CharField(max_length=50, null=True)
+
+    birthDate = models.DateField(verbose_name='Birth Date', blank=True, null=True)
     date_joined = models.DateTimeField(verbose_name='Date Joined', auto_now_add=True)
     gender_options = (
         ('Male', 'Male'),
@@ -56,9 +61,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_superuser = models.BooleanField(verbose_name='Superuser Status', default=False, help_text='Designate if the '
                                                                                                  'user has superuser '
                                                                                                  'status')
-    is_hr = models.BooleanField(verbose_name='Hr Status', default=False, help_text='Designate if the '
-                                                                                   'user has Hr '
-                                                                                   'status')
+    is_job_post_permission = models.BooleanField(verbose_name='Hr Status', default=False, help_text='Designate if the '
+                                                                                                    'user has Hr '
+                                                                                                    'status')
     is_employee = models.BooleanField(verbose_name='Employee Status', default=False, help_text='Designate if the '
                                                                                                'user has Employee '
                                                                                                'status')
@@ -74,6 +79,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.full_name
 
 
+# Designation Model
 class UserDesignationModel(models.Model):
     designation = models.CharField(max_length=50, null=False)
 
@@ -84,6 +90,7 @@ class UserDesignationModel(models.Model):
         return self.designation
 
 
+# Department Model
 class UserDepartmentModel(models.Model):
     department = models.CharField(max_length=50, null=False)
     deptManager = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
@@ -95,21 +102,70 @@ class UserDepartmentModel(models.Model):
         return f'{self.department}, {self.deptManager}'
 
 
+# User detail information
 class UserInfoModel(models.Model):
     shift_options = (
         ('Day', 'Day'),
         ('Night', 'Night'),
 
     )
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='permission_user')
-    phone_number = models.IntegerField(null=True)
-    designation = models.ForeignKey(UserDepartmentModel, on_delete=models.CASCADE, related_name='user_designation')
-    department = models.ForeignKey(UserDepartmentModel, on_delete=models.CASCADE, related_name='user_department')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_info_user')
+    # phone_number = models.IntegerField(null=True)
     salary = models.IntegerField(null=True)
-    shift = models.CharField(verbose_name='Choose Shift', choices=shift_options, max_length=20)
+    designation = models.ForeignKey(UserDepartmentModel, on_delete=models.CASCADE, related_name='designation_user')
+    department = models.ForeignKey(UserDepartmentModel, on_delete=models.CASCADE, related_name='department_user')
+    shift = models.CharField(choices=shift_options, verbose_name='Choose Shift', max_length=20)
 
     class Meta:
         verbose_name_plural = 'User_Info'
 
     def __str__(self):
         return f'{self.user}, Department: {self.department} Designation: {self.designation}'
+
+
+# user all academic information model
+class UserAcademicInfoModel(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='academic_info_user')
+    educationLevel = models.CharField(max_length=255, null=True)
+    degreeTitle = models.CharField(max_length=255, null=True)
+    instituteName = models.CharField(max_length=255, null=True)
+    major = models.CharField(max_length=255)
+    year = models.DateField()
+    duration = models.IntegerField()
+    cgpa = models.IntegerField()
+
+    def __str__(self):
+        return f'{self.user}, {self.major}'
+
+
+class UserCertificationsModel(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='certification_info_user')
+    vendorName = models.CharField(max_length=255)
+    examName = models.CharField(max_length=255)
+    score = models.CharField(max_length=255)
+    certificationId = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f'{self.user},{self.examName}'
+
+
+class UserTrainingExperienceModel(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='training_info_user')
+    vendorName = models.CharField(max_length=255)
+    topicName = models.CharField(max_length=255)
+    duration = models.IntegerField()
+
+    def __str__(self):
+        return f'{self.user},{self.topicName}'
+
+
+class JobPreferenceModel(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='job_preference_user')
+    preferredPost = models.CharField(max_length=255)
+    preferredShift = models.CharField(max_length=255)
+    salaryFrom = models.IntegerField()
+    salaryTo = models.IntegerField()
+
+    def __str__(self):
+        return f'{self.user}'
+

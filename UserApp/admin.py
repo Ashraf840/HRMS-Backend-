@@ -1,5 +1,6 @@
 from django.contrib import admin
-from User_App.models import User, UserDesignationModel, UserDepartmentModel, UserInfoModel
+from UserApp.models import User, UserDesignationModel, UserDepartmentModel, UserInfoModel
+from . import models
 from django.contrib.auth.admin import UserAdmin
 
 
@@ -13,8 +14,8 @@ class AdminUser(UserAdmin):
     fieldsets = (
         ('Login Info', {'fields': ('email', 'password')}),
         ('User Information',
-         {'fields': ('full_name', 'gender', 'profile_pic', 'birth_date')}),
-        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'is_hr', 'is_employee','is_candidate')}),
+         {'fields': ('full_name', 'gender', 'profile_pic')}),
+        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'is_employee','is_candidate')}),
 
     )
     add_fieldsets = (
@@ -33,3 +34,6 @@ admin.site.register(User, AdminUser)
 admin.site.register(UserInfoModel)
 admin.site.register(UserDesignationModel)
 admin.site.register(UserDepartmentModel)
+admin.site.register(models.UserAcademicInfoModel)
+
+# admin.site.register(JobPostModel)
