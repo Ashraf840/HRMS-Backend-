@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django_cleanup',
     'rest_framework_simplejwt',
     'corsheaders',
+    'drf_multiple_model',
 
     # Installed Apps
     'UserApp',

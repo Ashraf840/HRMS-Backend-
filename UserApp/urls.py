@@ -5,12 +5,13 @@ from rest_framework_simplejwt.views import (
 )
 from . import views
 
-app_name = 'user_app'
 urlpatterns = [
     path('register/', views.RegisterView.as_view()),
     path('user_info/', views.UserInfoListView.as_view()),
-    path('user_ac_info/',views.UserAcdemicInfoListView.as_view()),
+    path('user/<pk>/', views.UserInfoApiView.as_view()),
+    path('user_ac_info/<pk>/',views.UserAcademicInfoListView.as_view()),
     path('login/', views.CustomTokenObtainPairView.as_view()),
     path('logout/', views.LogoutView.as_view()),
+
 
 ]

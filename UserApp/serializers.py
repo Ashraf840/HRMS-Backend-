@@ -9,6 +9,8 @@ from . import models
 #         fields= '__all__'
 
 
+
+
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     # info = serializers.CharField(source='permission_user')
     def validate(self, attrs):
