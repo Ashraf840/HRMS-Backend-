@@ -37,9 +37,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     full_name = models.CharField(verbose_name='Full Name', max_length=100)
 
     profile_pic = models.ImageField(upload_to='users/', default='users/default.jpg')
-    phoneNumber = models.IntegerField(null=True)
+    phone_number = models.IntegerField(null=True)
     nid = models.IntegerField(null=True)
     nationality = models.CharField(max_length=50, null=True)
+    location = models.CharField(max_length=50, null=True)
 
     birthDate = models.DateField(verbose_name='Birth Date', blank=True, null=True)
     date_joined = models.DateTimeField(verbose_name='Date Joined', auto_now_add=True)
@@ -72,8 +73,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
+
     def __str__(self):
         return f'{self.id}'
+
 
 
 # Designation Model
@@ -126,10 +129,13 @@ class UserAcademicInfoModel(models.Model):
     educationLevel = models.CharField(max_length=255, null=True)
     degreeTitle = models.CharField(max_length=255, null=True)
     instituteName = models.CharField(max_length=255, null=True)
-    major = models.CharField(max_length=255)
-    year = models.DateField()
-    duration = models.IntegerField()
-    cgpa = models.IntegerField()
+    major = models.CharField(max_length=255,null=True)
+    year = models.DateField(null=True)
+    duration = models.IntegerField(null=True)
+    cgpa = models.IntegerField(null=True)
+
+    class Meta:
+        verbose_name_plural = 'Academic Information'
 
     def __str__(self):
         return f'{self.user}, {self.major}'
@@ -142,6 +148,9 @@ class UserCertificationsModel(models.Model):
     score = models.CharField(max_length=255)
     certificationId = models.CharField(max_length=255)
 
+    class Meta:
+        verbose_name_plural = 'Certification Information'
+
     def __str__(self):
         return f'{self.user},{self.examName}'
 
@@ -151,6 +160,9 @@ class UserTrainingExperienceModel(models.Model):
     vendorName = models.CharField(max_length=255)
     topicName = models.CharField(max_length=255)
     duration = models.IntegerField()
+
+    class Meta:
+        verbose_name_plural = 'Training Information'
 
     def __str__(self):
         return f'{self.user},{self.topicName}'

@@ -68,10 +68,10 @@ MIDDLEWARE = [
 
 # Simple JWT’s behavior customization
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
     'ROTATE_REFRESH_TOKENS': False,
-    'BLACKLIST_AFTER_ROTATION': False,
+    'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': True,
 
     'ALGORITHM': 'HS256',
@@ -162,13 +162,14 @@ AUTH_PASSWORD_VALIDATORS = [
 # Restframework authentication file
 REST_FRAMEWORK = {
     # 'DEFAULT_PERMISSION_CLASSES':[
-    #     'rest_framework.permissions.AllowAny',
+    #     'rest_framework.permissions.IsAuthenticated',
     # ],
 
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication',
 
     ]
 }
