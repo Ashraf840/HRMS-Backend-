@@ -65,7 +65,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_employee = models.BooleanField(verbose_name='Employee Status', default=False, help_text='Designate if the '
                                                                                                'user has Employee '
                                                                                                'status')
-    is_candidate = models.BooleanField(verbose_name='candidate Status', default=False, help_text='Designate if the '
+    is_candidate = models.BooleanField(verbose_name='candidate Status', default=True, help_text='Designate if the '
                                                                                                  'user has Candidate '
                                                                                                  'status')
     USERNAME_FIELD = 'email'
