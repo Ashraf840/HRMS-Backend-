@@ -45,10 +45,12 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'drf_multiple_model',
+    'rest_framework_simplejwt.token_blacklist',
 
     # Installed Apps
     'UserApp',
-    'HrManagementApp'
+    'HrManagementApp',
+    'TFHRM_API_App',
 
 ]
 
@@ -98,7 +100,6 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
-
 ROOT_URLCONF = 'TFHRM.urls'
 
 TEMPLATES = [
@@ -122,26 +123,26 @@ WSGI_APPLICATION = 'TFHRM.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'dbdaaoqq4cgvm',
-#         'USER': 'cjfglljlmnmjag',
-#         'PASSWORD': 'e140cf1105c3ff061e04c4d59895fb5b41ae979020257bdd7e4b662e99470870',
-#         'HOST': 'ec2-54-74-60-70.eu-west-1.compute.amazonaws.com',
-#         'PORT': '5432',
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
 
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-# SECURE_SSL_REDIRECT = False
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'dbdaaoqq4cgvm',
+        'USER': 'cjfglljlmnmjag',
+        'PASSWORD': 'e140cf1105c3ff061e04c4d59895fb5b41ae979020257bdd7e4b662e99470870',
+        'HOST': 'ec2-54-74-60-70.eu-west-1.compute.amazonaws.com',
+        'PORT': '5432',
+    }
+}
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
@@ -189,14 +190,15 @@ USE_TZ = True
 
 AUTH_USER_MODEL = 'UserApp.User'
 
-
-
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 STATIC_ROOT = BASE_DIR.joinpath('staticfiles')
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR/'static']
+STATICFILES_DIRS = [BASE_DIR / 'static']
+
+# Media files(images)
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -204,5 +206,3 @@ STATICFILES_DIRS = [BASE_DIR/'static']
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-
-

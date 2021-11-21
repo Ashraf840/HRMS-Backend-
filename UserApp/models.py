@@ -59,13 +59,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_superuser = models.BooleanField(verbose_name='Superuser Status', default=False, help_text='Designate if the '
                                                                                                  'user has superuser '
                                                                                                  'status')
-    is_job_post_permission = models.BooleanField(verbose_name='Hr Status', default=False, help_text='Designate if the '
-                                                                                                    'user has Hr '
-                                                                                                    'status')
+
     is_employee = models.BooleanField(verbose_name='Employee Status', default=False, help_text='Designate if the '
                                                                                                'user has Employee '
                                                                                                'status')
-    is_candidate = models.BooleanField(verbose_name='candidate Status', default=False, help_text='Designate if the '
+    is_hr = models.BooleanField(verbose_name='HR Status',default=False,help_text='Designate if the '
+                                                                                               'user has HR '
+                                                                                               'status')
+    is_candidate = models.BooleanField(verbose_name='candidate Status', default=True, help_text='Designate if the '
                                                                                                  'user has Candidate '
                                                                                                  'status')
     USERNAME_FIELD = 'email'
@@ -147,6 +148,7 @@ class UserCertificationsModel(models.Model):
     examName = models.CharField(max_length=255)
     score = models.CharField(max_length=255)
     certificationId = models.CharField(max_length=255)
+    dateOfAchievement = models.DateField(null=True)
 
     class Meta:
         verbose_name_plural = 'Certification Information'
@@ -168,6 +170,21 @@ class UserTrainingExperienceModel(models.Model):
         return f'{self.user},{self.topicName}'
 
 
+class UserWorkingExperienceModel(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE, related_name="working_experience_user")
+    organizationName = models.CharField(max_length=255,null=True)
+    department = models.CharField(max_length=255,null=True)
+    position = models.CharField(max_length=255,null=True)
+    joinDate = models.DateField(null=True)
+    quitDate = models.DateField(null=True)
+    responsibility = models.CharField(max_length=255, null=True)
+
+    class Meta:
+        verbose_name_plural = 'Work Experience'
+    def __str__(self):
+        return f'{self.pk}, {self.user},{self.department}'
+
+
 class JobPreferenceModel(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='job_preference_user')
     preferredPost = models.CharField(max_length=255)
@@ -178,3 +195,13 @@ class JobPreferenceModel(models.Model):
     def __str__(self):
         return f'{self.user}'
 
+
+
+# LogOut -> BlackList API
+class BlackListedToken(models.Model):
+    token = models.CharField(max_length=500)
+    user = models.ForeignKey(User, related_name="token_user", on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ("token", "user")
