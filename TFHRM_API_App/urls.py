@@ -5,14 +5,13 @@ from UserApp.views import RegisterView, UserInfoListView, UserDetailView, UserAc
     CustomTokenObtainPairView, UpdateAcademicInfoView, AddAcademicInfoView, \
     AddWorkExperienceView, UpdateWorkExpInfoView, AddCertificationsView, UpdateCertificationsView, \
     AddTrainingExperienceView, \
-    UpdateTrainingExperienceView, LogoutView
-
+    UpdateTrainingExperienceView
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('users/', UserInfoListView.as_view(), name='users_list'),
     path('user_ac/<id>/', UserAcademicInfoListView.as_view(), name='user_ac_info'),
     path('login/', CustomTokenObtainPairView.as_view(), name='login'),
-    path('logout/', LogoutView.as_view(), name='auth_logout'),
+    # path('logout/', LogoutView.as_view(), name='auth_logout'),
     path('users/<id>/', UserDetailView.as_view(), name='users'),
     path('update_ac/<user__id>/<id>/', UpdateAcademicInfoView.as_view(), name='update_academic'),
     path('all_users/', AllUserDetailView.as_view(), name='all_users'),
