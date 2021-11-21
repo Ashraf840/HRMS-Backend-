@@ -36,6 +36,11 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 
 # User model Serializer
+class UserRegistrationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
+
 class UserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
