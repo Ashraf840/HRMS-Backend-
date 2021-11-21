@@ -10,12 +10,12 @@ class AdminUser(UserAdmin):
     ordering = ('-date_joined',)
     search_fields = ('email', 'full_name',)
     list_filter = ('is_active', 'is_staff', 'is_superuser', 'gender',)
-    list_display = ('id','email', 'full_name', 'gender', 'date_joined', 'is_active','is_hr')
+    list_display = ('id', 'email', 'full_name', 'gender', 'date_joined', 'is_active', 'is_hr')
     fieldsets = (
         ('Login Info', {'fields': ('email', 'password')}),
         ('User Information',
          {'fields': ('full_name', 'gender', 'profile_pic')}),
-        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'is_employee','is_candidate')}),
+        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'is_employee', 'is_candidate', 'is_hr')}),
 
     )
     add_fieldsets = (
@@ -39,6 +39,5 @@ admin.site.register(models.UserTrainingExperienceModel)
 admin.site.register(models.UserCertificationsModel)
 admin.site.register(models.JobPreferenceModel)
 admin.site.register(models.UserWorkingExperienceModel)
-
 
 # admin.site.register(JobPostModel)
