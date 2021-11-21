@@ -3,7 +3,6 @@ from rest_framework import serializers
 from .models import User, UserInfoModel
 from . import models
 
-
 # class UserInfoModelSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = UserInfoModel
@@ -75,8 +74,6 @@ class UserAcademicSerializer(serializers.ModelSerializer):
         fields = '__all__'
         # depth = 1
 
-
-
     # def save(self, **kwargs):
     #     request = self.context.get("request")
     #     # print(request)
@@ -85,10 +82,15 @@ class UserAcademicSerializer(serializers.ModelSerializer):
     #         # print(user)
 
 
-
 class UserCertificationsSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserCertificationsModel
+        fields = '__all__'
+
+
+class UserWorkExperienceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.UserWorkingExperienceModel
         fields = '__all__'
 
 
@@ -127,8 +129,6 @@ class UserDetailsSerializer(serializers.ModelSerializer):
         # depth = 2
 
 
-
-
 # # Viewing all user information from admin panel
 # class AllUserDetailsSerializer(serializers.ModelSerializer):
 #     academicInfo = UserAcademicSerializer(source='academic_info_user', many=True)
@@ -154,4 +154,3 @@ class UpdateAcademicInformationSerializer(serializers.ModelSerializer):
     #     if request and hasattr(request, "id"):
     #         user = request.id
     #         print(user)
-
