@@ -45,12 +45,12 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'drf_multiple_model',
+    'rest_framework_simplejwt.token_blacklist',
 
     # Installed Apps
     'UserApp',
     'HrManagementApp',
     'TFHRM_API_App',
-
 
 ]
 
@@ -142,7 +142,7 @@ DATABASES = {
 }
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT = False
+SECURE_SSL_REDIRECT = True
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 

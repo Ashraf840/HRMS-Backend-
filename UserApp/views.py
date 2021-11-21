@@ -15,6 +15,21 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     token_obtain_pair = TokenObtainPairView.as_view()
 
 
+# JWT logout
+class LogoutView(generics.DestroyAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    print('upper')
+    def post(self, request):
+        print('called')
+        try:
+            refresh_token = request.data["refresh_token"]
+            print(refresh_token)
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+
+            return response.Response(status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            return response.Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 # User Registration view inheriting APIView class

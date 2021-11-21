@@ -59,7 +59,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_superuser = models.BooleanField(verbose_name='Superuser Status', default=False, help_text='Designate if the '
                                                                                                  'user has superuser '
                                                                                                  'status')
-    is_job_post_permission = models.BooleanField(verbose_name='Hr Status', default=False, help_text='Designate if the '
+    is_hr = models.BooleanField(verbose_name='Hr Status', default=False, help_text='Designate if the '
                                                                                                     'user has Hr '
                                                                                                     'status')
     is_employee = models.BooleanField(verbose_name='Employee Status', default=False, help_text='Designate if the '
