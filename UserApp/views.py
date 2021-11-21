@@ -4,6 +4,7 @@ it may conflict
 """
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import permissions, generics, status, views, response
+from rest_framework_simplejwt.tokens import RefreshToken
 from . import serializer
 from . import models
 
@@ -13,6 +14,21 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = serializer.CustomTokenObtainPairSerializer
     token_obtain_pair = TokenObtainPairView.as_view()
 
+
+
+# # JWT session destroy and blacklist tokens
+# class LogoutView(views.APIView):
+#     permission_classes = (permissions.IsAuthenticated,)
+#
+#     def post(self, request):
+#         try:
+#             refresh_token = request.data["refresh_token"]
+#             token = RefreshToken(refresh_token)
+#             token.blacklist()
+#
+#             return response.Response(status=status.HTTP_205_RESET_CONTENT)
+#         except Exception as e:
+#             return response.Response(status=status.HTTP_400_BAD_REQUEST)
 
 # User Registration view inheriting APIView class
 class RegisterView(generics.CreateAPIView):

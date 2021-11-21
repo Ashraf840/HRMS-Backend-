@@ -11,6 +11,7 @@ urlpatterns = [
     path('users/', UserInfoListView.as_view(), name='users_list'),
     path('user_ac/<id>/', UserAcademicInfoListView.as_view(), name='user_ac_info'),
     path('login/', CustomTokenObtainPairView.as_view(), name='login'),
+    # path('logout/', LogoutView.as_view(), name='logout'),
     # path('logout/', IsTokenValid.as_view()),
     path('users/<id>/', UserDetailView.as_view(), name='users'),
     path('update_ac/<user__id>/<id>/', UpdateAcademicInfoView.as_view(), name='update_academic'),

@@ -147,7 +147,7 @@ class UserCertificationsModel(models.Model):
     examName = models.CharField(max_length=255)
     score = models.CharField(max_length=255)
     certificationId = models.CharField(max_length=255)
-    dateOfAchivement = models.DateField(null=True)
+    dateOfAchievement = models.DateField(null=True)
 
     class Meta:
         verbose_name_plural = 'Certification Information'
