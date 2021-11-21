@@ -148,9 +148,10 @@ class UpdateAcademicInformationSerializer(serializers.ModelSerializer):
         model = models.UserAcademicInfoModel
         fields = '__all__'
 
-    def save(self, **kwargs):
-        user = None
-        request = self.context.get("request")
-        if request and hasattr(request, "id"):
-            user = request.id
-            print(user)
+    # def save(self, **kwargs):
+    #     user = None
+    #     request = self.context.get("request")
+    #     if request and hasattr(request, "id"):
+    #         user = request.id
+    #         print(user)
+

@@ -6,7 +6,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import permissions, generics, status, views, response
 from . import serializer
 from . import models
-from .permissions import IsOwner,IsSuperUser
+from .permissions import IsOwner, IsSuperUser
 
 
 # Custom JWT Authentication view
@@ -20,7 +20,7 @@ class RegisterView(views.APIView):
     # permission_classes = [permission.IsAuthenticated]
 
     def post(self, request):
-        serializers = serializer.UserSerializer(data=request.data)
+        serializers = serializer.UserInfoSerializer(data=request.data)
         serializers.is_valid(raise_exception=True)
         serializers.save()
         return response.Response(serializers.data)
@@ -99,16 +99,18 @@ class UserDetailView(generics.RetrieveAPIView):
     queryset = models.User.objects.all()
     lookup_field = 'id'
 
-#
-class UpdateAcademicInfoView(generics.RetrieveUpdateAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsOwner]
+
+# Updating Academic information
+# IsOwner importing from custom permission.py
+
+class UpdateAcademicInfoView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.UpdateAcademicInformationSerializer
-    queryset = models.UserAcademicInfoModel.objects.all()
+    # queryset = models.UserAcademicInfoModel.objects.all()
     lookup_field = 'id'
 
     def get_queryset(self):
-        u_id = self.kwargs['id']
+        id = self.kwargs['id']
 
-        # a_id = self.kwargs['id']
 
-        return models.UserAcademicInfoModel.objects.filter(user_id=u_id)
+
