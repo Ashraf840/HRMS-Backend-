@@ -111,6 +111,6 @@ class UpdateAcademicInfoView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         id = self.kwargs['id']
+        u_id = self.kwargs['user__id']
 
-
-
+        return models.UserAcademicInfoModel.objects.filter(id=id,user__id= u_id)
