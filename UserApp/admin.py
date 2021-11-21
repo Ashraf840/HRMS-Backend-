@@ -10,7 +10,7 @@ class AdminUser(UserAdmin):
     ordering = ('-date_joined',)
     search_fields = ('email', 'full_name',)
     list_filter = ('is_active', 'is_staff', 'is_superuser', 'gender',)
-    list_display = ('id','email', 'full_name', 'gender', 'date_joined', 'is_active')
+    list_display = ('id','email', 'full_name', 'gender', 'date_joined', 'is_active','is_hr')
     fieldsets = (
         ('Login Info', {'fields': ('email', 'password')}),
         ('User Information',
