@@ -1,15 +1,17 @@
 from django.urls import path
-
-from HrManagementApp.views import AllUserDetailView
+# importing Views from HrManagementApp views
+from HrManagementApp.views import AllUserDetailView, JobPostView, AppliedForJobView
+# importing Views from UserApp views
 from UserApp.views import RegisterView, UserInfoListView, UserDetailView, UserAcademicInfoListView, \
     CustomTokenObtainPairView, UpdateAcademicInfoView, AddAcademicInfoView, \
     AddWorkExperienceView, UpdateWorkExpInfoView, AddCertificationsView, UpdateCertificationsView, \
     AddTrainingExperienceView, \
     UpdateTrainingExperienceView
+
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('users/', UserInfoListView.as_view(), name='users_list'),
-    path('user_ac/<id>/', UserAcademicInfoListView.as_view(), name='user_ac_info'),
+    # path('user_ac/<id>/', UserAcademicInfoListView.as_view(), name='user_ac_info'), ->Not required
     path('login/', CustomTokenObtainPairView.as_view(), name='login'),
     # path('logout/', LogoutView.as_view(), name='auth_logout'),
     path('users/<id>/', UserDetailView.as_view(), name='users'),
@@ -24,7 +26,12 @@ urlpatterns = [
 
     path('training/', AddTrainingExperienceView.as_view(), name='training_exp'),
     path('up_training/<user__id>/<id>/', UpdateTrainingExperienceView.as_view(), name='update_training_exp'),
-    # path('up/<id>/', views.UserDetailView.as_view()),
-    # path('update_ac/<id>/', views..as_view()),
+
+    # Hr operations
+    path('job_post/', JobPostView.as_view(), name='job_post_hr'),
+
+    # for Candidate to Apply for Jobs
+    path('applied_job/', AppliedForJobView.as_view(), name='applied_for_jobs'),
+    # path('up_applied_job/<id>/', AppliedJobUpdateView.as_view(), name='Update_job_application'),
 
 ]

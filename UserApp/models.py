@@ -42,8 +42,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     nationality = models.CharField(max_length=50, null=True)
     location = models.CharField(max_length=50, null=True)
 
-    birthDate = models.DateField(verbose_name='Birth Date', blank=True, null=True)
-    date_joined = models.DateTimeField(verbose_name='Date Joined', auto_now_add=True)
+    birthDate = models.DateField(verbose_name='Date of Birth', blank=True, null=True)
+    date_joined = models.DateTimeField(verbose_name='Joined Date', auto_now_add=True)
     gender_options = (
         ('Male', 'Male'),
         ('Female', 'Female'),

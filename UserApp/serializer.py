@@ -44,16 +44,19 @@ class RegisterSerializer(serializers.ModelSerializer):
         validators=[UniqueValidator(queryset=User.objects.all())]
     )
 
-    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
-    password2 = serializers.CharField(write_only=True, required=True)
+    password = serializers.CharField(write_only=True, required=True, validators=[validate_password], \
+                                     style={'input_type': 'password'})
+    password2 = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
 
     class Meta:
         model = User
-        fields = ('email', 'full_name', 'password', 'password2')
+        fields = ('full_name', 'email', 'birthDate', 'nationality', 'password', 'password2')
         extra_kwargs = {
             'email': {'required': True},
             'full_name': {'required': True},
-            'password': {'input_field': 'password', 'write_only': True},
+            'birthDate': {'required': True},
+            'nationality': {'required': True},
+            'password': {'write_only': True},
 
         }
 
@@ -65,8 +68,11 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = User.objects.create(
-            email=validated_data['email'],
             full_name=validated_data['full_name'],
+            email=validated_data['email'],
+            birthDate=validated_data['birthDate'],
+            nationality=validated_data['nationality'],
+
         )
 
         user.set_password(validated_data['password'])
@@ -84,7 +90,10 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 class UserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        exclude = ['password']
+        fields = '__all__'
+        extra_kwargs = {
+            'password':{'write_only':True}
+        }
 
 
 # User Information serializer
@@ -169,23 +178,11 @@ class UserDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.User
-        # fields = '__all__'
-        exclude = ['password', ]
-        # depth = 2
+        fields = '__all__'
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
 
-
-# # Viewing all user information from admin panel
-# class AllUserDetailsSerializer(serializers.ModelSerializer):
-#     academicInfo = UserAcademicSerializer(source='academic_info_user', many=True)
-#     certificationInfo = UserCertificationsSerializer(source='certification_info_user', many=True)
-#     trainingInfo = UserTrainingExperienceSerializer(source='training_info_user', many=True)
-#     jobPreference = UserJobPreferenceSerializer(source='job_preference_user', many=True)
-#
-#     class Meta:
-#         model = models.User
-#         # fields = '__all__'
-#         exclude = ['password', ]
-#         # depth = 2
 
 # Academic information update from frontend serializer
 class UpdateAcademicInformationSerializer(serializers.ModelSerializer):

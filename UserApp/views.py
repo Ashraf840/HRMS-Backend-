@@ -3,8 +3,8 @@ Problem may occur just because of serializer name
 it may conflict
 """
 from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework import permissions, generics, status, views, response
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework import permissions, generics
+from .permissions import EditPermission,IsHrUser
 from . import serializer
 from . import models
 
@@ -57,6 +57,7 @@ class UserInfoListView(generics.ListCreateAPIView):
 
 # User academic information View
 # if user is authenticate user can Retrieve data
+# not needed
 class UserAcademicInfoListView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.UserAcademicSerializer
@@ -121,8 +122,8 @@ class AddAcademicInfoView(generics.CreateAPIView):
 
 
 # Academic Information Update Retrieve & Update View
-class UpdateAcademicInfoView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+class UpdateAcademicInfoView(generics.RetrieveUpdateDestroyAPIView, EditPermission):
+    permission_classes = [permissions.IsAuthenticated, EditPermission]
     serializer_class = serializer.UpdateAcademicInformationSerializer
     # queryset = models.UserAcademicInfoModel.objects.all()
     lookup_field = 'id'

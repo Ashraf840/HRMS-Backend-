@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from UserApp import serializer
 from UserApp.models import User
+from . import models
 
 
 # Viewing all user information from admin panel
@@ -12,6 +13,30 @@ class AllUserDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        # fields = '__all__'
-        exclude = ['password', ]
+        fields = '__all__'
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
+
         # depth = 2
+
+
+# Job post Model Serializer -> Only for HR
+class JobPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.JobPostModel
+        fields = '__all__'
+
+
+class AppliedForJobSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.UserJobAppliedModel
+        fields = '__all__'
+
+
+class UpdateAppliedJobSerializer(serializers.ModelSerializer):
+    jobInfo = AppliedForJobSerializer(source='job_post_id', many=True)
+
+    class Meta:
+        model = models.JobPostModel
+        fields = '__all__'
