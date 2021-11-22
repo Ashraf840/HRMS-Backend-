@@ -141,6 +141,7 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
 # ============== securing proxy for heroku hosting ==============
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SECURE_SSL_REDIRECT = True

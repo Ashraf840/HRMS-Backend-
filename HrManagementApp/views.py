@@ -27,6 +27,9 @@ class AppliedForJobView(generics.CreateAPIView):
     queryset = models.UserJobAppliedModel.objects.all()
 
 
+
+
+
 class JobDescriptionView(generics.RetrieveAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.JobPostSerializer
@@ -35,13 +38,19 @@ class JobDescriptionView(generics.RetrieveAPIView):
         id = self.kwargs['id']
         return models.JobPostModel.objects.filter(id=id)
 
-
+# GET data from Database
+# If user applied ,user will see his job placement
 class AppliedJobListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated, IsHrUser]
     serializer_class = serializer.AppliedForJobSerializer
     queryset = models.UserJobAppliedModel.objects.all()
 
 
+# authenticated user can see all job post
+class JobListView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializer.JobPostSerializer
+    queryset = models.JobPostModel.objects.all()
 
 
 # class AppliedJobUpdateView(generics.RetrieveUpdateDestroyAPIView):
