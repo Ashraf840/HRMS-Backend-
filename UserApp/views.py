@@ -34,7 +34,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
 # User Registration view inheriting APIView class
 class RegisterView(generics.CreateAPIView):
-    serializer_class = serializer.UserRegistrationSerializer
+    serializer_class = serializer.RegisterSerializer
     queryset = models.User.objects.all()
     # permission_classes = [permission.IsAuthenticated]
 
