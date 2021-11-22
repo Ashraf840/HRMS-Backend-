@@ -53,6 +53,8 @@ class JobListView(generics.ListAPIView):
     queryset = models.JobPostModel.objects.all()
 
 
+
+
 # class AppliedJobUpdateView(generics.RetrieveUpdateDestroyAPIView):
 #     permission_classes = [permissions.IsAuthenticated]
 #     serializer_class = serializer.UpdateAppliedJobSerializer

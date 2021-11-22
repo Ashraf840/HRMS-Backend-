@@ -2,11 +2,12 @@
 Problem may occur just because of serializer name
 it may conflict
 """
-from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import permissions, generics
-from .permissions import EditPermission,IsHrUser
-from . import serializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+
 from . import models
+from . import serializer
+from .permissions import EditPermission, IsAuthor
 
 
 # Custom JWT Authentication view
@@ -80,31 +81,6 @@ class UserAcademicInfoRetrieveView(generics.RetrieveUpdateDestroyAPIView):
         return models.UserAcademicInfoModel.objects.filter(user_id=u_id, id=a_id)
 
 
-# Retrieving Data From Multiple model -
-# Model name:
-# User,
-# UserAcademicInfoModel,
-# UserCertificationsModel,
-# UserTrainingExperienceModel
-# =================================
-
-# class UserInfoApiView(ObjectMultipleModelAPIView):
-#     def get_querylist(self):
-#         id = self.kwargs['id']
-#         print(id)
-#         # current_user = models.User.objects.get(id=id)
-#
-#         # print(current_user)
-#         querylist = (
-#             # {'queryset': models.User.objects.all(),
-#             #  'serializer_class': serializers.UserInfoSerializer},
-#             {'queryset': models.UserAcademicInfoModel.objects.all(),
-#              'serializer_class': serializers.UserAcademicSerializer},
-#         )
-#
-#         return querylist
-
-
 # specific User information retrieve
 class UserDetailView(generics.RetrieveAPIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -122,8 +98,8 @@ class AddAcademicInfoView(generics.CreateAPIView):
 
 
 # Academic Information Update Retrieve & Update View
-class UpdateAcademicInfoView(generics.RetrieveUpdateDestroyAPIView, EditPermission):
-    permission_classes = [permissions.IsAuthenticated, EditPermission]
+class UpdateAcademicInfoView(generics.RetrieveUpdateDestroyAPIView, EditPermission, IsAuthor):
+    permission_classes = [permissions.IsAuthenticated, EditPermission, IsAuthor]
     serializer_class = serializer.UpdateAcademicInformationSerializer
     # queryset = models.UserAcademicInfoModel.objects.all()
     lookup_field = 'id'

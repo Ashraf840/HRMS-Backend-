@@ -24,6 +24,7 @@ class IsHrUser(permissions.BasePermission):
     Allows access only to HR users.
     """
     message = 'You are not authorised to view this page.'
+
     def has_permission(self, request, view):
         return bool(request.user and request.user.is_hr)
 
@@ -35,3 +36,14 @@ class IsCandidateUser(permissions.BasePermission):
 
     def has_permission(self, request, view):
         return bool(request.user and request.user.is_candidate)
+
+
+class IsAuthor(permissions.BasePermission):
+    """
+       Allows access only to Author.
+       """
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return bool(request.user and request.user.is_authenticated)
+        return obj.user == request.user

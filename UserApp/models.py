@@ -63,21 +63,19 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_employee = models.BooleanField(verbose_name='Employee Status', default=False, help_text='Designate if the '
                                                                                                'user has Employee '
                                                                                                'status')
-    is_hr = models.BooleanField(verbose_name='HR Status',default=False,help_text='Designate if the '
-                                                                                               'user has HR '
-                                                                                               'status')
+    is_hr = models.BooleanField(verbose_name='HR Status', default=False, help_text='Designate if the '
+                                                                                   'user has HR '
+                                                                                   'status')
     is_candidate = models.BooleanField(verbose_name='candidate Status', default=True, help_text='Designate if the '
-                                                                                                 'user has Candidate '
-                                                                                                 'status')
+                                                                                                'user has Candidate '
+                                                                                                'status')
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['full_name', ]
 
     objects = UserManager()
 
-
     def __str__(self):
         return f'{self.id}'
-
 
 
 # Designation Model
@@ -130,7 +128,7 @@ class UserAcademicInfoModel(models.Model):
     educationLevel = models.CharField(max_length=255, null=True)
     degreeTitle = models.CharField(max_length=255, null=True)
     instituteName = models.CharField(max_length=255, null=True)
-    major = models.CharField(max_length=255,null=True)
+    major = models.CharField(max_length=255, null=True)
     year = models.DateField(null=True)
     duration = models.IntegerField(null=True)
     cgpa = models.IntegerField(null=True)
@@ -171,16 +169,17 @@ class UserTrainingExperienceModel(models.Model):
 
 
 class UserWorkingExperienceModel(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE, related_name="working_experience_user")
-    organizationName = models.CharField(max_length=255,null=True)
-    department = models.CharField(max_length=255,null=True)
-    position = models.CharField(max_length=255,null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="working_experience_user")
+    organizationName = models.CharField(max_length=255, null=True)
+    department = models.CharField(max_length=255, null=True)
+    position = models.CharField(max_length=255, null=True)
     joinDate = models.DateField(null=True)
     quitDate = models.DateField(null=True)
     responsibility = models.CharField(max_length=255, null=True)
 
     class Meta:
         verbose_name_plural = 'Work Experience'
+
     def __str__(self):
         return f'{self.pk}, {self.user},{self.department}'
 
@@ -196,9 +195,6 @@ class JobPreferenceModel(models.Model):
         return f'{self.user}'
 
 
-
-
-
 # LogOut -> BlackList API
 class BlackListedToken(models.Model):
     token = models.CharField(max_length=500)
@@ -207,5 +203,3 @@ class BlackListedToken(models.Model):
 
     class Meta:
         unique_together = ("token", "user")
-
-
