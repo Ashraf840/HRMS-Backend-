@@ -1,6 +1,7 @@
 from django.urls import path
 # importing Views from HrManagementApp views
-from HrManagementApp.views import AllUserDetailView, JobPostView, AppliedForJobView
+from HrManagementApp.views import AllUserDetailView, JobPostView, AppliedForJobView, AppliedJobListView, \
+    JobDescriptionView
 # importing Views from UserApp views
 from UserApp.views import RegisterView, UserInfoListView, UserDetailView, UserAcademicInfoListView, \
     CustomTokenObtainPairView, UpdateAcademicInfoView, AddAcademicInfoView, \
@@ -11,7 +12,6 @@ from UserApp.views import RegisterView, UserInfoListView, UserDetailView, UserAc
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('users/', UserInfoListView.as_view(), name='users_list'),
-    # path('user_ac/<id>/', UserAcademicInfoListView.as_view(), name='user_ac_info'), ->Not required
     path('login/', CustomTokenObtainPairView.as_view(), name='login'),
     # path('logout/', LogoutView.as_view(), name='auth_logout'),
     path('users/<id>/', UserDetailView.as_view(), name='users'),
@@ -32,6 +32,8 @@ urlpatterns = [
 
     # for Candidate to Apply for Jobs
     path('applied_job/', AppliedForJobView.as_view(), name='applied_for_jobs'),
+    path('job_des/<id>/', JobDescriptionView.as_view(), name='job_description'),
+    path('applied_list/', AppliedJobListView.as_view(), name='applied_jobs_list'),
     # path('up_applied_job/<id>/', AppliedJobUpdateView.as_view(), name='Update_job_application'),
 
 ]

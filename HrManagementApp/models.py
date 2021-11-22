@@ -19,7 +19,7 @@ class JobPostModel(models.Model):
     department = models.ForeignKey(UserDepartmentModel, on_delete=models.CASCADE, related_name='department_jobPost',
                                    null=True)
     vacancies = models.IntegerField()
-    jobDescription = models.CharField(max_length=255)
+    jobDescription = models.TextField(null=True)
     uploadCV = models.FileField(upload_to='user/')
 
     def __str__(self):

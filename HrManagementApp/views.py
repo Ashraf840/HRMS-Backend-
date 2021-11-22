@@ -27,8 +27,25 @@ class AppliedForJobView(generics.CreateAPIView):
     queryset = models.UserJobAppliedModel.objects.all()
 
 
+class JobDescriptionView(generics.RetrieveAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializer.JobPostSerializer
+    lookup_field = 'id'
+    def get_queryset(self):
+        id = self.kwargs['id']
+        return models.JobPostModel.objects.filter(id=id)
+
+
+class AppliedJobListView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated, IsHrUser]
+    serializer_class = serializer.AppliedForJobSerializer
+    queryset = models.UserJobAppliedModel.objects.all()
+
+
+
+
 # class AppliedJobUpdateView(generics.RetrieveUpdateDestroyAPIView):
-#     permission_classes = [permissions.IsAuthenticated, EditPermission]
+#     permission_classes = [permissions.IsAuthenticated]
 #     serializer_class = serializer.UpdateAppliedJobSerializer
 #     lookup_field = 'id'
 #     queryset = models.UserJobAppliedModel.objects.all()

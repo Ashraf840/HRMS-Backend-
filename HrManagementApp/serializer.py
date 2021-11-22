@@ -34,9 +34,9 @@ class AppliedForJobSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class UpdateAppliedJobSerializer(serializers.ModelSerializer):
-    jobInfo = AppliedForJobSerializer(source='job_post_id', many=True)
-
-    class Meta:
-        model = models.JobPostModel
-        fields = '__all__'
+# class UpdateAppliedJobSerializer(serializers.ModelSerializer):
+#     # jobInfo = AppliedForJobSerializer(source='job_post_id', many=True)
+#
+#     class Meta:
+#         model = models.UserJobAppliedModel
+#         fields = '__all__'

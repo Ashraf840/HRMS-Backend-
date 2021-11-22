@@ -197,6 +197,8 @@ class JobPreferenceModel(models.Model):
 
 
 
+
+
 # LogOut -> BlackList API
 class BlackListedToken(models.Model):
     token = models.CharField(max_length=500)
@@ -205,3 +207,5 @@ class BlackListedToken(models.Model):
 
     class Meta:
         unique_together = ("token", "user")
+
+
