@@ -12,3 +12,15 @@ from . import models
 class QuestionAnswerSetView(generics.ListCreateAPIView):
     serializer_class = serializer.QuestionAnswerSerializer
     queryset = models.QuestionAnswerModel.objects.all()
+
+
+    # def perform_create(self, serializer):
+    #     serializer.save(question__author = self.request.user)
+
+
+class QuestionSetView(generics.ListCreateAPIView):
+    serializer_class = serializer.QuestionSetSerializer
+    queryset = models.QuestionSetModel.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)

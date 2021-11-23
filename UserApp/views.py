@@ -7,7 +7,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 from . import models
 from . import serializer
-from .permissions import EditPermission, IsAuthor
+from .permissions import EditPermission, IsAuthor, IsCandidateUser
 
 
 # Custom JWT Authentication view
@@ -70,7 +70,7 @@ class UserAcademicInfoListView(generics.ListCreateAPIView):
 
 
 class UserAcademicInfoRetrieveView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsCandidateUser]
     serializer_class = serializer.UserAcademicSerializer
     # queryset = models.UserAcademicInfoModel.objects.all()
     lookup_field = 'id'
@@ -92,14 +92,14 @@ class UserDetailView(generics.RetrieveAPIView):
 # Updating Academic information
 # academicInformation update view
 class AddAcademicInfoView(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated, ]
+    permission_classes = [permissions.IsAuthenticated, IsCandidateUser]
     serializer_class = serializer.UserAcademicSerializer
     queryset = models.UserAcademicInfoModel.objects.all()
 
 
 # Academic Information Update Retrieve & Update View
 class UpdateAcademicInfoView(generics.RetrieveUpdateDestroyAPIView, EditPermission, IsAuthor):
-    permission_classes = [permissions.IsAuthenticated, EditPermission, IsAuthor]
+    permission_classes = [permissions.IsAuthenticated, EditPermission, IsAuthor ]
     serializer_class = serializer.UpdateAcademicInformationSerializer
     # queryset = models.UserAcademicInfoModel.objects.all()
     lookup_field = 'id'

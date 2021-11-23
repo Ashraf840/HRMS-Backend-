@@ -26,7 +26,7 @@ class LevelModel(models.Model):
 
 
 class QuestionSetModel(models.Model):
-    author = models.ForeignKey(UserApp.models.User,on_delete=models.CASCADE,related_name='question_author')
+    # author = models.ForeignKey(UserApp.models.User,on_delete=models.CASCADE,related_name='question_author')
     fieldType = models.ForeignKey(FieldTypeModels, on_delete=models.CASCADE, related_name='question_field_type')
     department = models.ForeignKey(UserDepartmentModel, on_delete=models.CASCADE, related_name='department_name')
     level = models.ForeignKey(LevelModel, on_delete=models.CASCADE, related_name='question_level')
