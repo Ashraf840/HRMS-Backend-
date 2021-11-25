@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'HrManagementApp',
     'TFHRM_API_App',
     'QuizApp',
+    'testApp',
 
 
 ]
@@ -104,6 +105,32 @@ SIMPLE_JWT = {
 
 ROOT_URLCONF = 'TFHRM.urls'
 
+
+"""
+==================DJOSER configuration==================
+"""
+DJOSER = {
+    "USER_ID_FIELD": "username",
+    "LOGIN_FIELD": "email"
+}
+
+DJOSER = {
+    "USER_ID_FIELD": "username",
+    "LOGIN_FIELD": "email",
+    "SEND_ACTIVATION_EMAIL": True,
+    "ACTIVATION_URL": "activate/{uid}/{token}",
+    'SERIALIZERS': {
+        'token_create': 'apps.accounts.serializers.CustomTokenCreateSerializer',
+    },
+}
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+SITE_NAME = "SaaSitive"
+
+
+
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -125,28 +152,28 @@ WSGI_APPLICATION = 'TFHRM.wsgi.application'
 # ============== sqlite3 Db ==============
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-# ============== postgresql Db ==============
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'dbdaaoqq4cgvm',
-        'USER': 'cjfglljlmnmjag',
-        'PASSWORD': 'e140cf1105c3ff061e04c4d59895fb5b41ae979020257bdd7e4b662e99470870',
-        'HOST': 'ec2-54-74-60-70.eu-west-1.compute.amazonaws.com',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
+# ============== postgresql Db ==============
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'dbdaaoqq4cgvm',
+#         'USER': 'cjfglljlmnmjag',
+#         'PASSWORD': 'e140cf1105c3ff061e04c4d59895fb5b41ae979020257bdd7e4b662e99470870',
+#         'HOST': 'ec2-54-74-60-70.eu-west-1.compute.amazonaws.com',
+#         'PORT': '5432',
+#     }
+# }
+
 # ============== securing proxy for heroku hosting ==============
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT = True
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# SECURE_SSL_REDIRECT = True
 
 
 # Password validation
