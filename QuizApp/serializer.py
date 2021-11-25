@@ -1,6 +1,12 @@
 from rest_framework import serializers
 from . import models
 
+#
+# class AnsSeri(serializers.ModelSerializer):
+#     class Meta:
+#         model = models.QuestionAnswerModel
+#         fields = '__all__'
+
 
 class QuestionSetSerializer(serializers.ModelSerializer):
     class Meta:
@@ -10,18 +16,16 @@ class QuestionSetSerializer(serializers.ModelSerializer):
         #     'author':{'read_only':True}
         # }
 
-
-
-
-"""
-Save data at two different models: 
-question will save on QuestionSetModel
-Answer will save on QuestionAnswerModel
-"""
+    """
+    Save data at two different models:
+    question will save on QuestionSetModel
+    Answer will save on QuestionAnswerModel
+    """
 
 
 class QuestionAnswerSerializer(serializers.ModelSerializer):
     question = QuestionSetSerializer()
+
     # author = serializers.ReadOnlyField(source='question_author')
 
     class Meta:
@@ -33,3 +37,16 @@ class QuestionAnswerSerializer(serializers.ModelSerializer):
         question = models.QuestionSetModel.objects.create(**questionData)
         answer = models.QuestionAnswerModel.objects.create(question=question, **validated_data)
         return answer
+
+
+class SubmitterAnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.SubmittedAnswerModel
+        fields = '__all__'
+
+        extra_kwargs = {
+            'user': {'read_only': True},
+            'correctAnswer': {'read_only': True}
+        }
+
+

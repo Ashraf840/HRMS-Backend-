@@ -51,9 +51,8 @@ class QuestionAnswerModel(models.Model):
 
 
 class SubmittedAnswerModel(models.Model):
-    question = models.OneToOneField(QuestionSetModel, on_delete=models.CASCADE, related_name='submitted_question')
-    correctAnswer = models.OneToOneField(QuestionAnswerModel, on_delete=models.CASCADE,
-                                         related_name='correct_answer')
+    question = models.ForeignKey(QuestionSetModel, on_delete=models.CASCADE, related_name='submitted_question')
+    # correctAnswer = models.ForeignKey(QuestionAnswerModel, on_delete=models.CASCADE, related_name='correct_answer')
     user = models.ForeignKey(UserApp.models.User, on_delete=models.CASCADE, related_name='submitted_by')
     givenAnswer = models.CharField(max_length=255, null=True)
 

@@ -26,12 +26,18 @@ class JobPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.JobPostModel
         fields = '__all__'
+        extra_kwargs = {
+            'user': {'read_only': True}
+        }
 
 
 class AppliedForJobSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserJobAppliedModel
         fields = '__all__'
+        extra_kwargs = {
+            'userId': {'read_only': True}
+        }
 
 
 # class UpdateAppliedJobSerializer(serializers.ModelSerializer):

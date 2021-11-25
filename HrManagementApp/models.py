@@ -21,6 +21,7 @@ class JobPostModel(models.Model):
     vacancies = models.IntegerField()
     jobDescription = models.TextField(null=True)
     uploadCV = models.FileField(upload_to='user/')
+    user = models.ForeignKey(User,verbose_name='user',on_delete=models.CASCADE,related_name='job_post_model')
 
     def __str__(self):
         return f'{self.jobTitle} {self.shift}'

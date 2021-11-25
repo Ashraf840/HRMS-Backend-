@@ -1,6 +1,6 @@
 from django.urls import path
 # Importing Views from QuizApp
-from QuizApp.views import QuestionAnswerSetView,QuestionSetView
+from QuizApp.views import QuestionAnswerSetView,SubmittedAnswerView,ShowSubmittedAnswerView
 # importing Views from HrManagementApp views
 from HrManagementApp.views import AllUserDetailView, JobPostView, AppliedForJobView, AppliedJobListView, \
     JobDescriptionView,JobListView
@@ -37,8 +37,10 @@ urlpatterns = [
     path('job_des/<id>/', JobDescriptionView.as_view(), name='job_description'),
     path('applied_list/', AppliedJobListView.as_view(), name='applied_jobs_list'),
     path('job_list/', JobListView.as_view(), name='job_list'),
-    path('questions/',QuestionSetView.as_view(),name='question_set'),
+    # path('questions/',QuestionSetView.as_view(),name='question_set'),
     path('qus_ans/',QuestionAnswerSetView.as_view(),name='question_ans'),
+    path('submit_ans/',SubmittedAnswerView.as_view(),name='submit_ans'),
+    path('submitted_ans_list/',ShowSubmittedAnswerView.as_view(),name='submitted_ans_list'),
     # path('up_applied_job/<id>/', AppliedJobUpdateView.as_view(), name='Update_job_application'),
 
 ]
