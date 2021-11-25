@@ -1,11 +1,11 @@
 from rest_framework import serializers
 from . import models
 
-#
-# class AnsSeri(serializers.ModelSerializer):
-#     class Meta:
-#         model = models.QuestionAnswerModel
-#         fields = '__all__'
+
+class AnsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.QuestionAnswerModel
+        fields = '__all__'
 
 
 class QuestionSetSerializer(serializers.ModelSerializer):
@@ -39,7 +39,7 @@ class QuestionAnswerSerializer(serializers.ModelSerializer):
         return answer
 
 
-class SubmitterAnswerSerializer(serializers.ModelSerializer):
+class SubmittedAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.SubmittedAnswerModel
         fields = '__all__'
@@ -49,4 +49,33 @@ class SubmitterAnswerSerializer(serializers.ModelSerializer):
             'correctAnswer': {'read_only': True}
         }
 
+
+class SubmittedAnswerListSerializer(serializers.ModelSerializer):
+    correctAnswer = serializers.CharField(source='question.question_answer.qusAnswer', read_only=True)
+
+    class Meta:
+        model = models.SubmittedAnswerModel
+        fields = '__all__'
+
+        extra_kwargs = {
+            'user': {'read_only': True},
+            # 'correctAnswer': {'read_only': True}
+        }
+
+
+class FilterQuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.JobApplyFilterQuestionModel
+        fields = '__all__'
+
+
+class FilterQuestionResponseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.FilterQuestionsResponseModel
+        fields = '__all__'
+
+        extra_kwargs = {
+            'user': {'read_only': True},
+
+        }
 

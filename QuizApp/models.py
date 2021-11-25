@@ -61,3 +61,30 @@ class SubmittedAnswerModel(models.Model):
 
     def __str__(self):
         return f'{self.user}, {self.givenAnswer}'
+
+
+# ============job apply filter questions section============
+
+class JobApplyFilterQuestionModel(models.Model):
+    fieldType = models.ForeignKey(FieldTypeModels, on_delete=models.CASCADE, related_name='filter_question_field_type')
+    department = models.ForeignKey(UserDepartmentModel, on_delete=models.CASCADE, related_name='filter_department_name')
+    question = models.CharField(max_length=255, verbose_name='filter_question')
+
+    class Meta:
+        verbose_name_plural = 'Filter Question List'
+
+    def __str__(self):
+        return f'{self.fieldType}, {self.question}'
+
+
+class FilterQuestionsResponseModel(models.Model):
+    questions = models.ForeignKey(JobApplyFilterQuestionModel, on_delete=models.CASCADE,
+                                  related_name='filter_questions')
+    response = models.CharField(max_length=255, blank=True)
+    user = models.ForeignKey(UserApp.models.User, on_delete=models.CASCADE, related_name='response_by')
+
+    class Meta:
+        verbose_name_plural = 'Filter Question Response'
+
+    def __str__(self):
+        return f'{self.questions}, {self.response}'

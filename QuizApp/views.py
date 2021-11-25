@@ -17,26 +17,37 @@ class QuestionAnswerSetView(generics.ListCreateAPIView):
 
 
 class SubmittedAnswerView(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsCandidateUser,EditPermission]
-    serializer_class = serializer.SubmitterAnswerSerializer
+    # permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializer.SubmittedAnswerSerializer
     queryset = models.SubmittedAnswerModel.objects.all()
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
 
-class ShowSubmittedAnswerView(generics.ListAPIView):
-    # permission_classes = [permissions.IsAuthenticated, IsHrUser]
-    serializer_class = serializer.SubmitterAnswerSerializer
+class SubmittedAnswerListView(generics.ListAPIView):
+    # permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializer.SubmittedAnswerListSerializer
     queryset = models.SubmittedAnswerModel.objects.all()
 
-# class QuestionSetView(generics.ListCreateAPIView):
-#     serializer_class = serializer.QuestionSetSerializer
-#     queryset = models.QuestionSetModel.objects.all()
-#
-#     """
-#     selecting the request user as author user
-#     """
-#
-#     def perform_create(self, serializer):
-#         serializer.save(author=self.request.user)
+
+
+"""
+Filter questions Sections
+"""
+class FilterQuestionView(generics.CreateAPIView):
+    serializer_class = serializer.FilterQuestionSerializer
+    queryset = models.JobApplyFilterQuestionModel.objects.all()
+
+
+class FilterQuestionResponseView(generics.CreateAPIView):
+    serializer_class = serializer.FilterQuestionResponseSerializer
+    queryset = models.FilterQuestionsResponseModel.objects.all()
+
+
+class FilterQuestionResponseListView(generics.ListAPIView):
+    serializer_class = serializer.FilterQuestionResponseSerializer
+    queryset = models.FilterQuestionsResponseModel.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
