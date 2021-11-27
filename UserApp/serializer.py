@@ -25,6 +25,9 @@ from . import models
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     # info = serializers.CharField(source='permission_user')
+    default_error_messages = {
+        'no_active_account': 'Username or Password does not matched.'
+    }
     def validate(self, attrs):
         data = super(CustomTokenObtainPairSerializer, self).validate(attrs)
         obj = {
