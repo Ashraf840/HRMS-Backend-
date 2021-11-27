@@ -151,7 +151,7 @@ WSGI_APPLICATION = 'TFHRM.wsgi.application'
 
 # ============== sqlite3 Db ==============
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
+#
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',

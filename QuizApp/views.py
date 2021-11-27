@@ -36,12 +36,12 @@ Filter questions Sections
 """
 
 
-class FilterQuestionView(generics.CreateAPIView):
+class FilterQuestionView(generics.ListCreateAPIView):
     serializer_class = serializer.FilterQuestionSerializer
     queryset = models.JobApplyFilterQuestionModel.objects.all()
 
 
-class FilterQuestionResponseView(generics.ListCreateAPIView):
+class FilterQuestionResponseView(generics.CreateAPIView):
     serializer_class = serializer.FilterQuestionResponseSerializer
     queryset = models.FilterQuestionsResponseModel.objects.all()
 
