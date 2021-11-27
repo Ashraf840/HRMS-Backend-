@@ -50,11 +50,11 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password], \
                                      style={'input_type': 'password'})
-    password2 = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
+    # password2 = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
 
     class Meta:
         model = User
-        fields = ('full_name', 'email', 'birthDate', 'nationality', 'phone_number', 'gender', 'password', 'password2')
+        fields = ('full_name', 'email', 'birthDate', 'nationality', 'phone_number', 'gender', 'password')
         extra_kwargs = {
             'email': {'required': True},
             'full_name': {'required': True},
@@ -64,11 +64,11 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         }
 
-    def validate(self, attrs):
-        if attrs['password'] != attrs['password2']:
-            raise serializers.ValidationError({"password": "Password fields didn't match."})
-
-        return attrs
+    # def validate(self, attrs):
+    #     if attrs['password'] != attrs['password2']:
+    #         raise serializers.ValidationError({"password": "Password fields didn't match."})
+    #
+    #     return attrs
 
     def create(self, validated_data):
         user = User.objects.create(
