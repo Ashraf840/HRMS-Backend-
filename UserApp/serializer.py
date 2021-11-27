@@ -28,6 +28,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     default_error_messages = {
         'no_active_account': 'Username or Password does not matched.'
     }
+
     def validate(self, attrs):
         data = super(CustomTokenObtainPairSerializer, self).validate(attrs)
         obj = {
@@ -53,12 +54,13 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('full_name', 'email', 'birthDate', 'nationality', 'phone_number','gender','password', 'password2')
+        fields = ('full_name', 'email', 'birthDate', 'nationality', 'phone_number', 'gender', 'password', 'password2')
         extra_kwargs = {
             'email': {'required': True},
             'full_name': {'required': True},
             'birthDate': {'required': True},
             'nationality': {'required': True},
+            'password': {'write_only': True},
 
         }
 
@@ -83,7 +85,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
-
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
