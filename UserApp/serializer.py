@@ -50,6 +50,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password], \
                                      style={'input_type': 'password'})
+
     # password2 = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
 
     class Meta:
@@ -85,6 +86,30 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
+
+class ProfileUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('full_name', 'birthDate', 'nationality', 'phone_number', 'gender', 'location', 'nid')
+        extra_kwargs = {
+            'email': {'required': True},
+            'full_name': {'required': True},
+            'birthDate': {'required': True},
+            'nationality': {'required': True},
+
+        }
+
+    def update(self, instance, validated_data):
+        instance.full_name = validated_data.get('full_name', instance.full_name)
+        instance.birthDate = validated_data.get('birthDate', instance.birthDate)
+        instance.nationality = validated_data.get('nationality', instance.nationality)
+        instance.phone_number = validated_data.get('phone_number', instance.phone_number)
+        instance.gender = validated_data.get('gender', instance.gender)
+        instance.location = validated_data.get('location', instance.location)
+        instance.nid = validated_data.get('nid', instance.nid)
+        instance.save()
+        return instance
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -132,6 +157,10 @@ class UserAcademicSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserAcademicInfoModel
         fields = '__all__'
+
+        extra_kwargs = {
+            'user': {'read_only': True}
+        }
         # depth = 1
 
     # def save(self, **kwargs):
@@ -146,24 +175,36 @@ class UserCertificationsSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserCertificationsModel
         fields = '__all__'
+        extra_kwargs = {
+            'user': {'read_only': True}
+        }
 
 
 class UserWorkExperienceSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserWorkingExperienceModel
         fields = '__all__'
+        extra_kwargs = {
+            'user': {'read_only': True}
+        }
 
 
 class UserTrainingExperienceSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserTrainingExperienceModel
         fields = '__all__'
+        extra_kwargs = {
+            'user': {'read_only': True}
+        }
 
 
 class UserJobPreferenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.JobPreferenceModel
         fields = '__all__'
+        extra_kwargs = {
+            'user': {'read_only': True}
+        }
 
 
 # User Detailed View
@@ -195,6 +236,9 @@ class UpdateAcademicInformationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserAcademicInfoModel
         fields = '__all__'
+        extra_kwargs = {
+            'user': {'read_only': True}
+        }
 
     # def save(self, **kwargs):
     #     user = None
