@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'drf_multiple_model',
     'rest_framework_simplejwt.token_blacklist',
+    'drf_yasg',
 
     # Installed Apps
     'UserApp',
@@ -216,5 +217,5 @@ import os
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = 'pranto.techforing@gmail.com'
+EMAIL_HOST_PASSWORD = 'pranto@7874@'
