@@ -56,7 +56,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     is_staff = models.BooleanField(verbose_name='Staff Status', default=False, help_text='Designate if the user has '
                                                                                          'staff status')
-    is_active = models.BooleanField(verbose_name='Active Status', default=True, help_text='Designate if the user has '
+    is_active = models.BooleanField(verbose_name='Active Status', default=False, help_text='Designate if the user has '
                                                                                           'active status')
     is_superuser = models.BooleanField(verbose_name='Superuser Status', default=False, help_text='Designate if the '
                                                                                                  'user has superuser '
@@ -136,9 +136,10 @@ class UserAcademicInfoModel(models.Model):
     degreeTitle = models.CharField(max_length=255, null=True)
     instituteName = models.CharField(max_length=255, null=True)
     major = models.CharField(max_length=255, null=True)
-    year = models.DateField(null=True)
+    # year = models.DateField(null=True)
+    year = models.PositiveSmallIntegerField(blank=True, null=True)
     duration = models.IntegerField(null=True)
-    cgpa = models.IntegerField(null=True)
+    cgpa = models.DecimalField(max_digits=20,decimal_places=2)
 
     class Meta:
         verbose_name_plural = 'Academic Information'

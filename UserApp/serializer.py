@@ -2,7 +2,6 @@ from django.contrib.auth.password_validation import validate_password
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
-from .models import User, UserInfoModel
 from . import models
 
 # class UserInfoModelSerializer(serializers.ModelSerializer):
@@ -25,12 +24,18 @@ from . import models
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     # info = serializers.CharField(source='permission_user')
+    non_field_errors = {
+        'no_active_account': 'Please verify your mail.'
+    }
     default_error_messages = {
         'no_active_account': 'Username or Password does not matched.'
     }
 
+
     def validate(self, attrs):
+        # print(attrs)
         data = super(CustomTokenObtainPairSerializer, self).validate(attrs)
+        # print(data)
         obj = {
             'email': self.user.email,
             'id': self.user.id,
@@ -45,7 +50,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 class RegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
         required=True,
-        validators=[UniqueValidator(queryset=User.objects.all())]
+        validators=[UniqueValidator(queryset=models.User.objects.all())]
     )
 
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password], \
@@ -54,14 +59,15 @@ class RegisterSerializer(serializers.ModelSerializer):
     # password2 = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
 
     class Meta:
-        model = User
-        fields = ('full_name', 'email', 'birthDate', 'nationality', 'phone_number', 'gender', 'password')
+        model = models.User
+        fields = ('full_name', 'email', 'birthDate', 'gender','nationality','phone_number','password')
         extra_kwargs = {
             'email': {'required': True},
             'full_name': {'required': True},
             'birthDate': {'required': True},
             'nationality': {'required': True},
             'password': {'write_only': True},
+            'phone_number': {'write_only': True},
 
         }
 
@@ -72,7 +78,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     #     return attrs
 
     def create(self, validated_data):
-        user = User.objects.create(
+        user = models.User.objects.create(
             full_name=validated_data['full_name'],
             email=validated_data['email'],
             birthDate=validated_data['birthDate'],
@@ -84,13 +90,21 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         user.set_password(validated_data['password'])
         user.save()
-
         return user
+        # return models.User.objects.create_user(**validated_data)
+
+class EmailVerificationSerializer(serializers.ModelSerializer):
+    token = serializers.CharField(max_length=555)
+
+    class Meta:
+        model = models.User
+        fields = ['token']
+
 
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = models.User
         fields = ('full_name', 'birthDate', 'nationality', 'phone_number', 'gender', 'location', 'nid')
         extra_kwargs = {
             'email': {'required': True},
@@ -114,13 +128,13 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = models.User
         fields = '__all__'
 
 
 class UserInfoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = models.User
         fields = '__all__'
         extra_kwargs = {
             'password': {'write_only': True}
@@ -134,7 +148,7 @@ class UserSerializer(serializers.ModelSerializer):
     # userAcademicInfo = UserAcademicInfoSerializer()
 
     class Meta:
-        model = UserInfoModel
+        model = models.UserInfoModel
         fields = '__all__'
 
 
