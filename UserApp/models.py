@@ -136,7 +136,7 @@ class UserAcademicInfoModel(models.Model):
     degreeTitle = models.CharField(max_length=255, null=True)
     instituteName = models.CharField(max_length=255, null=True)
     major = models.CharField(max_length=255, null=True)
-    # year = models.DateField(null=True)
+    year = models.DateField(null=True)
     # year = models.PositiveSmallIntegerField(blank=True, null=True)
     duration = models.IntegerField(null=True)
     cgpa = models.DecimalField(max_digits=20,decimal_places=2)
