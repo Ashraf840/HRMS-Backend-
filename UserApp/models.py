@@ -138,7 +138,7 @@ class UserAcademicInfoModel(models.Model):
     major = models.CharField(max_length=255, null=True)
     year = models.DateField(null=True)
     duration = models.IntegerField(null=True)
-    cgpa = models.CharField(max_length=10,null=True)
+    cgpa = models.DecimalField(max_length=10,null=True)
 
     class Meta:
         verbose_name_plural = 'Academic Information'

@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'drf_multiple_model',
     'rest_framework_simplejwt.token_blacklist',
-    'drf_yasg',
 
     # Installed Apps
     'UserApp',
