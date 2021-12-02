@@ -44,7 +44,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 
             }
-            data.update({'obj': obj})
+            data.update({'user': obj})
             return data
 
         else:

@@ -27,6 +27,7 @@ class UserManager(BaseUserManager):
         user.is_superuser = True
         user.is_staff = True
         user.is_active = True
+        user.email_validated = True
         user.save(using=self._db)
         return user
 
@@ -55,9 +56,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(verbose_name='Staff Status', default=False, help_text='Designate if the user has '
                                                                                          'staff status')
     is_active = models.BooleanField(verbose_name='Active Status', default=True, help_text='Designate if the user has '
-                                                                                           'active status')
-    email_validated = models.BooleanField(verbose_name='Email Validate', default=False, help_text='Designate if the user has '
-                                                                                           'Email Validate')
+                                                                                          'active status')
+    email_validated = models.BooleanField(verbose_name='Email Validate', default=False,
+                                          help_text='Designate if the user has '
+                                                    'Email Validate')
     is_superuser = models.BooleanField(verbose_name='Superuser Status', default=False, help_text='Designate if the '
                                                                                                  'user has superuser '
                                                                                                  'status')

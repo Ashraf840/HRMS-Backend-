@@ -9,6 +9,11 @@ class JobPostModel(models.Model):
         ('day', 'Day'),
         ('night', 'Night'),
     )
+    jobType = (
+        ('per_time', 'Per Time'),
+        ('full_time', 'Full Time'),
+        ('internship', 'Internship'),
+    )
     jobTitle = models.CharField(verbose_name='Job Title', max_length=100)
     lastDateOfApply = models.DateField()
     startDate = models.DateField()
@@ -19,6 +24,7 @@ class JobPostModel(models.Model):
     department = models.ForeignKey(UserDepartmentModel, on_delete=models.CASCADE, related_name='department_jobPost',
                                    null=True)
     vacancies = models.IntegerField()
+    jobType = models.CharField(verbose_name="job type",max_length=50,choices=jobType)
     jobDescription = models.TextField(null=True)
     # uploadCV = models.FileField(upload_to='user/')
     user = models.ForeignKey(User,verbose_name='user',on_delete=models.CASCADE,related_name='job_post_model')
