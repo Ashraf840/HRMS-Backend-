@@ -31,17 +31,24 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         'no_active_account': 'Username or Password does not matched.'
     }
 
-
     def validate(self, attrs):
         # print(attrs)
         data = super(CustomTokenObtainPairSerializer, self).validate(attrs)
         # print(data)
-        obj = {
-            'email': self.user.email,
-            'id': self.user.id,
+        if self.user.is_superuser:
+            obj = {
+                'id': self.user.id,
+                'email': self.user.email,
+                'full_name': self.user.full_name,
+                'phone_number':self.user.phone_number,
+                'profile_pic':self.user.profile_pic
 
-        }
-        data.update({'obj': obj})
+            }
+            data.update({'obj': obj})
+            return data
+
+        else:
+            print('You are not superuser')
 
         return data
 
@@ -60,7 +67,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.User
-        fields = ('full_name', 'email', 'birthDate', 'gender','nationality','phone_number','password')
+        fields = ('full_name', 'email', 'birthDate', 'gender', 'nationality', 'phone_number', 'password')
         extra_kwargs = {
             'email': {'required': True},
             'full_name': {'required': True},
@@ -93,13 +100,13 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
         # return models.User.objects.create_user(**validated_data)
 
+
 class EmailVerificationSerializer(serializers.ModelSerializer):
     token = serializers.CharField(max_length=555)
 
     class Meta:
         model = models.User
         fields = ['token']
-
 
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
@@ -260,3 +267,9 @@ class UpdateAcademicInformationSerializer(serializers.ModelSerializer):
     #     if request and hasattr(request, "id"):
     #         user = request.id
     #         print(user)
+
+
+class SkillsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.SkillsModel
+        fields = "__all__"

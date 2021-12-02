@@ -9,7 +9,7 @@ from HrManagementApp.views import AllUserDetailView, JobPostView, AppliedForJobV
 from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
     CustomTokenObtainPairView, UpdateAcademicInfoView, AddAcademicInfoView, \
     AddWorkExperienceView, UpdateWorkExpInfoView, AddCertificationsView, UpdateCertificationsView, \
-    AddTrainingExperienceView, UpdateUserInfoView,UpdateTrainingExperienceView,VerifyEmailView
+    AddTrainingExperienceView, UpdateUserInfoView, UpdateTrainingExperienceView, VerifyEmailView, SkillsView
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
@@ -32,11 +32,13 @@ urlpatterns = [
     path('up_training/<user__id>/<id>/', UpdateTrainingExperienceView.as_view(), name='update_training_exp'),
 
     # Hr operations
+    path('add_skills/', SkillsView.as_view(), name="add_new_skills"),
     path('job_post/', JobPostView.as_view(), name='job_post_hr'),
+
 
     # for Candidate to Apply for Jobs
     path('applied_job/', AppliedForJobView.as_view(), name='applied_for_jobs'),
-    path('job_description/<id>/', JobDescriptionView.as_view(), name='job_description'),
+    path('job_list/<id>/', JobDescriptionView.as_view(), name='job_description'),
     path('applied_list/', AppliedJobListView.as_view(), name='applied_jobs_list'),
     path('job_list/', JobListView.as_view(), name='job_list'),
     # path('questions/',QuestionSetView.as_view(),name='question_set'),

@@ -25,7 +25,7 @@ class JobPostView(generics.CreateAPIView):
 
 # if User is Authenticated and IsCandidate then User can only apply
 class AppliedForJobView(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsCandidateUser]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.AppliedForJobSerializer
     queryset = models.UserJobAppliedModel.objects.all()
 

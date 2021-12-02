@@ -25,6 +25,8 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     token_obtain_pair = TokenObtainPairView.as_view()
 
 
+
+
 # JWT logout
 # class LogoutView(generics.DestroyAPIView):
 #     permission_classes = (permissions.IsAuthenticated,)
@@ -88,9 +90,9 @@ class VerifyEmailView(views.APIView):
         token = request.GET.get('token')
         # print(token)
         try:
-            print('token1')
+            # print('token1')
             payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=['HS256'])
-            print('token2')
+            # print('token2')
             user = models.User.objects.get(id=payload['user_id'])
             # print(email=payload['email'])
             if not user.is_active:
@@ -101,7 +103,6 @@ class VerifyEmailView(views.APIView):
             return Response({'error': 'Activation Expired'}, status=status.HTTP_400_BAD_REQUEST)
         except jwt.exceptions.DecodeError as identifier:
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 class UpdateUserInfoView(generics.RetrieveUpdateDestroyAPIView):
@@ -246,3 +247,8 @@ class UpdateTrainingExperienceView(generics.RetrieveUpdateDestroyAPIView):
         c_id = self.kwargs['id']
         u_id = self.kwargs['user__id']
         return models.UserTrainingExperienceModel.objects.filter(user__id=u_id, id=c_id)
+
+
+class SkillsView(generics.CreateAPIView):
+    serializer_class = serializer.SkillsSerializer
+    queryset = models.SkillsModel.objects.all()

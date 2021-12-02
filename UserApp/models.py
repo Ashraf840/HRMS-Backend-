@@ -2,8 +2,6 @@ from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 
 
-
-
 # Create your models here.
 
 class UserManager(BaseUserManager):
@@ -38,8 +36,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=100, verbose_name='Email', unique=True, blank=False)
     full_name = models.CharField(verbose_name='Full Name', max_length=100)
 
-    profile_pic = models.ImageField(upload_to='users/', default='users/default.jpg')
-    phone_number = models.CharField(max_length=30,blank=True)
+    profile_pic = models.ImageField(upload_to='users/', default='users/default.png')
+    phone_number = models.CharField(max_length=30, blank=True)
     nid = models.IntegerField(null=True)
     nationality = models.CharField(max_length=50, null=True)
     location = models.CharField(max_length=50, null=True)
@@ -57,7 +55,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(verbose_name='Staff Status', default=False, help_text='Designate if the user has '
                                                                                          'staff status')
     is_active = models.BooleanField(verbose_name='Active Status', default=False, help_text='Designate if the user has '
-                                                                                          'active status')
+                                                                                           'active status')
     is_superuser = models.BooleanField(verbose_name='Superuser Status', default=False, help_text='Designate if the '
                                                                                                  'user has superuser '
                                                                                                  'status')
@@ -78,11 +76,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f'{self.id}'
-
-
-
-
-
 
 
 # Designation Model
@@ -200,6 +193,17 @@ class JobPreferenceModel(models.Model):
 
     def __str__(self):
         return f'{self.user}'
+
+
+# User skills Model
+class SkillsModel(models.Model):
+    skillName = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name_plural = "User skills"
+
+    def __str__(self):
+        return self.skillName
 
 
 # LogOut -> BlackList API
