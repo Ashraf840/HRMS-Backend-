@@ -35,22 +35,22 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         # print(attrs)
         data = super(CustomTokenObtainPairSerializer, self).validate(attrs)
         # print(data)
-        if self.user.is_superuser:
+        if self.user.email_validated:
             obj = {
                 'id': self.user.id,
                 'email': self.user.email,
                 'full_name': self.user.full_name,
-                'phone_number':self.user.phone_number,
-                'profile_pic':self.user.profile_pic
+                'phone_number': self.user.phone_number,
+
 
             }
             data.update({'obj': obj})
             return data
 
         else:
-            print('You are not superuser')
+            msg = "You email is not verified.please chek your email and verify to login"
 
-        return data
+        raise serializers.ValidationError(msg)
 
 
 # User model Serializer

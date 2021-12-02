@@ -9,15 +9,15 @@ from django.contrib.auth.admin import UserAdmin
 class AdminUser(UserAdmin):
     ordering = ('-date_joined',)
     search_fields = ('email', 'full_name',)
-    list_filter = ('is_active', 'is_staff', 'is_superuser', 'gender',)
+    list_filter = ('is_active', 'is_staff', 'is_superuser','email_validated', 'gender',)
     list_display = ('id', 'email', 'full_name', 'profile_pic', 'phone_number', 'nationality', \
-                    'location', 'birthDate', 'gender', 'date_joined', 'is_active', 'is_hr')
+                    'location', 'birthDate', 'gender', 'date_joined', 'is_active', 'is_hr','email_validated',)
     fieldsets = (
         ('Login Info', {'fields': ('email', 'password')}),
         ('User Information',
          {'fields': ('full_name', 'gender', 'profile_pic', 'phone_number', 'nationality', 'location', 'birthDate')}),
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'is_employee', \
-                                    'is_candidate', 'is_hr')}),
+                                    'is_candidate', 'is_hr','email_validated')}),
 
     )
     add_fieldsets = (

@@ -96,7 +96,7 @@ class VerifyEmailView(views.APIView):
             user = models.User.objects.get(id=payload['user_id'])
             # print(email=payload['email'])
             if not user.is_active:
-                user.is_active = True
+                user.email_validated = True
                 user.save()
             return Response({'email': 'Successfully activated'}, status=status.HTTP_200_OK)
         except jwt.ExpiredSignatureError as identifier:
