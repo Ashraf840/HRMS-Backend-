@@ -1,10 +1,10 @@
 from django.urls import path
 # Importing Views from QuizApp
 from QuizApp.views import QuestionAnswerSetView, SubmittedAnswerView, SubmittedAnswerListView, \
-    FilterQuestionView, FilterQuestionResponseView, FilterQuestionResponseListView
+    FilterQuestionView
 # importing Views from HrManagementApp views
 from HrManagementApp.views import AllUserDetailView, JobPostView, AppliedForJobView, AppliedJobListView, \
-    JobDescriptionView, JobListView
+    JobDescriptionView, JobListView,FilterQuestionResponseListView,FilterQuestionResponseView
 # importing Views from UserApp views
 from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
     CustomTokenObtainPairView, UpdateAcademicInfoView, AddAcademicInfoView, \

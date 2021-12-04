@@ -66,3 +66,17 @@ class JobListView(generics.ListAPIView):
 #     #     u_id = self.kwargs['u_id']
 #     #     id = self.kwargs['id']
 #     #     return models.UserJobAppliedModel.objects.all()
+
+
+class FilterQuestionResponseView(generics.CreateAPIView):
+    serializer_class = serializer.FilterQuestionResponseSerializer
+    queryset = models.FilterQuestionsResponseModelHR.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class FilterQuestionResponseListView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializer.FilterQuestionResponseSerializer
+    queryset = models.FilterQuestionsResponseModelHR.objects.all()

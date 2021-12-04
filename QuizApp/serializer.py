@@ -69,14 +69,14 @@ class FilterQuestionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class FilterQuestionResponseSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.FilterQuestionsResponseModel
-        fields = '__all__'
-
-        extra_kwargs = {
-            'user': {'read_only': True},
-
-        }
+# class FilterQuestionResponseSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = models.FilterQuestionsResponseModel
+#         fields = '__all__'
+#
+#         extra_kwargs = {
+#             'user': {'read_only': True},
+#
+#         }
 
 

@@ -2,7 +2,7 @@ from rest_framework import serializers
 from UserApp import serializer
 from UserApp.models import User
 from . import models
-
+from .models import FilterQuestionsResponseModelHR
 
 # Viewing all user information from admin panel
 class AllUserDetailsSerializer(serializers.ModelSerializer):
@@ -46,3 +46,14 @@ class AppliedForJobSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = models.UserJobAppliedModel
 #         fields = '__all__'
+
+class FilterQuestionResponseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.FilterQuestionsResponseModelHR
+        fields = '__all__'
+
+        extra_kwargs = {
+            'user': {'read_only': True},
+
+        }
+

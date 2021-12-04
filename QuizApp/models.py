@@ -77,14 +77,15 @@ class JobApplyFilterQuestionModel(models.Model):
         return f'{self.fieldType}, {self.question}'
 
 
-class FilterQuestionsResponseModel(models.Model):
-    questions = models.ForeignKey(JobApplyFilterQuestionModel, on_delete=models.CASCADE,
-                                  related_name='filter_questions')
-    response = models.CharField(max_length=255, blank=True)
-    user = models.ForeignKey(UserApp.models.User, on_delete=models.CASCADE, related_name='response_by')
-
-    class Meta:
-        verbose_name_plural = 'Filter Question Response'
-
-    def __str__(self):
-        return f'{self.questions}, {self.response}'
+# class FilterQuestionsResponseModel(models.Model):
+#     questions = models.ForeignKey(JobApplyFilterQuestionModel, on_delete=models.CASCADE,
+#                                   related_name='filter_questions')
+#     response = models.CharField(max_length=255, blank=True)
+#     user = models.ForeignKey(UserApp.models.User, on_delete=models.CASCADE, related_name='response_by')
+#     # jobPost = models.ForeignKey(JobPostModel,on_delete=models.CASCADE,related_name='job_info')
+#
+#     class Meta:
+#         verbose_name_plural = 'Filter Question Response'
+#
+#     def __str__(self):
+#         return f'{self.questions}, {self.response}'
