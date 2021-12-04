@@ -48,6 +48,7 @@ class AppliedForJobSerializer(serializers.ModelSerializer):
 #         fields = '__all__'
 
 class FilterQuestionResponseSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = models.FilterQuestionsResponseModelHR
         fields = '__all__'
@@ -56,4 +57,5 @@ class FilterQuestionResponseSerializer(serializers.ModelSerializer):
             'user': {'read_only': True},
 
         }
+
 

@@ -1,4 +1,6 @@
-from rest_framework import generics, permissions, serializers
+from rest_framework import generics, permissions, serializers, status
+from rest_framework.response import Response
+
 from UserApp.models import User, JobPreferenceModel
 from . import serializer
 from UserApp.permissions import IsHrUser, IsCandidateUser, EditPermission
@@ -57,6 +59,7 @@ class JobListView(generics.ListAPIView):
     serializer_class = serializer.JobPostSerializer
     queryset = models.JobPostModel.objects.all()
 
+
 # class AppliedJobUpdateView(generics.RetrieveUpdateDestroyAPIView):
 #     permission_classes = [permissions.IsAuthenticated]
 #     serializer_class = serializer.UpdateAppliedJobSerializer
@@ -69,11 +72,19 @@ class JobListView(generics.ListAPIView):
 
 
 class FilterQuestionResponseView(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated, IsCandidateUser]
     serializer_class = serializer.FilterQuestionResponseSerializer
     queryset = models.FilterQuestionsResponseModelHR.objects.all()
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class FilterQuestionResponseListView(generics.ListAPIView):
