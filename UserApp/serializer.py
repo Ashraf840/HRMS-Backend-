@@ -41,7 +41,9 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
                 'email': self.user.email,
                 'full_name': self.user.full_name,
                 'phone_number': self.user.phone_number,
-
+                'is_candidate': self.user.is_candidate,
+                'is_hr': self.user.is_hr,
+                'is_employee': self.user.is_employee,
 
             }
             data.update({'user': obj})
