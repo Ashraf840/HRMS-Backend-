@@ -104,6 +104,16 @@ class UserDepartmentModel(models.Model):
     def __str__(self):
         return f'{self.department}, {self.deptManager}'
 
+# User skills Model
+class SkillsModel(models.Model):
+    skillName = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name_plural = "User skills"
+
+    def __str__(self):
+        return self.skillName
+
 
 # User detail information
 class UserInfoModel(models.Model):
@@ -118,6 +128,7 @@ class UserInfoModel(models.Model):
     designation = models.ForeignKey(UserDepartmentModel, on_delete=models.CASCADE, related_name='designation_user')
     department = models.ForeignKey(UserDepartmentModel, on_delete=models.CASCADE, related_name='department_user')
     shift = models.CharField(choices=shift_options, verbose_name='Choose Shift', max_length=20)
+    userSkills = models.ManyToManyField(SkillsModel, related_name="user_skills")
 
     class Meta:
         verbose_name_plural = 'User_Info'
@@ -199,15 +210,7 @@ class JobPreferenceModel(models.Model):
         return f'{self.user}'
 
 
-# User skills Model
-class SkillsModel(models.Model):
-    skillName = models.CharField(max_length=50)
 
-    class Meta:
-        verbose_name_plural = "User skills"
-
-    def __str__(self):
-        return self.skillName
 
 
 # LogOut -> BlackList API

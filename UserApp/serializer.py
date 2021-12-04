@@ -174,6 +174,17 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 # User Details serializer
+
+class UserInformationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.UserInfoModel
+        fields = '__all__'
+
+        extra_kwargs = {
+            'user': {'read_only': True}
+        }
+
+
 class UserAcademicSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserAcademicInfoModel
@@ -239,6 +250,7 @@ Training Information -> UserTrainingModel
 
 
 class UserDetailsSerializer(serializers.ModelSerializer):
+    userInfo = UserInformationSerializer(source='user_info_user')
     academicInfo = UserAcademicSerializer(source='academic_info_user', many=True)
     certificationInfo = UserCertificationsSerializer(source='certification_info_user', many=True)
     trainingInfo = UserTrainingExperienceSerializer(source='training_info_user', many=True)

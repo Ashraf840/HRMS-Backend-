@@ -1,6 +1,6 @@
 from django.db import models
 from UserApp.models import UserDepartmentModel, User
-
+from QuizApp.models import JobApplyFilterQuestionModel
 
 # Create your models here.
 
@@ -10,7 +10,7 @@ class JobPostModel(models.Model):
         ('night', 'Night'),
     )
     jobType = (
-        ('per_time', 'Per Time'),
+        ('pert_time', 'Pert Time'),
         ('full_time', 'Full Time'),
         ('internship', 'Internship'),
     )
@@ -27,10 +27,14 @@ class JobPostModel(models.Model):
     jobType = models.CharField(verbose_name="job type",max_length=50,choices=jobType)
     jobDescription = models.TextField(null=True)
     # uploadCV = models.FileField(upload_to='user/')
+    filterQuestions = models.ManyToManyField(JobApplyFilterQuestionModel, related_name='filter_question_list')
     user = models.ForeignKey(User,verbose_name='user',on_delete=models.CASCADE,related_name='job_post_model')
 
     def __str__(self):
         return f'{self.jobTitle} {self.shift}'
+
+
+
 
 
 class UserJobAppliedModel(models.Model):
