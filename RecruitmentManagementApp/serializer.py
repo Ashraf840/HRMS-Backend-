@@ -4,6 +4,7 @@ from UserApp.models import User
 from . import models
 from .models import FilterQuestionsResponseModelHR
 
+
 # Viewing all user information from admin panel
 class AllUserDetailsSerializer(serializers.ModelSerializer):
     academicInfo = serializer.UserAcademicSerializer(source='academic_info_user', many=True)
@@ -22,6 +23,8 @@ class AllUserDetailsSerializer(serializers.ModelSerializer):
 
 
 # Job post Model Serializer -> Only for HR
+
+
 class JobPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.JobPostModel
@@ -29,6 +32,37 @@ class JobPostSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'user': {'read_only': True}
         }
+
+
+class OnlineTestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.OnlineTestModel
+        fields = '__all__'
+        extra_kwargs = {
+            'jobInfo': {'read_only': True}
+        }
+
+
+class PracticalTestSerializer(serializers.ModelSerializer):
+    jobPost = JobPostSerializer()
+    onlineTest = OnlineTestSerializer()
+
+
+    class Meta:
+        model = models.PracticalTestModel
+        fields = '__all__'
+        extra_kwargs = {
+            'jobInfo': {'read_only': True}
+        }
+
+    def create(self, validated_data):
+        print(validated_data)
+        jobData = validated_data.pop('jobPost')
+        onlineTestData = validated_data.pop('onlineTest')
+        jobPost = models.JobPostModel.objects.create(**jobData)
+        onlineTest = models.OnlineTestModel.objects.create(jobInfo_id=jobPost, **onlineTestData)
+        practicalTest = models.PracticalTestModel.objects.create(jobInfo_id=jobPost, **validated_data)
+        return practicalTest
 
 
 class AppliedForJobSerializer(serializers.ModelSerializer):
@@ -48,7 +82,6 @@ class AppliedForJobSerializer(serializers.ModelSerializer):
 #         fields = '__all__'
 
 class FilterQuestionResponseSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = models.FilterQuestionsResponseModelHR
         fields = '__all__'
@@ -57,6 +90,3 @@ class FilterQuestionResponseSerializer(serializers.ModelSerializer):
             'user': {'read_only': True},
 
         }
-
-
-

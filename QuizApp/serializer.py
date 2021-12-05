@@ -33,7 +33,9 @@ class QuestionAnswerSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
+        # print(validated_data)
         questionData = validated_data.pop('question')
+        # print(validated_data)
         question = models.QuestionSetModel.objects.create(**questionData)
         answer = models.QuestionAnswerModel.objects.create(question=question, **validated_data)
         return answer

@@ -109,3 +109,8 @@ class JobDataFilterView(generics.ListAPIView):
         # print(search)
         # print(dep)
         return queryset.filter(jobTitle__icontains=search, department__department__icontains=dep)
+
+
+class JobpostOnlineView(generics.ListCreateAPIView):
+    serializer_class = serializer.PracticalTestSerializer
+    queryset = models.PracticalTestModel.objects.all()
