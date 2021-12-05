@@ -9,7 +9,8 @@ from RecruitmentManagementApp.views import AllUserDetailView, JobPostView, Appli
 from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
     CustomTokenObtainPairView, UpdateAcademicInfoView, AddAcademicInfoView, \
     AddWorkExperienceView, UpdateWorkExpInfoView, AddCertificationsView, UpdateCertificationsView, \
-    AddTrainingExperienceView, UpdateUserInfoView, UpdateTrainingExperienceView, VerifyEmailView, SkillsView
+    AddTrainingExperienceView, UpdateUserInfoView, UpdateTrainingExperienceView, VerifyEmailView, SkillsView,\
+    AcademicInfoListView,WorkInfoListView,CertificationInfoListView,TrainingInfoListView
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
@@ -22,13 +23,17 @@ urlpatterns = [
     path('update_ac/<user__id>/<id>/', UpdateAcademicInfoView.as_view(), name='update_academic'),
     path('all_users/', AllUserDetailView.as_view(), name='all_users'),
     path('add_ac/', AddAcademicInfoView.as_view(), name='add_academics'),
+    path('add_ac_list/<id>/', AcademicInfoListView.as_view(), name='academic_info_list'),
     path('work_exp/', AddWorkExperienceView.as_view(), name='work_experiences'),
+    path('work_exp_list/<id>/', WorkInfoListView.as_view(), name='work_experiences_list'),
     path('up_work_exp/<user__id>/<id>/', UpdateWorkExpInfoView.as_view(), name='update_work_experiences'),
 
     path('certifications/', AddCertificationsView.as_view(), name='certification'),
+    path('certifications_list/<id>/', CertificationInfoListView.as_view(), name='certification_list'),
     path('up_certification/<user__id>/<id>/', UpdateCertificationsView.as_view(), name='update_certification'),
 
     path('training/', AddTrainingExperienceView.as_view(), name='training_exp'),
+    path('training_list/<id>/', TrainingInfoListView.as_view(), name='training_exp_list'),
     path('up_training/<user__id>/<id>/', UpdateTrainingExperienceView.as_view(), name='update_training_exp'),
 
     # Hr operations

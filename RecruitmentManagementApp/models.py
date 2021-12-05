@@ -18,8 +18,8 @@ class JobPostModel(models.Model):
     )
     jobTitle = models.CharField(verbose_name='Job Title', max_length=100)
     lastDateOfApply = models.DateField()
-    startDate = models.DateField()
-    endDate = models.DateField()
+    postDate = models.DateField(auto_now_add=True)
+    lastUpdated = models.DateField(auto_now=True)
     level = models.CharField(max_length=255, null=True)
     shift = models.CharField(verbose_name='Shift', max_length=10, choices=shiftOption)
     location = models.CharField(verbose_name='location', max_length=255)
@@ -45,10 +45,28 @@ class UserJobAppliedModel(models.Model):
 
 
 class FilterQuestionsResponseModelHR(models.Model):
-    questions = models.ForeignKey(JobApplyFilterQuestionModel, on_delete=models.CASCADE,related_name='filter_questions')
+    questions = models.ForeignKey(JobApplyFilterQuestionModel, on_delete=models.CASCADE,
+                                  related_name='filter_questions')
     response = models.CharField(max_length=255, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='response_by')
     jobPost = models.ForeignKey(JobPostModel, on_delete=models.CASCADE, related_name='job_info')
 
     def __str__(self):
         return f'{self.response}'
+
+
+class OnlineTestModel(models.Model):
+    culturalTest = models.URLField(verbose_name='Cultural Test', name='cultural_test')
+    analyticalTest = models.URLField(verbose_name='Analytical Test', name='analytical_test')
+    jobInfo = models.OneToOneField(JobPostModel, on_delete=models.CASCADE, related_name='job_info_online')
+
+    def __str__(self):
+        return f'{self.jobInfo}'
+
+
+class PracticalTestModel(models.Model):
+    practicalQuestion = models.FileField(verbose_name='Practical Question', upload_to='users/files')
+    jobInfo = models.OneToOneField(JobPostModel, on_delete=models.CASCADE, related_name='job_info_practical')
+
+    def __str__(self):
+        return f'{self.jobInfo}'

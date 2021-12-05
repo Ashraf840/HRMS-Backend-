@@ -168,7 +168,16 @@ class AddAcademicInfoView(generics.CreateAPIView):
 
 
 # Academic Information Update Retrieve & Update View
-class UpdateAcademicInfoView(generics.RetrieveUpdateDestroyAPIView, EditPermission, IsAuthor):
+class AcademicInfoListView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated, IsCandidateUser]
+    serializer_class = serializer.UserAcademicSerializer
+    queryset = models.UserAcademicInfoModel.objects.all()
+    def get_queryset(self):
+        id = self.kwargs['id']
+        return models.UserAcademicInfoModel.objects.filter(user__id=id)
+
+
+class UpdateAcademicInfoView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated, EditPermission, IsAuthor]
     serializer_class = serializer.UpdateAcademicInformationSerializer
     # queryset = models.UserAcademicInfoModel.objects.all()
@@ -189,6 +198,14 @@ class AddWorkExperienceView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+class WorkInfoListView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated, IsCandidateUser]
+    serializer_class = serializer.UserAcademicSerializer
+    # queryset = models.UserAcademicInfoModel.objects.all()
+    def get_queryset(self):
+        id = self.kwargs['id']
+        return models.UserAcademicInfoModel.objects.filter(user__id=id)
 
 
 class UpdateWorkExpInfoView(generics.RetrieveUpdateDestroyAPIView):
@@ -213,6 +230,14 @@ class AddCertificationsView(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+class CertificationInfoListView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated, IsCandidateUser]
+    serializer_class = serializer.UserCertificationsSerializer
+    # queryset = models.UserCertificationsModel.objects.all()
+    def get_queryset(self):
+        id = self.kwargs['id']
+        return models.UserCertificationsModel.objects.filter(user__id=id)
+
 
 class UpdateCertificationsView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -236,6 +261,14 @@ class AddTrainingExperienceView(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+
+class TrainingInfoListView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated, IsCandidateUser]
+    serializer_class = serializer.UserTrainingExperienceSerializer
+    # queryset = models.UserAcademicInfoModel.objects.all()
+    def get_queryset(self):
+        id = self.kwargs['id']
+        return models.UserTrainingExperienceModel.objects.filter(user__id=id)
 
 class UpdateTrainingExperienceView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated]
