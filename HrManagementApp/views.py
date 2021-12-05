@@ -1,7 +1,6 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, permissions, serializers, status
 from rest_framework.response import Response
-
 from UserApp.models import User, JobPreferenceModel
 from . import serializer
 from UserApp.permissions import IsHrUser, IsCandidateUser, EditPermission
