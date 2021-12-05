@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'drf_multiple_model',
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
+    'django_filters',
 
     # Installed Apps
     'UserApp',
@@ -177,6 +178,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
 
+    ],
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend'
     ]
 }
 

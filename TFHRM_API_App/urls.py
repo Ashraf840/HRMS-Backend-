@@ -4,7 +4,7 @@ from QuizApp.views import QuestionAnswerSetView, SubmittedAnswerView, SubmittedA
     FilterQuestionView
 # importing Views from HrManagementApp views
 from HrManagementApp.views import AllUserDetailView, JobPostView, AppliedForJobView, AppliedJobListView, \
-    JobDescriptionView, JobListView,FilterQuestionResponseListView,FilterQuestionResponseView
+    JobDescriptionView, JobListView,FilterQuestionResponseListView,FilterQuestionResponseView,JobDataFilterView
 # importing Views from UserApp views
 from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
     CustomTokenObtainPairView, UpdateAcademicInfoView, AddAcademicInfoView, \
@@ -41,6 +41,7 @@ urlpatterns = [
     path('job_list/<id>/', JobDescriptionView.as_view(), name='job_description'),
     path('applied_list/', AppliedJobListView.as_view(), name='applied_jobs_list'),
     path('job_list/', JobListView.as_view(), name='job_list'),
+    path('job_search/', JobDataFilterView.as_view(), name='job_search'),
     # path('questions/',QuestionSetView.as_view(),name='question_set'),
     path('qus_ans/', QuestionAnswerSetView.as_view(), name='question_ans'),
     path('submit_ans/', SubmittedAnswerView.as_view(), name='submit_ans'),

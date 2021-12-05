@@ -1,3 +1,4 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, permissions, serializers, status
 from rest_framework.response import Response
 
@@ -72,7 +73,7 @@ class JobListView(generics.ListAPIView):
 
 
 class FilterQuestionResponseView(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsCandidateUser]
+    # permission_classes = [permissions.IsAuthenticated, IsCandidateUser]
     serializer_class = serializer.FilterQuestionResponseSerializer
     queryset = models.FilterQuestionsResponseModelHR.objects.all()
 
@@ -91,3 +92,18 @@ class FilterQuestionResponseListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.FilterQuestionResponseSerializer
     queryset = models.FilterQuestionsResponseModelHR.objects.all()
+
+
+class JobDataFilterView(generics.ListAPIView):
+    queryset = models.JobPostModel.objects.all()
+    serializer_class = serializer.JobPostSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['jobTitle', 'department']
+
+    # def get_queryset(self):
+    #     queryset = models.JobPostModel.objects.all()
+    #     print(queryset)
+    #     search = self.request.query_params.get('search')
+    #     print(search)
+    #
+    #     return queryset.filter(jobTitle__icontains=search)

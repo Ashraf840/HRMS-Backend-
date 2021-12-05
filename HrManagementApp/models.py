@@ -49,3 +49,6 @@ class FilterQuestionsResponseModelHR(models.Model):
     response = models.CharField(max_length=255, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='response_by')
     jobPost = models.ForeignKey(JobPostModel, on_delete=models.CASCADE, related_name='job_info')
+
+    def __str__(self):
+        return f'{self.response}'
