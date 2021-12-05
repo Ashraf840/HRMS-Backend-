@@ -1,5 +1,6 @@
+from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import generics, permissions, serializers, status
+from rest_framework import generics, permissions, serializers, status,filters
 from rest_framework.response import Response
 from UserApp.models import User, JobPreferenceModel
 from . import serializer
@@ -94,15 +95,18 @@ class FilterQuestionResponseListView(generics.ListAPIView):
 
 
 class JobDataFilterView(generics.ListAPIView):
-    queryset = models.JobPostModel.objects.all()
+    # queryset = models.JobPostModel.objects.all()
     serializer_class = serializer.JobPostSerializer
-    filter_backends = [DjangoFilterBackend]
-    filter_fields = ['jobTitle', 'department']
+    # filter_backends = [DjangoFilterBackend]
+    # filter_fields = ['jobTitle', 'department']
+    # search_fields = ['$jobTitle', '$department']
 
-    # def get_queryset(self):
-    #     queryset = models.JobPostModel.objects.all()
-    #     print(queryset)
-    #     search = self.request.query_params.get('search')
-    #     print(search)
-    #
-    #     return queryset.filter(jobTitle__icontains=search)
+    def get_queryset(self):
+        queryset = models.JobPostModel.objects.all()
+        # print(queryset)
+        search = self.request.query_params.get('search')
+        dep = self.request.query_params.get('department')
+        print(search)
+        print(dep)
+        return queryset.filter(Q(jobTitle__icontains=search) | Q(department__department__icontains=dep) |
+                               Q(jobTitle__icontains=search, department__department__icontains=dep))
