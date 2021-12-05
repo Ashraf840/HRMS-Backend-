@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
             name='UserJobAppliedModel',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('jobPostId', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='job_post_id', to='HrManagementApp.jobpostmodel')),
+                ('jobPostId', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='job_post_id', to='RecruitmentManagementApp.jobpostmodel')),
             ],
         ),
     ]

@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('HrManagementApp', '0003_jobpostmodel_user'),
+        ('RecruitmentManagementApp', '0003_jobpostmodel_user'),
     ]
 
     operations = [

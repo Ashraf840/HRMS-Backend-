@@ -106,7 +106,6 @@ class JobDataFilterView(generics.ListAPIView):
         # print(queryset)
         search = self.request.query_params.get('search')
         dep = self.request.query_params.get('department')
-        print(search)
-        print(dep)
-        return queryset.filter(Q(jobTitle__icontains=search) | Q(department__department__icontains=dep) |
-                               Q(jobTitle__icontains=search, department__department__icontains=dep))
+        # print(search)
+        # print(dep)
+        return queryset.filter(jobTitle__icontains=search, department__department__icontains=dep)

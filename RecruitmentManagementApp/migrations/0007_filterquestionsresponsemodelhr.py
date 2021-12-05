@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('QuizApp', '0021_delete_filterquestionsresponsemodel'),
-        ('HrManagementApp', '0006_auto_20211204_1110'),
+        ('RecruitmentManagementApp', '0006_auto_20211204_1110'),
     ]
 
     operations = [
@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('response', models.CharField(blank=True, max_length=255)),
-                ('jobPost', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='job_info', to='HrManagementApp.jobpostmodel')),
+                ('jobPost', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='job_info', to='RecruitmentManagementApp.jobpostmodel')),
                 ('questions', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='filter_questions', to='QuizApp.jobapplyfilterquestionmodel')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='response_by', to=settings.AUTH_USER_MODEL)),
             ],

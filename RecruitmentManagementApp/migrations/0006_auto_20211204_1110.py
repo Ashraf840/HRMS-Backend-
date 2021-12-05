@@ -7,7 +7,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('QuizApp', '0020_filterquestionsresponsemodel_user'),
-        ('HrManagementApp', '0005_jobpostmodel_jobtype'),
+        ('RecruitmentManagementApp', '0005_jobpostmodel_jobtype'),
     ]
 
     operations = [

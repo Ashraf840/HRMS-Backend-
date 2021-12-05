@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('HrManagementApp', '0004_remove_jobpostmodel_uploadcv'),
+        ('RecruitmentManagementApp', '0004_remove_jobpostmodel_uploadcv'),
     ]
 
     operations = [

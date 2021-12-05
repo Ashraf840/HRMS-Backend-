@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('HrManagementApp', '0001_initial'),
+        ('RecruitmentManagementApp', '0001_initial'),
         ('UserApp', '0001_initial'),
     ]
 

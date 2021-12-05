@@ -51,7 +51,7 @@ INSTALLED_APPS = [
 
     # Installed Apps
     'UserApp',
-    'HrManagementApp',
+    'RecruitmentManagementApp',
     'TFHRM_API_App',
     'QuizApp',
 
