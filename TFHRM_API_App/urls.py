@@ -4,7 +4,8 @@ from QuizApp.views import QuestionAnswerSetView, SubmittedAnswerView, SubmittedA
     FilterQuestionView
 # importing Views from RecruitmentManagementApp views
 from RecruitmentManagementApp.views import AllUserDetailView, JobPostView, AppliedForJobView, AppliedJobListView, \
-    JobDescriptionView, JobListView,FilterQuestionResponseListView,FilterQuestionResponseView,JobDataFilterView,JobpostOnlineView
+    JobDescriptionView, JobListView,FilterQuestionResponseListView,FilterQuestionResponseView,JobDataFilterView,\
+    PracticalTestView,JobPostOnlineView
 # importing Views from UserApp views
 from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
     CustomTokenObtainPairView, UpdateAcademicInfoView, AddAcademicInfoView, \
@@ -38,7 +39,7 @@ urlpatterns = [
 
     # Hr operations
     path('add_skills/', SkillsView.as_view(), name="add_new_skills"),
-    path('job_post/', JobPostView.as_view(), name='job_post_hr'),
+    # path('job_post/', JobPostView.as_view(), name='job_post_hr'),
 
 
     # for Candidate to Apply for Jobs
@@ -51,7 +52,10 @@ urlpatterns = [
     path('qus_ans/', QuestionAnswerSetView.as_view(), name='question_ans'),
     path('submit_ans/', SubmittedAnswerView.as_view(), name='submit_ans'),
     path('submitted_ans_list/', SubmittedAnswerListView.as_view(), name='submitted_ans_list'),
-    path('online/', JobpostOnlineView.as_view(), name='online'),
+    path('job_post/', JobPostOnlineView.as_view(), name='job_post_with_online_test_link'),
+    path('practical_test/', PracticalTestView.as_view(), name='practical_test'),
+
+
 
     # Filter question list
     path('filter_question/', FilterQuestionView.as_view(), name='filter_questions'),

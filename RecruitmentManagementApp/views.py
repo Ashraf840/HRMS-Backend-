@@ -1,6 +1,6 @@
 from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import generics, permissions, serializers, status,filters
+from rest_framework import generics, permissions, serializers, status, filters
 from rest_framework.response import Response
 from UserApp.models import User, JobPreferenceModel
 from . import serializer
@@ -33,7 +33,7 @@ class AppliedForJobView(generics.CreateAPIView):
     queryset = models.UserJobAppliedModel.objects.all()
 
     def perform_create(self, serializer):
-        serializer.save(userId=self.request.user)
+        serializer.save(userId=self.request.user, jobProgressStatus='new')
 
 
 class JobDescriptionView(generics.RetrieveAPIView):
@@ -97,6 +97,7 @@ class FilterQuestionResponseListView(generics.ListAPIView):
 class JobDataFilterView(generics.ListAPIView):
     # queryset = models.JobPostModel.objects.all()
     serializer_class = serializer.JobPostSerializer
+
     # filter_backends = [DjangoFilterBackend]
     # filter_fields = ['jobTitle', 'department']
     # search_fields = ['$jobTitle', '$department']
@@ -111,6 +112,16 @@ class JobDataFilterView(generics.ListAPIView):
         return queryset.filter(jobTitle__icontains=search, department__department__icontains=dep)
 
 
-class JobpostOnlineView(generics.ListCreateAPIView):
+class PracticalTestView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.PracticalTestSerializer
     queryset = models.PracticalTestModel.objects.all()
+
+    # def perform_create(self, serializer):
+    #     serializer.save(user=self.request.user)
+
+
+class JobPostOnlineView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializer.OnlineTestSerializer
+    queryset = models.OnlineTestModel.objects.all()

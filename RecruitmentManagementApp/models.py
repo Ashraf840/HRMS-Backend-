@@ -3,8 +3,15 @@ from UserApp.models import UserDepartmentModel, User
 from QuizApp.models import JobApplyFilterQuestionModel
 from UserApp.models import UserDepartmentModel
 
-
 # Create your models here.
+"""
+====Admin Section====
+Job post model
+Filter question model
+online question set model
+practical question set model
+"""
+
 
 class JobPostModel(models.Model):
     shiftOption = (
@@ -36,14 +43,6 @@ class JobPostModel(models.Model):
         return f'{self.jobTitle} {self.shift}'
 
 
-class UserJobAppliedModel(models.Model):
-    jobPostId = models.ForeignKey(JobPostModel, on_delete=models.CASCADE, related_name='job_post_id')
-    userId = models.ForeignKey(User, on_delete=models.CASCADE, related_name='applied_user')
-
-    def __str__(self):
-        return f'{self.jobPostId}, {self.userId}'
-
-
 class FilterQuestionsResponseModelHR(models.Model):
     questions = models.ForeignKey(JobApplyFilterQuestionModel, on_delete=models.CASCADE,
                                   related_name='filter_questions')
@@ -70,3 +69,56 @@ class PracticalTestModel(models.Model):
 
     def __str__(self):
         return f'{self.jobInfo}'
+
+
+"""
+====Candidate section====
+All candidate response will stored model section
+online test response
+practical test response
+"""
+
+
+class UserJobAppliedModel(models.Model):
+    status = (
+        ('new', 'new'),
+        ('online', 'online'),
+        ('under_review', 'under_review'),
+        ('selected_for_practical', 'selected_for_practical'),
+        ('under_review', 'under_review'),
+        ('interview', 'interview'),
+        ('document', 'document'),
+        ('verification', 'verification'),
+        ('appointed', 'appointed'),
+
+    )
+    jobPostId = models.ForeignKey(JobPostModel, on_delete=models.CASCADE, related_name='job_post_id')
+    userId = models.ForeignKey(User, on_delete=models.CASCADE, related_name='applied_user')
+    jobProgressStatus = models.CharField(max_length=30, choices=status, blank=True)
+
+    def __str__(self):
+        return f'{self.jobPostId}, {self.userId}'
+
+
+class OnlineTestResponseModel(models.Model):
+    analyticalTestMark = models.IntegerField(blank=True)
+    analyticalTestScnSrt = models.ImageField(upload_to='online_test/analytical_test/', blank=True)
+    practicalTestMark = models.IntegerField(blank=True)
+    practicalTestScnSrt = models.ImageField(upload_to='online_test/practical_test/', blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='online_response_user')
+    jobId = models.ForeignKey(JobPostModel, on_delete=models.CASCADE, related_name='online_response_job')
+
+    def __str__(self):
+        return f'{self.analyticalTestMark}, {self.practicalTestMark}'
+
+
+class PracticalTestResponseModel(models.Model):
+    practicalTestResFiles = models.FileField(upload_to='practical_test/response/', blank=True)
+    practicalTestResLink = models.URLField(blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='practical_response_user')
+    jobId = models.ForeignKey(JobPostModel, on_delete=models.CASCADE, related_name='practical_response_job')
+
+    def __str__(self):
+        return f'{self.practicalTestResLink}   {self.practicalTestResFiles}'
+
+# class DocumentSubmissionModel(models.Model):
