@@ -106,7 +106,7 @@ class JobDataFilterView(generics.ListAPIView):
         queryset = models.JobPostModel.objects.all()
         # print(queryset)
         search = self.request.query_params.get('search')
-        dep = self.request.query_params.get('department')
+        # dep = self.request.query_params.get('department')
         # print(search)
         # print(dep)
         return queryset.filter(
