@@ -1,6 +1,6 @@
 from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import generics, permissions, serializers, status, filters,views
+from rest_framework import generics, permissions, serializers, status, filters, views
 from rest_framework.response import Response
 from UserApp.models import User, JobPreferenceModel
 from . import serializer
@@ -109,7 +109,11 @@ class JobDataFilterView(generics.ListAPIView):
         dep = self.request.query_params.get('department')
         # print(search)
         # print(dep)
-        return queryset.filter(jobTitle__icontains=search, department__department__icontains=dep)
+        return queryset.filter(
+            Q(jobTitle__icontains=search) |
+            Q(department__department__icontains=search) |
+            Q(level__icontains=search)
+        )
 
 
 class PracticalTestView(generics.ListCreateAPIView):
@@ -138,6 +142,7 @@ class OnlineTestResponseView(generics.CreateAPIView):
     # def create(self, request, *args, **kwargs):
     #     response = models.OnlineTestResponseModel.objects.create(user_id=self.request.user.id,)
 
+
 class PracticalTestResponseView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.PracticalTestResponseSerializer
@@ -145,9 +150,3 @@ class PracticalTestResponseView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
-
-
-
-
-
-
