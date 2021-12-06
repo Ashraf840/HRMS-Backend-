@@ -65,7 +65,8 @@ class OnlineTestModel(models.Model):
 
 class PracticalTestModel(models.Model):
     practicalQuestion = models.FileField(verbose_name='Practical Question', upload_to='users/files')
-    jobInfo = models.OneToOneField(JobPostModel, on_delete=models.CASCADE, related_name='job_info_practical')
+    jobInfo = models.OneToOneField(JobPostModel, on_delete=models.CASCADE, related_name='practical_job_info')
+    user = models.ForeignKey(User,on_delete=models.CASCADE,related_name='practical_user_info')
 
     def __str__(self):
         return f'{self.jobInfo}'
@@ -101,10 +102,12 @@ class UserJobAppliedModel(models.Model):
 
 
 class OnlineTestResponseModel(models.Model):
-    analyticalTestMark = models.IntegerField(blank=True)
-    analyticalTestScnSrt = models.ImageField(upload_to='online_test/analytical_test/', blank=True)
-    practicalTestMark = models.IntegerField(blank=True)
-    practicalTestScnSrt = models.ImageField(upload_to='online_test/practical_test/', blank=True)
+    analyticalTestMark = models.IntegerField(blank=True, verbose_name='Analytical Test Mark')
+    analyticalTestScnSrt = models.ImageField(upload_to='online_test/analytical_test/', blank=True,
+                                             verbose_name='Screenshot')
+    practicalTestMark = models.IntegerField(blank=True, verbose_name='Practical Test Mark')
+    practicalTestScnSrt = models.ImageField(upload_to='online_test/practical_test/', blank=True,
+                                            verbose_name='Screenshot')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='online_response_user')
     jobId = models.ForeignKey(JobPostModel, on_delete=models.CASCADE, related_name='online_response_job')
 

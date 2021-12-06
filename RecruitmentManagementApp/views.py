@@ -1,6 +1,6 @@
 from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import generics, permissions, serializers, status, filters
+from rest_framework import generics, permissions, serializers, status, filters,views
 from rest_framework.response import Response
 from UserApp.models import User, JobPreferenceModel
 from . import serializer
@@ -125,3 +125,29 @@ class JobPostOnlineView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.OnlineTestSerializer
     queryset = models.OnlineTestModel.objects.all()
+
+
+class OnlineTestResponseView(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializer.OnlineTestResponseSerializer
+    queryset = models.OnlineTestResponseModel.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    # def create(self, request, *args, **kwargs):
+    #     response = models.OnlineTestResponseModel.objects.create(user_id=self.request.user.id,)
+
+class PracticalTestResponseView(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializer.PracticalTestResponseSerializer
+    queryset = models.PracticalTestModel.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+
+
+
+

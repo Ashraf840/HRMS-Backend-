@@ -4,14 +4,14 @@ from QuizApp.views import QuestionAnswerSetView, SubmittedAnswerView, SubmittedA
     FilterQuestionView
 # importing Views from RecruitmentManagementApp views
 from RecruitmentManagementApp.views import AllUserDetailView, JobPostView, AppliedForJobView, AppliedJobListView, \
-    JobDescriptionView, JobListView,FilterQuestionResponseListView,FilterQuestionResponseView,JobDataFilterView,\
-    PracticalTestView,JobPostOnlineView
+    JobDescriptionView, JobListView, FilterQuestionResponseListView, FilterQuestionResponseView, JobDataFilterView, \
+    PracticalTestView, JobPostOnlineView, OnlineTestResponseView,PracticalTestResponseView
 # importing Views from UserApp views
 from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
     CustomTokenObtainPairView, UpdateAcademicInfoView, AddAcademicInfoView, \
     AddWorkExperienceView, UpdateWorkExpInfoView, AddCertificationsView, UpdateCertificationsView, \
-    AddTrainingExperienceView, UpdateUserInfoView, UpdateTrainingExperienceView, VerifyEmailView, SkillsView,\
-    AcademicInfoListView,WorkInfoListView,CertificationInfoListView,TrainingInfoListView
+    AddTrainingExperienceView, UpdateUserInfoView, UpdateTrainingExperienceView, VerifyEmailView, SkillsView, \
+    AcademicInfoListView, WorkInfoListView, CertificationInfoListView, TrainingInfoListView
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
@@ -41,7 +41,6 @@ urlpatterns = [
     path('add_skills/', SkillsView.as_view(), name="add_new_skills"),
     # path('job_post/', JobPostView.as_view(), name='job_post_hr'),
 
-
     # for Candidate to Apply for Jobs
     path('applied_job/', AppliedForJobView.as_view(), name='applied_for_jobs'),
     path('job_list/<id>/', JobDescriptionView.as_view(), name='job_description'),
@@ -55,11 +54,13 @@ urlpatterns = [
     path('job_post/', JobPostOnlineView.as_view(), name='job_post_with_online_test_link'),
     path('practical_test/', PracticalTestView.as_view(), name='practical_test'),
 
-
-
     # Filter question list
     path('filter_question/', FilterQuestionView.as_view(), name='filter_questions'),
     path('filter_question_res/', FilterQuestionResponseView.as_view(), name='filter_questions_response'),
     path('filter_question_res_list/', FilterQuestionResponseListView.as_view(), name='filter_questions_response_list'),
+
+    # Online and practical Test Response model
+    path('online_test_res/', OnlineTestResponseView.as_view(), name='online_test_response'),
+    path('practical_test_res/', PracticalTestResponseView.as_view(), name='practical_test_response'),
 
 ]

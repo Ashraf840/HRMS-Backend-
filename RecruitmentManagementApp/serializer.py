@@ -2,7 +2,6 @@ from rest_framework import serializers
 from UserApp import serializer
 from UserApp.models import User
 from . import models
-from QuizApp.models import JobApplyFilterQuestionModel
 
 
 # Viewing all user information from admin panel
@@ -119,3 +118,15 @@ class OnlineTestResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.OnlineTestResponseModel
         fields = '__all__'
+        extra_kwargs = {
+            'user': {'read_only': True},
+        }
+
+
+class PracticalTestResponseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.PracticalTestResponseModel
+        fields = '__all__'
+        extra_kwargs = {
+            'user': {'read_only': True},
+        }
