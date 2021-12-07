@@ -28,8 +28,6 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     token_obtain_pair = TokenObtainPairView.as_view()
 
 
-
-
 # JWT logout
 # class LogoutView(generics.DestroyAPIView):
 #     permission_classes = (permissions.IsAuthenticated,)
@@ -102,8 +100,9 @@ class VerifyEmailView(views.APIView):
                 if not user.email_validated:
                     user.email_validated = True
                     user.save()
-                    return Response({'email': 'Successfully activated'}, status=status.HTTP_200_OK)
-                    # return HttpResponseRedirect(redirect_to='https://google.com', status=status.HTTP_200_OK)
+                    # return Response({'email': 'Successfully activated'}, status=status.HTTP_200_OK)
+                    return HttpResponseRedirect(redirect_to='https://google.com',
+                                                content={'email': 'Successfully activated'})
 
             else:
                 return Response({'email': 'Activation failed'}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
@@ -180,6 +179,7 @@ class AcademicInfoListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated, IsCandidateUser]
     serializer_class = serializer.UserAcademicSerializer
     queryset = models.UserAcademicInfoModel.objects.all()
+
     def get_queryset(self):
         id = self.kwargs['id']
         return models.UserAcademicInfoModel.objects.filter(user__id=id)
@@ -207,9 +207,11 @@ class AddWorkExperienceView(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+
 class WorkInfoListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated, IsCandidateUser]
     serializer_class = serializer.UserAcademicSerializer
+
     # queryset = models.UserAcademicInfoModel.objects.all()
     def get_queryset(self):
         id = self.kwargs['id']
@@ -238,9 +240,11 @@ class AddCertificationsView(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+
 class CertificationInfoListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated, IsCandidateUser]
     serializer_class = serializer.UserCertificationsSerializer
+
     # queryset = models.UserCertificationsModel.objects.all()
     def get_queryset(self):
         id = self.kwargs['id']
@@ -273,10 +277,12 @@ class AddTrainingExperienceView(generics.CreateAPIView):
 class TrainingInfoListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated, IsCandidateUser]
     serializer_class = serializer.UserTrainingExperienceSerializer
+
     # queryset = models.UserAcademicInfoModel.objects.all()
     def get_queryset(self):
         id = self.kwargs['id']
         return models.UserTrainingExperienceModel.objects.filter(user__id=id)
+
 
 class UpdateTrainingExperienceView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated]

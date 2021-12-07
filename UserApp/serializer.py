@@ -25,10 +25,10 @@ from . import models
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     # info = serializers.CharField(source='permission_user')
     non_field_errors = {
-        'no_active_account': 'Please verify your mail.'
+        'detail': 'Please verify your mail.'
     }
     default_error_messages = {
-        'no_active_account': 'Username or Password does not matched.'
+        'detail': 'Username or Password does not matched.'
     }
 
     def validate(self, attrs):
