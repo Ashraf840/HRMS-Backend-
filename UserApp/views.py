@@ -5,12 +5,9 @@ it may conflict
 import jwt
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
-from django.http import HttpResponseRedirect
-from django.shortcuts import redirect
 from django.urls import reverse
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-
 from rest_framework import permissions, generics, status, views
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -26,6 +23,8 @@ from .utils import Util
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = serializer.CustomTokenObtainPairSerializer
     token_obtain_pair = TokenObtainPairView.as_view()
+
+
 
 
 # JWT logout
@@ -100,10 +99,7 @@ class VerifyEmailView(views.APIView):
                 if not user.email_validated:
                     user.email_validated = True
                     user.save()
-                    # return Response({'email': 'Successfully activated'}, status=status.HTTP_200_OK)
-                    return HttpResponseRedirect(redirect_to='https://google.com',
-                                                content={'email': 'Successfully activated'})
-
+                    return Response({'email': 'Successfully activated'}, status=status.HTTP_200_OK)
             else:
                 return Response({'email': 'Activation failed'}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
         except jwt.ExpiredSignatureError as identifier:
@@ -179,7 +175,6 @@ class AcademicInfoListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated, IsCandidateUser]
     serializer_class = serializer.UserAcademicSerializer
     queryset = models.UserAcademicInfoModel.objects.all()
-
     def get_queryset(self):
         id = self.kwargs['id']
         return models.UserAcademicInfoModel.objects.filter(user__id=id)
@@ -207,11 +202,9 @@ class AddWorkExperienceView(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-
 class WorkInfoListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated, IsCandidateUser]
     serializer_class = serializer.UserAcademicSerializer
-
     # queryset = models.UserAcademicInfoModel.objects.all()
     def get_queryset(self):
         id = self.kwargs['id']
@@ -240,11 +233,9 @@ class AddCertificationsView(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-
 class CertificationInfoListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated, IsCandidateUser]
     serializer_class = serializer.UserCertificationsSerializer
-
     # queryset = models.UserCertificationsModel.objects.all()
     def get_queryset(self):
         id = self.kwargs['id']
@@ -277,12 +268,10 @@ class AddTrainingExperienceView(generics.CreateAPIView):
 class TrainingInfoListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated, IsCandidateUser]
     serializer_class = serializer.UserTrainingExperienceSerializer
-
     # queryset = models.UserAcademicInfoModel.objects.all()
     def get_queryset(self):
         id = self.kwargs['id']
         return models.UserTrainingExperienceModel.objects.filter(user__id=id)
-
 
 class UpdateTrainingExperienceView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated]

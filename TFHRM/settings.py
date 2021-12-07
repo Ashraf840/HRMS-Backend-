@@ -41,11 +41,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Installed Packages
     'rest_framework',
-    'django_cleanup',
     'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
+    'django_cleanup',
+
+    # Corsheaders
     'corsheaders',
     'drf_multiple_model',
-    'rest_framework_simplejwt.token_blacklist',
+
     'drf_yasg',
     'django_filters',
 
@@ -59,6 +62,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    # whitenoise for heroku hosting
     'whitenoise.middleware.WhiteNoiseMiddleware',
     # cors header middleware
     'corsheaders.middleware.CorsMiddleware',
