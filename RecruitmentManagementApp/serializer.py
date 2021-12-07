@@ -115,12 +115,23 @@ class AppliedForJobSerializer(serializers.ModelSerializer):
 
 
 class OnlineTestResponseSerializer(serializers.ModelSerializer):
+    # applied = AppliedForJobSerializer()
+    # parent = serializers.PrimaryKeyRelatedField(queryset=models.UserJobAppliedModel.objects.all(),source='appliedJob',write_only=True)
+
     class Meta:
         model = models.OnlineTestResponseModel
         fields = '__all__'
         extra_kwargs = {
             'user': {'read_only': True},
         }
+
+    # def create(self, validated_data):
+    #
+    #     appalyInfo = validated_data('applied')
+    #     print(appalyInfo)
+    #     getData = serializers.PrimaryKeyRelatedField(queryset=models.UserJobAppliedModel.objects.get(jobPostId=appalyInfo.id,userId=self.context['request'].id))
+    #     print(getData)
+    #     pass
 
 
 class PracticalTestResponseSerializer(serializers.ModelSerializer):
@@ -130,3 +141,4 @@ class PracticalTestResponseSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'user': {'read_only': True},
         }
+
