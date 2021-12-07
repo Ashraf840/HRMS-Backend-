@@ -5,9 +5,12 @@ it may conflict
 import jwt
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
 from django.urls import reverse
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+
 from rest_framework import permissions, generics, status, views
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -95,10 +98,15 @@ class VerifyEmailView(views.APIView):
             # print('token2')
             user = models.User.objects.get(id=payload['user_id'])
             # print(email=payload['email'])
-            if not user.is_active:
-                user.email_validated = True
-                user.save()
-            return Response({'email': 'Successfully activated'}, status=status.HTTP_200_OK)
+            if user.is_active:
+                if not user.email_validated:
+                    user.email_validated = True
+                    user.save()
+                    return Response({'email': 'Successfully activated'}, status=status.HTTP_200_OK)
+                    # return HttpResponseRedirect(redirect_to='https://google.com', status=status.HTTP_200_OK)
+
+            else:
+                return Response({'email': 'Activation failed'}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
         except jwt.ExpiredSignatureError as identifier:
             return Response({'error': 'Activation Expired'}, status=status.HTTP_400_BAD_REQUEST)
         except jwt.exceptions.DecodeError as identifier:

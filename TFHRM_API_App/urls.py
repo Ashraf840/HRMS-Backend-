@@ -12,6 +12,7 @@ from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
     AddWorkExperienceView, UpdateWorkExpInfoView, AddCertificationsView, UpdateCertificationsView, \
     AddTrainingExperienceView, UpdateUserInfoView, UpdateTrainingExperienceView, VerifyEmailView, SkillsView, \
     AcademicInfoListView, WorkInfoListView, CertificationInfoListView, TrainingInfoListView
+app_name = 'tfhrm_api'
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
