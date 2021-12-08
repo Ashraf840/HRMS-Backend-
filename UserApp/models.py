@@ -40,8 +40,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     profile_pic = models.ImageField(upload_to='users/', default='users/default.png')
     phone_number = models.CharField(max_length=30, blank=True)
     nid = models.IntegerField(null=True)
-    nationality = models.CharField(max_length=50, null=True)
-    location = models.CharField(max_length=50, null=True)
+    nationality = models.CharField(max_length=50, null=True, blank=True)
+    location = models.CharField(max_length=50, blank=True)
 
     birthDate = models.DateField(verbose_name='Date of Birth', blank=True, null=True)
     date_joined = models.DateTimeField(verbose_name='Joined Date', auto_now_add=True)
@@ -103,6 +103,7 @@ class UserDepartmentModel(models.Model):
 
     def __str__(self):
         return f'{self.department}, {self.deptManager}'
+
 
 # User skills Model
 class SkillsModel(models.Model):
@@ -208,9 +209,6 @@ class JobPreferenceModel(models.Model):
 
     def __str__(self):
         return f'{self.user}'
-
-
-
 
 
 # LogOut -> BlackList API

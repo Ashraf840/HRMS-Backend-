@@ -1,6 +1,7 @@
 from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, permissions, serializers, status, filters, views
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from UserApp.models import User, JobPreferenceModel
 from . import serializer
@@ -137,29 +138,58 @@ class OnlineTestResponseView(generics.CreateAPIView):
     serializer_class = serializer.OnlineTestResponseSerializer
     queryset = models.OnlineTestResponseModel.objects.all()
 
-
-
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
 
+class UpdateCandidateStatusView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.IsAuthenticated, IsHrUser]
+    serializer_class = serializer.CandidateStatusChangeSerializer
+    lookup_field = 'id'
+
+    def get_queryset(self):
+        id = self.kwargs['id']
+        data = models.UserJobAppliedModel.objects.get(id=id)
+
+        if data.jobProgressStatus == 'new':
+            data.jobProgressStatus = 'online'
+        elif data.jobProgressStatus == 'online':
+            data.jobProgressStatus = 'under_review'
+
+        elif data.jobProgressStatus == 'under_review':
+            data.jobProgressStatus = 'interview'
+
+        elif data.jobProgressStatus == 'interview':
+            data.jobProgressStatus = 'document'
+
+        elif data.jobProgressStatus == 'document':
+            data.jobProgressStatus = 'verification'
+
+        elif data.jobProgressStatus == 'verification':
+            data.jobProgressStatus = 'appointed'
+        else:
+            data.jobProgressStatus = 'rejected'
+        return data
 
 
+# class OnlineTestResponseView(views.APIView):
+#     serializer_class = serializer.OnlineTestResponseSerializer
+#
+#     def get(self,request):
+#         appliedInfo =
 
 
+# def create(self, request, *args, **kwargs):
+#     response = models.OnlineTestResponseModel.objects.create(user=self.request.user)
+#     data = models.UserJobAppliedModel.objects.get(jobPostId=response.appliedJob, userId=self.request.user)
+#     print(data)
+#     data.jobProgressStatus = 'under_review'
+#     print(data.jobProgressStatus)
+#     data.save()
+#     return response
 
-    # def create(self, request, *args, **kwargs):
-    #     response = models.OnlineTestResponseModel.objects.create(user=self.request.user)
-    #     data = models.UserJobAppliedModel.objects.get(jobPostId=response.appliedJob, userId=self.request.user)
-    #     print(data)
-    #     data.jobProgressStatus = 'under_review'
-    #     print(data.jobProgressStatus)
-    #     data.save()
-    #     return response
-
-
-    # def create(self, request, *args, **kwargs):
-    #     response = models.OnlineTestResponseModel.objects.create(user_id=self.request.user.id,)
+# def create(self, request, *args, **kwargs):
+#     response = models.OnlineTestResponseModel.objects.create(user_id=self.request.user.id,)
 
 
 class PracticalTestResponseView(generics.CreateAPIView):
@@ -169,5 +199,3 @@ class PracticalTestResponseView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
-
-

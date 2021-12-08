@@ -91,6 +91,7 @@ class UserJobAppliedModel(models.Model):
         ('document', 'document'),
         ('verification', 'verification'),
         ('appointed', 'appointed'),
+        ('rejected', 'rejected'),
 
     )
     jobPostId = models.ForeignKey(JobPostModel, on_delete=models.CASCADE, related_name='applied_job_post_id')
