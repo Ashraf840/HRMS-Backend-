@@ -119,20 +119,28 @@ class CandidateStatusChangeSerializer(serializers.ModelSerializer):
         model = models.UserJobAppliedModel
         fields = '__all__'
         extra_kwargs = {
-            # 'userId': {'read_only': True},
-            # 'jobProgressStatus': {'read_only': True}
+            'userId': {'read_only': True},
+            # 'jobProgressStatus': {'read_only': True},
+            'jobPostId': {'read_only': True}
         }
 
+
 class OnlineTestResponseSerializer(serializers.ModelSerializer):
-    # applied = AppliedForJobSerializer(read_only=True)
+    # applied = CandidateStatusChangeSerializer()
     # parent = serializers.PrimaryKeyRelatedField(queryset=models.UserJobAppliedModel.objects.all(),source='appliedJob')
     # print(parent)
+
+    # jobInfo = serializers.CharField(source='appliedJob.applied_job_post_id', read_only=True)
+    # print(jobInfo)
 
     class Meta:
         model = models.OnlineTestResponseModel
         fields = '__all__'
+        # exclude = ['appliedJob']
         extra_kwargs = {
             'user': {'read_only': True},
+            # 'appliedJob':{'read_only': True}
+
         }
 
 
@@ -152,6 +160,3 @@ class PracticalTestResponseSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'user': {'read_only': True},
         }
-
-
-

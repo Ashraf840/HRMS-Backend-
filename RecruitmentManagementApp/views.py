@@ -99,10 +99,6 @@ class JobDataFilterView(generics.ListAPIView):
     # queryset = models.JobPostModel.objects.all()
     serializer_class = serializer.JobPostSerializer
 
-    # filter_backends = [DjangoFilterBackend]
-    # filter_fields = ['jobTitle', 'department']
-    # search_fields = ['$jobTitle', '$department']
-
     def get_queryset(self):
         queryset = models.JobPostModel.objects.all()
         # print(queryset)
@@ -133,15 +129,6 @@ class JobPostOnlineView(generics.ListCreateAPIView):
     queryset = models.OnlineTestModel.objects.all()
 
 
-class OnlineTestResponseView(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
-    serializer_class = serializer.OnlineTestResponseSerializer
-    queryset = models.OnlineTestResponseModel.objects.all()
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
-
 class UpdateCandidateStatusView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated, IsHrUser]
     serializer_class = serializer.CandidateStatusChangeSerializer
@@ -149,27 +136,39 @@ class UpdateCandidateStatusView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         id = self.kwargs['id']
-        data = models.UserJobAppliedModel.objects.get(id=id)
+        # data = models.UserJobAppliedModel.objects.get(id=id)
+        # if not data.jobProgressStatus == 'rejected':
+        #     if data.jobProgressStatus == 'new':
+        #         data.jobProgressStatus = 'online'
+        #     elif data.jobProgressStatus == 'online':
+        #         data.jobProgressStatus = 'under_review'
+        #     elif data.jobProgressStatus == 'under_review':
+        #         data.jobProgressStatus = 'selected_for_practical'
+        #     elif data.jobProgressStatus == 'selected_for_practical':
+        #         data.jobProgressStatus = 'test_under_review'
+        #     elif data.jobProgressStatus == 'test_under_review':
+        #         data.jobProgressStatus = 'interview'
+        #     elif data.jobProgressStatus == 'interview':
+        #         data.jobProgressStatus = 'document'
+        #     elif data.jobProgressStatus == 'document':
+        #         data.jobProgressStatus = 'verification'
+        #     elif data.jobProgressStatus == 'verification':
+        #         data.jobProgressStatus = 'appointed'
+        #
+        #     else:
+        #         data.jobProgressStatus = 'appointed'
+        #
+        #     data.save()
+        return models.UserJobAppliedModel.objects.filter(id=id)
 
-        if data.jobProgressStatus == 'new':
-            data.jobProgressStatus = 'online'
-        elif data.jobProgressStatus == 'online':
-            data.jobProgressStatus = 'under_review'
 
-        elif data.jobProgressStatus == 'under_review':
-            data.jobProgressStatus = 'interview'
+class OnlineTestResponseView(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializer.OnlineTestResponseSerializer
+    queryset = models.OnlineTestResponseModel.objects.all()
 
-        elif data.jobProgressStatus == 'interview':
-            data.jobProgressStatus = 'document'
-
-        elif data.jobProgressStatus == 'document':
-            data.jobProgressStatus = 'verification'
-
-        elif data.jobProgressStatus == 'verification':
-            data.jobProgressStatus = 'appointed'
-        else:
-            data.jobProgressStatus = 'rejected'
-        return data
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 # class OnlineTestResponseView(views.APIView):

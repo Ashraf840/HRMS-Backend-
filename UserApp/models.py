@@ -175,7 +175,8 @@ class UserTrainingExperienceModel(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='training_info_user')
     vendorName = models.CharField(max_length=255)
     topicName = models.CharField(max_length=255)
-    duration = models.IntegerField()
+    startDate = models.IntegerField()
+    completeDate = models.IntegerField()
 
     class Meta:
         verbose_name_plural = 'Training Information'
@@ -211,11 +212,11 @@ class JobPreferenceModel(models.Model):
         return f'{self.user}'
 
 
-# LogOut -> BlackList API
-class BlackListedToken(models.Model):
-    token = models.CharField(max_length=500)
-    user = models.ForeignKey(User, related_name="token_user", on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        unique_together = ("token", "user")
+# # LogOut -> BlackList API
+# class BlackListedToken(models.Model):
+#     token = models.CharField(max_length=500)
+#     user = models.ForeignKey(User, related_name="token_user", on_delete=models.CASCADE)
+#     timestamp = models.DateTimeField(auto_now=True)
+#
+#     class Meta:
+#         unique_together = ("token", "user")

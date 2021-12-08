@@ -86,12 +86,12 @@ class UserJobAppliedModel(models.Model):
         ('online', 'online'),
         ('under_review', 'under_review'),
         ('selected_for_practical', 'selected_for_practical'),
-        ('under_review', 'under_review'),
+        ('test_under_review', 'test_under_review'),
         ('interview', 'interview'),
         ('document', 'document'),
         ('verification', 'verification'),
         ('appointed', 'appointed'),
-        ('rejected', 'rejected'),
+        ('rejected', 'rejected')
 
     )
     jobPostId = models.ForeignKey(JobPostModel, on_delete=models.CASCADE, related_name='applied_job_post_id')
@@ -110,7 +110,7 @@ class OnlineTestResponseModel(models.Model):
     practicalTestScnSrt = models.ImageField(upload_to='online_test/practical_test/', blank=True,
                                             verbose_name='Screenshot')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='online_response_user')
-    appliedJob = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE, related_name='job_applied_online_response')
+    appliedJob = models.OneToOneField(UserJobAppliedModel, on_delete=models.CASCADE, related_name='job_applied_online_response')
 
     def __str__(self):
         return f'{self.analyticalTestMark}, {self.practicalTestMark}'
