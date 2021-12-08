@@ -41,7 +41,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     phone_number = models.CharField(max_length=30, blank=True)
     nid = models.IntegerField(null=True)
     nationality = models.CharField(max_length=50, null=True, blank=True)
-    location = models.CharField(max_length=50, blank=True)
+    location = models.CharField(max_length=50,blank=True)
 
     birthDate = models.DateField(verbose_name='Date of Birth', blank=True, null=True)
     date_joined = models.DateTimeField(verbose_name='Joined Date', auto_now_add=True)
