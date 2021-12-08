@@ -116,7 +116,12 @@ class AppliedForJobSerializer(serializers.ModelSerializer):
 
 class OnlineTestResponseSerializer(serializers.ModelSerializer):
     # applied = AppliedForJobSerializer()
-    # parent = serializers.PrimaryKeyRelatedField(queryset=models.UserJobAppliedModel.objects.all(),source='appliedJob',write_only=True)
+    # parent = serializers.PrimaryKeyRelatedField(
+    #     queryset=models.UserJobAppliedModel.objects.all(),
+    #     source='appliedJob',
+    #     read_only=True
+    # )
+    # print(parent)
 
     class Meta:
         model = models.OnlineTestResponseModel
@@ -124,6 +129,7 @@ class OnlineTestResponseSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'user': {'read_only': True},
         }
+
 
     # def create(self, validated_data):
     #
@@ -141,4 +147,3 @@ class PracticalTestResponseSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'user': {'read_only': True},
         }
-
