@@ -5,6 +5,7 @@ it may conflict
 import jwt
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
+from django.http.response import HttpResponseRedirect
 from django.urls import reverse
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -95,11 +96,16 @@ class VerifyEmailView(views.APIView):
             # print('token2')
             user = models.User.objects.get(id=payload['user_id'])
             # print(email=payload['email'])
+            redirect_url = 'http://localhost:3000/login'
             if user.is_active:
                 if not user.email_validated:
                     user.email_validated = True
                     user.save()
-                    return Response({'email': 'Successfully activated'}, status=status.HTTP_200_OK)
+                    # return Response({'email': 'Successfully activated'}, status=status.HTTP_200_OK)
+                    return HttpResponseRedirect(redirect_to=redirect_url)
+                else:
+                    return HttpResponseRedirect(redirect_to=redirect_url)
+
             else:
                 return Response({'email': 'Activation failed'}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
         except jwt.ExpiredSignatureError as identifier:
