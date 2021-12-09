@@ -15,6 +15,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from . import models
+from RecruitmentManagementApp.models import UserJobAppliedModel
 from . import serializer
 from .permissions import EditPermission, IsAuthor, IsCandidateUser
 from .utils import Util
@@ -299,3 +300,96 @@ class UpdateTrainingExperienceView(generics.RetrieveUpdateDestroyAPIView):
 class SkillsView(generics.CreateAPIView):
     serializer_class = serializer.SkillsSerializer
     queryset = models.SkillsModel.objects.all()
+
+
+"""
+Document submission section during -> DocumentSubmissionView
+User will upload during recruitment process -> ReferenceInformationView
+
+"""
+
+
+class DocumentSubmissionView(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializer.DocumentationSubmissionSerializer
+    queryset = models.DocumentSubmissionModel.objects.all()
+
+    def perform_create(self, serializer):
+        return serializer.save(user=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        job_id = self.kwargs['job_id']
+
+        try:
+            data = UserJobAppliedModel.objects.get(userId=self.request.user, id=job_id)
+            if data.jobProgressStatus == 'document':
+                try:
+                    checkRedundancy = models.DocumentSubmissionModel.objects.filter(user=self.request.user)
+                    # print(checkRedundancy)
+                    data.jobProgressStatus == 'reference'
+                    return Response({'detail': 'Your data has been updated already.'},
+                                    status=status.HTTP_400_BAD_REQUEST)
+                except:
+                    serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))
+                    # print(serializer)
+                    serializer.is_valid(raise_exception=True)
+                    self.perform_create(serializer)
+                    headers = self.get_success_headers(serializer.data)
+                    data.jobProgressStatus = 'reference'
+                    data.save()
+                    return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+            else:
+                pass
+                # more validation will be a plus.
+
+
+        except:
+            return Response({'detail': 'You are not selected to proceed.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))
+        # # print(serializer)
+        # serializer.is_valid(raise_exception=True)
+        # self.perform_create(serializer)
+        # headers = self.get_success_headers(serializer.data)
+
+
+class DocumentSubmissionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.IsAuthenticated, IsAuthor]
+    serializer_class = serializer.DocumentationSubmissionSerializer
+    # queryset = models.DocumentSubmissionModel.objects.all()
+    lookup_field = 'id'
+
+    # def perform_create(self, serializer):
+    #     return serializer.save(user=self.request.user)
+
+    def get_queryset(self):
+        id = self.kwargs['id']
+        return models.DocumentSubmissionModel.objects.filter(id=id, user_id=self.request.user.id)
+
+
+class ReferenceInformationView(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializer.ReferenceInformationSerializer
+    queryset = models.ReferenceInformationModel.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        job_id = self.kwargs['job_id']
+        try:
+            data = UserJobAppliedModel.objects.get(userId=self.request.user, id=job_id)
+            if data.jobProgressStatus == 'reference':
+                serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))
+                # print(serializer)
+                serializer.is_valid(raise_exception=True)
+                self.perform_create(serializer)
+                headers = self.get_success_headers(serializer.data)
+                data.jobProgressStatus = 'verification'
+                data.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+            else:
+                return Response({'detail': 'Not selected for Documentation'},
+                                status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+        except:
+            return Response({'detail': 'No Data found'}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)

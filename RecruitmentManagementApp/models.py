@@ -66,7 +66,7 @@ class OnlineTestModel(models.Model):
 class PracticalTestModel(models.Model):
     practicalQuestion = models.FileField(verbose_name='Practical Question', upload_to='users/files')
     jobInfo = models.OneToOneField(JobPostModel, on_delete=models.CASCADE, related_name='practical_job_info')
-    user = models.ForeignKey(User,on_delete=models.CASCADE,related_name='practical_user_info')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='practical_user_info')
 
     def __str__(self):
         return f'{self.jobInfo}'
@@ -89,6 +89,7 @@ class UserJobAppliedModel(models.Model):
         ('test_under_review', 'test_under_review'),
         ('interview', 'interview'),
         ('document', 'document'),
+        ('reference', 'reference'),
         ('verification', 'verification'),
         ('appointed', 'appointed'),
         ('rejected', 'rejected')
@@ -97,9 +98,10 @@ class UserJobAppliedModel(models.Model):
     jobPostId = models.ForeignKey(JobPostModel, on_delete=models.CASCADE, related_name='applied_job_post_id')
     userId = models.ForeignKey(User, on_delete=models.CASCADE, related_name='applied_user')
     jobProgressStatus = models.CharField(max_length=30, choices=status, blank=True)
+    appliedTime = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.jobPostId}, {self.userId}'
+        return f'{self.id} {self.jobPostId}, {self.userId}'
 
 
 class OnlineTestResponseModel(models.Model):
@@ -110,7 +112,9 @@ class OnlineTestResponseModel(models.Model):
     practicalTestScnSrt = models.ImageField(upload_to='online_test/practical_test/', blank=True,
                                             verbose_name='Screenshot')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='online_response_user')
-    appliedJob = models.OneToOneField(UserJobAppliedModel, on_delete=models.CASCADE, related_name='job_applied_online_response')
+    appliedJob = models.OneToOneField(UserJobAppliedModel, on_delete=models.CASCADE,
+                                      related_name='job_applied_online_response')
+    submittedTime = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f'{self.analyticalTestMark}, {self.practicalTestMark}'
@@ -120,10 +124,9 @@ class PracticalTestResponseModel(models.Model):
     practicalTestResFiles = models.FileField(upload_to='practical_test/response/', blank=True)
     practicalTestResLink = models.URLField(blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='practical_response_user')
-    appliedJob = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE, related_name='job_applied_practical_response')
+    appliedJob = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE,
+                                   related_name='job_applied_practical_response')
+    submittedTime = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f'{self.practicalTestResLink}   {self.practicalTestResFiles}'
-
-# class DocumentSubmissionModel(models.Model):
-#

@@ -11,7 +11,8 @@ from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
     CustomTokenObtainPairView, UpdateAcademicInfoView, AddAcademicInfoView, \
     AddWorkExperienceView, UpdateWorkExpInfoView, AddCertificationsView, UpdateCertificationsView, \
     AddTrainingExperienceView, UpdateUserInfoView, UpdateTrainingExperienceView, VerifyEmailView, SkillsView, \
-    AcademicInfoListView, WorkInfoListView, CertificationInfoListView, TrainingInfoListView
+    AcademicInfoListView, WorkInfoListView, CertificationInfoListView, TrainingInfoListView,DocumentSubmissionView,\
+    DocumentSubmissionUpdateDeleteView,ReferenceInformationView
 
 
 app_name = 'tfhrm_api'
@@ -67,5 +68,8 @@ urlpatterns = [
     # path('online_test_res/', OnlineTestResponseView, name='online_test_response'),
     path('practical_test_res/', PracticalTestResponseView.as_view(), name='practical_test_response'),
     path('update_status/<id>/', UpdateCandidateStatusView.as_view(), name='update_status'),
+    path('documents_submit/<job_id>/', DocumentSubmissionView.as_view(), name='document_submission_add'),
+    path('documents/<id>/', DocumentSubmissionUpdateDeleteView.as_view(), name='document_submission_update_delete'),
+    path('references/<job_id>/', ReferenceInformationView.as_view(), name='references_information_add'),
 
 ]

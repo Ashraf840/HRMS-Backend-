@@ -74,7 +74,7 @@ class JobListView(generics.ListAPIView):
 
 
 class FilterQuestionResponseView(generics.CreateAPIView):
-    # permission_classes = [permissions.IsAuthenticated, IsCandidateUser]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.FilterQuestionResponseSerializer
     queryset = models.FilterQuestionsResponseModelHR.objects.all()
 
