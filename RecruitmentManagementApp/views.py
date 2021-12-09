@@ -171,24 +171,7 @@ class OnlineTestResponseView(generics.CreateAPIView):
         serializer.save(user=self.request.user)
 
 
-# class OnlineTestResponseView(views.APIView):
-#     serializer_class = serializer.OnlineTestResponseSerializer
-#
-#     def get(self,request):
-#         appliedInfo =
 
-
-# def create(self, request, *args, **kwargs):
-#     response = models.OnlineTestResponseModel.objects.create(user=self.request.user)
-#     data = models.UserJobAppliedModel.objects.get(jobPostId=response.appliedJob, userId=self.request.user)
-#     print(data)
-#     data.jobProgressStatus = 'under_review'
-#     print(data.jobProgressStatus)
-#     data.save()
-#     return response
-
-# def create(self, request, *args, **kwargs):
-#     response = models.OnlineTestResponseModel.objects.create(user_id=self.request.user.id,)
 
 
 class PracticalTestResponseView(generics.CreateAPIView):

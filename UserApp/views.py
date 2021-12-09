@@ -394,3 +394,14 @@ class ReferenceInformationView(generics.CreateAPIView):
                                 status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
         except:
             return Response({'detail': 'No Data found'}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+
+
+class ReferenceInformationUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.IsAuthenticated,IsAuthor]
+    serializer_class = serializer.ReferenceInformationSerializer
+
+    lookup_field = 'id'
+
+    def get_queryset(self):
+        id = self.kwargs['id']
+        return models.ReferenceInformationModel.objects.filter(id=id, user_id=self.request.user.id)
