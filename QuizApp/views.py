@@ -38,8 +38,13 @@ Filter questions Sections
 
 class FilterQuestionView(generics.ListCreateAPIView):
     serializer_class = serializer.FilterQuestionSerializer
-    queryset = models.JobApplyFilterQuestionModel.objects.all()
-
+    # queryset = models.JobApplyFilterQuestionModel.objects.all()
+    def get_queryset(self):
+        try:
+            id = self.kwargs['dep_id']
+            return models.JobApplyFilterQuestionModel.objects.filter(department=id)
+        except:
+            return models.JobApplyFilterQuestionModel.objects.all()
 
 # class FilterQuestionResponseView(generics.CreateAPIView):
 #     serializer_class = serializer.FilterQuestionResponseSerializer

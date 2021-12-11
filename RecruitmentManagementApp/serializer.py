@@ -160,4 +160,5 @@ class PracticalTestResponseSerializer(serializers.ModelSerializer):
         fields = '__all__'
         extra_kwargs = {
             'user': {'read_only': True},
+            'appliedJob': {'read_only': True},
         }

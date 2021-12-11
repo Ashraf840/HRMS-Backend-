@@ -222,3 +222,4 @@ class PracticalTestResponseView(generics.CreateAPIView):
         except:
             return Response({'detail': 'No Data found'}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
+
