@@ -64,7 +64,8 @@ class OnlineTestModel(models.Model):
 
 
 class PracticalTestModel(models.Model):
-    practicalQuestion = models.FileField(verbose_name='Practical Question', upload_to='users/files')
+    practicalFile = models.FileField(verbose_name='Practical Test File', upload_to='users/files')
+    testLink = models.URLField(verbose_name='Test link',blank=True)
     jobInfo = models.OneToOneField(JobPostModel, on_delete=models.CASCADE, related_name='practical_job_info')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='practical_user_info')
 
@@ -85,7 +86,7 @@ class UserJobAppliedModel(models.Model):
         ('new', 'new'),
         ('online', 'online'),
         ('under_review', 'under_review'),
-        ('selected_for_practical', 'selected_for_practical'),
+        ('practical', 'practical'),
         ('test_under_review', 'test_under_review'),
         ('interview', 'interview'),
         ('document', 'document'),

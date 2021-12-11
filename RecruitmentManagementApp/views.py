@@ -167,17 +167,58 @@ class OnlineTestResponseView(generics.CreateAPIView):
     serializer_class = serializer.OnlineTestResponseSerializer
     queryset = models.OnlineTestResponseModel.objects.all()
 
+    #
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        serializer.save(user=self.request.user,
+                        appliedJob=models.UserJobAppliedModel.objects.get(id=self.kwargs['job_id']))
+        # id = self.kwargs['job_id']
+        # serializer.save(appliedJob=models.UserJobAppliedModel.objects.get(id = id))
 
+    def create(self, request, *args, **kwargs):
+        job_id = self.kwargs['job_id']
+        try:
+            appliedJobData = models.UserJobAppliedModel.objects.get(userId=self.request.user, id=job_id)
+            # print(appliedJobData)
+            if appliedJobData.jobProgressStatus == 'online':
+                serializer = self.get_serializer(data=request.data)
+                print(serializer)
+                serializer.is_valid(raise_exception=True)
+                self.perform_create(serializer)
 
-
+                headers = self.get_success_headers(serializer.data)
+                appliedJobData.jobProgressStatus = 'under_review'
+                appliedJobData.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+            else:
+                return Response({'detail': 'You can not attend this test.'}, status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response({'detail': 'No Data found'}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
 
 class PracticalTestResponseView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.PracticalTestResponseSerializer
-    queryset = models.PracticalTestModel.objects.all()
+    queryset = models.PracticalTestResponseModel.objects.all()
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        serializer.save(user=self.request.user,
+                        appliedJob=models.UserJobAppliedModel.objects.get(id=self.kwargs['job_id']))
+
+    def create(self, request, *args, **kwargs):
+        job_id = self.kwargs['job_id']
+        try:
+            data = models.UserJobAppliedModel.objects.get(userId=self.request.user, id=job_id)
+            if data.jobProgressStatus == 'practical':
+                serializer = self.get_serializer(data=request.data)
+                if serializer.is_valid():
+                    self.perform_create(serializer)
+                    headers = self.get_success_headers(serializer.data)
+                    data.jobProgressStatus = 'test_under_review'
+                    data.save()
+
+                    return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+            else:
+                return Response({'detail': 'You can not attend this test.'}, status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response({'detail': 'No Data found'}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+

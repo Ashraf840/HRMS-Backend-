@@ -64,9 +64,9 @@ urlpatterns = [
     path('filter_question_res_list/', FilterQuestionResponseListView.as_view(), name='filter_questions_response_list'),
 
     # Online and practical Test Response model
-    path('online_test_res/', OnlineTestResponseView.as_view(), name='online_test_response'),
+    path('online_test_res/<job_id>/', OnlineTestResponseView.as_view(), name='online_test_response'),
     # path('online_test_res/', OnlineTestResponseView, name='online_test_response'),
-    path('practical_test_res/', PracticalTestResponseView.as_view(), name='practical_test_response'),
+    path('practical_test_res/<job_id>/', PracticalTestResponseView.as_view(), name='practical_test_response'),
     path('update_status/<id>/', UpdateCandidateStatusView.as_view(), name='update_status'),
     path('documents_submit/<job_id>/', DocumentSubmissionView.as_view(), name='document_submission_add'),
     path('documents/<id>/', DocumentSubmissionUpdateDeleteView.as_view(), name='document_submission_update_delete'),

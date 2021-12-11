@@ -139,7 +139,8 @@ class OnlineTestResponseSerializer(serializers.ModelSerializer):
         # exclude = ['appliedJob']
         extra_kwargs = {
             'user': {'read_only': True},
-            # 'appliedJob':{'read_only': True}
+            'appliedJob': {'read_only': True},
+
 
         }
 
