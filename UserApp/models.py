@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
-
+from django_resized import ResizedImageField
 
 # Create your models here.
 
@@ -37,7 +37,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=100, verbose_name='Email', unique=True, blank=False)
     full_name = models.CharField(verbose_name='Full Name', max_length=100)
 
-    profile_pic = models.ImageField(upload_to='users/', default='users/default.png')
+    # profile_pic = models.ImageField(upload_to='users/', default='users/default.png')
+    profile_pic = ResizedImageField(upload_to='users/', blank=False, help_text='Size Recommended: 512x512', size=[512, 512], quality=100)
     phone_number = models.CharField(max_length=30, blank=True)
     nid = models.IntegerField(null=True)
     nationality = models.CharField(max_length=50, null=True, blank=True)
@@ -77,6 +78,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['full_name', ]
 
     objects = UserManager()
+
 
     def __str__(self):
         return f'{self.id}'

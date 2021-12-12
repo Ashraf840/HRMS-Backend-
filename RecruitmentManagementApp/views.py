@@ -70,7 +70,13 @@ class JobListView(generics.ListAPIView):
 #     #     u_id = self.kwargs['u_id']
 #     #     id = self.kwargs['id']
 #     #     return models.UserJobAppliedModel.objects.all()
-
+"""
+Filter question response,
+Filter question response List ,
+Job searching,
+Online test response,
+practical test response
+"""
 
 class FilterQuestionResponseView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]

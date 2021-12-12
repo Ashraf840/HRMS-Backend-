@@ -5,15 +5,14 @@ from QuizApp.views import QuestionAnswerSetView, SubmittedAnswerView, SubmittedA
 # importing Views from RecruitmentManagementApp views
 from RecruitmentManagementApp.views import AllUserDetailView, JobPostView, AppliedForJobView, AppliedJobListView, \
     JobDescriptionView, JobListView, FilterQuestionResponseListView, FilterQuestionResponseView, JobDataFilterView, \
-    PracticalTestView, JobPostOnlineView, OnlineTestResponseView,PracticalTestResponseView,UpdateCandidateStatusView
+    PracticalTestView, JobPostOnlineView, OnlineTestResponseView, PracticalTestResponseView, UpdateCandidateStatusView
 # importing Views from UserApp views
 from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
     CustomTokenObtainPairView, UpdateAcademicInfoView, AddAcademicInfoView, \
     AddWorkExperienceView, UpdateWorkExpInfoView, AddCertificationsView, UpdateCertificationsView, \
     AddTrainingExperienceView, UpdateUserInfoView, UpdateTrainingExperienceView, VerifyEmailView, SkillsView, \
-    AcademicInfoListView, WorkInfoListView, CertificationInfoListView, TrainingInfoListView,DocumentSubmissionView,\
-    DocumentSubmissionUpdateDeleteView,ReferenceInformationView,ReferenceInformationUpdateDeleteView
-
+    AcademicInfoListView, WorkInfoListView, CertificationInfoListView, TrainingInfoListView, DocumentSubmissionView, \
+    DocumentSubmissionUpdateDeleteView, ReferenceInformationView, ReferenceInformationUpdateDeleteView
 
 app_name = 'tfhrm_api'
 
@@ -66,12 +65,16 @@ urlpatterns = [
 
     # Online and practical Test Response model
     path('online_test_res/<job_id>/', OnlineTestResponseView.as_view(), name='online_test_response'),
+
+    # change user current status
+    path('update_status/<id>/', UpdateCandidateStatusView.as_view(), name='update_status'),
     # path('online_test_res/', OnlineTestResponseView, name='online_test_response'),
     path('practical_test_res/<job_id>/', PracticalTestResponseView.as_view(), name='practical_test_response'),
-    path('update_status/<id>/', UpdateCandidateStatusView.as_view(), name='update_status'),
+
     path('documents_submit/<job_id>/', DocumentSubmissionView.as_view(), name='document_submission_add'),
     path('documents/<id>/', DocumentSubmissionUpdateDeleteView.as_view(), name='document_submission_update_delete'),
     path('references_submit/<job_id>/', ReferenceInformationView.as_view(), name='references_information_add'),
-    path('references/<id>/', ReferenceInformationUpdateDeleteView.as_view(), name='references_information_update_delete'),
+    path('references/<id>/', ReferenceInformationUpdateDeleteView.as_view(),
+         name='references_information_update_delete'),
 
 ]
