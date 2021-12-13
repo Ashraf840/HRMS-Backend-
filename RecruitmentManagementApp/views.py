@@ -26,16 +26,6 @@ class JobPostView(generics.CreateAPIView):
         serializer.save(user=self.request.user)
 
 
-# if User is Authenticated and IsCandidate then User can only apply
-class AppliedForJobView(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
-    serializer_class = serializer.AppliedForJobSerializer
-    queryset = models.UserJobAppliedModel.objects.all()
-
-    def perform_create(self, serializer):
-        serializer.save(userId=self.request.user, jobProgressStatus='new')
-
-
 class JobDescriptionView(generics.RetrieveAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.JobPostSerializer
@@ -44,6 +34,16 @@ class JobDescriptionView(generics.RetrieveAPIView):
     def get_queryset(self):
         id = self.kwargs['id']
         return models.JobPostModel.objects.filter(id=id)
+
+
+# if User is Authenticated and IsCandidate then User can only apply
+class AppliedForJobView(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializer.AppliedForJobSerializer
+    queryset = models.UserJobAppliedModel.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save(userId=self.request.user, jobProgressStatus=models.JobStatusModel.objects.get(status='new'))
 
 
 # GET data from Database
@@ -59,6 +59,25 @@ class JobListView(generics.ListAPIView):
     permission_classes = []
     serializer_class = serializer.JobPostSerializer
     queryset = models.JobPostModel.objects.all()
+
+
+# Job searching Functionality
+class JobDataFilterView(generics.ListAPIView):
+    # queryset = models.JobPostModel.objects.all()
+    serializer_class = serializer.JobPostSerializer
+
+    def get_queryset(self):
+        queryset = models.JobPostModel.objects.all()
+        search = self.request.query_params.get('search')
+        # dep = self.request.query_params.get('department')
+        # print(search)
+        # print(dep)
+        return queryset.filter(
+            Q(jobTitle__icontains=search) |
+            Q(department__department__icontains=search) |
+            Q(level__icontains=search) |
+            Q(jobType__icontains=search)
+        )
 
 
 # class AppliedJobUpdateView(generics.RetrieveUpdateDestroyAPIView):
@@ -77,6 +96,7 @@ Job searching,
 Online test response,
 practical test response
 """
+
 
 class FilterQuestionResponseView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -98,25 +118,6 @@ class FilterQuestionResponseListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.FilterQuestionResponseSerializer
     queryset = models.FilterQuestionsResponseModelHR.objects.all()
-
-
-class JobDataFilterView(generics.ListAPIView):
-    # queryset = models.JobPostModel.objects.all()
-    serializer_class = serializer.JobPostSerializer
-
-    def get_queryset(self):
-        queryset = models.JobPostModel.objects.all()
-        # print(queryset)
-        search = self.request.query_params.get('search')
-        # dep = self.request.query_params.get('department')
-        # print(search)
-        # print(dep)
-        return queryset.filter(
-            Q(jobTitle__icontains=search) |
-            Q(department__department__icontains=search) |
-            Q(level__icontains=search) |
-            Q(jobType__icontains=search)
-        )
 
 
 class PracticalTestView(generics.ListCreateAPIView):
@@ -189,16 +190,16 @@ class OnlineTestResponseView(generics.CreateAPIView):
                 if check_redundancy is not None:
                     return Response({'detail': 'You have already taken the test.'}, status=status.HTTP_400_BAD_REQUEST)
             except:
+                print('except')
                 appliedJobData = models.UserJobAppliedModel.objects.get(userId=self.request.user, id=job_id)
-                # print(appliedJobData)
-                if appliedJobData.jobProgressStatus == 'online':
+                # print(appliedJobData.jobProgressStatus.status == 'online')
+                if appliedJobData.jobProgressStatus.status == 'online':
                     serializer = self.get_serializer(data=request.data)
                     # print(serializer)
                     serializer.is_valid(raise_exception=True)
                     self.perform_create(serializer)
-
                     headers = self.get_success_headers(serializer.data)
-                    appliedJobData.jobProgressStatus = 'under_review'
+                    appliedJobData.jobProgressStatus = models.JobStatusModel.objects.get(status='practical')
                     appliedJobData.save()
                     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
                 else:
@@ -226,13 +227,14 @@ class PracticalTestResponseView(generics.CreateAPIView):
                     return Response({'detail': 'You have already taken the test.'}, status=status.HTTP_400_BAD_REQUEST)
             except:
                 data = models.UserJobAppliedModel.objects.get(userId=self.request.user, id=job_id)
-                if data.jobProgressStatus == 'practical':
+                if data.jobProgressStatus.status == 'practical':
                     serializer = self.get_serializer(data=request.data)
                     if serializer.is_valid():
                         self.perform_create(serializer)
                         headers = self.get_success_headers(serializer.data)
-                        data.jobProgressStatus = 'test_under_review'
+                        data.jobProgressStatus = models.JobStatusModel.objects.get(status='document')
                         data.save()
+
 
                         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
                 else:

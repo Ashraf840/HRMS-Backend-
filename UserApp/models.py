@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django_resized import ResizedImageField
 
+
 # Create your models here.
 
 class UserManager(BaseUserManager):
@@ -38,7 +39,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     full_name = models.CharField(verbose_name='Full Name', max_length=100)
 
     # profile_pic = models.ImageField(upload_to='users/', default='users/default.png')
-    profile_pic = ResizedImageField(upload_to='users/', blank=False, help_text='Size Recommended: 512x512', size=[512, 512], quality=100)
+    profile_pic = ResizedImageField(upload_to='users/', blank=False, help_text='Size Recommended: 512x512',
+                                    size=[512, 512], quality=100, force_format='JPEG')
     phone_number = models.CharField(max_length=30, blank=True)
     nid = models.IntegerField(null=True)
     nationality = models.CharField(max_length=50, null=True, blank=True)
@@ -78,7 +80,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['full_name', ]
 
     objects = UserManager()
-
 
     def __str__(self):
         return f'{self.id}'
@@ -220,7 +221,7 @@ def image_file_name(instance, filename):
 
 
 def content_file_name(instance, filename):
-    return '/'.join(['document', instance.user.full_name+'-id_'+str(instance.user.id), filename])
+    return '/'.join(['document', instance.user.full_name + '-id_' + str(instance.user.id), filename])
 
 
 class DocumentSubmissionModel(models.Model):
@@ -235,17 +236,17 @@ class DocumentSubmissionModel(models.Model):
     def __str__(self):
         return f'pk:{self.id} id:{self.user.id},name: {self.user.full_name} Documents'
 
+
 class ReferenceInformationModel(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE,related_name='reference_information_user')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reference_information_user')
     name = models.CharField(max_length=100)
     phoneNumber = models.IntegerField()
     relationWithReferer = models.CharField(max_length=100)
     email = models.EmailField(max_length=100)
-    attachedFile = models.FileField(upload_to=content_file_name,blank=True,null=True)
+    attachedFile = models.FileField(upload_to=content_file_name, blank=True, null=True)
 
     def __str__(self):
         return f'pk: {self.pk} reference: {self.name}'
-
 
 # # LogOut -> BlackList API
 # class BlackListedToken(models.Model):

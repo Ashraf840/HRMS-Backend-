@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'RecruitmentManagementApp',
     'TFHRM_API_App',
     'QuizApp',
+    'AdminOperationApp'
 
 ]
 

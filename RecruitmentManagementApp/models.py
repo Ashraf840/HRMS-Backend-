@@ -65,7 +65,7 @@ class OnlineTestModel(models.Model):
 
 class PracticalTestModel(models.Model):
     practicalFile = models.FileField(verbose_name='Practical Test File', upload_to='users/files')
-    testLink = models.URLField(verbose_name='Test link',blank=True)
+    testLink = models.URLField(verbose_name='Test link', blank=True)
     jobInfo = models.OneToOneField(JobPostModel, on_delete=models.CASCADE, related_name='practical_job_info')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='practical_user_info')
 
@@ -81,24 +81,36 @@ practical test response
 """
 
 
-class UserJobAppliedModel(models.Model):
-    status = (
-        ('new', 'new'),
-        ('online', 'online'),
-        ('under_review', 'under_review'),
-        ('practical', 'practical'),
-        ('test_under_review', 'test_under_review'),
-        ('interview', 'interview'),
-        ('document', 'document'),
-        ('reference', 'reference'),
-        ('verification', 'verification'),
-        ('appointed', 'appointed'),
-        ('rejected', 'rejected')
+class JobStatusModel(models.Model):
+    status = models.CharField(max_length=50, blank=False, null=False)
 
-    )
-    jobPostId = models.ForeignKey(JobPostModel, on_delete=models.CASCADE, related_name='applied_job_post_id')
+    def __str__(self):
+        return self.status
+
+
+#     order= models.T
+
+# status = (
+#         ('new', 'new'),
+#         ('online', 'online'),
+#         ('under_review', 'under_review'),
+#         ('practical', 'practical'),
+#         ('test_under_review', 'test_under_review'),
+#         ('interview', 'interview'),
+#         ('document', 'document'),
+#         ('reference', 'reference'),
+#         ('verification', 'verification'),
+#         ('appointed', 'appointed'),
+#         ('rejected', 'rejected')
+#
+#     )
+
+class UserJobAppliedModel(models.Model):
     userId = models.ForeignKey(User, on_delete=models.CASCADE, related_name='applied_user')
-    jobProgressStatus = models.CharField(max_length=30, choices=status, blank=True)
+    jobPostId = models.ForeignKey(JobPostModel, on_delete=models.CASCADE, related_name='applied_job_post_id')
+    jobProgressStatus = models.ForeignKey(JobStatusModel, on_delete=models.CASCADE,
+                                          related_name='job_applied_progress_status')
+    # jobProgressStatus = models.CharField(max_length=30, choices=status, blank=True)
     appliedTime = models.DateTimeField(auto_now=True)
 
     def __str__(self):
