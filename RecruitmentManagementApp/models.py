@@ -83,6 +83,7 @@ practical test response
 
 class JobStatusModel(models.Model):
     status = models.CharField(max_length=50, blank=False, null=False)
+    statusOrder = models.TextField()
 
     def __str__(self):
         return self.status
@@ -111,7 +112,7 @@ class UserJobAppliedModel(models.Model):
     jobProgressStatus = models.ForeignKey(JobStatusModel, on_delete=models.CASCADE,
                                           related_name='job_applied_progress_status')
     # jobProgressStatus = models.CharField(max_length=30, choices=status, blank=True)
-    appliedTime = models.DateTimeField(auto_now=True)
+    appliedDate = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f'{self.id} {self.jobPostId}, {self.userId}'

@@ -48,10 +48,11 @@ class AppliedForJobView(generics.CreateAPIView):
 
 # GET data from Database
 # If user applied ,user will see his job placement
-class AppliedJobListView(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsHrUser]
-    serializer_class = serializer.AppliedForJobSerializer
-    queryset = models.UserJobAppliedModel.objects.all()
+
+# class AppliedJobListView(generics.ListAPIView):
+#     permission_classes = [permissions.IsAuthenticated, IsHrUser]
+#     serializer_class = serializer.AppliedForJobSerializer
+#     queryset = models.UserJobAppliedModel.objects.all()
 
 
 # authenticated user can see all job post

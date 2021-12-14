@@ -196,7 +196,7 @@ class UpdateAcademicInfoView(generics.RetrieveUpdateDestroyAPIView):
         id = self.kwargs['id']
         u_id = self.kwargs['user__id']
 
-        return models.UserAcademicInfoModel.objects.filter(user__id=u_id, id=id)
+        return models.UserAcademicInfoModel.objects.filter(user__id=self.request.user.id, id=id)
 
 
 # Work Experience CRUD Operations
@@ -228,7 +228,7 @@ class UpdateWorkExpInfoView(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         w_id = self.kwargs['id']
         u_id = self.kwargs['user__id']
-        return models.UserWorkingExperienceModel.objects.filter(user__id=u_id, id=w_id)
+        return models.UserWorkingExperienceModel.objects.filter(user__id=self.request.user.id, id=w_id)
 
 
 # Certification CRUD operations
@@ -261,7 +261,7 @@ class UpdateCertificationsView(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         c_id = self.kwargs['id']
         u_id = self.kwargs['user__id']
-        return models.UserCertificationsModel.objects.filter(user__id=u_id, id=c_id)
+        return models.UserCertificationsModel.objects.filter(user__id=self.request.user.id, id=c_id)
 
 
 # Training CRUD operations
@@ -294,7 +294,7 @@ class UpdateTrainingExperienceView(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         c_id = self.kwargs['id']
         u_id = self.kwargs['user__id']
-        return models.UserTrainingExperienceModel.objects.filter(user__id=u_id, id=c_id)
+        return models.UserTrainingExperienceModel.objects.filter(user__id=self.request.user.id, id=c_id)
 
 
 class SkillsView(generics.CreateAPIView):

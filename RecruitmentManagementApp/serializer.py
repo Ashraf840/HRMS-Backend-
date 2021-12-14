@@ -140,9 +140,8 @@ class OnlineTestResponseSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'user': {'read_only': True},
             'appliedJob': {'read_only': True},
-
-
         }
+
 
 
     # def create(self, validated_data):

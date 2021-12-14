@@ -76,11 +76,6 @@ class FilterQuestionSerializer(serializers.ModelSerializer):
         model = models.JobApplyFilterQuestionModel
         fields = '__all__'
 
-    def to_representation(self, instance):
-        rep = super().to_representation(instance)
-
-        rep['gender'] = FieldSerializer(instance).data
-        return rep
 
 # class FilterQuestionResponseSerializer(serializers.ModelSerializer):
 #     class Meta:
