@@ -43,7 +43,7 @@ class AppliedForJobView(generics.CreateAPIView):
     queryset = models.UserJobAppliedModel.objects.all()
 
     def perform_create(self, serializer):
-        serializer.save(userId=self.request.user)
+        serializer.save(userId=self.request.user, jobProgressStatus=models.JobStatusModel.objects.get(status='new'))
 
 
 # GET data from Database

@@ -83,7 +83,7 @@ practical test response
 
 class JobStatusModel(models.Model):
     status = models.CharField(max_length=50, blank=False, null=False)
-    statusOrder = models.TextField()
+    # statusOrder = models.TextField()
 
     def __str__(self):
         return self.status
