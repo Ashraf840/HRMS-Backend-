@@ -31,6 +31,7 @@ class JobPostSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'user': {'read_only': True}
         }
+        depth = 2
 
 
 class OnlineTestSerializer(serializers.ModelSerializer):
@@ -93,7 +94,6 @@ class FilterQuestionResponseSerializer(serializers.ModelSerializer):
 
         extra_kwargs = {
             'user': {'read_only': True},
-
         }
 
 
@@ -141,8 +141,6 @@ class OnlineTestResponseSerializer(serializers.ModelSerializer):
             'user': {'read_only': True},
             'appliedJob': {'read_only': True},
         }
-
-
 
     # def create(self, validated_data):
     #

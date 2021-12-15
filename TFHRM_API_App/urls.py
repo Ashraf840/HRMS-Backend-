@@ -44,18 +44,18 @@ urlpatterns = [
 
     # Hr operations
     path('add_skills/', SkillsView.as_view(), name="add_new_skills"),
-    path('job_post/', JobPostView.as_view(), name='job_post_hr'),
+    # path('job_post/', JobPostView.as_view(), name='job_post_hr'),
 
     # for Candidate to Apply for Jobs
-    path('applied_job/', AppliedForJobView.as_view(), name='applied_for_jobs'),
+    path('job_post/', JobPostOnlineView.as_view(), name='job_post_with_online_test_link'),
     path('job_list/<id>/', JobDescriptionView.as_view(), name='job_description'),
     path('job_list/', JobListView.as_view(), name='job_list'),
     path('job_search/', JobDataFilterView.as_view(), name='job_search'),
     # path('questions/',QuestionSetView.as_view(),name='question_set'),
+    path('applied_job/', AppliedForJobView.as_view(), name='applied_for_jobs'),
     path('qus_ans/', QuestionAnswerSetView.as_view(), name='question_ans'),
     path('submit_ans/', SubmittedAnswerView.as_view(), name='submit_ans'),
     path('submitted_ans_list/', SubmittedAnswerListView.as_view(), name='submitted_ans_list'),
-    path('job_post/', JobPostOnlineView.as_view(), name='job_post_with_online_test_link'),
     path('practical_test/', PracticalTestView.as_view(), name='practical_test'),
 
     # Filter question list

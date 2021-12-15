@@ -2,7 +2,7 @@ from django.db.models import Q
 from rest_framework import generics, status
 from rest_framework.response import Response
 from . import serializer
-from RecruitmentManagementApp.models import UserJobAppliedModel
+from RecruitmentManagementApp.models import UserJobAppliedModel,JobPostModel
 from rest_framework.permissions import IsAuthenticated
 from UserApp.permissions import IsHrUser
 
@@ -39,7 +39,14 @@ class AppliedUserDetailsView(generics.ListAPIView):
 
 
 class AdminJobListView(generics.ListCreateAPIView):
-    permission_classes = []
+    permission_classes = [IsAuthenticated,IsHrUser]
+    serializer_class = serializer.AppliedUserDetailsSerializer
+
+    # def get_queryset(self):
+    #     return JobPostModel.
+
+
+
 
 
 
