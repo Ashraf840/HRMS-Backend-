@@ -20,7 +20,7 @@ app_name = 'tfhrm_api'
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
-    path('update_profile/<pk>', UpdateUserInfoView.as_view(), name='update_profile'),
+    path('update_profile/<pk>/', UpdateUserInfoView.as_view(), name='update_profile'),
     path('email-verify/', VerifyEmailView.as_view(), name="email-verify"),
     path('users/', UserInfoListView.as_view(), name='users_list'),
     path('login/', CustomTokenObtainPairView.as_view(), name='login'),
