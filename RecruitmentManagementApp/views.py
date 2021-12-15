@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from UserApp.models import User, JobPreferenceModel
 from . import serializer
-from UserApp.permissions import IsHrUser, IsCandidateUser, EditPermission
+from UserApp.permissions import IsHrUser, IsCandidateUser, EditPermission, IsAuthor
 from . import models
 
 
@@ -79,6 +79,14 @@ class JobDataFilterView(generics.ListAPIView):
             Q(level__icontains=search) |
             Q(jobType__icontains=search)
         )
+
+
+class MyJobListView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated, IsAuthor, EditPermission]
+    serializer_class = serializer.AppliedForJobSerializer
+
+    def get_queryset(self):
+        return models.UserJobAppliedModel.objects.filter(userId_id=self.request.user.id)
 
 
 # class AppliedJobUpdateView(generics.RetrieveUpdateDestroyAPIView):

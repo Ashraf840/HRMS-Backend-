@@ -5,7 +5,8 @@ from QuizApp.views import QuestionAnswerSetView, SubmittedAnswerView, SubmittedA
 # importing Views from RecruitmentManagementApp views
 from RecruitmentManagementApp.views import AllUserDetailView, JobPostView, AppliedForJobView, \
     JobDescriptionView, JobListView, FilterQuestionResponseListView, FilterQuestionResponseView, JobDataFilterView, \
-    PracticalTestView, JobPostOnlineView, OnlineTestResponseView, PracticalTestResponseView, UpdateCandidateStatusView
+    PracticalTestView, JobPostOnlineView, OnlineTestResponseView, PracticalTestResponseView, \
+    UpdateCandidateStatusView,MyJobListView
 # importing Views from UserApp views
 from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
     CustomTokenObtainPairView, UpdateAcademicInfoView, AddAcademicInfoView, \
@@ -51,6 +52,8 @@ urlpatterns = [
     path('job_list/<id>/', JobDescriptionView.as_view(), name='job_description'),
     path('job_list/', JobListView.as_view(), name='job_list'),
     path('job_search/', JobDataFilterView.as_view(), name='job_search'),
+    path('my_jobs/', MyJobListView.as_view(), name='my_jobs'),
+
     # path('questions/',QuestionSetView.as_view(),name='question_set'),
     path('applied_job/', AppliedForJobView.as_view(), name='applied_for_jobs'),
     path('qus_ans/', QuestionAnswerSetView.as_view(), name='question_ans'),
