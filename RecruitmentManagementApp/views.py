@@ -27,7 +27,7 @@ class JobPostView(generics.CreateAPIView):
 
 
 class JobDescriptionView(generics.RetrieveAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.JobPostSerializer
     lookup_field = 'id'
 
