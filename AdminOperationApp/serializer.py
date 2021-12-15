@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from RecruitmentManagementApp.models import UserJobAppliedModel
+from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel
 
 
 class AppliedUserDetailsSerializer(serializers.ModelSerializer):
@@ -11,3 +11,10 @@ class AppliedUserDetailsSerializer(serializers.ModelSerializer):
             'jobProgressStatus': {'read_only': True}
         }
         depth = 1
+
+
+class AdminJobListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JobPostModel
+        fields = '__all__'
+

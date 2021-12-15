@@ -38,4 +38,9 @@ class AppliedUserDetailsView(generics.ListAPIView):
         return Response(responseData)
 
 
+class AdminJobListView(generics.ListCreateAPIView):
+    permission_classes = []
+
+
+
 

@@ -42,7 +42,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     profile_pic = ResizedImageField(upload_to='users/', blank=False, help_text='Size Recommended: 512x512',
                                     size=[512, 512], quality=100, force_format='JPEG')
     phone_number = models.CharField(max_length=30, blank=True)
-    nid = models.IntegerField(null=True)
+    nid = models.BigIntegerField(null=True)
     nationality = models.CharField(max_length=50, null=True, blank=True)
     location = models.CharField(max_length=50, blank=True)
 
@@ -178,8 +178,8 @@ class UserTrainingExperienceModel(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='training_info_user')
     vendorName = models.CharField(max_length=255)
     topicName = models.CharField(max_length=255)
-    startDate = models.IntegerField()
-    completeDate = models.IntegerField()
+    startDate = models.DateField()
+    completeDate = models.DateField()
 
     class Meta:
         verbose_name_plural = 'Training Information'
