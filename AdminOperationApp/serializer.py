@@ -14,6 +14,8 @@ class AppliedUserDetailsSerializer(serializers.ModelSerializer):
 
 
 class AdminJobListSerializer(serializers.ModelSerializer):
+
+    totalApplied = serializers.CharField(source=UserJobAppliedModel.objects.filter())
     class Meta:
         model = JobPostModel
         fields = '__all__'

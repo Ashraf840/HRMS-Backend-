@@ -27,11 +27,12 @@ class AllUserDetailsSerializer(serializers.ModelSerializer):
 class JobPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.JobPostModel
-        fields = '__all__'
+        exclude = ['user']
         extra_kwargs = {
-            'user': {'read_only': True}
+            'user': {'read_only': True},
+
         }
-        depth = 2
+        depth = 1
 
 
 class OnlineTestSerializer(serializers.ModelSerializer):

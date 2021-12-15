@@ -236,7 +236,6 @@ class PracticalTestResponseView(generics.CreateAPIView):
                         data.jobProgressStatus = models.JobStatusModel.objects.get(status='document')
                         data.save()
 
-
                         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
                 else:
                     return Response({'detail': 'You can not attend this test.'}, status=status.HTTP_400_BAD_REQUEST)
