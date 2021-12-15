@@ -26,8 +26,8 @@ class JobPostView(generics.CreateAPIView):
         serializer.save(user=self.request.user)
 
 
-class JobDescriptionView(generics.RetrieveAPIView):
-    # permission_classes = [permissions.IsAuthenticated]
+class JobDescriptionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.IsAuthenticated, IsHrUser]
     serializer_class = serializer.JobPostSerializer
     lookup_field = 'id'
 
