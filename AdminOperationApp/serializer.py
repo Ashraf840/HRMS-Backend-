@@ -14,8 +14,12 @@ class AppliedUserDetailsSerializer(serializers.ModelSerializer):
 
 
 class AdminJobListSerializer(serializers.ModelSerializer):
+    # totalApplied = serializers.CharField(source='')
+    total_count = serializers.SerializerMethodField('_checked')
 
-    totalApplied = serializers.CharField(source=UserJobAppliedModel.objects.filter())
+    def _checked(self, filters):
+        total = getattr(filters, 'total_applied')
+        return total
     class Meta:
         model = JobPostModel
         fields = '__all__'

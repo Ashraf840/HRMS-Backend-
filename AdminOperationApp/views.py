@@ -38,7 +38,7 @@ class AppliedUserDetailsView(generics.ListAPIView):
         return Response(responseData)
 
 
-class AdminJobListView(generics.ListCreateAPIView):
+class AdminJobListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated, IsHrUser]
     serializer_class = serializer.AdminJobListSerializer
 
@@ -50,10 +50,17 @@ class AdminJobListView(generics.ListCreateAPIView):
         responseData = serializer.data
 
         totalJob = self.get_queryset().count()
+        totalInterview = UserJobAppliedModel.objects.filter(jobProgressStatus__status='interview').count()
+        totalHired = UserJobAppliedModel.objects.filter(jobProgressStatus__status='hired').count()
+        totalApplicant = UserJobAppliedModel.objects.all().count()
 
 
         diction = {
             'totalJob': totalJob,
+            'totalInterview': totalInterview,
+            'totalHired': totalHired,
+            'totalApplicant': totalApplicant,
+
 
         }
         responseData.append(diction)

@@ -14,7 +14,6 @@ practical question set model
 
 
 class JobPostModel(models.Model):
-
     shiftOption = (
         ('day', 'Day'),
         ('night', 'Night'),
@@ -40,6 +39,10 @@ class JobPostModel(models.Model):
     # uploadCV = models.FileField(upload_to='user/')
     filterQuestions = models.ManyToManyField(JobApplyFilterQuestionModel, related_name='filter_question_list')
     is_active = models.BooleanField(default=True)
+
+    @property
+    def total_applied(self):
+        return self.applied_job_post_id.filter(jobPostId=self.id).count()
 
     def __str__(self):
         return f'{self.jobTitle} {self.shift}'
