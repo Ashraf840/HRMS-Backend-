@@ -14,6 +14,7 @@ practical question set model
 
 
 class JobPostModel(models.Model):
+
     shiftOption = (
         ('day', 'Day'),
         ('night', 'Night'),
@@ -23,6 +24,7 @@ class JobPostModel(models.Model):
         ('full_time', 'Full Time'),
         ('internship', 'Internship'),
     )
+    user = models.ForeignKey(User, verbose_name='user', on_delete=models.CASCADE, related_name='job_post_model')
     jobTitle = models.CharField(verbose_name='Job Title', max_length=100)
     lastDateOfApply = models.DateField()
     postDate = models.DateField(auto_now_add=True)
@@ -37,7 +39,7 @@ class JobPostModel(models.Model):
     jobDescription = models.TextField(null=True)
     # uploadCV = models.FileField(upload_to='user/')
     filterQuestions = models.ManyToManyField(JobApplyFilterQuestionModel, related_name='filter_question_list')
-    user = models.ForeignKey(User, verbose_name='user', on_delete=models.CASCADE, related_name='job_post_model')
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return f'{self.jobTitle} {self.shift}'

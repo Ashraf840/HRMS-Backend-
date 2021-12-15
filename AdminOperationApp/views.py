@@ -36,3 +36,6 @@ class AppliedUserDetailsView(generics.ListAPIView):
         }
         responseData.append(diction)
         return Response(responseData)
+
+
+
