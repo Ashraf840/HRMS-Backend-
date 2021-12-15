@@ -20,12 +20,12 @@ app_name = 'tfhrm_api'
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
-    path('update_profile/<pk>/', UpdateUserInfoView.as_view(), name='update_profile'),
     path('email-verify/', VerifyEmailView.as_view(), name="email-verify"),
     path('users/', UserInfoListView.as_view(), name='users_list'),
     path('login/', CustomTokenObtainPairView.as_view(), name='login'),
     # path('logout/', LogoutView.as_view(), name='auth_logout'),
     path('users/<id>/', UserDetailView.as_view(), name='users'),
+    path('update_profile/<pk>/', UpdateUserInfoView.as_view(), name='update_profile'),
     path('all_users/', AllUserDetailView.as_view(), name='all_users'),
     path('add_ac/', AddAcademicInfoView.as_view(), name='add_academics'),
     path('update_ac/<user__id>/<id>/', UpdateAcademicInfoView.as_view(), name='update_academic'),
