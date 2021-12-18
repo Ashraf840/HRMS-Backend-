@@ -27,7 +27,7 @@ class JobPostView(generics.CreateAPIView):
 
 
 class JobDescriptionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsHrUser]
+    # permission_classes = [permissions.IsAuthenticated, IsHrUser]
     serializer_class = serializer.JobPostSerializer
     lookup_field = 'id'
 

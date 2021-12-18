@@ -109,10 +109,12 @@ class AppliedForJobSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserJobAppliedModel
         fields = '__all__'
+
         extra_kwargs = {
             'userId': {'read_only': True},
             'jobProgressStatus': {'read_only': True}
         }
+        # depth = 1
 
 
 class CandidateStatusChangeSerializer(serializers.ModelSerializer):
