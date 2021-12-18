@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel
+from RecruitmentManagementApp.serializer import OnlineTestResponseSerializer
 
 
 class AppliedUserDetailsSerializer(serializers.ModelSerializer):
@@ -25,6 +26,22 @@ class AdminJobListSerializer(serializers.ModelSerializer):
     class Meta:
         model = JobPostModel
         fields = '__all__'
+
+
+# selected user for interview. will show online,practical test result will show
+class AdminInterviewerListSerializer(serializers.ModelSerializer):
+
+
+    class Meta:
+        model = UserJobAppliedModel
+        fields = '__all__'
+        depth = 1
+
+    def to_representation(self, instance):
+        serializer = super(AdminInterviewerListSerializer, self).to_representation(instance)
+        serializer.get('userId').pop('password')
+        # testRes =
+        return serializer
 
 
 class AdminOnlineTestLinkSerializer(serializers.ModelSerializer):

@@ -16,7 +16,8 @@ from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
     AcademicInfoListView, WorkInfoListView, CertificationInfoListView, TrainingInfoListView, DocumentSubmissionView, \
     DocumentSubmissionUpdateDeleteView, ReferenceInformationView, ReferenceInformationUpdateDeleteView
 
-from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView,OnlineTestLinkView
+from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView, OnlineTestLinkView, \
+    AdminInterviewerListView
 
 app_name = 'tfhrm_api'
 
@@ -90,5 +91,6 @@ urlpatterns = [
     path('admin_job_list/', AdminJobListView.as_view(), name='admin_job_list'),
     path('applicant_list_details/', AppliedUserDetailsView.as_view(), name='applied_user_list'),
     path('online_test_link/<id>/', OnlineTestLinkView.as_view(), name='online_test_link'),
+    path('applicant_interview/', AdminInterviewerListView.as_view(), name='applicant_interviewer_list'),
 
 ]

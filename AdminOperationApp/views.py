@@ -7,7 +7,6 @@ from rest_framework.permissions import IsAuthenticated
 from UserApp.permissions import IsHrUser
 
 
-
 # Create your views here.
 class OnlineTestLinkView(generics.RetrieveAPIView):
     serializer_class = serializer.AdminOnlineTestLinkSerializer
@@ -72,3 +71,8 @@ class AdminJobListView(generics.ListAPIView):
         }
         responseData.append(diction)
         return Response(responseData)
+
+
+class AdminInterviewerListView(generics.ListAPIView):
+    serializer_class = serializer.AdminInterviewerListSerializer
+    queryset = UserJobAppliedModel.objects.all()
