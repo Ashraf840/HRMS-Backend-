@@ -44,6 +44,10 @@ class JobPostModel(models.Model):
     def total_applied(self):
         return self.applied_job_post_id.filter(jobPostId=self.id).count()
 
+    # @property
+    # def get_online_test_info(self):
+    #     return self.job_info_online.analyticalTest
+
     def __str__(self):
         return f'{self.jobTitle} {self.shift}'
 
@@ -60,9 +64,9 @@ class FilterQuestionsResponseModelHR(models.Model):
 
 
 class OnlineTestModel(models.Model):
+    jobInfo = models.OneToOneField(JobPostModel, on_delete=models.CASCADE, related_name='job_info_online')
     culturalTest = models.URLField(verbose_name='Cultural Test', name='cultural_test')
     analyticalTest = models.URLField(verbose_name='Analytical Test', name='analytical_test')
-    jobInfo = models.OneToOneField(JobPostModel, on_delete=models.CASCADE, related_name='job_info_online')
 
     def __str__(self):
         return f'{self.jobInfo}'

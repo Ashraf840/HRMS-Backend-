@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from rest_framework.utils.serializer_helpers import ReturnDict
+# from rest_framework.utils.serializer_helpers import ReturnDict
 
 from UserApp import serializer
 from UserApp.models import User
@@ -55,6 +55,12 @@ class OnlineTestSerializer(serializers.ModelSerializer):
         jobInfo.filterQuestions.set(filterQus)
         onlineTest = models.OnlineTestModel.objects.create(jobInfo_id=jobInfo.id, **validated_data)
         return onlineTest
+
+
+class JobStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.JobStatusModel
+        fields = '__all__'
 
 
 class PracticalTestSerializer(serializers.ModelSerializer):

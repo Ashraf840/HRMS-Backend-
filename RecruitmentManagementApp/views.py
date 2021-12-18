@@ -35,9 +35,6 @@ class JobDescriptionView(generics.RetrieveAPIView):
         return models.JobPostModel.objects.filter(id=id)
 
 
-
-
-
 # Update/delete functionlity for admin
 class JobDescriptionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated, IsHrUser]
@@ -58,14 +55,18 @@ class AppliedForJobView(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save(userId=self.request.user, jobProgressStatus=models.JobStatusModel.objects.get(status='new'))
 
+    # def create(self, request, *args, **kwargs):
+    #     try:
+
 
 # GET data from Database
 # If user applied ,user will see his job placement
 
-# class AppliedJobListView(generics.ListAPIView):
-#     permission_classes = [permissions.IsAuthenticated, IsHrUser]
-#     serializer_class = serializer.AppliedForJobSerializer
-#     queryset = models.UserJobAppliedModel.objects.all()
+
+# View job status
+class JobStatusView(generics.ListAPIView):
+    serializer_class = serializer.JobStatusSerializer
+    queryset = models.JobStatusModel.objects.all()
 
 
 # authenticated user can see all job post
@@ -100,8 +101,6 @@ class MyJobListView(generics.ListAPIView):
 
     def get_queryset(self):
         return models.UserJobAppliedModel.objects.filter(userId_id=self.request.user.id)
-
-
 
 
 # class AppliedJobUpdateView(generics.RetrieveUpdateDestroyAPIView):
@@ -148,9 +147,6 @@ class PracticalTestView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.PracticalTestSerializer
     queryset = models.PracticalTestModel.objects.all()
-
-    # def perform_create(self, serializer):
-    #     serializer.save(user=self.request.user)
 
 
 class JobPostOnlineView(generics.ListCreateAPIView):

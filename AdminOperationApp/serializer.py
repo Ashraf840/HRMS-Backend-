@@ -20,7 +20,9 @@ class AdminJobListSerializer(serializers.ModelSerializer):
     def _checked(self, filters):
         total = getattr(filters, 'total_applied')
         return total
+
     class Meta:
         model = JobPostModel
         fields = '__all__'
 
+# class AdminJobListF2FView()
