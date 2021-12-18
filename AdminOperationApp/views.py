@@ -5,12 +5,12 @@ from . import serializer
 from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel
 from rest_framework.permissions import IsAuthenticated
 from UserApp.permissions import IsHrUser
-from RecruitmentManagementApp.serializer import OnlineTestSerializer
+
 
 
 # Create your views here.
 class OnlineTestLinkView(generics.RetrieveAPIView):
-    serializer_class = OnlineTestSerializer
+    serializer_class = serializer.AdminOnlineTestLinkSerializer
     lookup_field = 'id'
 
     def get_queryset(self):

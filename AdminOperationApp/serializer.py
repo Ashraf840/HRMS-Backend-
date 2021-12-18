@@ -3,9 +3,6 @@ from rest_framework import serializers
 from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel
 
 
-
-
-
 class AppliedUserDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserJobAppliedModel
@@ -30,8 +27,10 @@ class AdminJobListSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-
-
-
-
-
+class AdminOnlineTestLinkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OnlineTestModel
+        fields = '__all__'
+        extra_kwargs = {
+            'jobInfo': {'read_only': True}
+        }
