@@ -113,9 +113,20 @@ class AppliedForJobSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super(AppliedForJobSerializer, self).to_representation(instance)
-        data.get('userId').pop('password')
-        return data
+        user = data.get('userId')
+        user.pop('password')
+        user.pop('is_staff')
+        user.pop('is_active')
+        user.pop('email_validated')
+        user.pop('is_superuser')
+        user.pop('is_employee')
+        user.pop('is_hr')
+        user.pop('is_candidate')
+        user.pop('groups')
+        user.pop('user_permissions')
 
+        data.get('jobPostId').pop('filterQuestions')
+        return data
 
 
 class CandidateStatusChangeSerializer(serializers.ModelSerializer):
