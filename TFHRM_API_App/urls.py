@@ -3,10 +3,11 @@ from django.urls import path
 from QuizApp.views import QuestionAnswerSetView, SubmittedAnswerView, SubmittedAnswerListView, \
     FilterQuestionView
 # importing Views from RecruitmentManagementApp views
-from RecruitmentManagementApp.views import AllUserDetailView, JobPostView, AppliedForJobView,JobDescriptionView, \
-    JobDescriptionUpdateDeleteView, JobListView, FilterQuestionResponseListView, FilterQuestionResponseView, JobDataFilterView, \
+from RecruitmentManagementApp.views import AllUserDetailView, JobPostView, AppliedForJobView, JobDescriptionView, \
+    JobDescriptionUpdateDeleteView, JobListView, FilterQuestionResponseListView, FilterQuestionResponseView, \
+    JobDataFilterView, \
     PracticalTestView, JobPostOnlineView, OnlineTestResponseView, PracticalTestResponseView, \
-    UpdateCandidateStatusView,MyJobListView,JobStatusView
+    UpdateCandidateStatusView, MyJobListView, JobStatusView
 # importing Views from UserApp views
 from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
     CustomTokenObtainPairView, UpdateAcademicInfoView, AddAcademicInfoView, \
@@ -15,7 +16,7 @@ from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
     AcademicInfoListView, WorkInfoListView, CertificationInfoListView, TrainingInfoListView, DocumentSubmissionView, \
     DocumentSubmissionUpdateDeleteView, ReferenceInformationView, ReferenceInformationUpdateDeleteView
 
-from AdminOperationApp.views import AppliedUserDetailsView,AdminJobListView
+from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView,OnlineTestLinkView
 
 app_name = 'tfhrm_api'
 
@@ -88,5 +89,6 @@ urlpatterns = [
 
     path('admin_job_list/', AdminJobListView.as_view(), name='admin_job_list'),
     path('applicant_list_details/', AppliedUserDetailsView.as_view(), name='applied_user_list'),
+    path('online_test_link/<id>/', OnlineTestLinkView.as_view(), name='online_test_link'),
 
 ]

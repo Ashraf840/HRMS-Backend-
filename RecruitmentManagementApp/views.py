@@ -35,7 +35,7 @@ class JobDescriptionView(generics.RetrieveAPIView):
         return models.JobPostModel.objects.filter(id=id)
 
 
-# Update/delete functionlity for admin
+# Update/delete functionality for admin
 class JobDescriptionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated, IsHrUser]
     serializer_class = serializer.JobPostSerializer

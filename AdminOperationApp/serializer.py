@@ -1,5 +1,9 @@
 from rest_framework import serializers
-from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel
+
+from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel
+
+
+
 
 
 class AppliedUserDetailsSerializer(serializers.ModelSerializer):
@@ -25,4 +29,9 @@ class AdminJobListSerializer(serializers.ModelSerializer):
         model = JobPostModel
         fields = '__all__'
 
-# class AdminJobListF2FView()
+
+
+
+
+
+

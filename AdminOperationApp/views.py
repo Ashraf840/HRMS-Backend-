@@ -2,12 +2,22 @@ from django.db.models import Q
 from rest_framework import generics, status
 from rest_framework.response import Response
 from . import serializer
-from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel
+from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel
 from rest_framework.permissions import IsAuthenticated
 from UserApp.permissions import IsHrUser
+from RecruitmentManagementApp.serializer import OnlineTestSerializer
 
 
 # Create your views here.
+class OnlineTestLinkView(generics.RetrieveAPIView):
+    serializer_class = OnlineTestSerializer
+    lookup_field = 'id'
+
+    def get_queryset(self):
+        id = self.kwargs['id']
+        return OnlineTestModel.objects.filter(jobInfo_id=id)
+
+
 class AppliedUserDetailsView(generics.ListAPIView):
     permission_classes = [IsAuthenticated, IsHrUser]
     serializer_class = serializer.AppliedUserDetailsSerializer
@@ -54,14 +64,11 @@ class AdminJobListView(generics.ListAPIView):
         totalHired = UserJobAppliedModel.objects.filter(jobProgressStatus__status='hired').count()
         totalApplicant = UserJobAppliedModel.objects.all().count()
 
-
         diction = {
             'totalJob': totalJob,
             'totalInterview': totalInterview,
             'totalHired': totalHired,
             'totalApplicant': totalApplicant,
-
-
         }
         responseData.append(diction)
         return Response(responseData)
