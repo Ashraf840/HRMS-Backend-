@@ -26,8 +26,21 @@ class JobPostView(generics.CreateAPIView):
         serializer.save(user=self.request.user)
 
 
+class JobDescriptionView(generics.RetrieveAPIView):
+    serializer_class = serializer.JobPostSerializer
+    lookup_field = 'id'
+
+    def get_queryset(self):
+        id = self.kwargs['id']
+        return models.JobPostModel.objects.filter(id=id)
+
+
+
+
+
+# Update/delete functionlity for admin
 class JobDescriptionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
-    # permission_classes = [permissions.IsAuthenticated, IsHrUser]
+    permission_classes = [permissions.IsAuthenticated, IsHrUser]
     serializer_class = serializer.JobPostSerializer
     lookup_field = 'id'
 
@@ -87,6 +100,8 @@ class MyJobListView(generics.ListAPIView):
 
     def get_queryset(self):
         return models.UserJobAppliedModel.objects.filter(userId_id=self.request.user.id)
+
+
 
 
 # class AppliedJobUpdateView(generics.RetrieveUpdateDestroyAPIView):

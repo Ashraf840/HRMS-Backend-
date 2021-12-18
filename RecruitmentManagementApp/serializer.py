@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from rest_framework.utils.serializer_helpers import ReturnDict
+
 from UserApp import serializer
 from UserApp.models import User
 from . import models
@@ -17,8 +19,6 @@ class AllUserDetailsSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True}
         }
-
-        # depth = 2
 
 
 # Job post Model Serializer -> Only for HR
@@ -55,10 +55,6 @@ class OnlineTestSerializer(serializers.ModelSerializer):
         jobInfo.filterQuestions.set(filterQus)
         onlineTest = models.OnlineTestModel.objects.create(jobInfo_id=jobInfo.id, **validated_data)
         return onlineTest
-
-
-# class FilterQusSerializer(serializers.ModelSerializer):
-#     jobPost = JobPostSerializer()
 
 
 class PracticalTestSerializer(serializers.ModelSerializer):
@@ -109,12 +105,17 @@ class AppliedForJobSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserJobAppliedModel
         fields = '__all__'
-
+        depth = 1
         extra_kwargs = {
             'userId': {'read_only': True},
             'jobProgressStatus': {'read_only': True}
         }
-        # depth = 1
+
+    def to_representation(self, instance):
+        data = super(AppliedForJobSerializer, self).to_representation(instance)
+        data.get('userId').pop('password')
+        return data
+
 
 
 class CandidateStatusChangeSerializer(serializers.ModelSerializer):
