@@ -2,7 +2,7 @@ from rest_framework import serializers
 from . import models
 from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel, OnlineTestResponseModel, \
     PracticalTestModel
-from RecruitmentManagementApp.serializer import OnlineTestResponseSerializer, PracticalTestResponseSerializer
+from RecruitmentManagementApp.serializer import OnlineTestResponseSerializer, PracticalTestResponseSerializer,PracticalTestSerializer
 
 
 class AdminOnlineTestLinkSerializer(serializers.ModelSerializer):
@@ -15,6 +15,7 @@ class AdminOnlineTestLinkSerializer(serializers.ModelSerializer):
 
 
 class SendPracticalTestSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = models.PracticalTestUserModel
         fields = '__all__'

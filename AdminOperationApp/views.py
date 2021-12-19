@@ -43,8 +43,11 @@ class SendPracticalTestView(generics.ListCreateAPIView):
         if serializer.is_valid():
             self.perform_create(serializer)
             duration = int(request.data.get('duration'))
-
             user = User.objects.get(id=request.data.get('user'))
+            # print(request.data.get('practicalTestInfo'))
+            # print(models.PracticalTestUserModel.objects.get(id=request.data.get('practicalTestInfo')))
+            # task = PracticalTestModel.objects.get(id=models.PracticalTestUserModel.objects.get(id=request.data.get('practicalTestInfo')))
+            # print(task)
             email_body = f'Hi  {user.full_name} submit the task before {datetime.date.today() + datetime.timedelta(duration)}'
             data = {'email_body': email_body, 'to_email': user.email,
                     'email_subject': 'Update'}
