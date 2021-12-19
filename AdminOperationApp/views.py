@@ -26,29 +26,30 @@ class OnlineTestLinkView(generics.RetrieveAPIView):
         id = self.kwargs['id']
         return OnlineTestModel.objects.filter(jobInfo_id=id)
 
-
+#
 class SendPracticalTestView(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated] #admin permission required
     serializer_class = serializer.SendPracticalTestSerializer
     queryset = models.PracticalTestUserModel.objects.all()
 
-    def perform_create(self, serializer):
-        p_id = self.kwargs['p_id']
-        id = self.kwargs['id']
-        serializer.save(user=User.objects.get(id=id), practicalTestInfo=PracticalTestModel.objects.get(id=p_id))
+    # def perform_create(self, serializer):
+    #     p_id = self.kwargs['job_id']
+    #     id = self.kwargs['id']
+    #     serializer.save(user=User.objects.get(id=id),
+    #                     practicalTestInfo=PracticalTestModel.objects.get(jobInfo__id=p_id))
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             self.perform_create(serializer)
             duration = int(request.data.get('duration'))
-            user = User.objects.get(id=self.kwargs['id'])
-            email_body = f'Hi  {user.full_name} submit the task before {datetime.date.today() + datetime.timedelta(duration)} '
+
+            user = User.objects.get(id=request.data.get('user'))
+            email_body = f'Hi  {user.full_name} submit the task before {datetime.date.today() + datetime.timedelta(duration)}'
             data = {'email_body': email_body, 'to_email': user.email,
                     'email_subject': 'Update'}
             Util.send_email(data)
-
-        return super().create(request)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class AppliedUserDetailsView(generics.ListAPIView):

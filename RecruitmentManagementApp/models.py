@@ -73,10 +73,10 @@ class OnlineTestModel(models.Model):
 
 
 class PracticalTestModel(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='practical_user_info')
+    jobInfo = models.OneToOneField(JobPostModel, on_delete=models.CASCADE, related_name='practical_job_info')
     practicalFile = models.FileField(verbose_name='Practical Test File', upload_to='users/files')
     testLink = models.URLField(verbose_name='Test link', blank=True)
-    jobInfo = models.OneToOneField(JobPostModel, on_delete=models.CASCADE, related_name='practical_job_info')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='practical_user_info')
 
     def __str__(self):
         return f'{self.jobInfo}'

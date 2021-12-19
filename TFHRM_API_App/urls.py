@@ -88,6 +88,6 @@ urlpatterns = [
     path('applicant_list_details/', AppliedUserDetailsView.as_view(), name='admin_applied_user_list'),
     path('admin_online_test_res_list/', AdminAppliedCandidateOnlineResView.as_view(), name='admin_online_test_response_list'),
     path('applicant_interview/', AdminInterviewerListView.as_view(), name='applicant_interviewer_list'),
-    path('send_practical_test/<id>/<p_id>/', SendPracticalTestView.as_view(), name='admin_send_practical_test'),
+    path('send_practical_test/', SendPracticalTestView.as_view(), name='admin_send_practical_test'),
 
 ]

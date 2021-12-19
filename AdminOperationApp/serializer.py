@@ -19,8 +19,8 @@ class SendPracticalTestSerializer(serializers.ModelSerializer):
         model = models.PracticalTestUserModel
         fields = '__all__'
         extra_kwargs = {
-            'user': {'read_only': True},
-            'practicalTestInfo': {'read_only': True}
+            # 'user': {'read_only': True},
+            # 'practicalTestInfo': {'read_only': True}
         }
 
 
