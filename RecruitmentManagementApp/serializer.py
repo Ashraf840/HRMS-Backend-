@@ -64,15 +64,11 @@ class JobStatusSerializer(serializers.ModelSerializer):
 
 
 class PracticalTestSerializer(serializers.ModelSerializer):
-    # jobInfo = JobPostSerializer()
-
-    # jobInfo = OnlineTestSerializer()
-
     class Meta:
         model = models.PracticalTestModel
         fields = '__all__'
         extra_kwargs = {
-            'jobInfo': {'read_only': True}
+            'user': {'read_only': True}
         }
 
     # def create(self, validated_data):

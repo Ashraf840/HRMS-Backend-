@@ -1,14 +1,24 @@
+import datetime
+
 from django.db.models import Q
-from rest_framework import generics, status
+from rest_framework import generics, permissions, status
 from rest_framework.response import Response
+
+from UserApp.models import User
 from . import serializer
-from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel
+from . import models
+from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel, OnlineTestResponseModel, \
+    PracticalTestModel
 from rest_framework.permissions import IsAuthenticated
 from UserApp.permissions import IsHrUser
 
+from .utils import Util
 
-# Create your views here.
+
 class OnlineTestLinkView(generics.RetrieveAPIView):
+    """
+    Online link will be visible for specific jobs
+    """
     serializer_class = serializer.AdminOnlineTestLinkSerializer
     lookup_field = 'id'
 
@@ -17,15 +27,44 @@ class OnlineTestLinkView(generics.RetrieveAPIView):
         return OnlineTestModel.objects.filter(jobInfo_id=id)
 
 
+class SendPracticalTestView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializer.SendPracticalTestSerializer
+    queryset = models.PracticalTestUserModel.objects.all()
+
+    def perform_create(self, serializer):
+        p_id = self.kwargs['p_id']
+        id = self.kwargs['id']
+        serializer.save(user=User.objects.get(id=id), practicalTestInfo=PracticalTestModel.objects.get(id=p_id))
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            self.perform_create(serializer)
+            duration = int(request.data.get('duration'))
+            user = User.objects.get(id=self.kwargs['id'])
+            email_body = f'Hi  {user.full_name} submit the task before {datetime.date.today() + datetime.timedelta(duration)} '
+            data = {'email_body': email_body, 'to_email': user.email,
+                    'email_subject': 'Update'}
+            Util.send_email(data)
+
+        return super().create(request)
+
+
 class AppliedUserDetailsView(generics.ListAPIView):
+    """
+    admin will see the all applied user details and sort summary of recruitment like total applicant, hired,
+    rejected or on shortlisted applicant.
+    """
     permission_classes = [IsAuthenticated, IsHrUser]
     serializer_class = serializer.AppliedUserDetailsSerializer
+    queryset = UserJobAppliedModel.objects.all()
 
-    def get_queryset(self):
-        queryset = UserJobAppliedModel.objects.all()
-        # print(queryset.count())
-        return queryset
-
+    # def get_queryset(self):
+    #     queryset = UserJobAppliedModel.objects.all()
+    #     # print(queryset.count())
+    #     return queryset
+    # customizing default list view to provide more specific information like total applicant,shortlisted
     def list(self, request, *args, **kwargs):
         serializer = self.get_serializer(self.get_queryset(), many=True)
         responseData = serializer.data
@@ -48,6 +87,9 @@ class AppliedUserDetailsView(generics.ListAPIView):
 
 
 class AdminJobListView(generics.ListAPIView):
+    """
+    All job List will be shown here for admin
+    """
     permission_classes = [IsAuthenticated, IsHrUser]
     serializer_class = serializer.AdminJobListSerializer
 
@@ -71,6 +113,11 @@ class AdminJobListView(generics.ListAPIView):
         }
         responseData.append(diction)
         return Response(responseData)
+
+
+class AdminAppliedCandidateOnlineResView(generics.ListAPIView):
+    serializer_class = serializer.AdminAppliedCandidateOnlineResSerializer
+    queryset = OnlineTestResponseModel.objects.all()
 
 
 class AdminInterviewerListView(generics.ListAPIView):

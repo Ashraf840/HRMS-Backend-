@@ -148,6 +148,8 @@ class PracticalTestView(generics.ListCreateAPIView):
     serializer_class = serializer.PracticalTestSerializer
     queryset = models.PracticalTestModel.objects.all()
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 class JobPostOnlineView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]

@@ -17,17 +17,16 @@ from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
     DocumentSubmissionUpdateDeleteView, ReferenceInformationView, ReferenceInformationUpdateDeleteView
 
 from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView, OnlineTestLinkView, \
-    AdminInterviewerListView
+    AdminInterviewerListView,AdminAppliedCandidateOnlineResView,SendPracticalTestView
 
 app_name = 'tfhrm_api'
 
 urlpatterns = [
-    path('register/', RegisterView.as_view(), name='register'),
-    path('email-verify/', VerifyEmailView.as_view(), name="email-verify"),
-    path('users/', UserInfoListView.as_view(), name='users_list'),
-    path('login/', CustomTokenObtainPairView.as_view(), name='login'),
-    # path('logout/', LogoutView.as_view(), name='auth_logout'),
-    path('users/<id>/', UserDetailView.as_view(), name='users'),
+    path('register/', RegisterView.as_view(), name='register'),  # new user registration
+    path('email-verify/', VerifyEmailView.as_view(), name="email-verify"), # email verification while creating new account
+    path('users/', UserInfoListView.as_view(), name='users_list'), #add new user from admin
+    path('login/', CustomTokenObtainPairView.as_view(), name='login'), #Login url for user
+    path('users/<id>/', UserDetailView.as_view(), name='users'), #user details
     path('update_profile/<pk>/', UpdateUserInfoView.as_view(), name='update_profile'),
     path('all_users/', AllUserDetailView.as_view(), name='all_users'),
     path('add_ac/', AddAcademicInfoView.as_view(), name='add_academics'),
@@ -47,7 +46,6 @@ urlpatterns = [
 
     # Hr operations
     path('add_skills/', SkillsView.as_view(), name="add_new_skills"),
-    # path('job_post/', JobPostView.as_view(), name='job_post_hr'),
 
     # for Candidate to Apply for Jobs
     path('job_post/', JobPostOnlineView.as_view(), name='job_post_with_online_test_link'),
@@ -58,12 +56,10 @@ urlpatterns = [
     path('job_search/', JobDataFilterView.as_view(), name='job_search'),
     path('my_jobs/', MyJobListView.as_view(), name='my_jobs'),
 
-    # path('questions/',QuestionSetView.as_view(),name='question_set'),
     path('applied_job/', AppliedForJobView.as_view(), name='applied_for_jobs'),
     path('qus_ans/', QuestionAnswerSetView.as_view(), name='question_ans'),
     path('submit_ans/', SubmittedAnswerView.as_view(), name='submit_ans'),
     path('submitted_ans_list/', SubmittedAnswerListView.as_view(), name='submitted_ans_list'),
-    path('practical_test/', PracticalTestView.as_view(), name='practical_test'),
 
     # Filter question list
     path('filter_question/', FilterQuestionView.as_view(), name='filter_questions'),
@@ -75,8 +71,9 @@ urlpatterns = [
     path('online_test_res/<job_id>/', OnlineTestResponseView.as_view(), name='online_test_response'),
 
     # change user current status
-    path('update_status/<id>/', UpdateCandidateStatusView.as_view(), name='update_status'),
+    path('online_test_link/<id>/', OnlineTestLinkView.as_view(), name='online_test_link'),
     # path('online_test_res/', OnlineTestResponseView, name='online_test_response'),
+    path('practical_test/', PracticalTestView.as_view(), name='practical_test'),
     path('practical_test_res/<job_id>/', PracticalTestResponseView.as_view(), name='practical_test_response'),
 
     path('documents_submit/<job_id>/', DocumentSubmissionView.as_view(), name='document_submission_add'),
@@ -86,11 +83,11 @@ urlpatterns = [
          name='references_information_update_delete'),
 
     #     Admin section URL
-    # path('applied_list/', AppliedJobListView.as_view(), name='applied_jobs_list'),
-
+    path('update_status/<id>/', UpdateCandidateStatusView.as_view(), name='update_status'),
     path('admin_job_list/', AdminJobListView.as_view(), name='admin_job_list'),
-    path('applicant_list_details/', AppliedUserDetailsView.as_view(), name='applied_user_list'),
-    path('online_test_link/<id>/', OnlineTestLinkView.as_view(), name='online_test_link'),
+    path('applicant_list_details/', AppliedUserDetailsView.as_view(), name='admin_applied_user_list'),
+    path('admin_online_test_res_list/', AdminAppliedCandidateOnlineResView.as_view(), name='admin_online_test_response_list'),
     path('applicant_interview/', AdminInterviewerListView.as_view(), name='applicant_interviewer_list'),
+    path('send_practical_test/<id>/<p_id>/', SendPracticalTestView.as_view(), name='admin_send_practical_test'),
 
 ]
