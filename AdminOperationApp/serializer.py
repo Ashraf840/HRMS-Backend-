@@ -89,7 +89,7 @@ class AdminInterviewerListSerializer(serializers.ModelSerializer):
     """
     selected user for interview. will show online,practical test result will show
     """
-    onlineTest = OnlineTestResponseSerializer(source='job_applied_online_response.', many=True)
+    onlineTest = OnlineTestResponseSerializer(source='job_applied_online_response', many=True)
     practicalTest = PracticalTestResponseSerializer(source='job_applied_practical_response')
 
     class Meta:
