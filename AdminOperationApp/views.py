@@ -19,6 +19,7 @@ class OnlineTestLinkView(generics.RetrieveAPIView):
     """
     Online link will be visible for specific jobs
     """
+    permission_classes = [IsAuthenticated]
     serializer_class = serializer.AdminOnlineTestLinkSerializer
     lookup_field = 'jobInfo'
 
