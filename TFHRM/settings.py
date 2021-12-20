@@ -141,33 +141,33 @@ ROOT_URLCONF = 'TFHRM.urls'
 
 
 # ============== postgresql Db ==============
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'dbdaaoqq4cgvm',
-#         'USER': 'cjfglljlmnmjag',
-#         'PASSWORD': 'e140cf1105c3ff061e04c4d59895fb5b41ae979020257bdd7e4b662e99470870',
-#         'HOST': 'ec2-54-74-60-70.eu-west-1.compute.amazonaws.com',
-#         'PORT': '5432',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'dbdaaoqq4cgvm',
+        'USER': 'cjfglljlmnmjag',
+        'PASSWORD': 'e140cf1105c3ff061e04c4d59895fb5b41ae979020257bdd7e4b662e99470870',
+        'HOST': 'ec2-54-74-60-70.eu-west-1.compute.amazonaws.com',
+        'PORT': '5432',
+    }
+}
 
 """
 Dev server DB
 """
 
 # ============== mysql Db ==============
-DATABASES = {
-     'default': {
-         'ENGINE': 'django.db.backends.mysql',
-         'NAME': 'hrm_techforing',
-         'USER': 'root',
-         'PASSWORD': 'hOLL4m&*%$',
-         'OPTIONS': {
-             'sql_mode': 'traditional',
-         }
-     }
- }
+# DATABASES = {
+#      'default': {
+#          'ENGINE': 'django.db.backends.mysql',
+#          'NAME': 'hrm_techforing',
+#          'USER': 'root',
+#          'PASSWORD': 'hOLL4m&*%$',
+#          'OPTIONS': {
+#              'sql_mode': 'traditional',
+#          }
+#      }
+#  }
 
 # ============== securing proxy for heroku hosting ==============
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
