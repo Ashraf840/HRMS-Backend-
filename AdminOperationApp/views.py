@@ -15,13 +15,12 @@ from UserApp.permissions import IsHrUser
 from .utils import Util
 
 
-class OnlineTestLinkView(generics.RetrieveAPIView):
+class OnlineTestLinkView(generics.ListAPIView):
     """
     Online link will be visible for specific jobs
     """
     permission_classes = [IsAuthenticated]
     serializer_class = serializer.AdminOnlineTestLinkSerializer
-    lookup_field = 'jobInfo'
 
     def get_queryset(self):
         id = self.kwargs['jobInfo']

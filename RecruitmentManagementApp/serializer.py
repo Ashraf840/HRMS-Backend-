@@ -51,6 +51,8 @@ class OnlineTestSerializer(serializers.ModelSerializer):
     jobInfo = JobPostSerializer()
     filterQus = serializers.PrimaryKeyRelatedField(queryset=models.JobApplyFilterQuestionModel.objects.all(),
                                                    write_only=True, many=True)
+    progressStatus = serializers.PrimaryKeyRelatedField(queryset=models.JobStatusModel.objects.all(), write_only=True,
+                                                        many=True)
 
     class Meta:
         model = models.OnlineTestModel
@@ -64,10 +66,12 @@ class OnlineTestSerializer(serializers.ModelSerializer):
         jobData = validated_data.pop('jobInfo')
         # onlineTestData = validated_data.pop('onlineTest')
         question = validated_data.pop('filterQus')
+        progress = validated_data.pop('progressStatus')
         # print(question)
         jobInfo = models.JobPostModel.objects.create(user_id=self.context['request'].user.id,
                                                      **jobData)
         jobInfo.filterQuestions.add(*question)
+        jobInfo.jobProgressStatus.add(*progress)
         # print(jobInfo.filterQuestions.set(filterQus))
         onlineTest = models.OnlineTestModel.objects.create(jobInfo_id=jobInfo.id, **validated_data)
         return onlineTest

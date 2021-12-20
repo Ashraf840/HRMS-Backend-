@@ -13,6 +13,14 @@ practical question set model
 """
 
 
+class JobStatusModel(models.Model):
+    status = models.CharField(max_length=50, blank=False, null=False)
+    statusOrder = models.TextField()
+
+    def __str__(self):
+        return self.status
+
+
 class JobPostModel(models.Model):
     shiftOption = (
         ('day', 'Day'),
@@ -38,6 +46,7 @@ class JobPostModel(models.Model):
     jobDescription = models.TextField(null=True)
     # uploadCV = models.FileField(upload_to='user/')
     filterQuestions = models.ManyToManyField(JobApplyFilterQuestionModel, related_name='filter_question_list')
+    jobProgressStatus = models.ManyToManyField(JobStatusModel, related_name='job_progress_statusM2M')
     is_active = models.BooleanField(default=True)
 
     @property
@@ -64,12 +73,12 @@ class FilterQuestionsResponseModelHR(models.Model):
 
 
 class OnlineTestModel(models.Model):
-    jobInfo = models.OneToOneField(JobPostModel, on_delete=models.CASCADE, related_name='job_info_online')
-    culturalTest = models.URLField(verbose_name='Cultural Test', name='cultural_test')
-    analyticalTest = models.URLField(verbose_name='Analytical Test', name='analytical_test')
+    jobInfo = models.ForeignKey(JobPostModel, on_delete=models.CASCADE, related_name='job_info_online')
+    testName = models.CharField(max_length=256, verbose_name='Test Name', name='test_name')
+    testLink = models.URLField(verbose_name='Test Link', name='test_link')
 
     def __str__(self):
-        return f'{self.jobInfo.id}'
+        return f'job ID {self.jobInfo.id}  jobInfo: {self.jobInfo} '
 
 
 class PracticalTestModel(models.Model):
@@ -88,14 +97,6 @@ All candidate response will stored model section
 online test response
 practical test response
 """
-
-
-class JobStatusModel(models.Model):
-    status = models.CharField(max_length=50, blank=False, null=False)
-    statusOrder = models.TextField()
-
-    def __str__(self):
-        return self.status
 
 
 #     order= models.T
@@ -154,7 +155,6 @@ class PracticalTestResponseModel(models.Model):
 
     def __str__(self):
         return f'{self.user}'
-
 
 # class PracticalTestEvaluationModel(models.Model):
 #     choice = (
