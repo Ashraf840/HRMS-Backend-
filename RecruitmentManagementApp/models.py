@@ -58,7 +58,7 @@ class JobPostModel(models.Model):
     #     return self.job_info_online.analyticalTest
 
     def __str__(self):
-        return f'{self.jobTitle} {self.shift}'
+        return f'{self.id} {self.jobTitle} {self.shift}'
 
 
 class FilterQuestionsResponseModelHR(models.Model):
