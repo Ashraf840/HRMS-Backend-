@@ -156,13 +156,13 @@ class PracticalTestResponseModel(models.Model):
         return f'{self.user}'
 
 
-class PracticalTestEvaluationModel(models.Model):
-    choice = (
-        ('A', 'A'),
-        ('B', 'B'),
-        ('C', 'C'),
-        ('C', 'Fail'),
-    )
-    practicalTest = models.OneToOneField(PracticalTestResponseModel, on_delete=models.CASCADE,
-                                         related_name='practical_test_evaluation_practical_res')
-    grade = models.CharField(max_length=10,choices=choice)
+# class PracticalTestEvaluationModel(models.Model):
+#     choice = (
+#         ('A', 'A'),
+#         ('B', 'B'),
+#         ('C', 'C'),
+#         ('C', 'Fail'),
+#     )
+#     practicalTest = models.OneToOneField(PracticalTestResponseModel, on_delete=models.CASCADE,
+#                                          related_name='practical_test_evaluation_practical_res')
+#     grade = models.CharField(max_length=10,choices=choice)
