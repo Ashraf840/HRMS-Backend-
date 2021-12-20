@@ -140,16 +140,17 @@ class OnlineTestResponseModel(models.Model):
     submittedTime = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.analyticalTestMark}, {self.practicalTestMark}'
+        return f'Analytical {self.analyticalTestMark}, Practical {self.practicalTestMark}'
 
 
 class PracticalTestResponseModel(models.Model):
-    practicalTestResFiles = models.FileField(upload_to='practical_test/response/', blank=True)
-    practicalTestResLink = models.URLField(blank=True)
+    practicalTestResFiles = models.FileField(upload_to='practical_test/response/',
+                                             verbose_name='Practical test response', blank=True)
+    practicalTestResLink = models.URLField(verbose_name='Practical test response', blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='practical_response_user')
-    appliedJob = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE,
-                                   related_name='job_applied_practical_response')
+    appliedJob = models.OneToOneField(UserJobAppliedModel, on_delete=models.CASCADE,
+                                      related_name='job_applied_practical_response')
     submittedTime = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.practicalTestResLink}   {self.practicalTestResFiles}'
+        return f'{self.user}'

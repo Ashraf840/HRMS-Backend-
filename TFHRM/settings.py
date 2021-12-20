@@ -12,13 +12,14 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import os.path
+import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-
-
 BASE_DIR = Path(__file__).resolve().parent.parent
-MEDIA_DIR = BASE_DIR / 'media'
-
+TEMPLATES_DIR = BASE_DIR.as_posix() + 'templates'
+STATIC_DIR = BASE_DIR.as_posix() + 'static'
+MEDIA_DIR = BASE_DIR.as_posix() + 'media'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -28,7 +29,8 @@ SECRET_KEY = 'django-insecure-^^fv-&)8of=nhg48zj7$u_=i$ju%br7@ioy39010nexw*k5+t=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['0.0.0.0', '44.242.38.198', '127.0.0.1', 'careeradmin.techforing.com',
+                 'www.careeradmin.techforing.com']
 
 # Application definition
 
@@ -57,7 +59,7 @@ INSTALLED_APPS = [
     'RecruitmentManagementApp',
     'TFHRM_API_App',
     'QuizApp',
-    'AdminOperationApp'
+    'AdminOperationApp',
 
 ]
 
@@ -108,7 +110,6 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
-ROOT_URLCONF = 'TFHRM.urls'
 
 TEMPLATES = [
     {
@@ -127,6 +128,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'TFHRM.wsgi.application'
+ROOT_URLCONF = 'TFHRM.urls'
 
 # ============== sqlite3 Db ==============
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -137,6 +139,7 @@ WSGI_APPLICATION = 'TFHRM.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
 
 # ============== postgresql Db ==============
 DATABASES = {
@@ -150,10 +153,26 @@ DATABASES = {
     }
 }
 
+"""
+Dev server DB
+"""
+
+# ============== mysql Db ==============
+# DATABASES = {
+#      'default': {
+#          'ENGINE': 'django.db.backends.mysql',
+#          'NAME': 'hrm_techforing',
+#          'USER': 'root',
+#          'PASSWORD': 'hOLL4m&*%$',
+#          'OPTIONS': {
+#              'sql_mode': 'traditional',
+#          }
+#      }
+#  }
+
 # ============== securing proxy for heroku hosting ==============
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SECURE_SSL_REDIRECT = True
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -206,14 +225,13 @@ AUTH_USER_MODEL = 'UserApp.User'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
-STATIC_ROOT = BASE_DIR.joinpath('staticfiles')
+
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = '/static/'
+STATICFILES_DIRS = ['static']
 
-# Media files(images)
-MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
-
+MEDIA_ROOT = 'media'
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 

@@ -126,4 +126,9 @@ class AdminAppliedCandidateOnlineResView(generics.ListAPIView):
 
 class AdminInterviewerListView(generics.ListAPIView):
     serializer_class = serializer.AdminInterviewerListSerializer
-    queryset = UserJobAppliedModel.objects.all()
+    queryset = UserJobAppliedModel.objects.filter(jobProgressStatus__status='interview')
+
+    # def get(self, request, *args, **kwargs):
+    #     data = self.get_serializer(self.get_queryset(), many=True)
+    #     print(data)
+    #     return Response(data)

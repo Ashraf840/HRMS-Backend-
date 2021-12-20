@@ -49,7 +49,8 @@ class JobPostSerializer(serializers.ModelSerializer):
 
 class OnlineTestSerializer(serializers.ModelSerializer):
     jobInfo = JobPostSerializer()
-    filterQus = serializers.PrimaryKeyRelatedField(queryset=models.JobApplyFilterQuestionModel.objects.all(),write_only=True, many=True)
+    filterQus = serializers.PrimaryKeyRelatedField(queryset=models.JobApplyFilterQuestionModel.objects.all(),
+                                                   write_only=True, many=True)
 
     class Meta:
         model = models.OnlineTestModel
@@ -158,29 +159,13 @@ class CandidateStatusChangeSerializer(serializers.ModelSerializer):
 
 
 class OnlineTestResponseSerializer(serializers.ModelSerializer):
-    # applied = CandidateStatusChangeSerializer()
-    # parent = serializers.PrimaryKeyRelatedField(queryset=models.UserJobAppliedModel.objects.all(),source='appliedJob')
-    # print(parent)
-
-    # jobInfo = serializers.CharField(source='appliedJob.applied_job_post_id', read_only=True)
-    # print(jobInfo)
-
     class Meta:
         model = models.OnlineTestResponseModel
         fields = '__all__'
-        # exclude = ['appliedJob']
         extra_kwargs = {
             'user': {'read_only': True},
             'appliedJob': {'read_only': True},
         }
-
-    # def create(self, validated_data):
-    #
-    #     appalyInfo = validated_data('applied')
-    #     print(appalyInfo)
-    #     getData = serializers.PrimaryKeyRelatedField(queryset=models.UserJobAppliedModel.objects.get(jobPostId=appalyInfo.id,userId=self.context['request'].id))
-    #     print(getData)
-    #     pass
 
 
 class PracticalTestResponseSerializer(serializers.ModelSerializer):
