@@ -22,9 +22,15 @@ class AllUserDetailsSerializer(serializers.ModelSerializer):
 
 
 # Job post Model Serializer -> Only for HR
+class FilterQuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.JobApplyFilterQuestionModel
+        fields = '__all__'
 
 
 class JobPostSerializer(serializers.ModelSerializer):
+    # filterQus = FilterQuestionSerializer()
+
     class Meta:
         model = models.JobPostModel
         exclude = ['user']
@@ -34,9 +40,16 @@ class JobPostSerializer(serializers.ModelSerializer):
         }
         depth = 1
 
+    # def create(self, validated_data):
+    #     print(validated_data)
+    #     filterQus = validated_data.pop('filterQus')
+    #
+    #     return filterQus
+
 
 class OnlineTestSerializer(serializers.ModelSerializer):
     jobInfo = JobPostSerializer()
+    filterQus = serializers.PrimaryKeyRelatedField(queryset=models.JobApplyFilterQuestionModel.objects.all(),write_only=True, many=True)
 
     class Meta:
         model = models.OnlineTestModel
@@ -46,13 +59,15 @@ class OnlineTestSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        print(validated_data)
+        # print(validated_data)
         jobData = validated_data.pop('jobInfo')
         # onlineTestData = validated_data.pop('onlineTest')
-        filterQus = jobData.pop('filterQuestions')
-
-        jobInfo = models.JobPostModel.objects.create(user_id=self.context['request'].user.id, **jobData)
-        jobInfo.filterQuestions.set(filterQus)
+        question = validated_data.pop('filterQus')
+        # print(question)
+        jobInfo = models.JobPostModel.objects.create(user_id=self.context['request'].user.id,
+                                                     **jobData)
+        jobInfo.filterQuestions.add(*question)
+        # print(jobInfo.filterQuestions.set(filterQus))
         onlineTest = models.OnlineTestModel.objects.create(jobInfo_id=jobInfo.id, **validated_data)
         return onlineTest
 
