@@ -71,7 +71,7 @@ urlpatterns = [
     path('online_test_res/<job_id>/', OnlineTestResponseView.as_view(), name='online_test_response'),
 
     # change user current status
-    path('online_test_link/<id>/', OnlineTestLinkView.as_view(), name='online_test_link'),
+    path('online_test_link/<jobInfo>/', OnlineTestLinkView.as_view(), name='online_test_link'),
     # path('online_test_res/', OnlineTestResponseView, name='online_test_response'),
     path('practical_test/', PracticalTestView.as_view(), name='practical_test'),
     path('practical_test_res/<job_id>/', PracticalTestResponseView.as_view(), name='practical_test_response'),

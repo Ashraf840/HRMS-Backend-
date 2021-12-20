@@ -69,7 +69,7 @@ class OnlineTestModel(models.Model):
     analyticalTest = models.URLField(verbose_name='Analytical Test', name='analytical_test')
 
     def __str__(self):
-        return f'{self.jobInfo}'
+        return f'{self.jobInfo.id}'
 
 
 class PracticalTestModel(models.Model):
@@ -154,3 +154,15 @@ class PracticalTestResponseModel(models.Model):
 
     def __str__(self):
         return f'{self.user}'
+
+
+class PracticalTestEvaluationModel(models.Model):
+    choice = (
+        ('A', 'A'),
+        ('B', 'B'),
+        ('C', 'C'),
+        ('C', 'Fail'),
+    )
+    practicalTest = models.OneToOneField(PracticalTestResponseModel, on_delete=models.CASCADE,
+                                         related_name='practical_test_evaluation_practical_res')
+    grade = models.CharField(max_length=10,choices=choice)

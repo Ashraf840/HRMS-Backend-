@@ -20,13 +20,13 @@ class OnlineTestLinkView(generics.RetrieveAPIView):
     Online link will be visible for specific jobs
     """
     serializer_class = serializer.AdminOnlineTestLinkSerializer
-    lookup_field = 'id'
+    lookup_field = 'jobInfo'
 
     def get_queryset(self):
-        id = self.kwargs['id']
+        id = self.kwargs['jobInfo']
         return OnlineTestModel.objects.filter(jobInfo_id=id)
 
-#
+
 class SendPracticalTestView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated] #admin permission required
     serializer_class = serializer.SendPracticalTestSerializer
