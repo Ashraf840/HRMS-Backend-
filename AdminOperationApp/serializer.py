@@ -2,7 +2,8 @@ from rest_framework import serializers
 from . import models
 from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel, OnlineTestResponseModel, \
     PracticalTestModel
-from RecruitmentManagementApp.serializer import OnlineTestResponseSerializer, PracticalTestResponseSerializer,PracticalTestSerializer
+from RecruitmentManagementApp.serializer import OnlineTestResponseSerializer, PracticalTestResponseSerializer, \
+    PracticalTestSerializer
 
 
 class AdminOnlineTestLinkSerializer(serializers.ModelSerializer):
@@ -15,7 +16,6 @@ class AdminOnlineTestLinkSerializer(serializers.ModelSerializer):
 
 
 class SendPracticalTestSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = models.PracticalTestUserModel
         fields = '__all__'
@@ -89,7 +89,7 @@ class AdminInterviewerListSerializer(serializers.ModelSerializer):
     """
     selected user for interview. will show online,practical test result will show
     """
-    onlineTest = OnlineTestResponseSerializer(source='job_applied_online_response')
+    onlineTest = OnlineTestResponseSerializer(source='job_applied_online_response.', many=True)
     practicalTest = PracticalTestResponseSerializer(source='job_applied_practical_response')
 
     class Meta:

@@ -97,7 +97,7 @@ class JobDataFilterView(generics.ListAPIView):
 
 class MyJobListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated, IsAuthor, EditPermission]
-    serializer_class = serializer.AppliedForJobSerializer
+    serializer_class = serializer.MyJobListSerializer
 
     def get_queryset(self):
         return models.UserJobAppliedModel.objects.filter(userId_id=self.request.user.id)
@@ -195,39 +195,39 @@ class OnlineTestResponseView(generics.CreateAPIView):
     serializer_class = serializer.OnlineTestResponseSerializer
     queryset = models.OnlineTestResponseModel.objects.all()
 
-    #
+
     def perform_create(self, serializer):
         serializer.save(user=self.request.user,
                         appliedJob=models.UserJobAppliedModel.objects.get(id=self.kwargs['job_id']))
-        # id = self.kwargs['job_id']
-        # serializer.save(appliedJob=models.UserJobAppliedModel.objects.get(id = id))
 
-    def create(self, request, *args, **kwargs):
-        job_id = self.kwargs['job_id']
 
-        try:
-            try:
-                check_redundancy = models.OnlineTestResponseModel.objects.get(user=self.request.user,
-                                                                              appliedJob_id=job_id)
-                if check_redundancy is not None:
-                    return Response({'detail': 'You have already taken the test.'}, status=status.HTTP_400_BAD_REQUEST)
-            except:
-                print('except')
-                appliedJobData = models.UserJobAppliedModel.objects.get(userId=self.request.user, id=job_id)
-                # print(appliedJobData.jobProgressStatus.status == 'online')
-                if appliedJobData.jobProgressStatus.status == 'online':
-                    serializer = self.get_serializer(data=request.data)
-                    # print(serializer)
-                    serializer.is_valid(raise_exception=True)
-                    self.perform_create(serializer)
-                    headers = self.get_success_headers(serializer.data)
-                    appliedJobData.jobProgressStatus = models.JobStatusModel.objects.get(status='practical')
-                    appliedJobData.save()
-                    return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-                else:
-                    return Response({'detail': 'You can not attend this test.'}, status=status.HTTP_400_BAD_REQUEST)
-        except:
-            return Response({'detail': 'No Data found'}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+    # def create(self, request, *args, **kwargs):
+    #     job_id = self.kwargs['job_id']
+    #
+
+        # try:
+        #     try:
+        #         check_redundancy = models.OnlineTestResponseModel.objects.get(user=self.request.user,
+        #                                                                       appliedJob_id=job_id)
+        #         if check_redundancy is not None:
+        #             return Response({'detail': 'You have already taken the test.'}, status=status.HTTP_400_BAD_REQUEST)
+        #     except:
+        #         print('except')
+        #         appliedJobData = models.UserJobAppliedModel.objects.get(userId=self.request.user, id=job_id)
+        #         # print(appliedJobData.jobProgressStatus.status == 'online')
+        #         if appliedJobData.jobProgressStatus.status == 'online':
+        #             serializer = self.get_serializer(data=request.data)
+        #             # print(serializer)
+        #             serializer.is_valid(raise_exception=True)
+        #             self.perform_create(serializer)
+        #             headers = self.get_success_headers(serializer.data)
+        #             appliedJobData.jobProgressStatus = models.JobStatusModel.objects.get(status='practical')
+        #             appliedJobData.save()
+        #             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        #         else:
+        #             return Response({'detail': 'You can not attend this test.'}, status=status.HTTP_400_BAD_REQUEST)
+        # except:
+        #     return Response({'detail': 'No Data found'}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
 
 class PracticalTestResponseView(generics.CreateAPIView):

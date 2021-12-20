@@ -132,25 +132,25 @@ ROOT_URLCONF = 'TFHRM.urls'
 # ============== sqlite3 Db ==============
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 
 # ============== postgresql Db ==============
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'dbdaaoqq4cgvm',
-        'USER': 'cjfglljlmnmjag',
-        'PASSWORD': 'e140cf1105c3ff061e04c4d59895fb5b41ae979020257bdd7e4b662e99470870',
-        'HOST': 'ec2-54-74-60-70.eu-west-1.compute.amazonaws.com',
-        'PORT': '5432',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'dbdaaoqq4cgvm',
+#         'USER': 'cjfglljlmnmjag',
+#         'PASSWORD': 'e140cf1105c3ff061e04c4d59895fb5b41ae979020257bdd7e4b662e99470870',
+#         'HOST': 'ec2-54-74-60-70.eu-west-1.compute.amazonaws.com',
+#         'PORT': '5432',
+#     }
+# }
 
 """
 Dev server DB
@@ -170,8 +170,8 @@ Dev server DB
 #  }
 
 # ============== securing proxy for heroku hosting ==============
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT = True
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# SECURE_SSL_REDIRECT = True
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

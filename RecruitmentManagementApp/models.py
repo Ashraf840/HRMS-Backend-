@@ -78,7 +78,7 @@ class OnlineTestModel(models.Model):
     testLink = models.URLField(verbose_name='Test Link', name='test_link')
 
     def __str__(self):
-        return f'job ID {self.jobInfo.id}  jobInfo: {self.jobInfo} '
+        return f'{self.id} job ID {self.jobInfo.id}  jobInfo: {self.jobInfo} '
 
 
 class PracticalTestModel(models.Model):
@@ -129,19 +129,18 @@ class UserJobAppliedModel(models.Model):
 
 
 class OnlineTestResponseModel(models.Model):
-    analyticalTestMark = models.IntegerField(blank=True, verbose_name='Analytical Test Mark')
-    analyticalTestScnSrt = models.ImageField(upload_to='online_test/analytical_test/', blank=True,
-                                             verbose_name='Screenshot')
-    practicalTestMark = models.IntegerField(blank=True, verbose_name='Practical Test Mark')
-    practicalTestScnSrt = models.ImageField(upload_to='online_test/practical_test/', blank=True,
-                                            verbose_name='Screenshot')
+    testName = models.CharField(max_length=200)
+    TestMark = models.IntegerField(blank=True, verbose_name='Analytical Test Mark')
+    TestScnSrt = models.ImageField(upload_to='online_test/analytical_test/', blank=True,
+                                   verbose_name='Screenshot')
+
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='online_response_user')
-    appliedJob = models.OneToOneField(UserJobAppliedModel, on_delete=models.CASCADE,
-                                      related_name='job_applied_online_response')
+    appliedJob = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE,
+                                   related_name='job_applied_online_response')
     submittedTime = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'Analytical {self.analyticalTestMark}, Practical {self.practicalTestMark}'
+        return f'Analytical {self.testName}, Practical {self.TestMark}'
 
 
 class PracticalTestResponseModel(models.Model):

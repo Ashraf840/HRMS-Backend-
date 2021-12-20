@@ -127,14 +127,25 @@ class AppliedForJobSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserJobAppliedModel
         fields = '__all__'
-        depth = 1
         extra_kwargs = {
             'userId': {'read_only': True},
             'jobProgressStatus': {'read_only': True}
         }
 
+
+class MyJobListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.UserJobAppliedModel
+        fields = '__all__'
+
+        extra_kwargs = {
+            'userId': {'read_only': True},
+            'jobProgressStatus': {'read_only': True}
+        }
+        depth = 1
+
     def to_representation(self, instance):
-        data = super(AppliedForJobSerializer, self).to_representation(instance)
+        data = super(MyJobListSerializer, self).to_representation(instance)
         user = data.get('userId')
         user.pop('password')
         user.pop('is_staff')
