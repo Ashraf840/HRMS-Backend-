@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-^^fv-&)8of=nhg48zj7$u_=i$ju%br7@ioy39010nexw*k5+t=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0', '44.242.38.198', '127.0.0.1', 'careeradmin.techforing.com',
+ALLOWED_HOSTS = ['0.0.0.0', '44.242.38.198', '127.0.0.1', 'heroku.com', 'careeradmin.techforing.com',
                  'www.careeradmin.techforing.com']
 
 # Application definition
@@ -109,7 +109,6 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
-
 
 TEMPLATES = [
     {
