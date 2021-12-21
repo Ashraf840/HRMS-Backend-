@@ -132,6 +132,7 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
         instance.gender = validated_data.get('gender', instance.gender)
         instance.location = validated_data.get('location', instance.location)
         instance.nid = validated_data.get('nid', instance.nid)
+        instance.profile_pic = validated_data.get('profile_pic', instance.profile_pic)
         instance.save()
         return instance
 
