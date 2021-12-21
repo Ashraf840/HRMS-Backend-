@@ -183,7 +183,10 @@ class AcademicInfoListView(generics.ListAPIView):
 
     def get_queryset(self):
         id = self.kwargs['id']
-        return models.UserAcademicInfoModel.objects.filter(user__id=id)
+        if self.request.user.id == id:
+            return models.UserAcademicInfoModel.objects.filter(user__id=self.request.user.id)
+        elif self.request.user.is_hr:
+            return models.UserAcademicInfoModel.objects.filter(user__id=id)
 
 
 class UpdateAcademicInfoView(generics.RetrieveUpdateDestroyAPIView):
