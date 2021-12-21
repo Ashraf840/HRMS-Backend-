@@ -159,6 +159,8 @@ class MyJobListSerializer(serializers.ModelSerializer):
         user.pop('user_permissions')
 
         data.get('jobPostId').pop('filterQuestions')
+        print(data.get('jobPostId'))
+
         return data
 
 

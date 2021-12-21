@@ -7,7 +7,7 @@ from RecruitmentManagementApp.views import AllUserDetailView, JobPostView, Appli
     JobDescriptionUpdateDeleteView, JobListView, FilterQuestionResponseListView, FilterQuestionResponseView, \
     JobDataFilterView, \
     PracticalTestView, JobPostOnlineView, OnlineTestResponseView, PracticalTestResponseView, \
-    UpdateCandidateStatusView, MyJobListView, JobStatusView
+    UpdateCandidateStatusView, MyJobListView, JobStatusView,PracticalTestForApplicantView
 # importing Views from UserApp views
 from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
     CustomTokenObtainPairView, UpdateAcademicInfoView, AddAcademicInfoView, \
@@ -74,6 +74,7 @@ urlpatterns = [
     path('online_test_link/<jobInfo>/', OnlineTestLinkView.as_view(), name='online_test_link'),
     # path('online_test_res/', OnlineTestResponseView, name='online_test_response'),
     path('practical_test/', PracticalTestView.as_view(), name='practical_test'),
+    path('practical_test/<jobInfo>/', PracticalTestForApplicantView.as_view(), name='practical_test_for_a_job'),
     path('practical_test_res/<job_id>/', PracticalTestResponseView.as_view(), name='practical_test_response'),
 
     path('documents_submit/<job_id>/', DocumentSubmissionView.as_view(), name='document_submission_add'),
