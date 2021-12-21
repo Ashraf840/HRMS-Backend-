@@ -115,7 +115,7 @@ class EmailVerificationSerializer(serializers.ModelSerializer):
 class ProfileUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
-        fields = ('full_name', 'birthDate', 'nationality', 'phone_number', 'gender', 'location', 'nid')
+        fields = ('full_name', 'birthDate', 'nationality', 'phone_number', 'gender', 'location', 'nid', 'profile_pic')
         extra_kwargs = {
             'email': {'required': True},
             'full_name': {'required': True},
