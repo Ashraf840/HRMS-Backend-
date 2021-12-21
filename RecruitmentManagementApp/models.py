@@ -16,10 +16,10 @@ practical question set model
 class JobStatusModel(models.Model):
     status = models.CharField(max_length=50, blank=False, null=False)
     statusOrder = models.IntegerField()
-    is_completed = models.BooleanField(default=False, blank=True)
+    # is_completed = models.BooleanField(default=False, blank=True)
 
-    def __str__(self):
-        return self.status
+    # def __str__(self):
+        # return self.status
 
 
 class JobPostModel(models.Model):

@@ -142,7 +142,7 @@ class MyJobListSerializer(serializers.ModelSerializer):
             'userId': {'read_only': True},
             'jobProgressStatus': {'read_only': True}
         }
-        depth = 1
+        depth = 2
 
     def to_representation(self, instance):
         data = super(MyJobListSerializer, self).to_representation(instance)
@@ -157,9 +157,9 @@ class MyJobListSerializer(serializers.ModelSerializer):
         user.pop('is_candidate')
         user.pop('groups')
         user.pop('user_permissions')
-
         data.get('jobPostId').pop('filterQuestions')
-        print(data.get('jobPostId'))
+        data.get('jobPostId').pop('user')
+
 
         return data
 

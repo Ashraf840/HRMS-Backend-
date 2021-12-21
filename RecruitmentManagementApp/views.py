@@ -151,15 +151,15 @@ class PracticalTestView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+
 class PracticalTestForApplicantView(generics.RetrieveAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.PracticalTestSerializer
     lookup_field = 'jobInfo'
+
     def get_queryset(self):
         queryset = models.PracticalTestModel.objects.filter(jobInfo_id=self.kwargs['jobInfo'])
         return queryset
-
-
 
 
 class JobPostOnlineView(generics.ListCreateAPIView):
@@ -206,7 +206,6 @@ class OnlineTestResponseView(generics.CreateAPIView):
     serializer_class = serializer.OnlineTestResponseSerializer
     queryset = models.OnlineTestResponseModel.objects.all()
 
-
     def perform_create(self, serializer):
         serializer.save(user=self.request.user,
                         appliedJob=models.UserJobAppliedModel.objects.get(id=self.kwargs['job_id']))
@@ -217,7 +216,6 @@ class OnlineTestResponseView(generics.CreateAPIView):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
 
         # try:
         #     try:
