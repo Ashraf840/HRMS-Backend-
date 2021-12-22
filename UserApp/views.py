@@ -95,7 +95,7 @@ class VerifyEmailView(views.APIView):
             # print('token2')
             user = models.User.objects.get(id=payload['user_id'])
             # print(email=payload['email'])
-            redirect_url = 'https://tf-recruitment.vercel.app/login'
+            redirect_url = 'https://career.techforing.com/login'
             if user.is_active:
                 if not user.email_validated:
                     user.email_validated = True
