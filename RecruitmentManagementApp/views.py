@@ -292,12 +292,13 @@ class PracticalTestResponseView(generics.CreateAPIView):
         try:
             try:
                 check_redundancy = models.PracticalTestResponseModel.objects.get(user=self.request.user,
-                                                                              appliedJob_id=applied_job)
+                                                                              appliedJob=applied_job)
                 print(check_redundancy)
                 if check_redundancy is not None:
                     return Response({'detail': 'You have already taken the test.'}, status=status.HTTP_400_BAD_REQUEST)
             except:
                 data = models.UserJobAppliedModel.objects.get(userId=self.request.user, id=applied_job)
+                print(data)
                 if data.jobProgressStatus.status == 'Practical Test':
                     serializer = self.get_serializer(data=request.data)
                     if serializer.is_valid():
