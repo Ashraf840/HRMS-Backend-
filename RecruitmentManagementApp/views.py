@@ -205,7 +205,7 @@ class UpdateCandidateStatusView(generics.RetrieveUpdateDestroyAPIView):
 class OnlineTestResponseListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.OnlineTestResponseSerializer
-
+    parser_classes = [MultiPartParser, FormParser]
     def get_queryset(self):
         id = self.kwargs['applied_job']
         # onlineTestLink = models.OnlineTestModel.objects.filter(

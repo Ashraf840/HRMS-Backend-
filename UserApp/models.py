@@ -99,7 +99,7 @@ class UserDesignationModel(models.Model):
 # Department Model
 class UserDepartmentModel(models.Model):
     department = models.CharField(max_length=50, null=False)
-    deptManager = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    deptManager = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
     class Meta:
         verbose_name_plural = 'Department'
