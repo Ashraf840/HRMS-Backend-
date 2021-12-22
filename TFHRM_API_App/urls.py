@@ -7,7 +7,7 @@ from RecruitmentManagementApp.views import AllUserDetailView, JobPostView, Appli
     JobDescriptionUpdateDeleteView, JobListView, FilterQuestionResponseListView, FilterQuestionResponseView, \
     JobDataFilterView, \
     PracticalTestView, JobPostOnlineView, OnlineTestResponseView, PracticalTestResponseView, \
-    UpdateCandidateStatusView, MyJobListView, JobStatusView,PracticalTestForApplicantView
+    UpdateCandidateStatusView, MyJobListView, JobStatusView, PracticalTestForApplicantView, OnlineTestResponseListView
 # importing Views from UserApp views
 from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
     CustomTokenObtainPairView, UpdateAcademicInfoView, AddAcademicInfoView, \
@@ -17,16 +17,17 @@ from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
     DocumentSubmissionUpdateDeleteView, ReferenceInformationView, ReferenceInformationUpdateDeleteView
 
 from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView, OnlineTestLinkView, \
-    AdminInterviewerListView,AdminAppliedCandidateOnlineResView,SendPracticalTestView
+    AdminInterviewerListView, AdminAppliedCandidateOnlineResView, SendPracticalTestView
 
 app_name = 'tfhrm_api'
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),  # new user registration
-    path('email-verify/', VerifyEmailView.as_view(), name="email-verify"), # email verification while creating new account
-    path('users/', UserInfoListView.as_view(), name='users_list'), #add new user from admin
-    path('login/', CustomTokenObtainPairView.as_view(), name='login'), #Login url for user
-    path('users/<id>/', UserDetailView.as_view(), name='users'), #user details
+    path('email-verify/', VerifyEmailView.as_view(), name="email-verify"),
+    # email verification while creating new account
+    path('users/', UserInfoListView.as_view(), name='users_list'),  # add new user from admin
+    path('login/', CustomTokenObtainPairView.as_view(), name='login'),  # Login url for user
+    path('users/<id>/', UserDetailView.as_view(), name='users'),  # user details
     path('update_profile/<pk>/', UpdateUserInfoView.as_view(), name='update_profile'),
     path('all_users/', AllUserDetailView.as_view(), name='all_users'),
     path('add_ac/', AddAcademicInfoView.as_view(), name='add_academics'),
@@ -68,10 +69,12 @@ urlpatterns = [
     path('filter_question_res_list/', FilterQuestionResponseListView.as_view(), name='filter_questions_response_list'),
 
     # Online and practical Test Response model
-    path('online_test_res/<job_id>/', OnlineTestResponseView.as_view(), name='online_test_response'),
 
     # change user current status
     path('online_test_link/<jobInfo>/', OnlineTestLinkView.as_view(), name='online_test_link'),
+    path('online_test_res_list/<applied_job>/', OnlineTestResponseListView.as_view(), name='online_test_link'),
+
+    path('online_test_res/<applied_job>/', OnlineTestResponseView.as_view(), name='online_test_response'),
     # path('online_test_res/', OnlineTestResponseView, name='online_test_response'),
     path('practical_test/', PracticalTestView.as_view(), name='practical_test'),
     path('practical_test/<jobInfo>/', PracticalTestForApplicantView.as_view(), name='practical_test_for_a_job'),
@@ -87,7 +90,8 @@ urlpatterns = [
     path('update_status/<id>/', UpdateCandidateStatusView.as_view(), name='update_status'),
     path('admin_job_list/', AdminJobListView.as_view(), name='admin_job_list'),
     path('applicant_list_details/', AppliedUserDetailsView.as_view(), name='admin_applied_user_list'),
-    path('admin_online_test_res_list/', AdminAppliedCandidateOnlineResView.as_view(), name='admin_online_test_response_list'),
+    path('admin_online_test_res_list/', AdminAppliedCandidateOnlineResView.as_view(),
+         name='admin_online_test_response_list'),
     path('applicant_interview/', AdminInterviewerListView.as_view(), name='applicant_interviewer_list'),
     path('send_practical_test/', SendPracticalTestView.as_view(), name='admin_send_practical_test'),
 

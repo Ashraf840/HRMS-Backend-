@@ -201,6 +201,28 @@ class UpdateCandidateStatusView(generics.RetrieveUpdateDestroyAPIView):
         return models.UserJobAppliedModel.objects.filter(id=id)
 
 
+class OnlineTestResponseListView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializer.OnlineTestResponseSerializer
+
+    def get_queryset(self):
+        id = self.kwargs['applied_job']
+        # onlineTestLink = models.OnlineTestModel.objects.filter(
+        #     jobInfo=models.UserJobAppliedModel.objects.get(id=self.kwargs['applied_job']).id)
+
+        return models.OnlineTestResponseModel.objects.filter(user=self.request.user, appliedJob=id)
+
+    def list(self, request, *args, **kwargs):
+        id = self.kwargs['applied_job']
+        onlineTestLink = models.OnlineTestModel.objects.filter(jobInfo=models.UserJobAppliedModel.objects.get(id=self.kwargs['applied_job']).id)
+        if len(onlineTestLink) != 0:
+            data = models.OnlineTestResponseModel.objects.filter(user=self.request.user, appliedJob=id)
+            return Response(data)
+        else:
+            return Response({'detail': 'No data'},
+                            status=status.HTTP_204_NO_CONTENT)
+
+
 class OnlineTestResponseView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.OnlineTestResponseSerializer
@@ -208,14 +230,27 @@ class OnlineTestResponseView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user,
-                        appliedJob=models.UserJobAppliedModel.objects.get(id=self.kwargs['job_id']))
+                        appliedJob=models.UserJobAppliedModel.objects.get(id=self.kwargs['applied_job']))
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        onlineTestLink = models.OnlineTestModel.objects.filter(
+            jobInfo=models.UserJobAppliedModel.objects.get(id=self.kwargs['applied_job']).id)
+        flag = len(onlineTestLink)
+        if flag != 0:
+            submittedData = models.OnlineTestResponseModel.objects.filter(user=self.request.user,
+                                                                          appliedJob=self.kwargs['applied_job'])
+            if len(submittedData) < flag:
+                serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))
+                serializer.is_valid(raise_exception=True)
+                self.perform_create(serializer)
+                headers = self.get_success_headers(serializer.data)
+                return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+            else:
+                return Response({'detail': 'You have already submitted online test Mark.'},
+                                status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({'detail': 'No test link found'},
+                            status=status.HTTP_204_NO_CONTENT)
 
         # try:
         #     try:
