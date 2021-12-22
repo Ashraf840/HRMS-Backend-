@@ -2,6 +2,7 @@ from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, permissions, serializers, status, filters, views
 from rest_framework.decorators import api_view
+from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
 from UserApp.models import User, JobPreferenceModel
 from . import serializer
@@ -283,37 +284,38 @@ class PracticalTestResponseView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.PracticalTestResponseSerializer
     queryset = models.PracticalTestResponseModel.objects.all()
+    parser_classes = [FileUploadParser]
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user,
                         appliedJob=models.UserJobAppliedModel.objects.get(id=self.kwargs['job_id']))
 
-    # def create(self, request, *args, **kwargs):
-    #     applied_job = self.kwargs['job_id']
-    #     try:
-    #         try:
-    #             check_redundancy = models.PracticalTestResponseModel.objects.get(user=self.request.user,
-    #                                                                              appliedJob=applied_job)
-    #             print(check_redundancy)
-    #             if check_redundancy is not None:
-    #                 return Response({'detail': 'You have already taken the test.'}, status=status.HTTP_400_BAD_REQUEST)
-    #         except:
-    #             data = models.UserJobAppliedModel.objects.get(userId=self.request.user, id=applied_job)
-    #
-    #             if data.jobProgressStatus.status == 'Practical Test':
-    #                 serializer = self.get_serializer(data=request.data)
-    #                 if serializer.is_valid():
-    #                     # practicalTestResFiles = request.FILES.get('practicalTestResFiles')
-    #                     # content_type = practicalTestResFiles.content_type
-    #                     # response = "POST API and you have uploaded a {} file".format(content_type)
-    #
-    #                     self.perform_create(serializer)
-    #                     headers = self.get_success_headers(serializer.data)
-    #                     # data.jobProgressStatus = models.JobStatusModel.objects.get(status='document')
-    #                     # data.save()
-    #
-    #                     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-    #             else:
-    #                 return Response({'detail': 'You can not attend this test.'}, status=status.HTTP_400_BAD_REQUEST)
-    #     except:
-    #         return Response({'detail': 'No Data found'}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+    def create(self, request, *args, **kwargs):
+        applied_job = self.kwargs['job_id']
+        try:
+            try:
+                check_redundancy = models.PracticalTestResponseModel.objects.get(user=self.request.user,
+                                                                                 appliedJob=applied_job)
+                print(check_redundancy)
+                if check_redundancy is not None:
+                    return Response({'detail': 'You have already taken the test.'}, status=status.HTTP_400_BAD_REQUEST)
+            except:
+                data = models.UserJobAppliedModel.objects.get(userId=self.request.user, id=applied_job)
+
+                if data.jobProgressStatus.status == 'Practical Test':
+                    serializer = self.get_serializer(data=request.data)
+                    if serializer.is_valid():
+                        # practicalTestResFiles = request.FILES.get('practicalTestResFiles')
+                        # content_type = practicalTestResFiles.content_type
+                        # response = "POST API and you have uploaded a {} file".format(content_type)
+
+                        self.perform_create(serializer)
+                        headers = self.get_success_headers(serializer.data)
+                        # data.jobProgressStatus = models.JobStatusModel.objects.get(status='document')
+                        # data.save()
+
+                        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+                else:
+                    return Response({'detail': 'You can not attend this test.'}, status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response({'detail': 'No Data found'}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
