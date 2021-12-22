@@ -241,6 +241,7 @@ class OnlineTestResponseView(generics.CreateAPIView):
                                                                           appliedJob=self.kwargs['applied_job'])
             if len(submittedData) < flag:
                 serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))
+                print(type(request.data))
                 serializer.is_valid(raise_exception=True)
                 self.perform_create(serializer)
                 headers = self.get_success_headers(serializer.data)
@@ -287,16 +288,16 @@ class PracticalTestResponseView(generics.CreateAPIView):
                         appliedJob=models.UserJobAppliedModel.objects.get(id=self.kwargs['job_id']))
 
     def create(self, request, *args, **kwargs):
-        job_id = self.kwargs['job_id']
+        applied_job = self.kwargs['job_id']
         try:
             try:
                 check_redundancy = models.OnlineTestResponseModel.objects.get(user=self.request.user,
-                                                                              appliedJob_id=job_id)
+                                                                              appliedJob_id=applied_job)
                 if check_redundancy is not None:
                     return Response({'detail': 'You have already taken the test.'}, status=status.HTTP_400_BAD_REQUEST)
             except:
-                data = models.UserJobAppliedModel.objects.get(userId=self.request.user, id=job_id)
-                if data.jobProgressStatus.status == 'practical':
+                data = models.UserJobAppliedModel.objects.get(userId=self.request.user, id=applied_job)
+                if data.jobProgressStatus.status == 'Practical Test':
                     serializer = self.get_serializer(data=request.data)
                     if serializer.is_valid():
                         self.perform_create(serializer)
