@@ -1,9 +1,36 @@
 from rest_framework import serializers
+
+import UserApp.models
 from . import models
 from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel, OnlineTestResponseModel, \
     PracticalTestModel
 from RecruitmentManagementApp.serializer import OnlineTestResponseSerializer, PracticalTestResponseSerializer, \
     PracticalTestSerializer
+
+
+class DeptSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserApp.models.UserDepartmentModel
+        fields = '__all__'
+
+
+class UserSerializer(serializers.ModelSerializer):
+    """
+    Return user basic information
+    """
+
+    class Meta:
+        model = UserApp.models.User
+        fields = ['email', 'full_name', 'profile_pic', 'phone_number', 'nid', 'nationality']
+
+
+class JobSerializer(serializers.ModelSerializer):
+    # filterQus = FilterQuestionSerializer()
+
+    class Meta:
+        model = JobPostModel
+        fields =['jobTitle']
+
 
 
 class AdminOnlineTestLinkSerializer(serializers.ModelSerializer):
@@ -23,6 +50,39 @@ class SendPracticalTestSerializer(serializers.ModelSerializer):
             # 'user': {'read_only': True},
             # 'practicalTestInfo': {'read_only': True}
         }
+
+
+class AdminDashboardSerializer(serializers.ModelSerializer):
+    """
+    Admin Dashboard serializer
+    return Job applied information
+    and manually
+    """
+    jobPostId = JobSerializer()
+    userId = UserSerializer()
+
+    # print(jobPostId)
+    class Meta:
+        model = UserJobAppliedModel
+        fields = '__all__'
+        # depth = 1
+
+    # def to_representation(self, instance):
+    #     data = super(AdminDashboardSerializer, self).to_representation(instance)
+    #     jobInfo = data.get('jobPostId')
+    #     # print(jobInfo)
+    #     # jobInfo.pop('id')
+    #     # jobInfo.pop('filterQuestions')
+    #     # jobInfo.pop('jobProgressStatus')
+    #     # jobInfo.pop('is_active')
+    #     # jobInfo.pop('jobDescription')
+    #     # jobInfo.pop('jobType')
+    #     # jobInfo.pop('lastUpdated')
+    #     # jobInfo.pop('postDate')
+    #     # jobInfo.pop('department')
+    #     # jobInfo.pop('vacancies')
+    #
+    #     return data
 
 
 class AdminJobListSerializer(serializers.ModelSerializer):

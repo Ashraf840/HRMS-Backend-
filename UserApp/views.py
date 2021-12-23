@@ -400,7 +400,7 @@ class ReferenceInformationView(generics.CreateAPIView):
 
 
 class ReferenceInformationUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated,IsAuthor]
+    permission_classes = [permissions.IsAuthenticated, IsAuthor]
     serializer_class = serializer.ReferenceInformationSerializer
 
     lookup_field = 'id'

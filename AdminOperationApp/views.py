@@ -1,17 +1,15 @@
 import datetime
-
+import calendar
 from django.db.models import Q
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-
-from UserApp.models import User
+from UserApp.models import User, UserDepartmentModel
 from . import serializer
 from . import models
 from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel, OnlineTestResponseModel, \
     PracticalTestModel
 from rest_framework.permissions import IsAuthenticated
 from UserApp.permissions import IsHrUser
-
 from .utils import Util
 
 
@@ -28,7 +26,7 @@ class OnlineTestLinkView(generics.ListAPIView):
 
 
 class SendPracticalTestView(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticated] #admin permission required
+    permission_classes = [permissions.IsAuthenticated]  # admin permission required
     serializer_class = serializer.SendPracticalTestSerializer
     queryset = models.PracticalTestUserModel.objects.all()
 
@@ -53,6 +51,82 @@ class SendPracticalTestView(generics.ListCreateAPIView):
                     'email_subject': 'Update'}
             Util.send_email(data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class AdminDashboardView(generics.ListAPIView):
+    """
+    Admin dashboard for recruitment site.
+    recent posted jobs
+    recent applicants,
+    graph data,
+    Barchart data
+    """
+    permission_classes = [IsAuthenticated]
+    serializer_class = serializer.AdminDashboardSerializer
+    queryset = UserJobAppliedModel.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        serializer = self.get_serializer(self.get_queryset(), many=True)
+        responseData = serializer.data
+
+        # department graph data calculation
+        departments = UserDepartmentModel.objects.filter()
+        departmentGraph = []
+        for dept in departments:
+            deptApplicant = UserJobAppliedModel.objects.filter(
+                jobPostId__department__department=dept.department).count()
+            totalApplicant = UserJobAppliedModel.objects.all().count()
+            percentage = int((deptApplicant * 100) / totalApplicant)
+            graph = (
+                (dept.department, percentage)
+            )
+            departmentGraph.append(graph)
+
+        # Barchart data calculation
+        months = []
+        applicantByMonth = []
+        month_number = datetime.date.today().month
+        year = datetime.date.today().year
+        for month in range(month_number, month_number - 13, -1):
+            if month > 0:
+                yearCheck = year
+
+            else:
+                yearCheck = year - 1
+
+            applicant = UserJobAppliedModel.objects.filter(appliedDate__month=month,
+                                                           appliedDate__year=yearCheck).count()
+
+            applicantByMonth.append(applicant)
+            months.append(calendar.month_name[month])
+            # print(applicant)
+
+        barCart = {
+            'months': months,
+            'applicantByMonth': applicantByMonth
+        }
+
+        # recent job section
+        jobs = JobPostModel.objects.all()[:5]
+        recentJobs = []
+        for job in jobs:
+            totalApplied = UserJobAppliedModel.objects.filter(jobPostId=job.id).count()
+            jobDict = {
+                'jobTitle': job.jobTitle,
+                'totalApplied': totalApplied,
+                'status': job.is_active
+            }
+            recentJobs.append(jobDict)
+
+        diction = {
+            'departmentGraph': departmentGraph,
+            'barCart': barCart,
+            'recentJobs': recentJobs
+
+        }
+        responseData.append(diction)
+        # print(responseData)
+        return Response(responseData)
 
 
 class AppliedUserDetailsView(generics.ListAPIView):

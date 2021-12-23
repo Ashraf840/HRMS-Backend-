@@ -134,7 +134,7 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
         instance.nid = validated_data.get('nid', instance.nid)
         instance.profile_pic = validated_data.get('profile_pic', instance.profile_pic)
         instance.save()
-        return
+        return instance
 
 
 
