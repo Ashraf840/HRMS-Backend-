@@ -21,7 +21,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserApp.models.User
-        fields = ['email', 'full_name', 'profile_pic', 'phone_number', 'nid', 'nationality']
+        fields = ['id', 'email', 'full_name', 'profile_pic', 'phone_number', 'nid', 'nationality']
 
 
 class JobSerializer(serializers.ModelSerializer):
@@ -29,8 +29,7 @@ class JobSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = JobPostModel
-        fields =['jobTitle']
-
+        fields = ['id', 'jobTitle']
 
 
 class AdminOnlineTestLinkSerializer(serializers.ModelSerializer):
