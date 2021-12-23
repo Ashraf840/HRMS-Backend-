@@ -63,7 +63,7 @@ class AdminDashboardView(generics.ListAPIView):
     """
     permission_classes = [IsAuthenticated]
     serializer_class = serializer.AdminDashboardSerializer
-    queryset = UserJobAppliedModel.objects.all()
+    queryset = UserJobAppliedModel.objects.all()[:5]
 
     def list(self, request, *args, **kwargs):
         serializer = self.get_serializer(self.get_queryset(), many=True)
