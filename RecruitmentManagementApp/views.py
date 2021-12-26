@@ -243,7 +243,6 @@ class OnlineTestResponseView(generics.CreateAPIView):
             onlineTestLink = models.OnlineTestModel.objects.filter(
                 jobInfo=models.UserJobAppliedModel.objects.get(id=applied_job).jobPostId)
             flag = len(onlineTestLink)
-            # print(flag)
             if flag != 0:
                 submittedData = models.OnlineTestResponseModel.objects.filter(user=self.request.user,
                                                                               appliedJob=applied_job)
@@ -264,8 +263,7 @@ class OnlineTestResponseView(generics.CreateAPIView):
         else:
             return Response({'detail': 'You are not allowed to attend online test.'},
                             status=status.HTTP_400_BAD_REQUEST)
-        # except:
-        #     return Response({'detail': 'Wrong input details.'}, status=status.HTTP_404_NOT_FOUND)
+
         # try:
         #     try:
         #         check_redundancy = models.OnlineTestResponseModel.objects.get(user=self.request.user,
@@ -307,7 +305,7 @@ class PracticalTestResponseView(generics.CreateAPIView):
             try:
                 check_redundancy = models.PracticalTestResponseModel.objects.get(user=self.request.user,
                                                                                  appliedJob=applied_job)
-
+                print(check_redundancy)
                 if check_redundancy is not None:
                     return Response({'detail': 'You have already taken the test.'}, status=status.HTTP_400_BAD_REQUEST)
             except:
