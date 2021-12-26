@@ -131,8 +131,8 @@ class UserJobAppliedModel(models.Model):
 
 class OnlineTestResponseModel(models.Model):
     testName = models.CharField(max_length=200)
-    testMark = models.IntegerField(blank=True, verbose_name='Analytical Test Mark')
-    testScnSrt = models.ImageField(upload_to='online_test/analytical_test/', blank=True,
+    testMark = models.IntegerField(blank=True, verbose_name='Test Mark')
+    testScnSrt = models.ImageField(upload_to='online_test/test_res/', blank=True,
                                    verbose_name='Screenshot', default='users/default.png')
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='online_response_user')
@@ -141,7 +141,7 @@ class OnlineTestResponseModel(models.Model):
     submittedTime = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'Analytical {self.testName}, Practical {self.testMark}'
+        return f'{self.testName}: {self.testMark}'
 
 
 class PracticalTestResponseModel(models.Model):
