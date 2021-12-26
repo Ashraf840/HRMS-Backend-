@@ -339,35 +339,36 @@ class DocumentSubmissionView(generics.CreateAPIView):
     queryset = models.DocumentSubmissionModel.objects.all()
 
     def perform_create(self, serializer):
-        return serializer.save(user=self.request.user)
+        return serializer.save(user=self.request.user,
+                               applied_job=models.UserJobAppliedModel.objects.get(id=self.kwargs['job_id']))
 
     def create(self, request, *args, **kwargs):
         applied_job = self.kwargs['job_id']
+        data = models.UserJobAppliedModel.objects.get(userId=self.request.user, id=applied_job)
+        # print(data.jobProgressStatus.status)
+        if data.jobProgressStatus.status == 'Document':
+            checkRedundancy = models.DocumentSubmissionModel.objects.filter(user=self.request.user,
+                                                                            applied_job=applied_job)
 
-        try:
-            data = models.UserJobAppliedModel.objects.get(userId=self.request.user, id=applied_job)
-            # print(data.jobProgressStatus.status)
-            if data.jobProgressStatus.status == 'Document':
-                checkRedundancy = models.DocumentSubmissionModel.objects.filter(user=self.request.user)
+            if checkRedundancy.exists():
+                return Response({'detail': 'Your data has been updated already.'},
+                                status=status.HTTP_400_BAD_REQUEST)
 
-                if checkRedundancy.exists():
-                    return Response({'detail': 'Your data has been updated already.'},
-                                    status=status.HTTP_400_BAD_REQUEST)
+            serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))
 
-                serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        else:
+            return Response({'detail': 'You are not selected for Document Submission'},
+                            status=status.HTTP_403_FORBIDDEN)
+            # more validation will be a plus.
 
-                serializer.is_valid(raise_exception=True)
-                self.perform_create(serializer)
-                headers = self.get_success_headers(serializer.data)
-                return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-            else:
-                return Response({'detail': 'You are not selected for Document Submission'},
-                                status=status.HTTP_403_FORBIDDEN)
-                # more validation will be a plus.
+        # try:
 
-
-        except:
-            return Response({'detail': 'You are not selected to proceed.'}, status=status.HTTP_400_BAD_REQUEST)
+        # except:
+        #     return Response({'detail': ''}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class DocumentSubmissionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
