@@ -237,36 +237,36 @@ class OnlineTestResponseView(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         applied_job = self.kwargs['applied_job']
-        try:
-            data = models.UserJobAppliedModel.objects.get(userId=self.request.user, id=applied_job)
-            if data.jobProgressStatus.status == 'Online Test':
-                onlineTestLink = models.OnlineTestModel.objects.filter(
-                    jobInfo=models.UserJobAppliedModel.objects.get(id=applied_job).id)
-                print(models.UserJobAppliedModel.objects.get(id=applied_job).id)
-                flag = len(onlineTestLink)
-                # print(flag)
-                if flag != 0:
-                    submittedData = models.OnlineTestResponseModel.objects.filter(user=self.request.user,
-                                                                                  appliedJob=applied_job)
-                    if len(submittedData) < flag:
-                        serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))
 
-                        # print(serializer)
-                        serializer.is_valid(raise_exception=True)
-                        self.perform_create(serializer)
-                        headers = self.get_success_headers(serializer.data)
-                        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-                    else:
-                        return Response({'detail': 'You have already submitted online test Mark.'},
-                                        status=status.HTTP_208_ALREADY_REPORTED)
+        data = models.UserJobAppliedModel.objects.get(userId=self.request.user, id=applied_job)
+        if data.jobProgressStatus.status == 'Online Test':
+            onlineTestLink = models.OnlineTestModel.objects.filter(
+                jobInfo=models.UserJobAppliedModel.objects.get(id=applied_job).id)
+            print(models.UserJobAppliedModel.objects.get(id=applied_job).id)
+            flag = len(onlineTestLink)
+            # print(flag)
+            if flag != 0:
+                submittedData = models.OnlineTestResponseModel.objects.filter(user=self.request.user,
+                                                                              appliedJob=applied_job)
+                if len(submittedData) < flag:
+                    serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))
+
+                    # print(serializer)
+                    serializer.is_valid(raise_exception=True)
+                    self.perform_create(serializer)
+                    headers = self.get_success_headers(serializer.data)
+                    return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
                 else:
-                    return Response({'detail': 'No test link found'},
-                                    status=status.HTTP_204_NO_CONTENT)
+                    return Response({'detail': 'You have already submitted online test Mark.'},
+                                    status=status.HTTP_208_ALREADY_REPORTED)
             else:
-                return Response({'detail': 'You are not allowed to attend online test.'},
-                                status=status.HTTP_400_BAD_REQUEST)
-        except:
-            return Response({'detail': 'Wrong input details.'}, status=status.HTTP_404_NOT_FOUND)
+                return Response({'detail': 'No test link found'},
+                                status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({'detail': 'You are not allowed to attend online test.'},
+                            status=status.HTTP_400_BAD_REQUEST)
+        # except:
+        #     return Response({'detail': 'Wrong input details.'}, status=status.HTTP_404_NOT_FOUND)
         # try:
         #     try:
         #         check_redundancy = models.OnlineTestResponseModel.objects.get(user=self.request.user,
