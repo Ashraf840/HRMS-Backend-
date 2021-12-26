@@ -342,19 +342,20 @@ class DocumentSubmissionView(generics.CreateAPIView):
         return serializer.save(user=self.request.user)
 
     def create(self, request, *args, **kwargs):
-        job_id = self.kwargs['job_id']
+        applied_job = self.kwargs['job_id']
 
         try:
-            data = models.UserJobAppliedModel.objects.get(userId=self.request.user, id=job_id)
+            data = models.UserJobAppliedModel.objects.get(userId=self.request.user, id=applied_job)
+            # print(data.jobProgressStatus.status)
             if data.jobProgressStatus.status == 'Document':
                 checkRedundancy = models.DocumentSubmissionModel.objects.filter(user=self.request.user)
-                # print(checkRedundancy)
+
                 if checkRedundancy.exists():
                     return Response({'detail': 'Your data has been updated already.'},
                                     status=status.HTTP_400_BAD_REQUEST)
 
-                serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))
-                # print(serializer)
+                serializer = self.get_serializer(data=request.data)
+
                 serializer.is_valid(raise_exception=True)
                 self.perform_create(serializer)
                 headers = self.get_success_headers(serializer.data)
@@ -386,7 +387,7 @@ class ReferenceInformationView(generics.CreateAPIView):
     queryset = models.ReferenceInformationModel.objects.all()
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        serializer.save(user=self.request.user, applied_job=self.kwargs['job_id'])
 
     def create(self, request, *args, **kwargs):
         job_id = self.kwargs['job_id']
