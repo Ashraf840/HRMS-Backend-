@@ -226,12 +226,15 @@ def content_file_name(instance, filename):
 
 class DocumentSubmissionModel(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='document_submission_user')
-    sscCertificate = models.FileField(upload_to=content_file_name)
-    hscCertificate = models.FileField(upload_to=content_file_name)
-    graduationCertificate = models.FileField(upload_to=content_file_name)
+    sscCertificate = models.FileField(upload_to=content_file_name, blank=True)
+    hscCertificate = models.FileField(upload_to=content_file_name, blank=True)
+    graduationCertificate = models.FileField(upload_to=content_file_name, blank=True)
     postGraduationCertificate = models.FileField(upload_to=content_file_name, blank=True)
     nidCard = models.FileField(upload_to=content_file_name, blank=True)
-    userPassportImage = models.ImageField(upload_to=image_file_name)
+    userPassportImage = models.ImageField(upload_to=image_file_name, blank=True)
+    passportSizePhoto = models.ImageField(upload_to=image_file_name, blank=True)
+    digitalSignature = models.ImageField(upload_to=image_file_name, blank=True)
+    is_verified = models.BooleanField(default=False)
 
     def __str__(self):
         return f'pk:{self.id} id:{self.user.id},name: {self.user.full_name} Documents'
