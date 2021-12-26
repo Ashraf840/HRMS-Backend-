@@ -325,7 +325,7 @@ class DocumentSubmissionView(generics.CreateAPIView):
 
         try:
             data = UserJobAppliedModel.objects.get(userId=self.request.user, id=job_id)
-            if data.jobProgressStatus == 'Document':
+            if data.jobProgressStatus.status == 'Document':
                 try:
                     checkRedundancy = models.DocumentSubmissionModel.objects.filter(user=self.request.user)
                     # print(checkRedundancy)
