@@ -326,23 +326,19 @@ class DocumentSubmissionView(generics.CreateAPIView):
         try:
             data = UserJobAppliedModel.objects.get(userId=self.request.user, id=job_id)
             if data.jobProgressStatus.status == 'Document':
-                try:
-                    checkRedundancy = models.DocumentSubmissionModel.objects.filter(user=self.request.user)
-                    if checkRedundancy.exists():
-                        return Response({'detail': 'Your data has been updated already.'},
-                                        status=status.HTTP_400_BAD_REQUEST)
-                except:
-                    serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))
+                checkRedundancy = models.DocumentSubmissionModel.objects.filter(user=self.request.user)
+                # print(checkRedundancy)
+                if checkRedundancy.exists():
+                    return Response({'detail': 'Your data has been updated already.'},status=status.HTTP_400_BAD_REQUEST)
+
+                serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))
                     # print(serializer)
-                    serializer.is_valid(raise_exception=True)
-                    self.perform_create(serializer)
-                    headers = self.get_success_headers(serializer.data)
-                    # data.jobProgressStatus = 'reference'
-                    # data.save()
-                    return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+                serializer.is_valid(raise_exception=True)
+                self.perform_create(serializer)
+                headers = self.get_success_headers(serializer.data)
+                return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
             else:
-                return Response({'detail': 'You are not selected for Document Submission'},
-                                status=status.HTTP_403_FORBIDDEN)
+                return Response({'detail': 'You are not selected for Document Submission'},status=status.HTTP_403_FORBIDDEN)
                 # more validation will be a plus.
 
 
