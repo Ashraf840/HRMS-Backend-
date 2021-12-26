@@ -241,8 +241,7 @@ class OnlineTestResponseView(generics.CreateAPIView):
         data = models.UserJobAppliedModel.objects.get(userId=self.request.user, id=applied_job)
         if data.jobProgressStatus.status == 'Online Test':
             onlineTestLink = models.OnlineTestModel.objects.filter(
-                jobInfo=models.UserJobAppliedModel.objects.get(id=applied_job).id)
-            print(models.UserJobAppliedModel.objects.get(id=applied_job).id)
+                jobInfo=models.UserJobAppliedModel.objects.get(id=applied_job).jobPostId)
             flag = len(onlineTestLink)
             # print(flag)
             if flag != 0:
