@@ -328,11 +328,9 @@ class DocumentSubmissionView(generics.CreateAPIView):
             if data.jobProgressStatus.status == 'Document':
                 try:
                     checkRedundancy = models.DocumentSubmissionModel.objects.filter(user=self.request.user)
-                    # print(checkRedundancy)
-                    # data.jobProgressStatus = 'reference'
-                    # data.save()
-                    return Response({'detail': 'Your data has been updated already.'},
-                                    status=status.HTTP_400_BAD_REQUEST)
+                    if checkRedundancy.exists():
+                        return Response({'detail': 'Your data has been updated already.'},
+                                        status=status.HTTP_400_BAD_REQUEST)
                 except:
                     serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))
                     # print(serializer)
