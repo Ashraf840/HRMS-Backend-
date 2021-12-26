@@ -242,7 +242,9 @@ class OnlineTestResponseView(generics.CreateAPIView):
             if data.jobProgressStatus.status == 'Online Test':
                 onlineTestLink = models.OnlineTestModel.objects.filter(
                     jobInfo=models.UserJobAppliedModel.objects.get(id=applied_job).id)
+                print(models.UserJobAppliedModel.objects.get(id=applied_job).id)
                 flag = len(onlineTestLink)
+                # print(flag)
                 if flag != 0:
                     submittedData = models.OnlineTestResponseModel.objects.filter(user=self.request.user,
                                                                                   appliedJob=applied_job)
@@ -306,7 +308,7 @@ class PracticalTestResponseView(generics.CreateAPIView):
             try:
                 check_redundancy = models.PracticalTestResponseModel.objects.get(user=self.request.user,
                                                                                  appliedJob=applied_job)
-                print(check_redundancy)
+
                 if check_redundancy is not None:
                     return Response({'detail': 'You have already taken the test.'}, status=status.HTTP_400_BAD_REQUEST)
             except:
