@@ -42,8 +42,8 @@ admin.site.register(models.UserCertificationsModel)
 admin.site.register(models.JobPreferenceModel)
 admin.site.register(models.UserWorkingExperienceModel)
 admin.site.register(models.SkillsModel)
-admin.site.register(models.DocumentSubmissionModel)
-admin.site.register(models.ReferenceInformationModel)
+# admin.site.register(models.DocumentSubmissionModel)
+# admin.site.register(models.ReferenceInformationModel)
 
 
 # admin.site.register(JobPostModel)

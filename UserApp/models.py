@@ -3,6 +3,7 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, Permis
 from django_resized import ResizedImageField
 
 
+
 # Create your models here.
 
 class UserManager(BaseUserManager):
@@ -215,7 +216,7 @@ class JobPreferenceModel(models.Model):
         return f'{self.user}'
 
 
-# for document naming
+# # for document naming
 def image_file_name(instance, filename):
     return '/'.join(['images', instance.user.full_name, filename])
 
@@ -223,33 +224,37 @@ def image_file_name(instance, filename):
 def content_file_name(instance, filename):
     return '/'.join(['document', instance.user.full_name + '-id_' + str(instance.user.id), filename])
 
-
-class DocumentSubmissionModel(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='document_submission_user')
-    sscCertificate = models.FileField(upload_to=content_file_name, blank=True)
-    hscCertificate = models.FileField(upload_to=content_file_name, blank=True)
-    graduationCertificate = models.FileField(upload_to=content_file_name, blank=True)
-    postGraduationCertificate = models.FileField(upload_to=content_file_name, blank=True)
-    nidCard = models.FileField(upload_to=content_file_name, blank=True)
-    userPassportImage = models.ImageField(upload_to=image_file_name, blank=True)
-    passportSizePhoto = models.ImageField(upload_to=image_file_name, blank=True)
-    digitalSignature = models.ImageField(upload_to=image_file_name, blank=True)
-    is_verified = models.BooleanField(default=False)
-
-    def __str__(self):
-        return f'pk:{self.id} id:{self.user.id},name: {self.user.full_name} Documents'
-
-
-class ReferenceInformationModel(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reference_information_user')
-    name = models.CharField(max_length=100)
-    phoneNumber = models.IntegerField()
-    relationWithReferer = models.CharField(max_length=100)
-    email = models.EmailField(max_length=100)
-    attachedFile = models.FileField(upload_to=content_file_name, blank=True, null=True)
-
-    def __str__(self):
-        return f'pk: {self.pk} reference: {self.name}'
+#
+# class DocumentSubmissionModel(models.Model):
+#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='document_submission_user')
+#     # applied_job = models.OneToOneField(UserJobAppliedModel, on_delete=models.CASCADE,
+#     #                                    related_name='document_submission_applied_job')
+#     sscCertificate = models.FileField(upload_to=content_file_name, blank=True)
+#     hscCertificate = models.FileField(upload_to=content_file_name, blank=True)
+#     graduationCertificate = models.FileField(upload_to=content_file_name, blank=True)
+#     postGraduationCertificate = models.FileField(upload_to=content_file_name, blank=True)
+#     nidCard = models.FileField(upload_to=content_file_name, blank=True)
+#     userPassportImage = models.ImageField(upload_to=image_file_name, blank=True)
+#     passportSizePhoto = models.ImageField(upload_to=image_file_name, blank=True)
+#     digitalSignature = models.ImageField(upload_to=image_file_name, blank=True)
+#     is_verified = models.BooleanField(default=False)
+#
+#     def __str__(self):
+#         return f'pk:{self.id} id:{self.user.id},name: {self.user.full_name} Documents'
+#
+#
+# class ReferenceInformationModel(models.Model):
+#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reference_information_user')
+#     # applied_job = models.OneToOneField(UserJobAppliedModel, on_delete=models.CASCADE,
+#     #                                    related_name='references_submission_applied_job')
+#     name = models.CharField(max_length=100)
+#     phoneNumber = models.IntegerField()
+#     relationWithReferer = models.CharField(max_length=100)
+#     email = models.EmailField(max_length=100)
+#     attachedFile = models.FileField(upload_to=content_file_name, blank=True, null=True)
+#
+#     def __str__(self):
+#         return f'pk: {self.pk} reference: {self.name}'
 
 # # LogOut -> BlackList API
 # class BlackListedToken(models.Model):

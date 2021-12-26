@@ -7,14 +7,15 @@ from RecruitmentManagementApp.views import AllUserDetailView, JobPostView, Appli
     JobDescriptionUpdateDeleteView, JobListView, FilterQuestionResponseListView, FilterQuestionResponseView, \
     JobDataFilterView, \
     PracticalTestView, JobPostOnlineView, OnlineTestResponseView, PracticalTestResponseView, \
-    UpdateCandidateStatusView, MyJobListView, JobStatusView, PracticalTestForApplicantView, OnlineTestResponseListView
+    UpdateCandidateStatusView, MyJobListView, JobStatusView, PracticalTestForApplicantView, \
+    OnlineTestResponseListView, DocumentSubmissionView, \
+    DocumentSubmissionUpdateDeleteView, ReferenceInformationView, ReferenceInformationUpdateDeleteView
 # importing Views from UserApp views
 from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
     CustomTokenObtainPairView, UpdateAcademicInfoView, AddAcademicInfoView, \
     AddWorkExperienceView, UpdateWorkExpInfoView, AddCertificationsView, UpdateCertificationsView, \
     AddTrainingExperienceView, UpdateUserInfoView, UpdateTrainingExperienceView, VerifyEmailView, SkillsView, \
-    AcademicInfoListView, WorkInfoListView, CertificationInfoListView, TrainingInfoListView, DocumentSubmissionView, \
-    DocumentSubmissionUpdateDeleteView, ReferenceInformationView, ReferenceInformationUpdateDeleteView
+    AcademicInfoListView, WorkInfoListView, CertificationInfoListView, TrainingInfoListView
 
 from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView, OnlineTestLinkView, \
     AdminInterviewerListView, AdminAppliedCandidateOnlineResView, SendPracticalTestView, AdminDashboardView
@@ -81,9 +82,9 @@ urlpatterns = [
     path('practical_test_res/<job_id>/', PracticalTestResponseView.as_view(), name='practical_test_response'),
 
     path('documents_submit/<job_id>/', DocumentSubmissionView.as_view(), name='document_submission_add'),
-    path('documents/<id>/', DocumentSubmissionUpdateDeleteView.as_view(), name='document_submission_update_delete'),
+    path('documents/<applied_job>/', DocumentSubmissionUpdateDeleteView.as_view(), name='document_submission_update_delete'),
     path('references_submit/<job_id>/', ReferenceInformationView.as_view(), name='references_information_add'),
-    path('references/<id>/', ReferenceInformationUpdateDeleteView.as_view(),
+    path('references/<applied_job>/', ReferenceInformationUpdateDeleteView.as_view(),
          name='references_information_update_delete'),
 
     #     Admin section URL

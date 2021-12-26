@@ -293,20 +293,20 @@ class SkillsSerializer(serializers.ModelSerializer):
         model = models.SkillsModel
         fields = "__all__"
 
-
-class DocumentationSubmissionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.DocumentSubmissionModel
-        fields = '__all__'
-        extra_kwargs = {
-            'user': {'read_only': True}
-        }
-
-
-class ReferenceInformationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.ReferenceInformationModel
-        fields = '__all__'
-        extra_kwargs = {
-            'user': {'read_only':True}
-        }
+#
+# class DocumentationSubmissionSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = models.DocumentSubmissionModel
+#         fields = '__all__'
+#         extra_kwargs = {
+#             'user': {'read_only': True}
+#         }
+#
+#
+# class ReferenceInformationSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = models.ReferenceInformationModel
+#         fields = '__all__'
+#         extra_kwargs = {
+#             'user': {'read_only':True}
+#         }
