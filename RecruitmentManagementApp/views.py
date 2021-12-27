@@ -388,22 +388,28 @@ class ReferenceInformationView(generics.CreateAPIView):
     queryset = models.ReferenceInformationModel.objects.all()
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user, applied_job=self.kwargs['job_id'])
+        serializer.save(user=self.request.user, applied_job=models.UserJobAppliedModel.objects.get(id=self.kwargs['job_id']))
 
     def create(self, request, *args, **kwargs):
         job_id = self.kwargs['job_id']
         try:
-            data = models.UserJobAppliedModel.objects.get(userId=self.request.user, id=job_id)
-            if data.jobProgressStatus == 'References':
-                serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))
-                # print(serializer)
-                serializer.is_valid(raise_exception=True)
-                self.perform_create(serializer)
-                headers = self.get_success_headers(serializer.data)
-                return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+            # data = models.UserJobAppliedModel.objects.get(userId=self.request.user, id=job_id)
+            documentSubmitted = models.DocumentSubmissionModel.objects.get(user=self.request.user,
+                                                                           applied_job_id=job_id)
+            if len(documentSubmitted)!=0:
+                if documentSubmitted.is_verified:
+                    serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))
+                    # print(serializer)
+                    serializer.is_valid(raise_exception=True)
+                    self.perform_create(serializer)
+                    headers = self.get_success_headers(serializer.data)
+                    return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+                else:
+                    return Response({'detail': 'Document not Verified Yet'},
+                                    status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
             else:
-                return Response({'detail': 'Not selected for References'},
-                                status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+                return Response({'detail': 'Document not Verified Yet'},
+                                status=status.HTTP_403_FORBIDDEN)
         except:
             return Response({'detail': 'No Data found'}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
