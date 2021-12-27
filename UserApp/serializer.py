@@ -261,6 +261,7 @@ class UserDetailsSerializer(serializers.ModelSerializer):
     trainingInfo = UserTrainingExperienceSerializer(source='training_info_user', many=True)
     jobPreference = UserJobPreferenceSerializer(source='job_preference_user', many=True)
     workExperience = UserWorkExperienceSerializer(source='working_experience_user', many=True)
+    userSkills = UserSkillsSerializer(source='skills_user')
 
     class Meta:
         model = models.User

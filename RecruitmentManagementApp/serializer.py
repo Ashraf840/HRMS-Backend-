@@ -12,6 +12,7 @@ class AllUserDetailsSerializer(serializers.ModelSerializer):
     certificationInfo = serializer.UserCertificationsSerializer(source='certification_info_user', many=True)
     trainingInfo = serializer.UserTrainingExperienceSerializer(source='training_info_user', many=True)
     jobPreference = serializer.UserJobPreferenceSerializer(source='job_preference_user', many=True)
+    userSkills = serializer.UserSkillsSerializer(source='skills_user')
 
     class Meta:
         model = User
