@@ -211,27 +211,37 @@ class OnlineTestResponseListView(generics.ListAPIView):
         id = self.kwargs['applied_job']
         # onlineTestLink = models.OnlineTestModel.objects.filter(
         #     jobInfo=models.UserJobAppliedModel.objects.get(id=self.kwargs['applied_job']).id)
-
-        return models.OnlineTestResponseModel.objects.filter(user=self.request.user, appliedJob=id)
+        # print(models.OnlineTestResponseModel.objects.filter(user=self.request.user,
+        #                                                      appliedJob=models.UserJobAppliedModel.objects.get(
+        #                                                          id=id)))
+        return models.OnlineTestResponseModel.objects.filter(user=self.request.user,
+                                                             appliedJob=models.UserJobAppliedModel.objects.get(
+                                                                 id=id))
 
     def list(self, request, *args, **kwargs):
         serializer = self.get_serializer(self.get_queryset(), many=True)
         responseData = serializer.data
 
         id = self.kwargs['applied_job']
-        onlineTestLink = models.OnlineTestModel.objects.filter(
-            jobInfo=models.UserJobAppliedModel.objects.get(id=self.kwargs['applied_job']).id)
+        jobPostId = models.UserJobAppliedModel.objects.get(id=id).jobPostId
+        onlineTestLink = models.OnlineTestModel.objects.filter(jobInfo=jobPostId)
         # print(len(onlineTestLink))
         if len(onlineTestLink) != 0:
-            data = models.OnlineTestResponseModel.objects.filter(user=self.request.user,
-                                                                 appliedJob=models.UserJobAppliedModel.objects.get(id=id))
+            # data = models.OnlineTestResponseModel.objects.filter(user=self.request.user,
+            #                                                      appliedJob=models.UserJobAppliedModel.objects.get(id=id))
             return Response(responseData)
         else:
-            return Response({'detail': 'No data'},
+            return Response({'detail': 'No Test link found.'},
                             status=status.HTTP_204_NO_CONTENT)
 
 
+
+
 class OnlineTestResponseView(generics.CreateAPIView):
+
+    """
+    online test response view
+    """
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.OnlineTestResponseSerializer
     queryset = models.OnlineTestResponseModel.objects.all()
