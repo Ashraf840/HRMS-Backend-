@@ -15,7 +15,7 @@ from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
     CustomTokenObtainPairView, UpdateAcademicInfoView, AddAcademicInfoView, \
     AddWorkExperienceView, UpdateWorkExpInfoView, AddCertificationsView, UpdateCertificationsView, \
     AddTrainingExperienceView, UpdateUserInfoView, UpdateTrainingExperienceView, VerifyEmailView, SkillsView, \
-    AcademicInfoListView, WorkInfoListView, CertificationInfoListView, TrainingInfoListView
+    AcademicInfoListView, WorkInfoListView, CertificationInfoListView, TrainingInfoListView,AddUserSkillsView
 
 from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView, OnlineTestLinkView, \
     AdminInterviewerListView, AdminAppliedCandidateOnlineResView, SendPracticalTestView, AdminDashboardView
@@ -45,7 +45,7 @@ urlpatterns = [
     path('training/', AddTrainingExperienceView.as_view(), name='training_exp'),
     path('training_list/<id>/', TrainingInfoListView.as_view(), name='training_exp_list'),
     path('up_training/<user__id>/<id>/', UpdateTrainingExperienceView.as_view(), name='update_training_exp'),
-
+    path('add_user_skills/', AddUserSkillsView.as_view(), name='add_user_skills'),
     # Hr operations
     path('add_skills/', SkillsView.as_view(), name="add_new_skills"),
 
@@ -96,5 +96,6 @@ urlpatterns = [
          name='admin_online_test_response_list'),
     path('applicant_interview/', AdminInterviewerListView.as_view(), name='applicant_interviewer_list'),
     path('send_practical_test/', SendPracticalTestView.as_view(), name='admin_send_practical_test'),
+
 
 ]

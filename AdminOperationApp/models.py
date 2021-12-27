@@ -13,3 +13,8 @@ class PracticalTestUserModel(models.Model):
 
     def __str__(self):
         return f'{self.user}, {self.practicalTestInfo}'
+
+
+#
+# class MarkingDuringInterviewModel(models.Model):
+#

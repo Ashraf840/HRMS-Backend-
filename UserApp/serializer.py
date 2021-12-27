@@ -137,8 +137,6 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
         return instance
 
 
-
-
 class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
@@ -180,6 +178,14 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 # User Details serializer
+class UserSkillsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.UserSkillsModel
+        fields = '__all__'
+        extra_kwargs = {
+            'user': {'read_only': True}
+        }
+
 
 class UserInformationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -200,13 +206,6 @@ class UserAcademicSerializer(serializers.ModelSerializer):
             'user': {'read_only': True}
         }
         # depth = 1
-
-    # def save(self, **kwargs):
-    #     request = self.context.get("request")
-    #     # print(request)
-    #     if request and hasattr(request, "user"):
-    #         user = request.user
-    #         # print(user)
 
 
 class UserCertificationsSerializer(serializers.ModelSerializer):
@@ -279,13 +278,6 @@ class UpdateAcademicInformationSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'user': {'read_only': True}
         }
-
-    # def save(self, **kwargs):
-    #     user = None
-    #     request = self.context.get("request")
-    #     if request and hasattr(request, "id"):
-    #         user = request.id
-    #         print(user)
 
 
 class SkillsSerializer(serializers.ModelSerializer):

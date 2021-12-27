@@ -3,7 +3,6 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, Permis
 from django_resized import ResizedImageField
 
 
-
 # Create your models here.
 
 class UserManager(BaseUserManager):
@@ -214,6 +213,17 @@ class JobPreferenceModel(models.Model):
 
     def __str__(self):
         return f'{self.user}'
+
+
+class UserSkillsModel(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='skills_user')
+    skills = models.ManyToManyField(SkillsModel, verbose_name='user_skills')
+
+    class Meta:
+        verbose_name_plural = 'User Skills'
+
+    def __str__(self):
+        return f'{self.user}, {self.skills}'
 
 
 # # for document naming

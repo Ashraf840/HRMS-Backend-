@@ -300,6 +300,14 @@ class UpdateTrainingExperienceView(generics.RetrieveUpdateDestroyAPIView):
         return models.UserTrainingExperienceModel.objects.filter(user__id=self.request.user.id, id=c_id)
 
 
+class AddUserSkillsView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializer.UserSkillsSerializer
+    queryset = models.UserSkillsModel.objects.all()
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
 class SkillsView(generics.CreateAPIView):
     serializer_class = serializer.SkillsSerializer
     queryset = models.SkillsModel.objects.all()
