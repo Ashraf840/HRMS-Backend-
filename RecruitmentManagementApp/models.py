@@ -198,7 +198,7 @@ class DocumentSubmissionModel(models.Model):
 
 class ReferenceInformationModel(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reference_information_user')
-    applied_job = models.OneToOneField(UserJobAppliedModel, on_delete=models.CASCADE,
+    applied_job = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE,
                                        related_name='references_submission_applied_job')
     name = models.CharField(max_length=100)
     phoneNumber = models.IntegerField()
