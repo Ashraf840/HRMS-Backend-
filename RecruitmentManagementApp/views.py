@@ -215,12 +215,17 @@ class OnlineTestResponseListView(generics.ListAPIView):
         return models.OnlineTestResponseModel.objects.filter(user=self.request.user, appliedJob=id)
 
     def list(self, request, *args, **kwargs):
+        serializer = self.get_serializer(self.get_queryset(), many=True)
+        responseData = serializer.data
+
         id = self.kwargs['applied_job']
         onlineTestLink = models.OnlineTestModel.objects.filter(
             jobInfo=models.UserJobAppliedModel.objects.get(id=self.kwargs['applied_job']).id)
+        # print(len(onlineTestLink))
         if len(onlineTestLink) != 0:
-            data = models.OnlineTestResponseModel.objects.filter(user=self.request.user, appliedJob=id)
-            return Response(data)
+            data = models.OnlineTestResponseModel.objects.filter(user=self.request.user,
+                                                                 appliedJob=models.UserJobAppliedModel.objects.get(id=id))
+            return Response(responseData)
         else:
             return Response({'detail': 'No data'},
                             status=status.HTTP_204_NO_CONTENT)
