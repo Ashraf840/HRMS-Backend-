@@ -1,5 +1,5 @@
 from django.contrib import admin
-from UserApp.models import User, UserDesignationModel, UserDepartmentModel, UserInfoModel
+from UserApp.models import User, UserDesignationModel, UserDepartmentModel, EmployeeInfoModel
 from . import models
 from django.contrib.auth.admin import UserAdmin
 
@@ -33,7 +33,7 @@ class AdminUser(UserAdmin):
 
 
 admin.site.register(User, AdminUser)
-admin.site.register(UserInfoModel)
+admin.site.register(EmployeeInfoModel)
 admin.site.register(UserDesignationModel)
 admin.site.register(UserDepartmentModel)
 admin.site.register(models.UserAcademicInfoModel)

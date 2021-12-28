@@ -3,13 +3,13 @@ import calendar
 from django.db.models import Q
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-from UserApp.models import User, UserDepartmentModel
+from UserApp.models import User, UserDepartmentModel,EmployeeInfoModel
 from . import serializer
 from . import models
 from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel, OnlineTestResponseModel, \
     PracticalTestModel
 from rest_framework.permissions import IsAuthenticated
-from UserApp.permissions import IsHrUser
+from UserApp.permissions import IsHrUser,IsAdminUser
 from .utils import Util
 
 
@@ -206,3 +206,22 @@ class AdminInterviewerListView(generics.ListAPIView):
     #     data = self.get_serializer(self.get_queryset(), many=True)
     #     print(data)
     #     return Response(data)
+
+
+class MarkingDuringInterviewView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated, IsAdminUser]
+    serializer_class = serializer.MarkingDuringInterviewSerializer
+    queryset = models.MarkingDuringInterviewModel.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save(interviewer=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        checkStatus = UserJobAppliedModel.objects.get(userId_id=request.data['user'])
+        if checkStatus.jobProgressStatus.status == 'F2F Interview':
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response({'detail': 'This candidate is not selected for F2F Interview'}, status=status.HTTP_406_NOT_ACCEPTABLE)

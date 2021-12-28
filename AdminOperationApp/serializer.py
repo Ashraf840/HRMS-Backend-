@@ -174,3 +174,13 @@ class AdminInterviewerListSerializer(serializers.ModelSerializer):
 
         data.get('jobPostId').pop('filterQuestions')
         return data
+
+
+class MarkingDuringInterviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.MarkingDuringInterviewModel
+        fields = '__all__'
+
+        extra_kwargs = {
+            'interviewer': {'read_only': True}
+        }

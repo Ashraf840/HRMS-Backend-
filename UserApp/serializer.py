@@ -6,7 +6,7 @@ from . import models
 
 # class UserInfoModelSerializer(serializers.ModelSerializer):
 #     class Meta:
-#         model = UserInfoModel
+#         model = EmployeeInfoModel
 #         fields= '__all__'
 
 
@@ -159,7 +159,7 @@ class UserSerializer(serializers.ModelSerializer):
     # userAcademicInfo = UserAcademicInfoSerializer()
 
     class Meta:
-        model = models.UserInfoModel
+        model = models.EmployeeInfoModel
         fields = '__all__'
 
 
@@ -189,7 +189,7 @@ class UserSkillsSerializer(serializers.ModelSerializer):
 
 class UserInformationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.UserInfoModel
+        model = models.EmployeeInfoModel
         fields = '__all__'
 
         extra_kwargs = {
@@ -247,7 +247,7 @@ class UserJobPreferenceSerializer(serializers.ModelSerializer):
 # User Detailed View
 """
 user Basic Info -> User
-User More info -> UserInfoModel
+User More info -> EmployeeInfoModel
 Academic Information -> UserAcademicInfoModel
 Certification Information -> UserCertificationsModel
 Training Information -> UserTrainingModel

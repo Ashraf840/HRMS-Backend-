@@ -28,7 +28,7 @@ class JobPostModel(models.Model):
         ('night', 'Night'),
     )
     jobType = (
-        ('pert_time', 'Pert Time'),
+        ('part_time', 'Part Time'),
         ('full_time', 'Full Time'),
         ('internship', 'Internship'),
     )

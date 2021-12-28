@@ -99,13 +99,12 @@ class UserDesignationModel(models.Model):
 # Department Model
 class UserDepartmentModel(models.Model):
     department = models.CharField(max_length=50, null=False)
-    deptManager = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
     class Meta:
         verbose_name_plural = 'Department'
 
     def __str__(self):
-        return f'{self.department}, {self.deptManager}'
+        return f'{self.department}'
 
 
 # User skills Model
@@ -120,7 +119,7 @@ class SkillsModel(models.Model):
 
 
 # User detail information
-class UserInfoModel(models.Model):
+class EmployeeInfoModel(models.Model):
     shift_options = (
         ('Day', 'Day'),
         ('Night', 'Night'),
@@ -129,10 +128,10 @@ class UserInfoModel(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_info_user')
     # phone_number = models.IntegerField(null=True)
     salary = models.IntegerField(null=True)
-    designation = models.ForeignKey(UserDepartmentModel, on_delete=models.CASCADE, related_name='designation_user')
+    designation = models.ForeignKey(UserDesignationModel, on_delete=models.CASCADE, related_name='designation_user')
     department = models.ForeignKey(UserDepartmentModel, on_delete=models.CASCADE, related_name='department_user')
     shift = models.CharField(choices=shift_options, verbose_name='Choose Shift', max_length=20)
-    userSkills = models.ManyToManyField(SkillsModel, related_name="user_skills")
+    personalEmail = models.EmailField(blank=True)
 
     class Meta:
         verbose_name_plural = 'User_Info'

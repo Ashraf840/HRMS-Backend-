@@ -125,7 +125,7 @@ class UserInfoListView(generics.ListCreateAPIView):
     serializer_class = serializer.UserSerializer
 
     def get_queryset(self):
-        return models.UserInfoModel.objects.all()
+        return models.EmployeeInfoModel.objects.all()
 
 
 # User academic information View

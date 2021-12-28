@@ -1,7 +1,6 @@
 from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, permissions, serializers, status, filters, views
-from rest_framework.decorators import api_view
 from rest_framework.parsers import FileUploadParser, MultiPartParser, FormParser
 from rest_framework.response import Response
 from UserApp.models import User, JobPreferenceModel
@@ -176,29 +175,6 @@ class UpdateCandidateStatusView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         id = self.kwargs['id']
-        # data = models.UserJobAppliedModel.objects.get(id=id)
-        # if not data.jobProgressStatus == 'rejected':
-        #     if data.jobProgressStatus == 'new':
-        #         data.jobProgressStatus = 'online'
-        #     elif data.jobProgressStatus == 'online':
-        #         data.jobProgressStatus = 'under_review'
-        #     elif data.jobProgressStatus == 'under_review':
-        #         data.jobProgressStatus = 'selected_for_practical'
-        #     elif data.jobProgressStatus == 'selected_for_practical':
-        #         data.jobProgressStatus = 'test_under_review'
-        #     elif data.jobProgressStatus == 'test_under_review':
-        #         data.jobProgressStatus = 'interview'
-        #     elif data.jobProgressStatus == 'interview':
-        #         data.jobProgressStatus = 'document'
-        #     elif data.jobProgressStatus == 'document':
-        #         data.jobProgressStatus = 'verification'
-        #     elif data.jobProgressStatus == 'verification':
-        #         data.jobProgressStatus = 'appointed'
-        #
-        #     else:
-        #         data.jobProgressStatus = 'appointed'
-        #
-        #     data.save()
         return models.UserJobAppliedModel.objects.filter(id=id)
 
 
