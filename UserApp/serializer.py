@@ -1,3 +1,5 @@
+from abc import ABC
+
 from django.contrib.auth.password_validation import validate_password
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -59,7 +61,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         else:
             msg = 'You are not Candidate.'
 
-        raise serializers.ValidationError(msg)
+        raise serializers.ValidationError({'detail': msg})
 
 
 class HRMCustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -102,7 +104,7 @@ class HRMCustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         else:
             msg = 'You are not Employee.'
 
-        raise serializers.ValidationError(msg)
+        raise serializers.ValidationError({'detail': msg})
 
 # User model Serializer
 class RegisterSerializer(serializers.ModelSerializer):

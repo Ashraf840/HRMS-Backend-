@@ -102,6 +102,7 @@ class UserDesignationModel(models.Model):
 # Department Model
 class UserDepartmentModel(models.Model):
     department = models.CharField(max_length=50, null=False)
+    # departmentHead = models.ForeignKey(User, on_delete=models.)
 
     class Meta:
         verbose_name_plural = 'Department'
