@@ -14,6 +14,11 @@ from pathlib import Path
 from datetime import timedelta
 import os.path
 import sys
+import environ
+
+
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,6 +36,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['0.0.0.0', '44.242.38.198', '127.0.0.1', 'tfhrm.herokuapp.com', 'careeradmin.techforing.com',
                  'www.careeradmin.techforing.com']
+
+# Initialise environment variables
+"""
+env = environ.Env()
+environ.Env.read_env(BASE_DIR.joinpath('.env'))
+"""
+
 
 # Application definition
 

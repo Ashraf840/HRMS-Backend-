@@ -1,5 +1,6 @@
 .idea/
 requirement.txt
+desktop.ini
 venv/
 Academy/__pycache__
 Account/__pycache__
@@ -12,6 +13,7 @@ __pycache__/
 *.log
 *.pot
 *.pyc
+*.env
 __pycache__
 media
 **/__pycache__/
