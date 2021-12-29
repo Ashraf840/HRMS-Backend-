@@ -1,7 +1,7 @@
 import datetime
 import calendar
 from django.db.models import Q
-from rest_framework import generics, permissions, status,pagination
+from rest_framework import generics, permissions, status, pagination
 from rest_framework.response import Response
 from UserApp.models import User, UserDepartmentModel, EmployeeInfoModel
 from . import serializer
@@ -72,7 +72,6 @@ class RecruitmentAdminApplicantListView(generics.ListAPIView):
     pagination_class = Pagination
 
 
-
 class RecruitmentAdminGraphView(generics.ListAPIView):
     """
     Admin dashboard for recruitment site.
@@ -92,15 +91,20 @@ class RecruitmentAdminGraphView(generics.ListAPIView):
         # department graph data calculation
         departments = UserDepartmentModel.objects.filter()
         departmentGraph = []
+        department_list = []
+        department_percent = []
         for dept in departments:
             deptApplicant = UserJobAppliedModel.objects.filter(
                 jobPostId__department__department=dept.department).count()
             totalApplicant = UserJobAppliedModel.objects.all().count()
             percentage = int((deptApplicant * 100) / totalApplicant)
-            graph = (
-                (dept.department, percentage)
-            )
-            departmentGraph.append(graph)
+            department_list.append(dept.department)
+            department_percent.append(percentage)
+            # graph = (
+            #     (dept.department, percentage)
+            # )
+        departmentGraph.append(department_list)
+        departmentGraph.append(department_percent)
 
         # Barchart data calculation
         months = []
@@ -128,11 +132,12 @@ class RecruitmentAdminGraphView(generics.ListAPIView):
         }
 
         # recent job section
-        jobs = JobPostModel.objects.all()[:5]
+        jobs = JobPostModel.objects.all().order_by('-lastDateOfApply')[:5]
         recentJobs = []
         for job in jobs:
             totalApplied = UserJobAppliedModel.objects.filter(jobPostId=job.id).count()
             jobDict = {
+                'jobId': job.id,
                 'jobTitle': job.jobTitle,
                 'totalApplied': totalApplied,
                 'status': job.is_active

@@ -35,26 +35,74 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         # print(attrs)
         data = super(CustomTokenObtainPairSerializer, self).validate(attrs)
         # print(data)
-        if self.user.email_validated:
-            obj = {
-                'id': self.user.id,
-                'email': self.user.email,
-                'full_name': self.user.full_name,
-                'phone_number': self.user.phone_number,
-                'is_candidate': self.user.is_candidate,
-                'is_hr': self.user.is_hr,
-                'is_employee': self.user.is_employee,
-                'email_validated': self.user.email_validated,
+        if self.user.is_candidate:
+            if self.user.is_active:
+                if self.user.email_validated:
+                    obj = {
+                        'id': self.user.id,
+                        'email': self.user.email,
+                        'full_name': self.user.full_name,
+                        'phone_number': self.user.phone_number,
+                        'is_candidate': self.user.is_candidate,
+                        'is_hr': self.user.is_hr,
+                        'is_employee': self.user.is_employee,
+                        'email_validated': self.user.email_validated,
 
-            }
-            data.update({'user': obj})
-            return data
+                    }
+                    data.update({'user': obj})
+                    return data
 
+                else:
+                    msg = "You email is not verified.please chek your email and verify to login"
+            else:
+                msg = "Your account is not active"
         else:
-            msg = "You email is not verified.please chek your email and verify to login"
+            msg = 'You are not Candidate.'
 
         raise serializers.ValidationError(msg)
 
+
+class HRMCustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    """
+    Admin Custom Authentication
+    """
+    # info = serializers.CharField(source='permission_user')
+    non_field_errors = {
+        'detail': 'Please verify your mail.'
+    }
+    default_error_messages = {
+        'detail': 'Username or Password does not matched.'
+    }
+
+    def validate(self, attrs):
+        # print(attrs)
+        data = super(HRMCustomTokenObtainPairSerializer, self).validate(attrs)
+        # print(data)
+        if self.user.is_employee:
+            if self.user.is_active:
+                if self.user.email_validated:
+                    obj = {
+                        'id': self.user.id,
+                        'email': self.user.email,
+                        'full_name': self.user.full_name,
+                        'phone_number': self.user.phone_number,
+                        'is_candidate': self.user.is_candidate,
+                        'is_hr': self.user.is_hr,
+                        'is_employee': self.user.is_employee,
+                        'email_validated': self.user.email_validated,
+
+                    }
+                    data.update({'user': obj})
+                    return data
+
+                else:
+                    msg = "You email is not verified.please chek your email and verify to login"
+            else:
+                msg = "Your account is not active"
+        else:
+            msg = 'You are not Employee.'
+
+        raise serializers.ValidationError(msg)
 
 # User model Serializer
 class RegisterSerializer(serializers.ModelSerializer):

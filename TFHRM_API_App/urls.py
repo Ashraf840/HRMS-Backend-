@@ -15,7 +15,8 @@ from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
     CustomTokenObtainPairView, UpdateAcademicInfoView, AddAcademicInfoView, \
     AddWorkExperienceView, UpdateWorkExpInfoView, AddCertificationsView, UpdateCertificationsView, \
     AddTrainingExperienceView, UpdateUserInfoView, UpdateTrainingExperienceView, VerifyEmailView, SkillsView, \
-    AcademicInfoListView, WorkInfoListView, CertificationInfoListView, TrainingInfoListView, AddUserSkillsView
+    AcademicInfoListView, WorkInfoListView, CertificationInfoListView, TrainingInfoListView, AddUserSkillsView, \
+    HRMCustomTokenObtainPairView
 
 from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView, OnlineTestLinkView, \
     RecruitmentAdminApplicantListView, AdminInterviewerListView, AdminAppliedCandidateOnlineResView, SendPracticalTestView, \
@@ -29,6 +30,7 @@ urlpatterns = [
     # email verification while creating new account
     path('users/', UserInfoListView.as_view(), name='users_list'),  # add new user from admin
     path('login/', CustomTokenObtainPairView.as_view(), name='login'),  # Login url for user
+    path('hrm_login/', HRMCustomTokenObtainPairView.as_view(), name='hrm-login_employee'),  # Login url for employee
     path('users/<id>/', UserDetailView.as_view(), name='users'),  # user details
     path('update_profile/<pk>/', UpdateUserInfoView.as_view(), name='update_profile'),
     path('all_users/', AllUserDetailView.as_view(), name='all_users'),

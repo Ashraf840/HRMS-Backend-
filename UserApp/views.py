@@ -27,6 +27,14 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     token_obtain_pair = TokenObtainPairView.as_view()
 
 
+class HRMCustomTokenObtainPairView(TokenObtainPairView):
+    """
+    Custom Authentication for Employee
+    """
+    serializer_class = serializer.HRMCustomTokenObtainPairSerializer
+    token_obtain_pair = TokenObtainPairView.as_view()
+
+
 # JWT logout
 # class LogoutView(generics.DestroyAPIView):
 #     permission_classes = (permissions.IsAuthenticated,)

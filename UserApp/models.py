@@ -29,17 +29,25 @@ class UserManager(BaseUserManager):
         user.is_staff = True
         user.is_active = True
         user.email_validated = True
+        user.is_employee = True
+        user.is_candidate = True
+        user.is_hr = True
         user.save(using=self._db)
         return user
 
 
 # Custom User model
+gender_options = (
+        ('Male', 'Male'),
+        ('Female', 'Female'),
+        ('Other', 'Other'),
+    )
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=100, verbose_name='Email', unique=True, blank=False)
     full_name = models.CharField(verbose_name='Full Name', max_length=100)
 
     # profile_pic = models.ImageField(upload_to='users/', default='users/default.png')
-    profile_pic = ResizedImageField(upload_to='users/', blank=False, help_text='Size Recommended: 512x512',
+    profile_pic = ResizedImageField(upload_to='users/', blank=True, help_text='Size Recommended: 512x512',
                                     size=[512, 512], quality=100, force_format='JPEG')
     phone_number = models.CharField(max_length=30, blank=True)
     nid = models.CharField(max_length=30, null=True)
@@ -48,13 +56,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     birthDate = models.DateField(verbose_name='Date of Birth', blank=True, null=True)
     date_joined = models.DateTimeField(verbose_name='Joined Date', auto_now_add=True)
-    gender_options = (
-        ('Male', 'Male'),
-        ('Female', 'Female'),
-        ('Other', 'Other'),
-    )
 
-    gender = models.CharField(verbose_name='Choose Gender', choices=gender_options, max_length=20)
+    gender = models.CharField(verbose_name='Choose Gender', choices=gender_options, max_length=20, blank=True)
 
     is_staff = models.BooleanField(verbose_name='Staff Status', default=False, help_text='Designate if the user has '
                                                                                          'staff status')
