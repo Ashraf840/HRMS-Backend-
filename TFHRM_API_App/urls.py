@@ -89,7 +89,7 @@ urlpatterns = [
 
     #     Admin section URL
     path('update_status/<id>/', UpdateCandidateStatusView.as_view(), name='update_status'),
-    path('recruitment_dashboard/', AdminDashboardView.as_view(), name='admin_dashboard'),
+    path('recruitment_dashboard/<year>/', AdminDashboardView.as_view(), name='admin_dashboard'),
     path('admin_job_list/', AdminJobListView.as_view(), name='admin_job_list'),
     path('applicant_list_details/', AppliedUserDetailsView.as_view(), name='admin_applied_user_list'),
     path('admin_online_test_res_list/', AdminAppliedCandidateOnlineResView.as_view(),

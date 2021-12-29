@@ -3,13 +3,13 @@ import calendar
 from django.db.models import Q
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-from UserApp.models import User, UserDepartmentModel,EmployeeInfoModel
+from UserApp.models import User, UserDepartmentModel, EmployeeInfoModel
 from . import serializer
 from . import models
 from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel, OnlineTestResponseModel, \
     PracticalTestModel
 from rest_framework.permissions import IsAuthenticated
-from UserApp.permissions import IsHrUser,IsAdminUser
+from UserApp.permissions import IsHrUser, IsAdminUser
 from .utils import Util
 
 
@@ -85,17 +85,18 @@ class AdminDashboardView(generics.ListAPIView):
         # Barchart data calculation
         months = []
         applicantByMonth = []
+
         month_number = datetime.date.today().month
-        year = datetime.date.today().year
-        for month in range(month_number, month_number - 13, -1):
-            if month > 0:
-                yearCheck = year
 
-            else:
-                yearCheck = year - 1
-
+        year = self.kwargs['year']
+        for month in range(1, 13):
+            # if month > 0:
+            #     yearCheck = year
+            #
+            # else:
+            #     yearCheck = year - 1
             applicant = UserJobAppliedModel.objects.filter(appliedDate__month=month,
-                                                           appliedDate__year=yearCheck).count()
+                                                           appliedDate__year=year).count()
 
             applicantByMonth.append(applicant)
             months.append(calendar.month_name[month])
@@ -224,4 +225,5 @@ class MarkingDuringInterviewView(generics.ListCreateAPIView):
             self.perform_create(serializer)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Response({'detail': 'This candidate is not selected for F2F Interview'}, status=status.HTTP_406_NOT_ACCEPTABLE)
+            return Response({'detail': 'This candidate is not selected for F2F Interview'},
+                            status=status.HTTP_406_NOT_ACCEPTABLE)

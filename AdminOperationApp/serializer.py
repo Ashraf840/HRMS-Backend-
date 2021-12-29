@@ -5,7 +5,7 @@ from . import models
 from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel, OnlineTestResponseModel, \
     PracticalTestModel
 from RecruitmentManagementApp.serializer import OnlineTestResponseSerializer, PracticalTestResponseSerializer, \
-    PracticalTestSerializer
+    PracticalTestSerializer, JobStatusSerializer
 
 
 class DeptSerializer(serializers.ModelSerializer):
@@ -59,6 +59,7 @@ class AdminDashboardSerializer(serializers.ModelSerializer):
     """
     jobPostId = JobSerializer()
     userId = UserSerializer()
+    jobProgressStatus = JobStatusSerializer()
 
     # print(jobPostId)
     class Meta:
