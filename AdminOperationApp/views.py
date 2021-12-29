@@ -90,7 +90,6 @@ class RecruitmentAdminGraphView(generics.ListAPIView):
         responseData = []
         # department graph data calculation
         departments = UserDepartmentModel.objects.filter()
-        departmentGraph = []
         department_list = []
         department_percent = []
         for dept in departments:
@@ -103,8 +102,11 @@ class RecruitmentAdminGraphView(generics.ListAPIView):
             # graph = (
             #     (dept.department, percentage)
             # )
-        departmentGraph.append({'department_list': department_list})
-        departmentGraph.append({'department_percent': department_percent})
+        departmentGraph = {
+            'department_list': department_list,
+            'department_percent': department_percent
+        }
+
 
         # Barchart data calculation
         months = []
