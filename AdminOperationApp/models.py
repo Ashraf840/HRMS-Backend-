@@ -54,7 +54,7 @@ class MarkingDuringInterviewModel(models.Model):
                 intMark.append(int(i))
 
         # print(temp)
-        res = sum(intMark)/temp
+        res = sum(intMark) / temp
         response = ''
         if 4.5 <= res <= 5:
             response = 'Good Fit'
@@ -69,3 +69,13 @@ class MarkingDuringInterviewModel(models.Model):
 
     def __str__(self):
         return f'user: {self.user.full_name}, Feedback: {self.summary()}'
+
+
+# class MeetingScheduleModel(models.Model):
+#     applicationId = models.ForeignKey(UserJobAppliedModel, on_delete=models.SET_NULL,
+#                                       related_name='application_id_applied_job', null=True)
+#     meetingHost = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='meeting_host_user', null=True)
+#     meetingGuest = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='meeting_guest_user', null=True)
+#     meetingScheduleBy = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='meeting_scheduled_user', null=True)
+#     meetingDateTime = models.DateTimeField()
+#     scheduleAssignDate = models.DateField(auto_now_add=True)

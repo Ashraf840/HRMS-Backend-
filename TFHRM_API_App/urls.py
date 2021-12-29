@@ -15,10 +15,11 @@ from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
     CustomTokenObtainPairView, UpdateAcademicInfoView, AddAcademicInfoView, \
     AddWorkExperienceView, UpdateWorkExpInfoView, AddCertificationsView, UpdateCertificationsView, \
     AddTrainingExperienceView, UpdateUserInfoView, UpdateTrainingExperienceView, VerifyEmailView, SkillsView, \
-    AcademicInfoListView, WorkInfoListView, CertificationInfoListView, TrainingInfoListView,AddUserSkillsView
+    AcademicInfoListView, WorkInfoListView, CertificationInfoListView, TrainingInfoListView, AddUserSkillsView
 
 from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView, OnlineTestLinkView, \
-    AdminInterviewerListView, AdminAppliedCandidateOnlineResView, SendPracticalTestView, AdminDashboardView,MarkingDuringInterviewView
+    RecruitmentAdminApplicantListView, AdminInterviewerListView, AdminAppliedCandidateOnlineResView, SendPracticalTestView, \
+    RecruitmentAdminGraphView, MarkingDuringInterviewView
 
 app_name = 'tfhrm_api'
 
@@ -82,14 +83,17 @@ urlpatterns = [
     path('practical_test_res/<job_id>/', PracticalTestResponseView.as_view(), name='practical_test_response'),
 
     path('documents_submit/<job_id>/', DocumentSubmissionView.as_view(), name='document_submission_add'),
-    path('documents/<applied_job>/', DocumentSubmissionUpdateDeleteView.as_view(), name='document_submission_update_delete'),
+    path('documents/<applied_job>/', DocumentSubmissionUpdateDeleteView.as_view(),
+         name='document_submission_update_delete'),
     path('references_submit/<job_id>/', ReferenceInformationView.as_view(), name='references_information_add'),
     path('references/<applied_job>/', ReferenceInformationUpdateDeleteView.as_view(),
          name='references_information_update_delete'),
 
     #     Admin section URL
     path('update_status/<id>/', UpdateCandidateStatusView.as_view(), name='update_status'),
-    path('recruitment_dashboard/<year>/', AdminDashboardView.as_view(), name='admin_dashboard'),
+    path('recruitment_dashboard_applicant/', RecruitmentAdminApplicantListView.as_view(),
+         name='recruitment_dashboard_applicant'),
+    path('recruitment_dashboard/<year>/', RecruitmentAdminGraphView.as_view(), name='recruitment_dashboard_graph_jobs'),
     path('admin_job_list/', AdminJobListView.as_view(), name='admin_job_list'),
     path('applicant_list_details/', AppliedUserDetailsView.as_view(), name='admin_applied_user_list'),
     path('admin_online_test_res_list/', AdminAppliedCandidateOnlineResView.as_view(),
@@ -98,6 +102,5 @@ urlpatterns = [
     path('send_practical_test/', SendPracticalTestView.as_view(), name='admin_send_practical_test'),
     path('marking_during_interview/', MarkingDuringInterviewView.as_view(),
          name='marking_during_interview_interviewer'),
-
 
 ]

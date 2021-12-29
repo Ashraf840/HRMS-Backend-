@@ -1,7 +1,7 @@
 import datetime
 import calendar
 from django.db.models import Q
-from rest_framework import generics, permissions, status
+from rest_framework import generics, permissions, status,pagination
 from rest_framework.response import Response
 from UserApp.models import User, UserDepartmentModel, EmployeeInfoModel
 from . import serializer
@@ -11,6 +11,15 @@ from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, O
 from rest_framework.permissions import IsAuthenticated
 from UserApp.permissions import IsHrUser, IsAdminUser
 from .utils import Util
+
+
+class Pagination(pagination.PageNumberPagination):
+    """
+    Pagination classes
+    """
+    page_size = 5
+    page_size_query_param = 'limit'
+    max_page_size = 5
 
 
 class OnlineTestLinkView(generics.ListAPIView):
@@ -53,7 +62,18 @@ class SendPracticalTestView(generics.ListCreateAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class AdminDashboardView(generics.ListAPIView):
+class RecruitmentAdminApplicantListView(generics.ListAPIView):
+    """
+    Recruitment job list for recruitment admin dashboard
+    """
+    permission_classes = [IsAuthenticated]
+    serializer_class = serializer.AdminDashboardSerializer
+    queryset = UserJobAppliedModel.objects.all().order_by('-id')
+    pagination_class = Pagination
+
+
+
+class RecruitmentAdminGraphView(generics.ListAPIView):
     """
     Admin dashboard for recruitment site.
     recent posted jobs
@@ -66,9 +86,9 @@ class AdminDashboardView(generics.ListAPIView):
     queryset = UserJobAppliedModel.objects.all()[:5]
 
     def list(self, request, *args, **kwargs):
-        serializer = self.get_serializer(self.get_queryset(), many=True)
-        responseData = serializer.data
-
+        # serializer = self.get_serializer(self.get_queryset(), many=True)
+        # response = serializer.data
+        responseData = []
         # department graph data calculation
         departments = UserDepartmentModel.objects.filter()
         departmentGraph = []
