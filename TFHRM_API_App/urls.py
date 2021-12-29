@@ -20,7 +20,7 @@ from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
 
 from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView, OnlineTestLinkView, \
     RecruitmentAdminApplicantListView, AdminInterviewerListView, AdminAppliedCandidateOnlineResView, SendPracticalTestView, \
-    RecruitmentAdminGraphView, MarkingDuringInterviewView
+    RecruitmentAdminGraphView, MarkingDuringInterviewView, AddEmployeeInfoDuringOnboardView
 
 app_name = 'tfhrm_api'
 
@@ -90,7 +90,9 @@ urlpatterns = [
     path('references_submit/<job_id>/', ReferenceInformationView.as_view(), name='references_information_add'),
     path('references/<applied_job>/', ReferenceInformationUpdateDeleteView.as_view(),
          name='references_information_update_delete'),
-
+    # Update official email during onboarding
+    path('add_employee_info/<id>/', AddEmployeeInfoDuringOnboardView.as_view(),
+         name='add_employee_info_during_onboard'),
     #     Admin section URL
     path('update_status/<id>/', UpdateCandidateStatusView.as_view(), name='update_status'),
     path('recruitment_dashboard_applicant/', RecruitmentAdminApplicantListView.as_view(),

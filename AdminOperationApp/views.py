@@ -107,7 +107,6 @@ class RecruitmentAdminGraphView(generics.ListAPIView):
             'department_percent': department_percent
         }
 
-
         # Barchart data calculation
         months = []
         applicantByMonth = []
@@ -254,3 +253,55 @@ class MarkingDuringInterviewView(generics.ListCreateAPIView):
         else:
             return Response({'detail': 'This candidate is not selected for F2F Interview'},
                             status=status.HTTP_406_NOT_ACCEPTABLE)
+
+
+# class ChangeEmailDuringOnboardingView(generics.RetrieveUpdateDestroyAPIView):
+#     """
+#     Provide a official Email to the selected candidate
+#     """
+#     permission_classes = [permissions.IsAuthenticated]
+#     serializer_class = serializer.UpdateEmailDuringOnboardingSerializer
+#     queryset = User.objects.all()
+#     lookup_field = 'id'
+#
+#     def update(self, request, *args, **kwargs):
+#         id = self.kwargs['id']
+#         personalEmail = User.objects.get(id=id).email
+#         # print(personalEmail)
+#         # officialEmail = request.data['email']
+#         try:
+#             employeeInfo = EmployeeInfoModel.objects.get(user__id=id)
+#         except:
+#             employeeInfo = EmployeeInfoModel.objects.create(user_id=id, personalEmail=personalEmail)
+#         print(employeeInfo.personalEmail)
+#         employeeInfo.personalEmail = personalEmail
+#         employeeInfo.save()
+#         print(employeeInfo.personalEmail)
+#
+#         return Response(request.data, status=status.HTTP_201_CREATED)
+#
+#
+#         # print(officialEmail)
+
+class AddEmployeeInfoDuringOnboardView(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializer.AddEmployeeInfoDuringOnboardSerializer
+    queryset = EmployeeInfoModel.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save(user=User.objects.get(id=self.kwargs['id']))
+
+    def create(self, request, *args, **kwargs):
+        id = self.kwargs['id']
+        personalInfo = User.objects.get(id=id)
+        # personalInfo.email = request.data['email']
+        # personalInfo.save()
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        print(serializer.data)
+        self.perform_create(serializer)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+

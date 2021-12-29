@@ -1,6 +1,6 @@
 from rest_framework import serializers
-
-import UserApp.models
+from rest_framework.validators import UniqueValidator
+from UserApp.models import User, UserDepartmentModel, EmployeeInfoModel
 from . import models
 from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel, OnlineTestResponseModel, \
     PracticalTestModel
@@ -10,7 +10,7 @@ from RecruitmentManagementApp.serializer import OnlineTestResponseSerializer, Pr
 
 class DeptSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserApp.models.UserDepartmentModel
+        model = UserDepartmentModel
         fields = '__all__'
 
 
@@ -20,7 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
     """
 
     class Meta:
-        model = UserApp.models.User
+        model = User
         fields = ['id', 'email', 'full_name', 'profile_pic', 'phone_number', 'nid', 'nationality']
 
 
@@ -185,3 +185,34 @@ class MarkingDuringInterviewSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'interviewer': {'read_only': True}
         }
+
+
+# class UpdateEmailDuringOnboardingSerializer(serializers.ModelSerializer):
+#     email = serializers.EmailField(
+#         required=True,
+#         validators=[UniqueValidator(queryset=models.User.objects.all())]
+#     )
+#
+#     class Meta:
+#         model = User
+#         fields = ['email']
+
+
+class AddEmployeeInfoDuringOnboardSerializer(serializers.ModelSerializer):
+    personalEmail = serializers.EmailField(
+        required=True,
+        validators=[UniqueValidator(queryset=models.User.objects.all())]
+    )
+
+    class Meta:
+        model = EmployeeInfoModel
+        # fields = ['user', 'salary', 'designation', 'department', 'shift', 'personalEmail']
+        fields = '__all__'
+        extra_kwargs = {
+            'personalEmail': {'read_only': True},
+            'user': {'read_only': True}
+        }
+
+    # def create(self, validated_data):
+    #     # print(validated_data.pop('email'))
+    #     return EmployeeInfoModel.objects.create(**validated_data)

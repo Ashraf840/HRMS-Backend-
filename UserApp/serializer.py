@@ -106,6 +106,7 @@ class HRMCustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         raise serializers.ValidationError({'detail': msg})
 
+
 # User model Serializer
 class RegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(

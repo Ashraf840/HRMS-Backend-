@@ -131,9 +131,11 @@ class EmployeeInfoModel(models.Model):
     )
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_info_user')
     # phone_number = models.IntegerField(null=True)
-    salary = models.IntegerField(null=True)
-    designation = models.ForeignKey(UserDesignationModel, on_delete=models.CASCADE, related_name='designation_user')
-    department = models.ForeignKey(UserDepartmentModel, on_delete=models.CASCADE, related_name='department_user')
+    salary = models.IntegerField(null=True,blank=True)
+    designation = models.ForeignKey(UserDesignationModel, on_delete=models.CASCADE, related_name='designation_user',
+                                    null=True)
+    department = models.ForeignKey(UserDepartmentModel, on_delete=models.CASCADE, related_name='department_user',
+                                   null=True)
     shift = models.CharField(choices=shift_options, verbose_name='Choose Shift', max_length=20)
     personalEmail = models.EmailField(blank=True)
 
