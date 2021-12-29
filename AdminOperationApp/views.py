@@ -103,8 +103,8 @@ class RecruitmentAdminGraphView(generics.ListAPIView):
             # graph = (
             #     (dept.department, percentage)
             # )
-        departmentGraph.append(department_list)
-        departmentGraph.append(department_percent)
+        departmentGraph.append({'department_list': department_list})
+        departmentGraph.append({'department_percent': department_percent})
 
         # Barchart data calculation
         months = []
