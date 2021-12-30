@@ -85,7 +85,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     def __str__(self):
-        return f'{self.id}'
+        return f'{self.full_name}'
 
 
 # Designation Model
@@ -123,21 +123,23 @@ class SkillsModel(models.Model):
 
 
 # User detail information
-class EmployeeInfoModel(models.Model):
-    shift_options = (
-        ('Day', 'Day'),
-        ('Night', 'Night'),
+shift_options = (
+    ('Day', 'Day'),
+    ('Night', 'Night'),
 
-    )
+)
+
+
+class EmployeeInfoModel(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_info_user')
     # phone_number = models.IntegerField(null=True)
-    salary = models.IntegerField(null=True,blank=True)
+    salary = models.IntegerField(null=True, blank=True)
     designation = models.ForeignKey(UserDesignationModel, on_delete=models.CASCADE, related_name='designation_user',
                                     null=True)
     department = models.ForeignKey(UserDepartmentModel, on_delete=models.CASCADE, related_name='department_user',
                                    null=True)
     shift = models.CharField(choices=shift_options, verbose_name='Choose Shift', max_length=20)
-    personalEmail = models.EmailField(blank=True)
+    email = models.EmailField(blank=True)
 
     class Meta:
         verbose_name_plural = 'User_Info'

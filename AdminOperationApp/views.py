@@ -2,6 +2,7 @@ import datetime
 import calendar
 from django.db.models import Q
 from rest_framework import generics, permissions, status, pagination
+from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from UserApp.models import User, UserDepartmentModel, EmployeeInfoModel
 from . import serializer
@@ -236,7 +237,7 @@ class AdminInterviewerListView(generics.ListAPIView):
 
 
 class MarkingDuringInterviewView(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsAdminUser]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.MarkingDuringInterviewSerializer
     queryset = models.MarkingDuringInterviewModel.objects.all()
 
@@ -244,7 +245,8 @@ class MarkingDuringInterviewView(generics.ListCreateAPIView):
         serializer.save(interviewer=self.request.user)
 
     def create(self, request, *args, **kwargs):
-        checkStatus = UserJobAppliedModel.objects.get(userId_id=request.data['user'])
+        checkStatus = UserJobAppliedModel.objects.get(userId_id=request.data['candidate'],
+                                                      id=request.data['appliedJob'])
         if checkStatus.jobProgressStatus.status == 'F2F Interview':
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
@@ -289,19 +291,22 @@ class AddEmployeeInfoDuringOnboardView(generics.CreateAPIView):
     queryset = EmployeeInfoModel.objects.all()
 
     def perform_create(self, serializer):
+        queryset = EmployeeInfoModel.objects.filter(user=User.objects.get(id=self.kwargs['id']))
+        if queryset.exists():
+            raise ValidationError({'detail': 'Employee information already Created'})
         serializer.save(user=User.objects.get(id=self.kwargs['id']))
 
     def create(self, request, *args, **kwargs):
         id = self.kwargs['id']
-        personalInfo = User.objects.get(id=id)
-        # personalInfo.email = request.data['email']
-        # personalInfo.save()
         serializer = self.get_serializer(data=request.data)
+        personalInfo = User.objects.get(id=id)
+        setEmail = personalInfo.email
+        personalInfo.email = request.data['email']
+        personalInfo.save()
+        request.data._mutable = True
+        request.data['email'] = setEmail
+        request.data._mutable = False
         serializer.is_valid(raise_exception=True)
-        print(serializer.data)
         self.perform_create(serializer)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-
-

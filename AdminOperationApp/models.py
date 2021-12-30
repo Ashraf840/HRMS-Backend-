@@ -26,7 +26,8 @@ markingValue = (
 
 
 class MarkingDuringInterviewModel(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='marking_during_interview_candidate_user')
+    candidate = models.ForeignKey(User, on_delete=models.CASCADE,
+                                  related_name='marking_during_interview_candidate_user')
     appliedJob = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE,
                                    related_name='applied_job_user_applied_model')
     interviewer = models.ForeignKey(User, on_delete=models.CASCADE,

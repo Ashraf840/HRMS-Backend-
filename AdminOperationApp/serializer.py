@@ -199,20 +199,14 @@ class MarkingDuringInterviewSerializer(serializers.ModelSerializer):
 
 
 class AddEmployeeInfoDuringOnboardSerializer(serializers.ModelSerializer):
-    personalEmail = serializers.EmailField(
-        required=True,
-        validators=[UniqueValidator(queryset=models.User.objects.all())]
-    )
+    email = serializers.EmailField(required=True, validators=[UniqueValidator(queryset=User.objects.all())])
 
     class Meta:
         model = EmployeeInfoModel
-        # fields = ['user', 'salary', 'designation', 'department', 'shift', 'personalEmail']
-        fields = '__all__'
+        fields = ['id', 'user', 'salary', 'designation', 'department', 'shift', 'email']
+        # fields = '__all__'
         extra_kwargs = {
-            'personalEmail': {'read_only': True},
             'user': {'read_only': True}
         }
 
-    # def create(self, validated_data):
-    #     # print(validated_data.pop('email'))
-    #     return EmployeeInfoModel.objects.create(**validated_data)
+
