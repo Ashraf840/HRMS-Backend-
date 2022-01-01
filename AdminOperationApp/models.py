@@ -50,6 +50,9 @@ def create_practical_test_mark(sender, instance, created, **kwargs):
 
 
 class MarkingDuringInterviewModel(models.Model):
+    """
+    Mark input during interview
+    """
     candidate = models.ForeignKey(User, on_delete=models.CASCADE,
                                   related_name='marking_during_interview_candidate_user')
     appliedJob = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE,

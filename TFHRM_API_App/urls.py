@@ -54,7 +54,8 @@ urlpatterns = [
     path('add_skills/', SkillsView.as_view(), name="add_new_skills"),
 
     # for Candidate to Apply for Jobs
-    path('job_post/', JobPostOnlineView.as_view(), name='job_post_with_online_test_link'),
+    # path('job_post/', JobPostOnlineView.as_view(), name='job_post_with_online_test_link'),
+    path('job_post/', JobPostView.as_view(), name='job_post_with_online_test_link'),
     path('job_status/', JobStatusView.as_view(), name='job_status'),
     path('job_list/<id>/', JobDescriptionView.as_view(), name='job_description'),
     path('job_update/<id>/', JobDescriptionUpdateDeleteView.as_view(), name='job_description_update_delete'),
