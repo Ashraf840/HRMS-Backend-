@@ -3,9 +3,9 @@ from rest_framework.validators import UniqueValidator
 from UserApp.models import User, UserDepartmentModel, EmployeeInfoModel
 from . import models
 from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel, OnlineTestResponseModel, \
-    PracticalTestModel
+    PracticalTestModel, FilterQuestionsResponseModelHR
 from RecruitmentManagementApp.serializer import OnlineTestResponseSerializer, PracticalTestResponseSerializer, \
-    PracticalTestSerializer, JobStatusSerializer
+    PracticalTestSerializer, JobStatusSerializer, FilterQuestionSerializer, FilterQuestionSerializer
 
 
 class DeptSerializer(serializers.ModelSerializer):
@@ -29,7 +29,7 @@ class JobSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = JobPostModel
-        fields = ['id', 'jobTitle']
+        fields = ['id', 'jobTitle', 'jobType', 'shift']
 
 
 class AdminOnlineTestLinkSerializer(serializers.ModelSerializer):
@@ -96,6 +96,8 @@ class AdminJobListSerializer(serializers.ModelSerializer):
         total = getattr(filters, 'total_applied')
         return total
 
+    # filterQuestions = FilterQuestionSerializer(many=True)
+
     class Meta:
         model = JobPostModel
         fields = '__all__'
@@ -105,6 +107,8 @@ class AppliedUserDetailsSerializer(serializers.ModelSerializer):
     """
         Applicant list will be visible here in admin dashboard.
     """
+    userId = UserSerializer()
+    jobPostId = JobSerializer()
 
     class Meta:
         model = UserJobAppliedModel
@@ -113,7 +117,15 @@ class AppliedUserDetailsSerializer(serializers.ModelSerializer):
             'userId': {'read_only': True},
             'jobProgressStatus': {'read_only': True}
         }
-        depth = 1
+        # depth = 1
+
+
+class FilterQuestionResponseListSerializer(serializers.ModelSerializer):
+    questions = FilterQuestionSerializer()
+
+    class Meta:
+        model = FilterQuestionsResponseModelHR
+        fields = '__all__'
 
 
 class AdminAppliedCandidateOnlineResSerializer(serializers.ModelSerializer):
@@ -208,5 +220,3 @@ class AddEmployeeInfoDuringOnboardSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'user': {'read_only': True}
         }
-
-

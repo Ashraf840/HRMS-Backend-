@@ -27,11 +27,7 @@ class IsHrUser(permissions.BasePermission):
     message = 'You are not authorised to view this page.'
 
     def has_permission(self, request, view):
-        permission = False
-        designation = UserApp.models.EmployeeInfoModel.objects.get(user_id=request.user).designation.designation
-        if designation == 'CEO' or designation == 'GM':
-            permission = True
-        return bool((request.user and request.user.is_hr) or permission)
+        return bool(request.user and request.user.is_hr)
 
 
 class IsAdminUser(permissions.BasePermission):

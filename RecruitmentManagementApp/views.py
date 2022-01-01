@@ -1,3 +1,5 @@
+import datetime
+
 from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, permissions, serializers, status, filters, views
@@ -71,13 +73,30 @@ class JobStatusView(generics.ListAPIView):
 
 # authenticated user can see all job post
 class JobListView(generics.ListAPIView):
+    """
+    new job post will appear for candidate
+    only active jobs will be visible for candidate site
+    """
     permission_classes = []
     serializer_class = serializer.JobPostSerializer
-    queryset = models.JobPostModel.objects.all()
+    queryset = models.JobPostModel.objects.filter(is_active=True)
+
+    def list(self, request, *args, **kwargs):
+        serializer = self.get_serializer(self.get_queryset(), many=True)
+        response = serializer.data
+        data = self.get_queryset().filter(is_active=True)
+        for job in data:
+            # print(job.lastDateOfApply)
+            if job.lastDateOfApply <= datetime.date.today():
+                job.is_active = False
+                job.save()
+        return Response(response)
 
 
-# Job searching Functionality
 class JobDataFilterView(generics.ListAPIView):
+    """
+    Job searching Functionality
+    """
     # queryset = models.JobPostModel.objects.all()
     serializer_class = serializer.JobPostSerializer
 
@@ -211,10 +230,7 @@ class OnlineTestResponseListView(generics.ListAPIView):
                             status=status.HTTP_204_NO_CONTENT)
 
 
-
-
 class OnlineTestResponseView(generics.CreateAPIView):
-
     """
     online test response view
     """
@@ -398,9 +414,6 @@ class ReferenceInformationView(generics.CreateAPIView):
         else:
             return Response({'detail': 'Document not Verified Yet'},
                             status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
-
-
-
 
 
 class ReferenceInformationUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):

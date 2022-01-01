@@ -1,5 +1,4 @@
-import datetime
-import calendar
+import datetime, calendar
 from django.db.models import Q
 from rest_framework import generics, permissions, status, pagination
 from rest_framework.exceptions import ValidationError
@@ -8,7 +7,7 @@ from UserApp.models import User, UserDepartmentModel, EmployeeInfoModel
 from . import serializer
 from . import models
 from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel, OnlineTestResponseModel, \
-    PracticalTestModel
+    PracticalTestModel,FilterQuestionsResponseModelHR
 from rest_framework.permissions import IsAuthenticated
 from UserApp.permissions import IsHrUser, IsAdminUser
 from .utils import Util
@@ -219,6 +218,17 @@ class AdminJobListView(generics.ListAPIView):
         }
         responseData.append(diction)
         return Response(responseData)
+
+
+class FilterQuestionResponseListView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializer.FilterQuestionResponseListSerializer
+
+    def get_queryset(self):
+        user_id = self.kwargs['user_id']
+        job_id = self.kwargs['job_id']
+        queryset = FilterQuestionsResponseModelHR.objects.filter(user=user_id, jobPost=job_id)
+        return queryset
 
 
 class AdminAppliedCandidateOnlineResView(generics.ListAPIView):

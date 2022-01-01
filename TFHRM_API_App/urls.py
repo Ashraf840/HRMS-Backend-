@@ -20,7 +20,8 @@ from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
 
 from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView, OnlineTestLinkView, \
     RecruitmentAdminApplicantListView, AdminInterviewerListView, AdminAppliedCandidateOnlineResView, SendPracticalTestView, \
-    RecruitmentAdminGraphView, MarkingDuringInterviewView, AddEmployeeInfoDuringOnboardView
+    RecruitmentAdminGraphView, MarkingDuringInterviewView, AddEmployeeInfoDuringOnboardView, \
+    FilterQuestionResponseListView
 
 app_name = 'tfhrm_api'
 
@@ -99,6 +100,8 @@ urlpatterns = [
          name='recruitment_dashboard_applicant'),
     path('recruitment_dashboard/<year>/', RecruitmentAdminGraphView.as_view(), name='recruitment_dashboard_graph_jobs'),
     path('admin_job_list/', AdminJobListView.as_view(), name='admin_job_list'),
+    path('filter_qus_res_list/<user_id>/<job_id>/', FilterQuestionResponseListView.as_view(),
+         name='filter_qus_res_list_admin'),
     path('applicant_list_details/', AppliedUserDetailsView.as_view(), name='admin_applied_user_list'),
     path('admin_online_test_res_list/', AdminAppliedCandidateOnlineResView.as_view(),
          name='admin_online_test_response_list'),
