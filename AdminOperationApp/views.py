@@ -232,11 +232,20 @@ class FilterQuestionResponseListView(generics.ListAPIView):
 
 
 class AdminAppliedCandidateOnlineResView(generics.ListAPIView):
+    """
+    Online test response list
+    """
     serializer_class = serializer.AdminAppliedCandidateOnlineResSerializer
     queryset = OnlineTestResponseModel.objects.all()
 
 
+
+
+
 class AdminInterviewerListView(generics.ListAPIView):
+    """
+    selected for interview stage
+    """
     serializer_class = serializer.AdminInterviewerListSerializer
     queryset = UserJobAppliedModel.objects.filter(jobProgressStatus__status='F2F Interview')
 

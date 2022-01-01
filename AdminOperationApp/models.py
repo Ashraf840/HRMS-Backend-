@@ -4,7 +4,14 @@ from RecruitmentManagementApp.models import PracticalTestModel, UserJobAppliedMo
 
 
 # Create your models here.
-
+markingValue = (
+    ('5', 'A'),
+    ('4', 'B'),
+    ('3', 'C'),
+    ('2', 'D'),
+    ('1', 'E'),
+    ('0', 'F'),
+)
 class PracticalTestUserModel(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='practical_test_user')
     practicalTestInfo = models.ForeignKey(PracticalTestModel, on_delete=models.CASCADE,
@@ -15,14 +22,9 @@ class PracticalTestUserModel(models.Model):
         return f'{self.user}, {self.practicalTestInfo}'
 
 
-markingValue = (
-    ('5', 'A'),
-    ('4', 'B'),
-    ('3', 'C'),
-    ('2', 'D'),
-    ('1', 'E'),
-    ('0', 'F'),
-)
+class PracticalTestMarkModel(models.Model):
+    jobApplication = models.ForeignKey(UserJobAppliedModel)
+
 
 
 class MarkingDuringInterviewModel(models.Model):
