@@ -7,9 +7,9 @@ from UserApp.models import User, UserDepartmentModel, EmployeeInfoModel
 from . import serializer
 from . import models
 from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel, OnlineTestResponseModel, \
-    PracticalTestModel,FilterQuestionsResponseModelHR
+    FilterQuestionsResponseModelHR
 from rest_framework.permissions import IsAuthenticated
-from UserApp.permissions import IsHrUser, IsAdminUser
+from UserApp.permissions import IsHrUser
 from .utils import Util
 
 

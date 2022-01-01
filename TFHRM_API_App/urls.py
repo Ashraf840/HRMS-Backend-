@@ -91,7 +91,7 @@ urlpatterns = [
     path('references_submit/<job_id>/', ReferenceInformationView.as_view(), name='references_information_add'),
     path('references/<applied_job>/', ReferenceInformationUpdateDeleteView.as_view(),
          name='references_information_update_delete'),
-    # Update official email during onboarding
+    # Update official email during onboard
     path('add_employee_info/<id>/', AddEmployeeInfoDuringOnboardView.as_view(),
          name='add_employee_info_during_onboard'),
     #     Admin section URL

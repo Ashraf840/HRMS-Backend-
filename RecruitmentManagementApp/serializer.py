@@ -1,6 +1,6 @@
 from rest_framework import serializers
 # from rest_framework.utils.serializer_helpers import ReturnDict
-
+from AdminOperationApp.models import PracticalTestMarkInputModel
 from UserApp import serializer
 from UserApp.models import User
 from . import models
@@ -176,6 +176,10 @@ class CandidateStatusChangeSerializer(serializers.ModelSerializer):
 
 
 class OnlineTestResponseSerializer(serializers.ModelSerializer):
+    """
+    Online test response will be stored here
+    """
+
     class Meta:
         model = models.OnlineTestResponseModel
         fields = '__all__'

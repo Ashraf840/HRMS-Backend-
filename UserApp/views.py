@@ -15,7 +15,6 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from . import models
-from RecruitmentManagementApp.models import UserJobAppliedModel
 from . import serializer
 from .permissions import EditPermission, IsAuthor, IsCandidateUser
 from .utils import Util

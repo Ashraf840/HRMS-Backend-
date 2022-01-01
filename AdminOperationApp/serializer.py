@@ -3,9 +3,9 @@ from rest_framework.validators import UniqueValidator
 from UserApp.models import User, UserDepartmentModel, EmployeeInfoModel
 from . import models
 from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel, OnlineTestResponseModel, \
-    PracticalTestModel, FilterQuestionsResponseModelHR
+    FilterQuestionsResponseModelHR
 from RecruitmentManagementApp.serializer import OnlineTestResponseSerializer, PracticalTestResponseSerializer, \
-    PracticalTestSerializer, JobStatusSerializer, FilterQuestionSerializer, FilterQuestionSerializer
+    JobStatusSerializer, FilterQuestionSerializer
 
 
 class DeptSerializer(serializers.ModelSerializer):
@@ -157,6 +157,15 @@ class AdminAppliedCandidateOnlineResSerializer(serializers.ModelSerializer):
         return data
 
 
+class PracticalTestMarkInputSerializer(serializers.ModelSerializer):
+    """
+    Practical Test Mark input serializer
+    """
+    class Meta:
+        model = models.PracticalTestMarkInputModel
+        fields = '__all__'
+
+
 class AdminInterviewerListSerializer(serializers.ModelSerializer):
     """
     selected user for interview. will show online,practical test result will show
@@ -197,17 +206,6 @@ class MarkingDuringInterviewSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'interviewer': {'read_only': True}
         }
-
-
-# class UpdateEmailDuringOnboardingSerializer(serializers.ModelSerializer):
-#     email = serializers.EmailField(
-#         required=True,
-#         validators=[UniqueValidator(queryset=models.User.objects.all())]
-#     )
-#
-#     class Meta:
-#         model = User
-#         fields = ['email']
 
 
 class AddEmployeeInfoDuringOnboardSerializer(serializers.ModelSerializer):

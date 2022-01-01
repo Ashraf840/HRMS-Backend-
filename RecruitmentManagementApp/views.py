@@ -1,13 +1,12 @@
 import datetime
 
 from django.db.models import Q
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import generics, permissions, serializers, status, filters, views
-from rest_framework.parsers import FileUploadParser, MultiPartParser, FormParser
+from rest_framework import generics, permissions, status
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
-from UserApp.models import User, JobPreferenceModel
+from UserApp.models import User
 from . import serializer
-from UserApp.permissions import IsHrUser, IsCandidateUser, EditPermission, IsAuthor
+from UserApp.permissions import IsHrUser, EditPermission, IsAuthor
 from . import models
 
 

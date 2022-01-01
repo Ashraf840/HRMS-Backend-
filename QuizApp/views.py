@@ -1,5 +1,5 @@
 from rest_framework import generics, permissions
-from UserApp.permissions import IsHrUser, IsCandidateUser, EditPermission
+from UserApp.permissions import IsHrUser
 from . import serializer
 from . import models
 
