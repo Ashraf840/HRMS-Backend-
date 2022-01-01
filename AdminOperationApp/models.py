@@ -22,8 +22,8 @@ class PracticalTestUserModel(models.Model):
         return f'{self.user}, {self.practicalTestInfo}'
 
 
-class PracticalTestMarkModel(models.Model):
-    jobApplication = models.ForeignKey(UserJobAppliedModel)
+# class PracticalTestMarkModel(models.Model):
+#     jobApplication = models.ForeignKey(UserJobAppliedModel)
 
 
 
