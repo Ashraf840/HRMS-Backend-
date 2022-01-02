@@ -21,7 +21,7 @@ from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
 from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView, OnlineTestLinkView, \
     RecruitmentAdminApplicantListView, AdminInterviewerListView, AdminAppliedCandidateOnlineResView, SendPracticalTestView, \
     RecruitmentAdminGraphView, MarkingDuringInterviewView, AddEmployeeInfoDuringOnboardView, \
-    FilterQuestionResponseListView, PracticalTestMarkInputView
+    FilterQuestionResponseListView, PracticalTestMarkUpdateView, RecruitmentPracticalTestResponseView
 
 app_name = 'tfhrm_api'
 
@@ -97,8 +97,10 @@ urlpatterns = [
          name='add_employee_info_during_onboard'),
     #     Admin section URL
 
-    path('practical_test_mark_input/<application_id>/', PracticalTestMarkInputView.as_view(),
+    path('practical_test_mark_update/<jobApplication>/', PracticalTestMarkUpdateView.as_view(),
          name='practical_test_mark_input_view'),
+    path('recruitment_practical_test_res/', RecruitmentPracticalTestResponseView.as_view(),
+         name='recruitment_practical_test_response'),
     path('update_status/<id>/', UpdateCandidateStatusView.as_view(), name='update_status'),
     path('recruitment_dashboard_applicant/', RecruitmentAdminApplicantListView.as_view(),
          name='recruitment_dashboard_applicant'),

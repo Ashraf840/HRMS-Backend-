@@ -102,6 +102,10 @@ class JobDataFilterView(generics.ListAPIView):
     def get_queryset(self):
         queryset = models.JobPostModel.objects.all()
         search = self.request.query_params.get('search')
+        for job in queryset:
+            if job.lastDateOfApply <= datetime.date.today():
+                job.is_active = False
+                job.save()
         # dep = self.request.query_params.get('department')
         # print(search)
         # print(dep)
@@ -109,7 +113,7 @@ class JobDataFilterView(generics.ListAPIView):
             Q(jobTitle__icontains=search) |
             Q(department__department__icontains=search) |
             Q(level__icontains=search) |
-            Q(jobType__icontains=search)
+            Q(jobType__icontains=search), is_active=True
         )
 
 

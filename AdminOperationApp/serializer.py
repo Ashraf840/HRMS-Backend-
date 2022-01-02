@@ -172,6 +172,17 @@ class PracticalTestMarkInputSerializer(serializers.ModelSerializer):
         }
 
 
+class RecruitmentPracticalTestResponseSerializer(serializers.ModelSerializer):
+    """
+    Recruitment practical test response and mark serializer
+    """
+    # practicalMark = PracticalTestMarkInputSerializer(source='appliedJob.jobApplication.')
+
+    class Meta:
+        model = models.PracticalTestResponseModel
+        fields = '__all__'
+
+
 class AdminInterviewerListSerializer(serializers.ModelSerializer):
     """
     selected user for interview. will show online,practical test result will show

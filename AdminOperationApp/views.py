@@ -7,7 +7,7 @@ from UserApp.models import User, UserDepartmentModel, EmployeeInfoModel
 from . import serializer
 from . import models
 from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel, OnlineTestResponseModel, \
-    FilterQuestionsResponseModelHR
+    FilterQuestionsResponseModelHR, PracticalTestResponseModel
 from rest_framework.permissions import IsAuthenticated
 from UserApp.permissions import IsHrUser
 from .utils import Util
@@ -65,20 +65,38 @@ class SendPracticalTestView(generics.ListCreateAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class PracticalTestMarkInputView(generics.CreateAPIView):
+class PracticalTestMarkUpdateView(generics.RetrieveUpdateDestroyAPIView):
     """
     practical test mark will be given and evaluate candidate practical test mark
     """
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.PracticalTestMarkInputSerializer
-    queryset = models.PracticalTestMarkInputModel.objects.all()
+    # queryset = models.PracticalTestMarkInputModel.objects.filter(jobApplication_id='jobApplication')
+    lookup_field = 'jobApplication'
 
-    def perform_create(self, serializer):
-        application_id = self.kwargs['application_id']
-        serializer.save(jobApplication=UserJobAppliedModel.objects.get(id=application_id),
-                        markAssignBy=self.request.user)
+    def get_queryset(self):
+        application_id = self.kwargs['jobApplication']
+        queryset = models.PracticalTestMarkInputModel.objects.filter(jobApplication_id=application_id)
+        return queryset
 
+    def perform_update(self, serializer):
+        instance = self.get_object()  # instance before update
+        print(instance)
+        self.request.data.get("jobApplication", None)  # read data from request
+        if self.request.user.is_authenticated:
+            updated_instance = serializer.save(markAssignBy=self.request.user)
+        else:
+            updated_instance = serializer.save()
+        return updated_instance
 
+    # def perform_update(self, serializer):
+    #     application_id = self.kwargs['jobApplication']
+    #     serializer.save(jobApplication=UserJobAppliedModel.objects.get(id=application_id),
+    #                     markAssignBy=self.request.user)
+
+    # def update(self, request, *args, **kwargs):
+    #     serializer = self.get_serializer(data=request.data)
+    #     print(serializer)
 
 
 class RecruitmentAdminApplicantListView(generics.ListAPIView):
@@ -256,6 +274,14 @@ class AdminAppliedCandidateOnlineResView(generics.ListAPIView):
     """
     serializer_class = serializer.AdminAppliedCandidateOnlineResSerializer
     queryset = OnlineTestResponseModel.objects.all()
+
+
+class RecruitmentPracticalTestResponseView(generics.ListAPIView):
+    """
+    Recruitment practical test response and marks
+    """
+    serializer_class = serializer.RecruitmentPracticalTestResponseSerializer
+    queryset = PracticalTestResponseModel.objects.all()
 
 
 class AdminInterviewerListView(generics.ListAPIView):

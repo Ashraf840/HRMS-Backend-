@@ -34,7 +34,7 @@ class PracticalTestMarkInputModel(models.Model):
     testMark = models.CharField(choices=markingValue, max_length=2, blank=True, null=True)
 
     def __str__(self):
-        return f'{self.testMark}, {self.jobApplication}'
+        return f'{self.id} {self.testMark}, {self.jobApplication}'
 
 # Django signal
 @receiver(post_save, sender=PracticalTestResponseModel)
