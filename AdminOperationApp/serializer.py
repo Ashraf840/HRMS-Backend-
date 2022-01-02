@@ -161,9 +161,15 @@ class PracticalTestMarkInputSerializer(serializers.ModelSerializer):
     """
     Practical Test Mark input serializer
     """
+
     class Meta:
         model = models.PracticalTestMarkInputModel
         fields = '__all__'
+
+        extra_kwargs = {
+            'markAssignBy': {'read_only': True},
+            'jobApplication': {'read_only': True}
+        }
 
 
 class AdminInterviewerListSerializer(serializers.ModelSerializer):

@@ -21,7 +21,7 @@ from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
 from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView, OnlineTestLinkView, \
     RecruitmentAdminApplicantListView, AdminInterviewerListView, AdminAppliedCandidateOnlineResView, SendPracticalTestView, \
     RecruitmentAdminGraphView, MarkingDuringInterviewView, AddEmployeeInfoDuringOnboardView, \
-    FilterQuestionResponseListView
+    FilterQuestionResponseListView, PracticalTestMarkInputView
 
 app_name = 'tfhrm_api'
 
@@ -54,8 +54,8 @@ urlpatterns = [
     path('add_skills/', SkillsView.as_view(), name="add_new_skills"),
 
     # for Candidate to Apply for Jobs
-    # path('job_post/', JobPostOnlineView.as_view(), name='job_post_with_online_test_link'),
-    path('job_post/', JobPostView.as_view(), name='job_post_with_online_test_link'),
+    path('job_post/', JobPostOnlineView.as_view(), name='job_post_create'),
+    # path('job_post/', JobPostView.as_view(), name='job_post_with_online_test_link'),
     path('job_status/', JobStatusView.as_view(), name='job_status'),
     path('job_list/<id>/', JobDescriptionView.as_view(), name='job_description'),
     path('job_update/<id>/', JobDescriptionUpdateDeleteView.as_view(), name='job_description_update_delete'),
@@ -82,7 +82,7 @@ urlpatterns = [
 
     path('online_test_res/<applied_job>/', OnlineTestResponseView.as_view(), name='online_test_response'),
     # path('online_test_res/', OnlineTestResponseView, name='online_test_response'),
-    path('practical_test/', PracticalTestView.as_view(), name='practical_test'),
+    # path('practical_test/', PracticalTestView.as_view(), name='practical_test'),
     path('practical_test/<jobInfo>/', PracticalTestForApplicantView.as_view(), name='practical_test_for_a_job'),
     path('practical_test_res/<job_id>/', PracticalTestResponseView.as_view(), name='practical_test_response'),
 
@@ -96,6 +96,9 @@ urlpatterns = [
     path('add_employee_info/<id>/', AddEmployeeInfoDuringOnboardView.as_view(),
          name='add_employee_info_during_onboard'),
     #     Admin section URL
+
+    path('practical_test_mark_input/<application_id>/', PracticalTestMarkInputView.as_view(),
+         name='practical_test_mark_input_view'),
     path('update_status/<id>/', UpdateCandidateStatusView.as_view(), name='update_status'),
     path('recruitment_dashboard_applicant/', RecruitmentAdminApplicantListView.as_view(),
          name='recruitment_dashboard_applicant'),

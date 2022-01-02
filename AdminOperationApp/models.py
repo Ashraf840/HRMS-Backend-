@@ -36,7 +36,6 @@ class PracticalTestMarkInputModel(models.Model):
     def __str__(self):
         return f'{self.testMark}, {self.jobApplication}'
 
-
 # Django signal
 @receiver(post_save, sender=PracticalTestResponseModel)
 def create_practical_test_mark(sender, instance, created, **kwargs):

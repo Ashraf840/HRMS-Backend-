@@ -35,6 +35,9 @@ class OnlineTestLinkView(generics.ListAPIView):
 
 
 class SendPracticalTestView(generics.ListCreateAPIView):
+    """
+    set and send practical test link to the candidate
+    """
     permission_classes = [permissions.IsAuthenticated]  # admin permission required
     serializer_class = serializer.SendPracticalTestSerializer
     queryset = models.PracticalTestUserModel.objects.all()
@@ -60,6 +63,22 @@ class SendPracticalTestView(generics.ListCreateAPIView):
                     'email_subject': 'Update'}
             Util.send_email(data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class PracticalTestMarkInputView(generics.CreateAPIView):
+    """
+    practical test mark will be given and evaluate candidate practical test mark
+    """
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializer.PracticalTestMarkInputSerializer
+    queryset = models.PracticalTestMarkInputModel.objects.all()
+
+    def perform_create(self, serializer):
+        application_id = self.kwargs['application_id']
+        serializer.save(jobApplication=UserJobAppliedModel.objects.get(id=application_id),
+                        markAssignBy=self.request.user)
+
+
 
 
 class RecruitmentAdminApplicantListView(generics.ListAPIView):
@@ -237,9 +256,6 @@ class AdminAppliedCandidateOnlineResView(generics.ListAPIView):
     """
     serializer_class = serializer.AdminAppliedCandidateOnlineResSerializer
     queryset = OnlineTestResponseModel.objects.all()
-
-
-
 
 
 class AdminInterviewerListView(generics.ListAPIView):

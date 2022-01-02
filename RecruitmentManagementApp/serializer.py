@@ -31,7 +31,7 @@ class FilterQuestionSerializer(serializers.ModelSerializer):
 
 class JobPostSerializer(serializers.ModelSerializer):
     # filterQus = FilterQuestionSerializer()
-
+    # filterQuestions = FilterQuestionSerializer(many=True)
     class Meta:
         model = models.JobPostModel
         exclude = ['user']
@@ -48,34 +48,36 @@ class JobPostSerializer(serializers.ModelSerializer):
     #     return filterQus
 
 
-class OnlineTestSerializer(serializers.ModelSerializer):
-    jobInfo = JobPostSerializer()
-    filterQus = serializers.PrimaryKeyRelatedField(queryset=models.JobApplyFilterQuestionModel.objects.all(),
-                                                   write_only=True, many=True)
-    progressStatus = serializers.PrimaryKeyRelatedField(queryset=models.JobStatusModel.objects.all(), write_only=True,
-                                                        many=True)
+class JobCreateSerializer(serializers.ModelSerializer):
+    # jobInfo = JobPostSerializer()
+    # filterQus = serializers.PrimaryKeyRelatedField(queryset=models.JobApplyFilterQuestionModel.objects.all(),
+    #                                                write_only=True, many=True)
+    # progressStatus = serializers.PrimaryKeyRelatedField(queryset=models.JobStatusModel.objects.all(), write_only=True,
+    #                                                     many=True)
 
     class Meta:
-        model = models.OnlineTestModel
+        model = models.JobPostModel
         fields = '__all__'
         extra_kwargs = {
-            'jobInfo': {'read_only': True}
+            'user': {'read_only': True}
         }
 
-    def create(self, validated_data):
-        # print(validated_data)
-        jobData = validated_data.pop('jobInfo')
-        # onlineTestData = validated_data.pop('onlineTest')
-        question = validated_data.pop('filterQus')
-        progress = validated_data.pop('progressStatus')
-        # print(question)
-        jobInfo = models.JobPostModel.objects.create(user_id=self.context['request'].user.id,
-                                                     **jobData)
-        jobInfo.filterQuestions.add(*question)
-        jobInfo.jobProgressStatus.add(*progress)
-        # print(jobInfo.filterQuestions.set(filterQus))
-        onlineTest = models.OnlineTestModel.objects.create(jobInfo_id=jobInfo.id, **validated_data)
-        return onlineTest
+
+    # Multiple model data save at a time
+    # def create(self, validated_data):
+    #     # print(validated_data)
+    #     jobData = validated_data.pop('jobInfo')
+    #     # onlineTestData = validated_data.pop('onlineTest')
+    #     question = validated_data.pop('filterQus')
+    #     progress = validated_data.pop('progressStatus')
+    #     # print(question)
+    #     jobInfo = models.JobPostModel.objects.create(user_id=self.context['request'].user.id,
+    #                                                  **jobData)
+    #     jobInfo.filterQuestions.add(*question)
+    #     jobInfo.jobProgressStatus.add(*progress)
+    #     # print(jobInfo.filterQuestions.set(filterQus))
+    #     onlineTest = models.OnlineTestModel.objects.create(jobInfo_id=jobInfo.id, **validated_data)
+    #     return onlineTest
 
 
 class JobStatusSerializer(serializers.ModelSerializer):

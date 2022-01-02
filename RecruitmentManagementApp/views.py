@@ -182,8 +182,11 @@ class PracticalTestForApplicantView(generics.RetrieveAPIView):
 
 class JobPostOnlineView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
-    serializer_class = serializer.OnlineTestSerializer
+    serializer_class = serializer.JobCreateSerializer
     queryset = models.OnlineTestModel.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 class UpdateCandidateStatusView(generics.RetrieveUpdateDestroyAPIView):
