@@ -145,12 +145,12 @@ class OnlineTestResponseModel(models.Model):
 
 
 class PracticalTestResponseModel(models.Model):
-    practicalTestResFiles = models.FileField(upload_to='practical_test/response/',
-                                             verbose_name='Practical test response', blank=True)
-    practicalTestResLink = models.URLField(verbose_name='Practical test response', blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='practical_response_user')
     appliedJob = models.OneToOneField(UserJobAppliedModel, on_delete=models.CASCADE,
                                       related_name='job_applied_practical_response')
+    practicalTestResFiles = models.FileField(upload_to='practical_test/response/',
+                                             verbose_name='Practical test response', blank=True)
+    practicalTestResLink = models.URLField(verbose_name='Practical test response', blank=True)
     submittedTime = models.DateTimeField(auto_now=True)
 
     def __str__(self):

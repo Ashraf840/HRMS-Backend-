@@ -1,6 +1,5 @@
 from rest_framework import serializers
 # from rest_framework.utils.serializer_helpers import ReturnDict
-from AdminOperationApp.models import PracticalTestMarkInputModel
 from UserApp import serializer
 from UserApp.models import User
 from . import models

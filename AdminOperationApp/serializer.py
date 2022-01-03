@@ -176,7 +176,7 @@ class RecruitmentPracticalTestResponseSerializer(serializers.ModelSerializer):
     """
     Recruitment practical test response and mark serializer
     """
-    # practicalMark = PracticalTestMarkInputSerializer(source='appliedJob.jobApplication.')
+    practicalMark = PracticalTestMarkInputSerializer(source='appliedJob.practical_test_application')
 
     class Meta:
         model = models.PracticalTestResponseModel

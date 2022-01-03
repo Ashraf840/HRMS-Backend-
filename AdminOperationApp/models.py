@@ -27,14 +27,15 @@ class PracticalTestUserModel(models.Model):
 
 
 class PracticalTestMarkInputModel(models.Model):
-    jobApplication = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE,
-                                       related_name='practical_test_application')
+    jobApplication = models.OneToOneField(UserJobAppliedModel, on_delete=models.CASCADE,
+                                          related_name='practical_test_application')
     markAssignBy = models.ForeignKey(User, on_delete=models.CASCADE, related_name='mark_assigned_by_user',
                                      blank=True, null=True)
     testMark = models.CharField(choices=markingValue, max_length=2, blank=True, null=True)
 
     def __str__(self):
         return f'{self.id} {self.testMark}, {self.jobApplication}'
+
 
 # Django signal
 @receiver(post_save, sender=PracticalTestResponseModel)
