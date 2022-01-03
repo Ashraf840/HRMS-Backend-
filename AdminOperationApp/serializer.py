@@ -51,6 +51,19 @@ class SendPracticalTestSerializer(serializers.ModelSerializer):
         }
 
 
+class MarkingDuringInterviewSerializer(serializers.ModelSerializer):
+    """
+    Interviewer will mark Candidate During Interview based on few criteria.
+    """
+    class Meta:
+        model = models.MarkingDuringInterviewModel
+        fields = '__all__'
+
+        extra_kwargs = {
+            'interviewer': {'read_only': True}
+        }
+
+
 class AdminDashboardSerializer(serializers.ModelSerializer):
     """
     Admin Dashboard serializer
@@ -189,40 +202,38 @@ class AdminInterviewerListSerializer(serializers.ModelSerializer):
     """
     onlineTest = OnlineTestResponseSerializer(source='job_applied_online_response', many=True)
     practicalTest = PracticalTestResponseSerializer(source='job_applied_practical_response')
+    interviewFeedback = MarkingDuringInterviewSerializer(source='applied_job_user_applied_model', many=True)
+    userId = UserSerializer()
+    jobProgressStatus = JobStatusSerializer()
+    jobPostId = JobSerializer()
+
+
 
     class Meta:
         model = UserJobAppliedModel
         fields = '__all__'
-        depth = 1
+        # depth = 1
 
-    def to_representation(self, instance):
-        data = super(AdminInterviewerListSerializer, self).to_representation(instance)
-        # serializer.get('userId').pop('password')
-        user = data.get('userId')
-        user.pop('password')
-        user.pop('is_staff')
-        user.pop('is_active')
-        user.pop('email_validated')
-        user.pop('is_superuser')
-        user.pop('is_employee')
-        user.pop('is_hr')
-        user.pop('is_candidate')
-        user.pop('groups')
-        user.pop('user_permissions')
-        user.pop('date_joined')
+    # def to_representation(self, instance):
+    #     data = super(AdminInterviewerListSerializer, self).to_representation(instance)
+    #     # serializer.get('userId').pop('password')
+    #     user = data.get('userId')
+    #     user.pop('password')
+    #     user.pop('is_staff')
+    #     user.pop('is_active')
+    #     user.pop('email_validated')
+    #     user.pop('is_superuser')
+    #     user.pop('is_employee')
+    #     user.pop('is_hr')
+    #     user.pop('is_candidate')
+    #     user.pop('groups')
+    #     user.pop('user_permissions')
+    #     user.pop('date_joined')
+    #
+    #     data.get('jobPostId').pop('filterQuestions')
+    #     return data
 
-        data.get('jobPostId').pop('filterQuestions')
-        return data
 
-
-class MarkingDuringInterviewSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.MarkingDuringInterviewModel
-        fields = '__all__'
-
-        extra_kwargs = {
-            'interviewer': {'read_only': True}
-        }
 
 
 class AddEmployeeInfoDuringOnboardSerializer(serializers.ModelSerializer):
