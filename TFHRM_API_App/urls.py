@@ -92,11 +92,9 @@ urlpatterns = [
     path('references_submit/<job_id>/', ReferenceInformationView.as_view(), name='references_information_add'),
     path('references/<applied_job>/', ReferenceInformationUpdateDeleteView.as_view(),
          name='references_information_update_delete'),
-    # Update official email during onboard
-    path('add_employee_info/<id>/', AddEmployeeInfoDuringOnboardView.as_view(),
-         name='add_employee_info_during_onboard'),
-    #     Admin section URL
 
+    #     Admin section URL
+    path('send_practical_test/', SendPracticalTestView.as_view(), name='admin_send_practical_test'),
     path('practical_test_mark_update/<jobApplication>/', PracticalTestMarkUpdateView.as_view(),
          name='practical_test_mark_input_view'),
     path('recruitment_practical_test_res/', RecruitmentPracticalTestResponseView.as_view(),
@@ -112,8 +110,10 @@ urlpatterns = [
     path('admin_online_test_res_list/', AdminAppliedCandidateOnlineResView.as_view(),
          name='admin_online_test_response_list'),
     path('applicant_interview/', AdminInterviewerListView.as_view(), name='applicant_interviewer_list'),
-    path('send_practical_test/', SendPracticalTestView.as_view(), name='admin_send_practical_test'),
     path('marking_during_interview/', MarkingDuringInterviewView.as_view(),
          name='marking_during_interview_interviewer'),
+    # Update official email during onboard
+    path('add_employee_info/<id>/', AddEmployeeInfoDuringOnboardView.as_view(),
+         name='add_employee_info_during_onboard'),
 
 ]

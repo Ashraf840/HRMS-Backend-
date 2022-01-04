@@ -75,9 +75,10 @@ class MarkingDuringInterviewModel(models.Model):
         marks = [self.behavior, self.personality, self.dressSense, self.professionalism, self.engSpeaking,
                  self.eagerness, self.flexibility, self.technicalKnowledge]
         temp = 0
+        marks = list(filter(None, marks))
         intMark = []
         for i in marks:
-            if i >= '0':
+            if int(i) >= 0:
                 temp += 1
                 intMark.append(int(i))
 
@@ -96,7 +97,7 @@ class MarkingDuringInterviewModel(models.Model):
         return response
 
     def __str__(self):
-        return f'user: {self.user.full_name}, Feedback: {self.summary()}'
+        return f'user: {self.candidate.full_name}, Feedback: {self.summary()}'
 
 # class MeetingScheduleModel(models.Model):
 #     applicationId = models.ForeignKey(UserJobAppliedModel, on_delete=models.SET_NULL,

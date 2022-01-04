@@ -24,6 +24,17 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'email', 'full_name', 'profile_pic', 'phone_number', 'nid', 'nationality']
 
 
+class InterviewerSerializer(serializers.ModelSerializer):
+    """
+    Return Interviewer basic information and designation
+    """
+    designation = serializers.CharField(source='user_info_user.designation')
+
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'full_name', 'designation']
+
+
 class JobSerializer(serializers.ModelSerializer):
     # filterQus = FilterQuestionSerializer()
 
@@ -55,6 +66,24 @@ class MarkingDuringInterviewSerializer(serializers.ModelSerializer):
     """
     Interviewer will mark Candidate During Interview based on few criteria.
     """
+
+    # interviewer = InterviewerSerializer()
+
+    class Meta:
+        model = models.MarkingDuringInterviewModel
+        fields = '__all__'
+
+        extra_kwargs = {
+            'interviewer': {'read_only': True}
+        }
+
+
+class MarkingListDuringInterviewSerializer(serializers.ModelSerializer):
+    """
+    Interview feedback List serializer for recruitment admin panel interview
+    """
+    interviewer = InterviewerSerializer()
+
     class Meta:
         model = models.MarkingDuringInterviewModel
         fields = '__all__'
@@ -202,12 +231,11 @@ class AdminInterviewerListSerializer(serializers.ModelSerializer):
     """
     onlineTest = OnlineTestResponseSerializer(source='job_applied_online_response', many=True)
     practicalTest = PracticalTestResponseSerializer(source='job_applied_practical_response')
-    interviewFeedback = MarkingDuringInterviewSerializer(source='applied_job_user_applied_model', many=True)
+    practicalTestMarks = PracticalTestMarkInputSerializer(source='practical_test_application')
+    interviewFeedback = MarkingListDuringInterviewSerializer(source='applied_job_user_applied_model', many=True)
     userId = UserSerializer()
     jobProgressStatus = JobStatusSerializer()
     jobPostId = JobSerializer()
-
-
 
     class Meta:
         model = UserJobAppliedModel
@@ -232,8 +260,6 @@ class AdminInterviewerListSerializer(serializers.ModelSerializer):
     #
     #     data.get('jobPostId').pop('filterQuestions')
     #     return data
-
-
 
 
 class AddEmployeeInfoDuringOnboardSerializer(serializers.ModelSerializer):
