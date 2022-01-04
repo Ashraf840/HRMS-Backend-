@@ -87,7 +87,7 @@ urlpatterns = [
     # path('practical_test/', PracticalTestView.as_view(), name='practical_test'),
     path('practical_test/<jobInfo>/', PracticalTestForApplicantView.as_view(), name='practical_test_for_a_job'),
     path('practical_test_res/<job_id>/', PracticalTestResponseView.as_view(), name='practical_test_response'),
-
+    # Document submission by user
     path('documents_submit/<job_id>/', DocumentSubmissionView.as_view(), name='document_submission_add'),
     path('documents/<applied_job>/', DocumentSubmissionUpdateDeleteView.as_view(),
          name='document_submission_update_delete'),
@@ -97,11 +97,11 @@ urlpatterns = [
 
     #     Admin section URL
     path('send_practical_test/', SendPracticalTestView.as_view(), name='admin_send_practical_test'),
+    path('update_status/<id>/', UpdateCandidateStatusView.as_view(), name='update_status'),
     path('practical_test_mark_update/<jobApplication>/', PracticalTestMarkUpdateView.as_view(),
          name='practical_test_mark_input_view'),
     path('recruitment_practical_test_res/', RecruitmentPracticalTestResponseView.as_view(),
          name='recruitment_practical_test_response'),
-    path('update_status/<id>/', UpdateCandidateStatusView.as_view(), name='update_status'),
     path('recruitment_dashboard_applicant/', RecruitmentAdminApplicantListView.as_view(),
          name='recruitment_dashboard_applicant'),
     path('recruitment_dashboard/<year>/', RecruitmentAdminGraphView.as_view(), name='recruitment_dashboard_graph_jobs'),
@@ -114,6 +114,7 @@ urlpatterns = [
     path('applicant_interview/', AdminInterviewerListView.as_view(), name='applicant_interviewer_list'),
     path('marking_during_interview/', MarkingDuringInterviewView.as_view(),
          name='marking_during_interview_interviewer'),
+
     # Update official email during onboard
     path('add_employee_info/<id>/', AddEmployeeInfoDuringOnboardView.as_view(),
          name='add_employee_info_during_onboard'),

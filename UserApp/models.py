@@ -119,7 +119,7 @@ class SkillsModel(models.Model):
     skillName = models.CharField(max_length=50)
 
     class Meta:
-        verbose_name_plural = "User skills"
+        verbose_name_plural = "skills"
 
     def __str__(self):
         return self.skillName
