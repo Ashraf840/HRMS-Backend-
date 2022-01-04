@@ -38,10 +38,12 @@ class UserManager(BaseUserManager):
 
 # Custom User model
 gender_options = (
-        ('Male', 'Male'),
-        ('Female', 'Female'),
-        ('Other', 'Other'),
-    )
+    ('Male', 'Male'),
+    ('Female', 'Female'),
+    ('Other', 'Other'),
+)
+
+
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=100, verbose_name='Email', unique=True, blank=False)
     full_name = models.CharField(verbose_name='Full Name', max_length=100)
@@ -102,6 +104,7 @@ class UserDesignationModel(models.Model):
 # Department Model
 class UserDepartmentModel(models.Model):
     department = models.CharField(max_length=50, null=False)
+
     # departmentHead = models.ForeignKey(User, on_delete=models.)
 
     class Meta:
@@ -149,10 +152,45 @@ class EmployeeInfoModel(models.Model):
 
 
 # user all academic information model
+class EducationLevelModel(models.Model):
+    """
+    Education level model for User academic model foreign key value
+    """
+    educationLevel = models.CharField(max_length=200)
+
+    def __str__(self):
+        return f'{self.educationLevel}'
+
+
+class DegreeTitleModel(models.Model):
+    """
+    Degree model for User academic model foreign key value
+    """
+    educationLevel = models.ForeignKey(EducationLevelModel, on_delete=models.CASCADE,
+                                       related_name='education_level_education')
+    degree = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f'{self.degree}'
+
+class GroupOrSubjectModel(models.Model):
+    educationLevel = models.ForeignKey(EducationLevelModel, on_delete=models.CASCADE,
+                                       related_name='major_group_educational_level')
+    majorGroup = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f'{self.majorGroup}'
+
+
 class UserAcademicInfoModel(models.Model):
+    """
+    User academic information model
+    """
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='academic_info_user')
-    educationLevel = models.CharField(max_length=255, null=True)
-    degreeTitle = models.CharField(max_length=255, null=True)
+    educationLevel = models.ForeignKey(EducationLevelModel, on_delete=models.SET_NULL, related_name='education_level',
+                                       blank=True,null=True)
+    degreeTitle = models.ForeignKey(DegreeTitleModel, on_delete=models.SET_NULL, related_name='degree_title',
+                                    blank=True, null=True)
     instituteName = models.CharField(max_length=255, null=True)
     major = models.CharField(max_length=255, null=True)
     year = models.DateField(null=True)

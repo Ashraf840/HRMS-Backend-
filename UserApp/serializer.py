@@ -162,6 +162,10 @@ class EmailVerificationSerializer(serializers.ModelSerializer):
 
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
+    """
+    User profile update serializer
+    """
+
     class Meta:
         model = models.User
         fields = ('full_name', 'birthDate', 'nationality', 'phone_number', 'gender', 'location', 'nid', 'profile_pic')
@@ -184,6 +188,34 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
         instance.profile_pic = validated_data.get('profile_pic', instance.profile_pic)
         instance.save()
         return instance
+
+
+class EducationLevelSerializer(serializers.ModelSerializer):
+    """
+    Foreign key value for academic models data and filter automated data for the degree title.
+    """
+    class Meta:
+        model = models.EducationLevelModel
+        fields = '__all__'
+
+
+class DegreeTitleSerializer(serializers.ModelSerializer):
+    """
+    Foreign key value for academic models data and filter automated data for the Degree title and education level
+    wise filtering.
+    """
+    class Meta:
+        model = models.DegreeTitleModel
+        fields = '__all__'
+
+
+class GroupOrSubjectSerializer(serializers.ModelSerializer):
+    """
+    Foreign key value for academic models data and filter automated data for the major group
+    """
+    class Meta:
+        model = models.GroupOrSubjectModel
+        fields = '__all__'
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):

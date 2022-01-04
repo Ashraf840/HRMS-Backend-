@@ -138,6 +138,21 @@ class UserInfoListView(generics.ListCreateAPIView):
 # User academic information View
 # if user is authenticate user can Retrieve data
 # not needed
+
+class DegreeTitleView(generics.ListAPIView):
+    """
+    return data using the filter queries based on education level
+    """
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializer.DegreeTitleSerializer
+
+    def get_queryset(self):
+        educationLevel_id = self.kwargs['educationLevel']
+        return models.DegreeTitleModel.objects.filter(educationLevel=educationLevel_id)
+
+
+
+
 class UserAcademicInfoListView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.UserAcademicSerializer
@@ -311,6 +326,7 @@ class AddUserSkillsView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.UserSkillsSerializer
     queryset = models.UserSkillsModel.objects.all()
+
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
