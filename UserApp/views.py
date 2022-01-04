@@ -138,6 +138,11 @@ class UserInfoListView(generics.ListCreateAPIView):
 # User academic information View
 # if user is authenticate user can Retrieve data
 # not needed
+class EducationLevelView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializer.EducationLevelSerializer
+    queryset = models.EducationLevelModel.objects.all()
+
 
 class DegreeTitleView(generics.ListAPIView):
     """

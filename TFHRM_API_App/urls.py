@@ -36,6 +36,7 @@ urlpatterns = [
     path('update_profile/<pk>/', UpdateUserInfoView.as_view(), name='update_profile'),
     path('all_users/', AllUserDetailView.as_view(), name='all_users'),
     path('add_ac/', AddAcademicInfoView.as_view(), name='add_academics'),
+    # path('edu_level/', EducationLevelView.as_view(), name='education_level'),
     path('degree_titles/<educationLevel>/', DegreeTitleView.as_view(), name='degree_title_using_education_level'),
     path('update_ac/<user__id>/<id>/', UpdateAcademicInfoView.as_view(), name='update_academic'),
     path('add_ac_list/<id>/', AcademicInfoListView.as_view(), name='academic_info_list'),
