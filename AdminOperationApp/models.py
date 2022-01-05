@@ -99,11 +99,14 @@ class MarkingDuringInterviewModel(models.Model):
     def __str__(self):
         return f'user: {self.candidate.full_name}, Feedback: {self.summary()}'
 
-# class MeetingScheduleModel(models.Model):
-#     applicationId = models.ForeignKey(UserJobAppliedModel, on_delete=models.SET_NULL,
-#                                       related_name='application_id_applied_job', null=True)
-#     meetingHost = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='meeting_host_user', null=True)
-#     meetingGuest = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='meeting_guest_user', null=True)
-#     meetingScheduleBy = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='meeting_scheduled_user', null=True)
-#     meetingDateTime = models.DateTimeField()
-#     scheduleAssignDate = models.DateField(auto_now_add=True)
+class MeetingScheduleModel(models.Model):
+    applicationId = models.ForeignKey(UserJobAppliedModel, on_delete=models.SET_NULL,
+                                      related_name='application_id_applied_job', null=True)
+    meetingHost = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='meeting_host_user', null=True)
+    meetingGuest = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='meeting_guest_user', null=True)
+    meetingScheduleBy = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='meeting_scheduled_user', null=True)
+    meetingDateTime = models.DateTimeField()
+    scheduleAssignDate = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.meetingDateTime} - {self.meetingGuest}'
