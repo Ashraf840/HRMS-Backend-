@@ -129,11 +129,16 @@ class UserProfileCompletionPercentageView(generics.ListAPIView):
         query = models.User.objects.filter(id=self.request.user.id)
         return query
 
-    # def list(self, request, *args, **kwargs):
-    #     response = self.get_serializer(self.get_queryset(), many=True)
-    #     responseData = response.data
-    #     print(responseData)
-    #     return Response({})
+    def list(self, request, *args, **kwargs):
+        response = self.get_serializer(self.get_queryset(), many=True)
+        responseData = response.data
+        user_id = self.request.user.id
+        percentage = 0
+        academicInfo = models.UserAcademicInfoModel.objects.filter(id=user_id)
+        trainningInfo = models.UserWorkingExperienceModel.objects.filter(id=user_id)
+        print(academicInfo)
+        print(responseData)
+        return Response(percentage)
 
 
 class UpdateUserInfoView(generics.RetrieveUpdateDestroyAPIView):
