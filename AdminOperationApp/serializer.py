@@ -218,6 +218,7 @@ class RecruitmentPracticalTestResponseSerializer(serializers.ModelSerializer):
     """
     Recruitment practical test response and mark serializer
     """
+    user = UserSerializer()
     practicalMark = PracticalTestMarkInputSerializer(source='appliedJob.practical_test_application')
 
     class Meta:
