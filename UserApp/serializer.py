@@ -190,6 +190,15 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
         return instance
 
 
+class UserProfileCompletionPercentageSerializer(serializers.ModelSerializer):
+    """
+    Profile percentage progressbar
+    """
+    class Meta:
+        model = models.User
+        fields = ['id', 'full_name']
+
+
 class EducationLevelSerializer(serializers.ModelSerializer):
     """
     Foreign key value for academic models data and filter automated data for the degree title.

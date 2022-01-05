@@ -16,7 +16,7 @@ from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
     AddWorkExperienceView, UpdateWorkExpInfoView, AddCertificationsView, UpdateCertificationsView, \
     AddTrainingExperienceView, UpdateUserInfoView, UpdateTrainingExperienceView, VerifyEmailView, SkillsView, \
     AcademicInfoListView, WorkInfoListView, CertificationInfoListView, TrainingInfoListView, AddUserSkillsView, \
-    HRMCustomTokenObtainPairView, DegreeTitleView
+    HRMCustomTokenObtainPairView, DegreeTitleView ,UserProfileCompletionPercentageView,EducationLevelView
 
 from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView, OnlineTestLinkView, \
     RecruitmentAdminApplicantListView, AdminInterviewerListView, AdminAppliedCandidateOnlineResView, SendPracticalTestView, \
@@ -30,13 +30,18 @@ urlpatterns = [
     path('email-verify/', VerifyEmailView.as_view(), name="email-verify"),
     # email verification while creating new account
     path('users/', UserInfoListView.as_view(), name='users_list'),  # add new user from admin
+    # Login url
     path('login/', CustomTokenObtainPairView.as_view(), name='login'),  # Login url for user
     path('hrm_login/', HRMCustomTokenObtainPairView.as_view(), name='hrm-login_employee'),  # Login url for employee
+    path('profile_completion_percentage/', UserProfileCompletionPercentageView.as_view(),
+         name='profile_completion_percentage'),
+
+    # employee
     path('users/<id>/', UserDetailView.as_view(), name='users'),  # user details
     path('update_profile/<pk>/', UpdateUserInfoView.as_view(), name='update_profile'),
     path('all_users/', AllUserDetailView.as_view(), name='all_users'),
     path('add_ac/', AddAcademicInfoView.as_view(), name='add_academics'),
-    # path('edu_level/', EducationLevelView.as_view(), name='education_level'),
+    path('edu_level/', EducationLevelView.as_view(), name='education_level'),
     path('degree_titles/<educationLevel>/', DegreeTitleView.as_view(), name='degree_title_using_education_level'),
     path('update_ac/<user__id>/<id>/', UpdateAcademicInfoView.as_view(), name='update_academic'),
     path('add_ac_list/<id>/', AcademicInfoListView.as_view(), name='academic_info_list'),

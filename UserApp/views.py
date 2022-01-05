@@ -120,6 +120,22 @@ class VerifyEmailView(views.APIView):
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
 
 
+class UserProfileCompletionPercentageView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializer.UserProfileCompletionPercentageSerializer
+
+    def get_queryset(self):
+        # print(self.request.user.id)
+        query = models.User.objects.filter(id=self.request.user.id)
+        return query
+
+    # def list(self, request, *args, **kwargs):
+    #     response = self.get_serializer(self.get_queryset(), many=True)
+    #     responseData = response.data
+    #     print(responseData)
+    #     return Response({})
+
+
 class UpdateUserInfoView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializer.ProfileUpdateSerializer
     queryset = models.User.objects.all()
@@ -154,8 +170,6 @@ class DegreeTitleView(generics.ListAPIView):
     def get_queryset(self):
         educationLevel_id = self.kwargs['educationLevel']
         return models.DegreeTitleModel.objects.filter(educationLevel=educationLevel_id)
-
-
 
 
 class UserAcademicInfoListView(generics.ListCreateAPIView):
