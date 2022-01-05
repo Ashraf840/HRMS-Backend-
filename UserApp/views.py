@@ -133,11 +133,33 @@ class UserProfileCompletionPercentageView(generics.ListAPIView):
         response = self.get_serializer(self.get_queryset(), many=True)
         responseData = response.data
         user_id = self.request.user.id
-        percentage = 0
-        academicInfo = models.UserAcademicInfoModel.objects.filter(id=user_id)
-        trainningInfo = models.UserWorkingExperienceModel.objects.filter(id=user_id)
-        print(academicInfo)
-        print(responseData)
+        percentage = 20
+        academicInfo = models.UserAcademicInfoModel.objects.filter(user_id=user_id).count()
+        workInfo = models.UserWorkingExperienceModel.objects.filter(user_id=user_id).count()
+        trainingInfo = models.UserTrainingExperienceModel.objects.filter(user_id=user_id).count()
+        certificateInfo = models.UserCertificationsModel.objects.filter(user_id=user_id).count()
+        skillsInfo = models.UserSkillsModel.objects.filter(user_id=user_id).count()
+        if academicInfo > 0:
+            if academicInfo > 2:
+                percentage += 40
+            else:
+                percentage += academicInfo * 20
+
+        if workInfo > 0:
+            percentage += 10
+
+        if trainingInfo > 0:
+            percentage += 10
+
+        if certificateInfo > 0:
+            percentage += 10
+
+        if skillsInfo > 0:
+            percentage += 10
+
+        if percentage > 100:
+            percentage = 100
+
         return Response(percentage)
 
 
