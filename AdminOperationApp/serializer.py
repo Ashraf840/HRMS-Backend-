@@ -195,6 +195,7 @@ class AdminAppliedCandidateOnlineResSerializer(serializers.ModelSerializer):
         info.pop('user_permissions')
         info.pop('date_joined')
         data.get('appliedJob').pop('userId')
+        # data.get('appliedJob').get('jobPostId').pop('user')
 
         return data
 
