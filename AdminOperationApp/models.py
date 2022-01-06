@@ -106,6 +106,7 @@ class MeetingScheduleModel(models.Model):
     meetingGuest = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='meeting_guest_user', null=True)
     meetingScheduleBy = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='meeting_scheduled_user', null=True)
     meetingDateTime = models.DateTimeField()
+    meetingLocation = models.TextField()
     scheduleAssignDate = models.DateField(auto_now_add=True)
 
     def __str__(self):
