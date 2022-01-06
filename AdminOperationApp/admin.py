@@ -4,4 +4,4 @@ from . import models
 admin.site.register(models.PracticalTestUserModel)
 admin.site.register(models.MarkingDuringInterviewModel)
 admin.site.register(models.PracticalTestMarkInputModel)
-admin.site.register(models.MeetingScheduleModel)
+admin.site.register(models.InterviewTimeScheduleModel)

@@ -99,7 +99,7 @@ class MarkingDuringInterviewModel(models.Model):
     def __str__(self):
         return f'user: {self.candidate.full_name}, Feedback: {self.summary()}'
 
-class MeetingScheduleModel(models.Model):
+class InterviewTimeScheduleModel(models.Model):
     applicationId = models.ForeignKey(UserJobAppliedModel, on_delete=models.SET_NULL,
                                       related_name='application_id_applied_job', null=True)
     meetingHost = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='meeting_host_user', null=True)

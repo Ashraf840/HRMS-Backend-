@@ -274,3 +274,9 @@ class AddEmployeeInfoDuringOnboardSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'user': {'read_only': True}
         }
+
+
+class InterviewTimeScheduleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.InterviewTimeScheduleModel
+        fields = '__all__'
