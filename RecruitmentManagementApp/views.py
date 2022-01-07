@@ -156,39 +156,41 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        # filterQusResponse = models.FilterQuestionsResponseModelHR.objects.filter(
-        #     appliedJob=serializer.data['appliedJob'])
-        # jobFilterQuestion = models.UserJobAppliedModel.objects.get(id=serializer.data['appliedJob'])
-        # totalQuestion = jobFilterQuestion.jobPostId.filterQuestions.count()
-        #
-        # score = 0
-        # for res in filterQusResponse:
-        #     questionAnswer = FilterQuestionAnswerModel.objects.get(question=res.questions)
-        #     if questionAnswer.answer == res.response:
-        #         score += 1
-        #
-        #     if not questionAnswer.answer == res.response:
-        #         try:
-        #             resNum = int(res.response)
-        #             answer = int(questionAnswer.answer)
-        #             if 1000 < answer <= resNum:
-        #                 score += 1
-        #             elif answer < 1000 and answer <= resNum:
-        #                 score += 1
-        #         except:
-        #             pass
-        # # print(score)
-        # jobProgress = jobFilterQuestion.jobPostId.jobProgressStatus.all()
-        # for i, progress in enumerate(jobProgress):
-        #     # jobFilterQuestion.jobProgressStatus.status = jobProgress[i + 1]
-        #     # print(jobFilterQuestion.jobProgressStatus.status)
-        #     if progress.status == jobFilterQuestion.jobProgressStatus.status:
-        #         print()
-        # if totalQuestion - 1 <= score:
-        #     print(jobFilterQuestion.jobPostId.filterQuestions)
-        # else:
-        #     print('rejected')
+        filterQusResponse = models.FilterQuestionsResponseModelHR.objects.filter(
+            jobPost=serializer.data['jobPost'], user=self.request.user)
+        jobFilterQuestion = models.UserJobAppliedModel.objects.get(jobPostId=serializer.data['jobPost'],
+                                                                   userId=self.request.user)
 
+        totalQuestion = jobFilterQuestion.jobPostId.filterQuestions.count()
+
+        score = 0
+        for res in filterQusResponse:
+            questionAnswer = FilterQuestionAnswerModel.objects.get(question=res.questions)
+            if questionAnswer.answer == res.response:
+                score += 1
+
+            if not questionAnswer.answer == res.response:
+                try:
+                    resNum = int(res.response)
+                    answer = int(questionAnswer.answer)
+                    if 1000 < answer <= resNum:
+                        score += 1
+                    elif answer < 1000 and answer <= resNum:
+                        score += 1
+                except:
+                    pass
+        # print(score)
+        jobProgress = jobFilterQuestion.jobPostId.jobProgressStatus.all()
+        for i, progress in enumerate(jobProgress):
+            # jobFilterQuestion.jobProgressStatus.status = jobProgress[i + 1]
+            # print(jobFilterQuestion.jobProgressStatus.status)
+            # print()
+            if jobFilterQuestion.jobProgressStatus.status==progress.status:
+                pass
+        if totalQuestion - 1 <= score:
+            print(jobFilterQuestion.jobPostId.filterQuestions)
+        else:
+            print('rejected')
 
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
