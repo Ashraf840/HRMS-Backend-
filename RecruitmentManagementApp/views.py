@@ -1,10 +1,10 @@
 import datetime
-
 from django.db.models import Q
 from rest_framework import generics, permissions, status
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from UserApp.models import User
+from QuizApp.models import FilterQuestionAnswerModel
 from . import serializer
 from UserApp.permissions import IsHrUser, EditPermission, IsAuthor
 from . import models
@@ -143,7 +143,7 @@ practical test response
 """
 
 
-class FilterQuestionResponseView(generics.CreateAPIView):
+class FilterQuestionResponseView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.FilterQuestionResponseSerializer
     queryset = models.FilterQuestionsResponseModelHR.objects.all()
@@ -156,6 +156,34 @@ class FilterQuestionResponseView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
+        filterQusResponse = models.FilterQuestionsResponseModelHR.objects.filter(
+            appliedJob=serializer.data['appliedJob'])
+        jobFilterQuestion = models.UserJobAppliedModel.objects.get(id=serializer.data['appliedJob'])
+        totalQuestion = jobFilterQuestion.jobPostId.filterQuestions.count()
+
+        score = 0
+        for res in filterQusResponse:
+            questionAnswer = FilterQuestionAnswerModel.objects.get(question=res.questions)
+            if questionAnswer.answer == res.response:
+                score += 1
+
+            if not questionAnswer.answer == res.response:
+                try:
+                    resNum = int(res.response)
+                    answer = int(questionAnswer.answer)
+                    if 1000 < answer <= resNum:
+                        score += 1
+                    elif answer < 1000 and answer <= resNum:
+                        score += 1
+                except:
+                    pass
+        # print(score)
+        if totalQuestion - 1 <= score:
+            print('selected')
+        else:
+            print('rejected')
+
+        # print(filterQusResponse)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 

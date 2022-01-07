@@ -82,13 +82,12 @@ class FilterQuestionAnswerModel(models.Model):
     Filter question answer will be stored here for check and select candidate for next stage
     """
 
-    question = models.OneToOneField(JobApplyFilterQuestionModel,on_delete=models.CASCADE,
+    question = models.OneToOneField(JobApplyFilterQuestionModel, on_delete=models.CASCADE,
                                     related_name='job_apply_filter_question_answer')
     answer = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
         return f'{self.answer}'
-
 
 # class FilterQuestionsResponseModel(models.Model):
 #     questions = models.ForeignKey(JobApplyFilterQuestionModel, on_delete=models.CASCADE,

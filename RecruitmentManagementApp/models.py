@@ -19,7 +19,7 @@ class JobStatusModel(models.Model):
     # is_completed = models.BooleanField(default=False, blank=True)
 
     # def __str__(self):
-        # return self.status
+    # return self.status
 
 
 class JobPostModel(models.Model):
@@ -62,12 +62,31 @@ class JobPostModel(models.Model):
         return f'{self.id} {self.jobTitle} {self.shift}'
 
 
+class UserJobAppliedModel(models.Model):
+    """
+    Job application model
+    """
+    userId = models.ForeignKey(User, on_delete=models.CASCADE, related_name='applied_user')
+    jobPostId = models.ForeignKey(JobPostModel, on_delete=models.CASCADE, related_name='applied_job_post_id')
+    jobProgressStatus = models.ForeignKey(JobStatusModel, on_delete=models.CASCADE,
+                                          related_name='job_applied_progress_status')
+    # jobProgressStatus = models.CharField(max_length=30, choices=status, blank=True)
+    appliedDate = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.jobPostId}, {self.userId}'
+
+
 class FilterQuestionsResponseModelHR(models.Model):
+    """
+    All filter questions response will be stored in this model
+    """
     questions = models.ForeignKey(JobApplyFilterQuestionModel, on_delete=models.CASCADE,
                                   related_name='filter_questions')
     response = models.CharField(max_length=255, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='response_by')
-    jobPost = models.ForeignKey(JobPostModel, on_delete=models.CASCADE, related_name='job_info')
+    appliedJob = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE,
+                                   related_name='filter_question_job_application')
 
     def __str__(self):
         return f'{self.response}'
@@ -117,17 +136,6 @@ practical test response
 #
 #     )
 
-class UserJobAppliedModel(models.Model):
-    userId = models.ForeignKey(User, on_delete=models.CASCADE, related_name='applied_user')
-    jobPostId = models.ForeignKey(JobPostModel, on_delete=models.CASCADE, related_name='applied_job_post_id')
-    jobProgressStatus = models.ForeignKey(JobStatusModel, on_delete=models.CASCADE,
-                                          related_name='job_applied_progress_status')
-    # jobProgressStatus = models.CharField(max_length=30, choices=status, blank=True)
-    appliedDate = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f'{self.jobPostId}, {self.userId}'
-
 
 class OnlineTestResponseModel(models.Model):
     testName = models.CharField(max_length=200)
@@ -156,6 +164,7 @@ class PracticalTestResponseModel(models.Model):
     def __str__(self):
         return f'{self.user}'
 
+
 # class PracticalTestEvaluationModel(models.Model):
 #     choice = (
 #         ('A', 'A'),
@@ -168,14 +177,13 @@ class PracticalTestResponseModel(models.Model):
 #     grade = models.CharField(max_length=10,choices=choice)
 
 
-
 # for document naming
 def image_file_name(instance, filename):
     return '/'.join(['images', instance.user.full_name, filename])
 
 
 def content_file_name(instance, filename):
-    return '/'.join(['document', instance.user.full_name+ '-id_' + str(instance.user.id), filename])
+    return '/'.join(['document', instance.user.full_name + '-id_' + str(instance.user.id), filename])
 
 
 class DocumentSubmissionModel(models.Model):
@@ -199,7 +207,7 @@ class DocumentSubmissionModel(models.Model):
 class ReferenceInformationModel(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reference_information_user')
     applied_job = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE,
-                                       related_name='references_submission_applied_job')
+                                    related_name='references_submission_applied_job')
     name = models.CharField(max_length=100)
     phoneNumber = models.IntegerField()
     relationWithReferer = models.CharField(max_length=100)

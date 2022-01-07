@@ -77,6 +77,20 @@ class FilterQuestionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class FilterQuestionAnswerSerializer(serializers.ModelSerializer):
+    question = FilterQuestionSerializer()
+
+    class Meta:
+        model = models.FilterQuestionAnswerModel
+        fields = '__all__'
+
+    def create(self, validated_data):
+        question = validated_data.pop('question')
+        filterQus = models.JobApplyFilterQuestionModel.objects.create(**question)
+        qusAns = models.FilterQuestionAnswerModel.objects.create(question=filterQus, **validated_data)
+        return qusAns
+
+
 # class FilterQuestionResponseSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = models.FilterQuestionsResponseModel

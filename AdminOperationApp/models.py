@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 
-from UserApp.models import User
+from UserApp.models import User,UserDesignationModel
 from RecruitmentManagementApp.models import PracticalTestModel, UserJobAppliedModel, PracticalTestResponseModel
 
 # Create your models here.
@@ -102,7 +102,8 @@ class MarkingDuringInterviewModel(models.Model):
 class InterviewTimeScheduleModel(models.Model):
     applicationId = models.ForeignKey(UserJobAppliedModel, on_delete=models.SET_NULL,
                                       related_name='application_id_applied_job', null=True)
-    meetingHost = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='meeting_host_user', null=True)
+    meetingHost = models.ForeignKey(UserDesignationModel, on_delete=models.SET_NULL,
+                                    related_name='meeting_host_designation', null=True)
     meetingGuest = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='meeting_guest_user', null=True)
     meetingScheduleBy = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='meeting_scheduled_user', null=True)
     meetingDateTime = models.DateTimeField()
