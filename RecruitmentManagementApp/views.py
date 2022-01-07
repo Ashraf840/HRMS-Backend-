@@ -180,8 +180,10 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
         # print(score)
         jobProgress = jobFilterQuestion.jobPostId.jobProgressStatus.all()
         for i, progress in enumerate(jobProgress):
-            if progress.status==jobFilterQuestion.jobProgressStatus.status:
-                print('ok')
+            # jobFilterQuestion.jobProgressStatus.status = jobProgress[i + 1]
+            # print(jobFilterQuestion.jobProgressStatus.status)
+            if progress.status == jobFilterQuestion.jobProgressStatus.status:
+                print()
         if totalQuestion - 1 <= score:
             print(jobFilterQuestion.jobPostId.filterQuestions)
         else:

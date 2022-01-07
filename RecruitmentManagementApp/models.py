@@ -85,8 +85,9 @@ class FilterQuestionsResponseModelHR(models.Model):
                                   related_name='filter_questions')
     response = models.CharField(max_length=255, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='response_by')
-    appliedJob = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE,
-                                   related_name='filter_question_job_application')
+    jobPost = models.ForeignKey(JobPostModel, on_delete=models.CASCADE, related_name='job_info')
+    # appliedJob = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE,
+    #                                related_name='filter_question_job_application')
 
     def __str__(self):
         return f'{self.response}'
