@@ -273,6 +273,12 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 # User Details serializer
+class UserDepartmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.UserDepartmentModel
+        fields = '__all__'
+
+
 class UserSkillsSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserSkillsModel

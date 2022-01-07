@@ -2,6 +2,7 @@ from rest_framework import serializers
 from . import models
 
 
+
 class FieldSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.FieldTypeModels
@@ -79,6 +80,7 @@ class FilterQuestionSerializer(serializers.ModelSerializer):
 
 class FilterQuestionAnswerSerializer(serializers.ModelSerializer):
     question = FilterQuestionSerializer()
+
 
     class Meta:
         model = models.FilterQuestionAnswerModel
