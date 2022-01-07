@@ -181,7 +181,7 @@ class UserInfoListView(generics.ListCreateAPIView):
 # User academic information View
 # if user is authenticate user can Retrieve data
 # not needed
-class DepartmentView(generics.CreateAPIView):
+class DepartmentView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.UserDepartmentSerializer
     queryset = models.UserDepartmentModel.objects.all()
