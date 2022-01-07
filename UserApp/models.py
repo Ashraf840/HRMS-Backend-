@@ -239,7 +239,7 @@ class UserWorkingExperienceModel(models.Model):
     department = models.CharField(max_length=255, null=True)
     position = models.CharField(max_length=255, null=True)
     joinDate = models.DateField(null=True)
-    quitDate = models.DateField(null=True)
+    quitDate = models.DateField(blank=True, null=True)
     responsibility = models.CharField(max_length=255, null=True)
 
     class Meta:

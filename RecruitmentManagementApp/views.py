@@ -178,8 +178,12 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
                 except:
                     pass
         # print(score)
+        jobProgress = jobFilterQuestion.jobPostId.jobProgressStatus.all()
+        for i, progress in enumerate(jobProgress):
+            if progress.status==jobFilterQuestion.jobProgressStatus.status:
+                print('ok')
         if totalQuestion - 1 <= score:
-            print('selected')
+            print(jobFilterQuestion.jobPostId.filterQuestions)
         else:
             print('rejected')
 
