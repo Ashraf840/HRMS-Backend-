@@ -220,10 +220,10 @@ class PracticalTestForApplicantView(generics.RetrieveAPIView):
         return queryset
 
 
-class JobPostOnlineView(generics.ListCreateAPIView):
+class JobCreateView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.JobCreateSerializer
-    queryset = models.OnlineTestModel.objects.all()
+    queryset = models.JobPostModel.objects.all()
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
