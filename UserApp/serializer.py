@@ -109,7 +109,8 @@ class HRMCustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 class RegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
         required=True,
-        validators=[UniqueValidator(queryset=models.User.objects.all())]
+        validators=[UniqueValidator(queryset=models.User.objects.all(),
+                                    message='Already registered with this email address')],
     )
 
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password], \
@@ -194,6 +195,7 @@ class UserProfileCompletionPercentageSerializer(serializers.ModelSerializer):
     """
     Profile percentage progressbar
     """
+
     class Meta:
         model = models.User
         fields = ['id', 'full_name']
@@ -203,6 +205,7 @@ class EducationLevelSerializer(serializers.ModelSerializer):
     """
     Foreign key value for academic models data and filter automated data for the degree title.
     """
+
     class Meta:
         model = models.EducationLevelModel
         fields = '__all__'
@@ -213,6 +216,7 @@ class DegreeTitleSerializer(serializers.ModelSerializer):
     Foreign key value for academic models data and filter automated data for the Degree title and education level
     wise filtering.
     """
+
     class Meta:
         model = models.DegreeTitleModel
         fields = '__all__'
@@ -222,6 +226,7 @@ class GroupOrSubjectSerializer(serializers.ModelSerializer):
     """
     Foreign key value for academic models data and filter automated data for the major group
     """
+
     class Meta:
         model = models.GroupOrSubjectModel
         fields = '__all__'
@@ -288,6 +293,9 @@ class UserInformationSerializer(serializers.ModelSerializer):
 
 
 class UserAcademicSerializer(serializers.ModelSerializer):
+    educationLevel = EducationLevelSerializer()
+    degreeTitle = DegreeTitleSerializer()
+
     class Meta:
         model = models.UserAcademicInfoModel
         fields = '__all__'
