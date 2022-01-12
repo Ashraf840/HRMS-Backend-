@@ -331,7 +331,42 @@ class OnlineTestResponseView(generics.CreateAPIView):
                     serializer.is_valid(raise_exception=True)
                     self.perform_create(serializer)
                     headers = self.get_success_headers(serializer.data)
-                    return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+                    jobApplication = models.UserJobAppliedModel.objects.get(id=applied_job)
+
+                    onlineTestRes = models.OnlineTestResponseModel.objects.filter(user=self.request.user,
+                                                                                  appliedJob=applied_job)
+                    statusList = jobApplication.jobPostId.jobProgressStatus.all()
+                    if onlineTestLink.count() == onlineTestRes.count():
+                        for testMark in onlineTestRes:
+                            if testMark.testMark < 50:
+                                jobApplication.jobProgressStatus = models.JobStatusModel.objects.get(status='Rejected')
+                                jobApplication.save()
+                                email_body = 'Hi ' + self.request.user.full_name + \
+                                             f' sorry you are not selected for the next stage.' \
+                                             'All the best for your job searching.'
+
+                                data = {'email_body': email_body, 'to_email': self.request.user.email,
+                                        'email_subject': 'Status of the Screening Test'}
+                                utils.Util.send_email(data)
+
+                                return Response({'detail': 'sorry you are not selected for the next step'})
+                        for i, sta in enumerate(statusList):
+                            if sta.status == jobApplication.jobProgressStatus.status:
+                                update = statusList[i + 1]
+                                # print(update.status)
+                                jobApplication.jobProgressStatus = models.JobStatusModel.objects.get(status=update.status)
+                                jobApplication.save()
+                                # email sending option
+                                email_body = 'Hi ' + self.request.user.full_name + \
+                                             f' Congratulations you have been selected for the {update.status} stage.' \
+                                             'All the best for this step.'
+
+                                data = {'email_body': email_body, 'to_email': self.request.user.email,
+                                        'email_subject': f'Status of the {statusList[i]} Screening Test'}
+                                utils.Util.send_email(data)
+                                break
+                        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+                    return Response({'testName': serializer.data['testName'], 'testMark': serializer.data['testMark']})
                 else:
                     return Response({'detail': 'You have already submitted online test Mark.'},
                                     status=status.HTTP_208_ALREADY_REPORTED)
