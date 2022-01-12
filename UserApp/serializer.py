@@ -299,8 +299,8 @@ class UserInformationSerializer(serializers.ModelSerializer):
 
 
 class UserAcademicSerializer(serializers.ModelSerializer):
-    educationLevel = EducationLevelSerializer()
-    degreeTitle = DegreeTitleSerializer()
+    # educationLevel = EducationLevelSerializer()
+    # degreeTitle = DegreeTitleSerializer()
 
     class Meta:
         model = models.UserAcademicInfoModel
@@ -310,6 +310,13 @@ class UserAcademicSerializer(serializers.ModelSerializer):
             'user': {'read_only': True}
         }
         # depth = 1
+
+    # def create(self, validated_data):
+    #     educationLevel = validated_data.pop('educationLevel')
+    #     degreeTitle = validated_data.pop('degreeTitle')
+    #
+    #     return models.UserAcademicInfoModel.objects.create(educationLevel=educationLevel, degreeTitle=degreeTitle,
+    #                                                        **validated_data)
 
 
 class UserCertificationsSerializer(serializers.ModelSerializer):
