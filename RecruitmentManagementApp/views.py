@@ -196,6 +196,13 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
                         jobFilterQuestion.jobProgressStatus = models.JobStatusModel.objects.get(
                             status=jobProgress[i + 1].status)
                         jobFilterQuestion.save()
+                        email_body = 'Hi ' + self.request.user.full_name + \
+                                     f' Congratulations you have been selected for the {jobProgress[i + 1].status} stage.' \
+                                     'All the best in your job search!'
+
+                        data = {'email_body': email_body, 'to_email': self.request.user.email,
+                                'email_subject': 'Status of the Screening Test'}
+                        utils.Util.send_email(data)
                         # print(jobFilterQuestion.jobProgressStatus.status)
                         break
             else:
