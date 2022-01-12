@@ -4,6 +4,7 @@ from rest_framework import generics, permissions, status
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from UserApp.models import User
+from UserApp import utils
 from QuizApp.models import FilterQuestionAnswerModel
 from . import serializer
 from UserApp.permissions import IsHrUser, EditPermission, IsAuthor
@@ -162,42 +163,58 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
                                                                    userId=self.request.user)
 
         totalQuestion = jobFilterQuestion.jobPostId.filterQuestions.count()
-
+        totalResponse = filterQusResponse.count()
+        # print(totalQuestion)
         score = 0
-        for res in filterQusResponse:
-            questionAnswer = FilterQuestionAnswerModel.objects.get(question=res.questions)
-            if questionAnswer.answer == res.response:
-                score += 1
+        if totalResponse == totalQuestion:
+            for res in filterQusResponse:
+                questionAnswer = FilterQuestionAnswerModel.objects.get(question=res.questions)
+                if questionAnswer.answer == res.response:
+                    score += 1
 
-            if not questionAnswer.answer == res.response:
-                try:
-                    resNum = int(res.response)
-                    answer = int(questionAnswer.answer)
-                    if 1000 < answer <= resNum:
-                        score += 1
-                    elif answer < 1000 and answer <= resNum:
-                        score += 1
-                except:
-                    pass
-        # print(score)
+                if not questionAnswer.answer == res.response:
+                    try:
+                        resNum = int(res.response)
+                        answer = int(questionAnswer.answer)
+                        if 1000 < answer <= resNum:
+                            score += 1
+                        elif answer < 1000 and answer <= resNum:
+                            score += 1
+                    except:
+                        pass
+            # print(score)
 
-        if totalQuestion - 1 <= score:
-            jobProgress = jobFilterQuestion.jobPostId.jobProgressStatus.all()
-            for i, progress in enumerate(jobProgress):
-                # jobFilterQuestion.jobProgressStatus.status = jobProgress[i + 1]
-                # print(jobFilterQuestion.jobProgressStatus.status)
-                # print()
-                if jobFilterQuestion.jobProgressStatus.status == progress.status:
+            if totalQuestion - 1 <= score:
+                jobProgress = jobFilterQuestion.jobPostId.jobProgressStatus.all()
+                for i, progress in enumerate(jobProgress):
+                    # jobFilterQuestion.jobProgressStatus.status = jobProgress[i + 1]
                     # print(jobFilterQuestion.jobProgressStatus.status)
-                    print(jobProgress[1+i].status)
-                    jobFilterQuestion.jobProgressStatus.status = jobProgress[i + 1].status
-                    jobFilterQuestion.jobProgressStatus.save()
-                    print(jobFilterQuestion.jobProgressStatus.status)
-                    break
-        else:
-            print('rejected')
+                    # print()
+                    if jobFilterQuestion.jobProgressStatus.status == progress.status:
+                        # print(jobFilterQuestion.jobProgressStatus.status)
+                        # print(jobProgress[1+i].status)
+                        jobFilterQuestion.jobProgressStatus = models.JobStatusModel.objects.get(
+                            status=jobProgress[i + 1].status)
+                        jobFilterQuestion.save()
+                        # print(jobFilterQuestion.jobProgressStatus.status)
+                        break
+            else:
+                jobFilterQuestion.jobProgressStatus = models.JobStatusModel.objects.get(status='Rejected')
+                jobFilterQuestion.save()
 
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+                email_body = 'Hi ' + self.request.user.full_name + \
+                             ' We regret to inform you that we have decided to move forward with other candidates at ' \
+                             'this time. We will definitely keep you in mind for future opportunities that may be a ' \
+                             'good fit.' \
+                             'All the best in your job search!'
+
+                data = {'email_body': email_body, 'to_email': self.request.user.email,
+                        'email_subject': 'Status of the Screening Test'}
+
+                utils.Util.send_email(data)
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response({'detail': 'new response added'})
 
 
 class FilterQuestionResponseListView(generics.ListAPIView):
