@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 
-from UserApp.models import User,UserDesignationModel
+from UserApp.models import User, UserDesignationModel
 from RecruitmentManagementApp.models import PracticalTestModel, UserJobAppliedModel, PracticalTestResponseModel
 
 # Create your models here.
@@ -45,7 +45,7 @@ def create_practical_test_mark(sender, instance, created, **kwargs):
     """
     if created:
         data = UserJobAppliedModel.objects.get(job_applied_practical_response__id=instance.id)
-        print(data)
+        # print(data)
         PracticalTestMarkInputModel.objects.create(jobApplication=data)
 
 
@@ -99,16 +99,19 @@ class MarkingDuringInterviewModel(models.Model):
     def __str__(self):
         return f'user: {self.candidate.full_name}, Feedback: {self.summary()}'
 
+
 class InterviewTimeScheduleModel(models.Model):
     applicationId = models.ForeignKey(UserJobAppliedModel, on_delete=models.SET_NULL,
                                       related_name='application_id_applied_job', null=True)
-    meetingHost = models.ForeignKey(UserDesignationModel, on_delete=models.SET_NULL,
-                                    related_name='meeting_host_designation', null=True)
-    meetingGuest = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='meeting_guest_user', null=True)
-    meetingScheduleBy = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='meeting_scheduled_user', null=True)
-    meetingDateTime = models.DateTimeField()
-    meetingLocation = models.TextField()
+    interviewer = models.ForeignKey(UserDesignationModel, on_delete=models.SET_NULL,
+                                    related_name='interviewer_designation', null=True)
+    candidate = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='candidate_interview_user', null=True)
+    scheduleBy = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='meeting_scheduled_user',
+                                   null=True)
+    interviewDate = models.DateField()
+    interviewTime = models.TimeField()
+    interviewLocation = models.TextField()
     scheduleAssignDate = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.meetingDateTime} - {self.meetingGuest}'
+        return f'{self.interviewDate} - {self.interviewer}'

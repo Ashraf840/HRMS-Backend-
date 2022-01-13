@@ -277,6 +277,14 @@ class AddEmployeeInfoDuringOnboardSerializer(serializers.ModelSerializer):
 
 
 class InterviewTimeScheduleSerializer(serializers.ModelSerializer):
+    """
+    Interview time scheduling
+    """
+
     class Meta:
         model = models.InterviewTimeScheduleModel
         fields = '__all__'
+
+        extra_kwargs = {
+            'scheduleBy': {'read_only': True}
+        }

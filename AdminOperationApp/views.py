@@ -372,7 +372,11 @@ class AddEmployeeInfoDuringOnboardView(generics.CreateAPIView):
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+
 class InterviewTimeScheduleView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.InterviewTimeScheduleSerializer
     queryset = models.InterviewTimeScheduleModel.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save(scheduleBy=self.request.user)
