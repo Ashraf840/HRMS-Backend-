@@ -7,7 +7,7 @@ from UserApp.models import User, UserDepartmentModel, EmployeeInfoModel
 from . import serializer
 from . import models
 from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel, OnlineTestResponseModel, \
-    FilterQuestionsResponseModelHR, PracticalTestResponseModel
+    FilterQuestionsResponseModelHR, PracticalTestResponseModel, DocumentSubmissionModel
 from rest_framework.permissions import IsAuthenticated
 from UserApp.permissions import IsHrUser
 from .utils import Util
@@ -380,3 +380,21 @@ class InterviewTimeScheduleView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(scheduleBy=self.request.user)
+
+
+"""
+=======================Document section =======================
+"""
+
+
+class AdminDocumentVerificationView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = serializer.AdminDocumentVerificationSerializer
+    queryset = DocumentSubmissionModel.objects.all()
+    lookup_field = 'applied_job'
+
+    def retrieve(self, request, *args, **kwargs):
+        applicationId = self.kwargs['applied_job']
+
+        serializer = self.get_serializer(self.get_object())
+        print(serializer.data)
+        return Response()

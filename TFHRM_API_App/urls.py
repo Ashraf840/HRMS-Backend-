@@ -23,7 +23,7 @@ from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView, On
     RecruitmentAdminApplicantListView, AdminInterviewerListView, AdminAppliedCandidateOnlineResView, \
     SendPracticalTestView,  RecruitmentAdminGraphView, MarkingDuringInterviewView, AddEmployeeInfoDuringOnboardView, \
     FilterQuestionResponseListView, PracticalTestMarkUpdateView, RecruitmentPracticalTestResponseView,\
-    InterviewTimeScheduleView
+    InterviewTimeScheduleView, AdminDocumentVerificationView
 
 app_name = 'tfhrm_api'
 
@@ -123,7 +123,8 @@ urlpatterns = [
     path('interview_schedule/', InterviewTimeScheduleView.as_view(), name='interview_time_schedule'),
     path('marking_during_interview/', MarkingDuringInterviewView.as_view(),
          name='marking_during_interview_interviewer'),
-
+    # Document verification
+    path('recruitment_documents_verification/<applied_job>/', AdminDocumentVerificationView.as_view(), name='document_verification_recruitment'),
     # Update official email during onboard
     path('add_employee_info/<id>/', AddEmployeeInfoDuringOnboardView.as_view(),
          name='add_employee_info_during_onboard'),

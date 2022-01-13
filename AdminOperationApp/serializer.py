@@ -3,7 +3,7 @@ from rest_framework.validators import UniqueValidator
 from UserApp.models import User, UserDepartmentModel, EmployeeInfoModel
 from . import models
 from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel, OnlineTestResponseModel, \
-    FilterQuestionsResponseModelHR
+    FilterQuestionsResponseModelHR, DocumentSubmissionModel
 from RecruitmentManagementApp.serializer import OnlineTestResponseSerializer, PracticalTestResponseSerializer, \
     JobStatusSerializer, FilterQuestionSerializer
 
@@ -288,3 +288,15 @@ class InterviewTimeScheduleSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'scheduleBy': {'read_only': True}
         }
+
+
+"""
+==================Document section==================
+"""
+
+
+class AdminDocumentVerificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DocumentSubmissionModel
+        fields = '__all__'
+
