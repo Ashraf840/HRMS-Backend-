@@ -18,8 +18,8 @@ class JobStatusModel(models.Model):
     statusOrder = models.IntegerField()
     # is_completed = models.BooleanField(default=False, blank=True)
 
-    # def __str__(self):
-    # return self.status
+    def __str__(self):
+        return f'{self.status}'
 
 
 class JobPostModel(models.Model):
