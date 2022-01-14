@@ -375,12 +375,26 @@ class UpdateTrainingExperienceView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class AddUserSkillsView(generics.ListCreateAPIView):
+    """
+    adding user skills if skill is not in the skill table automatically new will add to the database
+    """
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.UserSkillsSerializer
     queryset = models.UserSkillsModel.objects.all()
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        skills = request.data.get('skills', [])
+        # print(skills)
+        for skill in skills:
+            models.SkillsModel.objects.get_or_create(skillName=skill)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+
+        return Response(serializer.data)
 
 
 class SkillsView(generics.CreateAPIView):

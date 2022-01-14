@@ -279,13 +279,29 @@ class UserDepartmentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class SkillsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.SkillsModel
+        fields = "__all__"
+
+
 class UserSkillsSerializer(serializers.ModelSerializer):
+    skills = serializers.SlugRelatedField(many=True,
+                                          queryset=models.SkillsModel.objects.all(),
+                                          slug_field='skillName')
+
     class Meta:
         model = models.UserSkillsModel
         fields = '__all__'
         extra_kwargs = {
             'user': {'read_only': True}
         }
+
+    def create(self, validated_data):
+        skills = validated_data.pop('skills')
+        userSkills = models.UserSkillsModel.objects.create(**validated_data)
+        userSkills.skills.add(*skills)
+        return userSkills
 
 
 class UserInformationSerializer(serializers.ModelSerializer):
@@ -390,12 +406,6 @@ class UpdateAcademicInformationSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'user': {'read_only': True}
         }
-
-
-class SkillsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.SkillsModel
-        fields = "__all__"
 
 #
 # class DocumentationSubmissionSerializer(serializers.ModelSerializer):
