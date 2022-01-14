@@ -21,7 +21,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'full_name', 'profile_pic', 'phone_number', 'nid', 'nationality']
+        fields = ['id', 'email', 'full_name', 'profile_pic', 'phone_number', 'nid', 'nationality', 'location']
 
 
 class InterviewerSerializer(serializers.ModelSerializer):
@@ -296,7 +296,8 @@ class InterviewTimeScheduleSerializer(serializers.ModelSerializer):
 
 
 class AdminDocumentVerificationSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+
     class Meta:
         model = DocumentSubmissionModel
         fields = '__all__'
-

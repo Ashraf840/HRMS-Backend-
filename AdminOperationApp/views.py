@@ -7,7 +7,7 @@ from UserApp.models import User, UserDepartmentModel, EmployeeInfoModel
 from . import serializer
 from . import models
 from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel, OnlineTestResponseModel, \
-    FilterQuestionsResponseModelHR, PracticalTestResponseModel, DocumentSubmissionModel
+    FilterQuestionsResponseModelHR, PracticalTestResponseModel, DocumentSubmissionModel, ReferenceInformationModel
 from rest_framework.permissions import IsAuthenticated
 from UserApp.permissions import IsHrUser
 from .utils import Util
@@ -387,14 +387,36 @@ class InterviewTimeScheduleView(generics.CreateAPIView):
 """
 
 
-class AdminDocumentVerificationView(generics.RetrieveUpdateDestroyAPIView):
+class AdminDocumentVerificationView(generics.ListAPIView):
     serializer_class = serializer.AdminDocumentVerificationSerializer
-    queryset = DocumentSubmissionModel.objects.all()
-    lookup_field = 'applied_job'
 
-    def retrieve(self, request, *args, **kwargs):
+    def get_queryset(self):
+        return DocumentSubmissionModel.objects.filter(applied_job=self.kwargs['applied_job'])
+
+    def list(self, request, *args, **kwargs):
         applicationId = self.kwargs['applied_job']
+        serializer = self.get_serializer(self.get_queryset(), many=True)
+        responseData = serializer.data
+        references = ReferenceInformationModel.objects.filter(applied_job=applicationId)
+        jobApplication = UserJobAppliedModel.objects.get(id=applicationId)
+        jobDetails = JobPostModel.objects.get(id=jobApplication.jobPostId.id)
+        jobName = jobDetails.jobTitle
+        progressStatus = jobApplication.jobProgressStatus.status
+        responseData.append({'references': references})
+        responseData.append(
+            {
+                'jobTitle': jobName,
+                'department': jobDetails.department.department,
+                'progressStatus': progressStatus,
 
-        serializer = self.get_serializer(self.get_object())
-        print(serializer.data)
-        return Response()
+            }
+        )
+
+        return Response(responseData)
+
+    # def retrieve(self, request, *args, **kwargs):
+    #     applicationId = self.kwargs['applied_job']
+    #
+    #     serializer = self.get_serializer(self.get_object())
+    #     print(serializer.data)
+    #     return Response()
