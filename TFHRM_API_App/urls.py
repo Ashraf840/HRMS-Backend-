@@ -17,7 +17,7 @@ from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
     AddTrainingExperienceView, UpdateUserInfoView, UpdateTrainingExperienceView, VerifyEmailView, SkillsView, \
     AcademicInfoListView, WorkInfoListView, CertificationInfoListView, TrainingInfoListView, AddUserSkillsView, \
     HRMCustomTokenObtainPairView, DegreeTitleView, UserProfileCompletionPercentageView, EducationLevelView, \
-    DepartmentView
+    DepartmentView, UpdateUserSkillsView
 
 from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView, OnlineTestLinkView, \
     RecruitmentAdminApplicantListView, AdminInterviewerListView, AdminAppliedCandidateOnlineResView, \
@@ -60,6 +60,7 @@ urlpatterns = [
     path('training_list/<id>/', TrainingInfoListView.as_view(), name='training_exp_list'),
     path('up_training/<user__id>/<id>/', UpdateTrainingExperienceView.as_view(), name='update_training_exp'),
     path('add_user_skills/', AddUserSkillsView.as_view(), name='add_user_skills'),
+    path('update_user_skills/<user_id>/', UpdateUserSkillsView.as_view(), name='update_user_skills'),
     # Hr operations
     path('add_skills/', SkillsView.as_view(), name="add_new_skills"),
 

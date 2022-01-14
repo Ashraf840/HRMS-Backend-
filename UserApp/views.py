@@ -397,28 +397,30 @@ class AddUserSkillsView(generics.ListCreateAPIView):
         return Response(serializer.data)
 
 
-# class UpdateUserSkillsView(generics.RetrieveUpdateDestroyAPIView):
-#     """
-#     Updating user skills if skill is not in the skill table automatically new will add to the database
-#     """
-#     permission_classes = [permissions.IsAuthenticated]
-#     serializer_class = serializer.UserSkillsSerializer
-#     queryset = models.UserSkillsModel.objects.all()
-#     lookup_field = 'user_id'
-#
-#     def update(self, request, *args, **kwargs):
-#         skills = request.data.get('skills', [])
-#         # print(skills)
-#         for skill in skills:
-#             models.SkillsModel.objects.get_or_create(skillName=skill)
-#         instance = self.get_object()
-#         instance.skillName = request.data.get("skillName")
-#         instance.save()
-#
-#         serializer = self.get_serializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         self.perform_create(serializer)
-#         return Response
+class UpdateUserSkillsView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Updating user skills if skill is not in the skill table automatically new will add to the database
+    """
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializer.UserSkillsSerializer
+    queryset = models.UserSkillsModel.objects.all()
+    lookup_field = 'user_id'
+
+    # def get_queryset(self):
+
+
+    def update(self, request, *args, **kwargs):
+        skills = request.data.get('skills', [])
+        # print(skills)
+        for skill in skills:
+            models.SkillsModel.objects.get_or_create(skillName=skill)
+        instance = self.get_object()
+        instance.skills = request.data.get("skills")
+        instance.save()
+        serializer = self.get_serializer(instance)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
 
 
 
