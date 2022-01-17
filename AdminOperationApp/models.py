@@ -101,6 +101,9 @@ class MarkingDuringInterviewModel(models.Model):
 
 
 class InterviewTimeScheduleModel(models.Model):
+    """
+    Time scheduling for interview
+    """
     applicationId = models.ForeignKey(UserJobAppliedModel, on_delete=models.SET_NULL,
                                       related_name='application_id_applied_job', null=True)
     interviewer = models.ForeignKey(UserDesignationModel, on_delete=models.SET_NULL,
@@ -115,3 +118,16 @@ class InterviewTimeScheduleModel(models.Model):
 
     def __str__(self):
         return f'{self.interviewDate} - {self.interviewer}'
+
+
+class GenerateAppointmentLetterModel(models.Model):
+    applicationId = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE, related_name='application_id_job_applied_user')
+    subjectLine = models.CharField(max_length=255, blank=True)
+    joiningDate = models.DateField()
+    grossSalary = models.IntegerField()
+    jobDescription = models.TextField()
+    termsCondition = models.TextField()
+
+    def __str__(self):
+        return f'{self.applicationId.userId.full_name} - {self.applicationId.jobPostId.jobTitle}'
+

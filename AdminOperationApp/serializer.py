@@ -301,3 +301,16 @@ class AdminDocumentVerificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = DocumentSubmissionModel
         fields = '__all__'
+
+
+class GenerateAppointmentLetterSerializer(serializers.ModelSerializer):
+    """
+    On-boarding section for candidate where admin will set appointment letter and others documents
+    """
+
+    class Meta:
+        model = models.GenerateAppointmentLetterModel
+        fields = '__all__'
+        # extra_kwargs = {
+        #     'applicationId': {'read_only': True}
+        # }

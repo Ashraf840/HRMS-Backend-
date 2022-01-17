@@ -420,3 +420,23 @@ class AdminDocumentVerificationView(generics.ListAPIView):
     #     serializer = self.get_serializer(self.get_object())
     #     print(serializer.data)
     #     return Response()
+
+
+class GenerateAppointmentLetterView(generics.CreateAPIView):
+    serializer_class = serializer.GenerateAppointmentLetterSerializer
+    queryset = models.GenerateAppointmentLetterModel.objects.all()
+
+    # def perform_create(self, serializer):
+    #     serializer
+    #     serializer.save(applicationId=)
+
+    def create(self, request, *args, **kwargs):
+        alreadyApplied = models.GenerateAppointmentLetterModel.objects.filter(
+            applicationId=request.data['applicationId'])
+        if alreadyApplied.count() < 1:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response({'detail': 'Already created Appointment letter for this candidate'},
+                        status=status.HTTP_208_ALREADY_REPORTED)
