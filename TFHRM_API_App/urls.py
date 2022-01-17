@@ -23,7 +23,8 @@ from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView, On
     RecruitmentAdminApplicantListView, AdminInterviewerListView, AdminAppliedCandidateOnlineResView, \
     SendPracticalTestView,  RecruitmentAdminGraphView, MarkingDuringInterviewView, AddEmployeeInfoDuringOnboardView, \
     FilterQuestionResponseListView, PracticalTestMarkUpdateView, RecruitmentPracticalTestResponseView,\
-    InterviewTimeScheduleView, AdminDocumentVerificationView, GenerateAppointmentLetterView
+    InterviewTimeScheduleView, AdminDocumentVerificationView, GenerateAppointmentLetterView, AppointmentLetterInformationView
+
 
 app_name = 'tfhrm_api'
 
@@ -128,6 +129,7 @@ urlpatterns = [
     # Document verification
     path('recruitment_documents_verification/<applied_job>/', AdminDocumentVerificationView.as_view(), name='document_verification_recruitment'),
     path('generate_appointment_letter/', GenerateAppointmentLetterView.as_view(), name='generate_appointment_letter_during_onboarding'),
+    path('appointment_letter_details/<applied_job>/', AppointmentLetterInformationView.as_view(), name='appointment_letter_details_for_pdf'),
     # Update official email during onboard
     path('add_employee_info/<id>/', AddEmployeeInfoDuringOnboardView.as_view(),
          name='add_employee_info_during_onboard'),

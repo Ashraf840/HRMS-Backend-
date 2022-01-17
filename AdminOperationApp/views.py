@@ -440,3 +440,41 @@ class GenerateAppointmentLetterView(generics.CreateAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response({'detail': 'Already created Appointment letter for this candidate'},
                         status=status.HTTP_208_ALREADY_REPORTED)
+
+
+class AppointmentLetterInformationView(generics.ListAPIView):
+    serializer_class = serializer.GenerateAppointmentLetterSerializer
+
+    def get_queryset(self):
+        applicationId = self.kwargs['applied_job']
+        queryset = models.GenerateAppointmentLetterModel.objects.filter(applicationId=applicationId)
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        applicationId = self.kwargs['applied_job']
+        userInformation = UserJobAppliedModel.objects.get(id=applicationId)
+        serializer = self.get_serializer(self.get_queryset(), many=True)
+        responseData = serializer.data
+        data = self.get_queryset().get()
+        grossSalary = int(data.grossSalary)
+        basicSalary = grossSalary * .5
+        homeAllowance = basicSalary * .6
+        medicalAllowance = basicSalary * .2
+        transportAllowance = basicSalary * .2
+        responseData.append({
+            'grossSalary': grossSalary,
+            'basicSalary': int(basicSalary),
+            'homeAllowance': int(homeAllowance),
+            'medicalAllowance': int(medicalAllowance),
+            'transportAllowance': int(transportAllowance)
+        })
+
+        responseData.append({
+            'applicantName': userInformation.userId.full_name,
+            'location': userInformation.userId.location,
+            'nid': userInformation.userId.nid,
+            'jobTitle': userInformation.jobPostId.jobTitle,
+
+        })
+
+        return Response(responseData)
