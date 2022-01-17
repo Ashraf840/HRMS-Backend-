@@ -236,7 +236,14 @@ class AdminJobListView(generics.ListAPIView):
     serializer_class = serializer.AdminJobListSerializer
 
     def get_queryset(self):
-        return JobPostModel.objects.all()
+        queryset = JobPostModel.objects.all()
+        jobType = self.request.query_params.get('jobType')
+        department = self.request.query_params.get('department')
+        # expire = self.request.query_params.get('expire')
+        shift = self.request.query_params.get('shift')
+
+        return queryset.filter(Q(jobType__icontains=jobType), Q(shift__icontains=shift),
+                               Q(department__department__icontains=department))
 
     def list(self, request, *args, **kwargs):
         serializer = self.get_serializer(self.get_queryset(), many=True)
