@@ -245,9 +245,9 @@ class AdminJobListView(generics.ListAPIView):
 
         return queryset.filter(
             (Q(jobType__icontains=search) | Q(shift__icontains=search) | Q(department__department__icontains=search) |
-             Q(jobTitle__icontains=search)) or
-            (Q(jobType__icontains=jobType), Q(shift__icontains=shift),
-             Q(department__department__icontains=department)))
+             Q(jobTitle__icontains=search)),
+            Q(jobType__icontains=jobType), Q(shift__icontains=shift),
+            Q(department__department__icontains=department))
 
     def list(self, request, *args, **kwargs):
         serializer = self.get_serializer(self.get_queryset(), many=True)
