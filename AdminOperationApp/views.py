@@ -237,13 +237,17 @@ class AdminJobListView(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = JobPostModel.objects.all()
+        search = self.request.query_params.get('search')
         jobType = self.request.query_params.get('jobType')
         department = self.request.query_params.get('department')
         # expire = self.request.query_params.get('expire')
         shift = self.request.query_params.get('shift')
 
-        return queryset.filter(Q(jobType__icontains=jobType), Q(shift__icontains=shift),
-                               Q(department__department__icontains=department))
+        return queryset.filter(
+            (Q(jobType__icontains=search) | Q(shift__icontains=search) | Q(department__department__icontains=search) |
+             Q(jobTitle__icontains=search)) or
+            (Q(jobType__icontains=jobType), Q(shift__icontains=shift),
+             Q(department__department__icontains=department)))
 
     def list(self, request, *args, **kwargs):
         serializer = self.get_serializer(self.get_queryset(), many=True)
