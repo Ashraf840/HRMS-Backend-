@@ -157,12 +157,13 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        filterQusResponse = models.FilterQuestionsResponseModelHR.objects.filter(
-            jobPost=serializer.data['jobPost'], user=self.request.user)
+        for val in serializer.data:
+            jobPostId = val['jobPost']
+            break
+        filterQusResponse = models.FilterQuestionsResponseModelHR.objects.filter(user=self.request.user, jobPost_id=jobPostId)
         # print(serializer.data['jobPost'])
-        # print(filterQusResponse)
-        jobFilterQuestion = models.UserJobAppliedModel.objects.get(jobPostId_id=serializer.data['jobPost'],
-                                                                   userId=self.request.user)
+        print(filterQusResponse)
+        jobFilterQuestion = models.UserJobAppliedModel.objects.get(jobPostId=jobPostId, userId=self.request.user)
         # print(jobFilterQuestion)
 
         totalQuestion = jobFilterQuestion.jobPostId.filterQuestions.count()
@@ -225,6 +226,8 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
 
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         return Response({'detail': 'new response added'})
+
+
 
 
 class FilterQuestionResponseListView(generics.ListAPIView):
