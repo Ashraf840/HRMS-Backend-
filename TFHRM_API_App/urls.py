@@ -138,6 +138,7 @@ urlpatterns = [
     path('add_employee_info/<id>/', AddEmployeeInfoDuringOnboardView.as_view(),
          name='add_employee_info_during_onboard'),
 
-    path('support_ticket/', supportView.SupportTicketView.as_view(), name='support_ticketing_')
+    path('support_ticket/', supportView.SupportTicketView.as_view(), name='support_ticketing'),
+    path('support_message/<ticketId>/', supportView.SupportMessageView.as_view(), name='support_message')
 
 ]
