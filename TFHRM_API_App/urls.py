@@ -21,10 +21,12 @@ from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
 
 from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView, OnlineTestLinkView, \
     RecruitmentAdminApplicantListView, AdminInterviewerListView, AdminAppliedCandidateOnlineResView, \
-    SendPracticalTestView,  RecruitmentAdminGraphView, MarkingDuringInterviewView, AddEmployeeInfoDuringOnboardView, \
-    FilterQuestionResponseListView, PracticalTestMarkUpdateView, RecruitmentPracticalTestResponseView,\
-    InterviewTimeScheduleView, AdminDocumentVerificationView, GenerateAppointmentLetterView, AppointmentLetterInformationView
+    SendPracticalTestView, RecruitmentAdminGraphView, MarkingDuringInterviewView, AddEmployeeInfoDuringOnboardView, \
+    FilterQuestionResponseListView, PracticalTestMarkUpdateView, RecruitmentPracticalTestResponseView, \
+    InterviewTimeScheduleView, AdminDocumentVerificationView, GenerateAppointmentLetterView, \
+    AppointmentLetterInformationView
 
+from SupportApp import views as supportView
 
 app_name = 'tfhrm_api'
 
@@ -64,7 +66,6 @@ urlpatterns = [
     path('update_user_skills/<user_id>/', UpdateUserSkillsView.as_view(), name='update_user_skills'),
     # Hr operations
     path('add_skills/', SkillsView.as_view(), name="add_new_skills"),
-
 
     # for Candidate to Apply for Jobs
     path('job_post/', JobCreateView.as_view(), name='job_post_with_online_test_link'),
@@ -127,11 +128,16 @@ urlpatterns = [
     path('marking_during_interview/', MarkingDuringInterviewView.as_view(),
          name='marking_during_interview_interviewer'),
     # Document verification
-    path('recruitment_documents_verification/<applied_job>/', AdminDocumentVerificationView.as_view(), name='document_verification_recruitment'),
-    path('generate_appointment_letter/', GenerateAppointmentLetterView.as_view(), name='generate_appointment_letter_during_onboarding'),
-    path('appointment_letter_details/<applied_job>/', AppointmentLetterInformationView.as_view(), name='appointment_letter_details_for_pdf'),
+    path('recruitment_documents_verification/<applied_job>/', AdminDocumentVerificationView.as_view(),
+         name='document_verification_recruitment'),
+    path('generate_appointment_letter/', GenerateAppointmentLetterView.as_view(),
+         name='generate_appointment_letter_during_onboarding'),
+    path('appointment_letter_details/<applied_job>/', AppointmentLetterInformationView.as_view(),
+         name='appointment_letter_details_for_pdf'),
     # Update official email during onboard
     path('add_employee_info/<id>/', AddEmployeeInfoDuringOnboardView.as_view(),
          name='add_employee_info_during_onboard'),
+
+    path('support_ticket/', supportView.SupportTicketView.as_view(), name='support_ticketing_')
 
 ]

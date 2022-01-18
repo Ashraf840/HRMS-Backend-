@@ -335,6 +335,20 @@ class UserAcademicSerializer(serializers.ModelSerializer):
     #                                                        **validated_data)
 
 
+class UserAcademicDetailsSerializer(serializers.ModelSerializer):
+    educationLevel = EducationLevelSerializer()
+    degreeTitle = DegreeTitleSerializer()
+
+    class Meta:
+        model = models.UserAcademicInfoModel
+        fields = '__all__'
+
+        extra_kwargs = {
+            'user': {'read_only': True}
+        }
+
+
+
 class UserCertificationsSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserCertificationsModel
@@ -383,7 +397,7 @@ Training Information -> UserTrainingModel
 
 class UserDetailsSerializer(serializers.ModelSerializer):
     userInfo = UserInformationSerializer(source='user_info_user')
-    academicInfo = UserAcademicSerializer(source='academic_info_user', many=True)
+    academicInfo = UserAcademicDetailsSerializer(source='academic_info_user', many=True)
     certificationInfo = UserCertificationsSerializer(source='certification_info_user', many=True)
     trainingInfo = UserTrainingExperienceSerializer(source='training_info_user', many=True)
     jobPreference = UserJobPreferenceSerializer(source='job_preference_user', many=True)

@@ -173,6 +173,7 @@ class DegreeTitleModel(models.Model):
     def __str__(self):
         return f'{self.degree}'
 
+
 class GroupOrSubjectModel(models.Model):
     educationLevel = models.ForeignKey(EducationLevelModel, on_delete=models.CASCADE,
                                        related_name='major_group_educational_level')
@@ -188,7 +189,7 @@ class UserAcademicInfoModel(models.Model):
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='academic_info_user')
     educationLevel = models.ForeignKey(EducationLevelModel, on_delete=models.SET_NULL, related_name='education_level',
-                                       blank=True,null=True)
+                                       blank=True, null=True)
     degreeTitle = models.ForeignKey(DegreeTitleModel, on_delete=models.SET_NULL, related_name='degree_title',
                                     blank=True, null=True)
     instituteName = models.CharField(max_length=255, null=True)
@@ -196,12 +197,17 @@ class UserAcademicInfoModel(models.Model):
     year = models.CharField(max_length=15, null=True, blank=True)
     duration = models.IntegerField(null=True)
     cgpa = models.DecimalField(max_digits=10, decimal_places=2)
+    cgpaOutOf = models.DecimalField(max_digits=10, decimal_places=2, blank=True, default=0)
 
     class Meta:
         verbose_name_plural = 'Academic Information'
 
     def __str__(self):
         return f'{self.user}, {self.major}'
+
+
+def certificate_file_name(instance, filename):
+    return '/'.join(['certificate', instance.user.full_name + '_id_' + str(instance.user.id), filename])
 
 
 class UserCertificationsModel(models.Model):
@@ -211,6 +217,7 @@ class UserCertificationsModel(models.Model):
     score = models.CharField(max_length=255)
     certificationId = models.CharField(max_length=255)
     dateOfAchievement = models.DateField(null=True)
+    certificateImage = models.FileField(upload_to=certificate_file_name, blank=True)
 
     class Meta:
         verbose_name_plural = 'Certification Information'
