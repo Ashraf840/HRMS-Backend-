@@ -40,7 +40,7 @@ class JobDescriptionView(generics.RetrieveAPIView):
 # Update/delete functionality for admin
 class JobDescriptionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated, IsHrUser]
-    serializer_class = serializer.JobPostSerializer
+    serializer_class = serializer.JobCreateSerializer
     lookup_field = 'id'
 
     def get_queryset(self):
