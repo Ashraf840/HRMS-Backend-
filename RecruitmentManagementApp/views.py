@@ -159,8 +159,11 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
         headers = self.get_success_headers(serializer.data)
         filterQusResponse = models.FilterQuestionsResponseModelHR.objects.filter(
             jobPost=serializer.data['jobPost'], user=self.request.user)
-        jobFilterQuestion = models.UserJobAppliedModel.objects.get(jobPostId=serializer.data['jobPost'],
+        # print(serializer.data['jobPost'])
+        # print(filterQusResponse)
+        jobFilterQuestion = models.UserJobAppliedModel.objects.get(jobPostId_id=serializer.data['jobPost'],
                                                                    userId=self.request.user)
+        # print(jobFilterQuestion)
 
         totalQuestion = jobFilterQuestion.jobPostId.filterQuestions.count()
         totalResponse = filterQusResponse.count()

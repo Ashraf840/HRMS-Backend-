@@ -28,6 +28,7 @@ class TicketingForSupportModel(models.Model):
 
 
 class SupportMessageModel(models.Model):
+    ticket = models.ForeignKey(TicketingForSupportModel, on_delete=models.CASCADE, related_name='message_support_ticket')
     message = models.CharField(max_length=255, blank=True)
     time = models.DateTimeField(auto_now=True)
     id_read = models.BooleanField(default=False)
