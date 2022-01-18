@@ -232,6 +232,7 @@ class UserTrainingExperienceModel(models.Model):
     topicName = models.CharField(max_length=255)
     startDate = models.DateField()
     completeDate = models.DateField()
+    certificateImage = models.FileField(upload_to=certificate_file_name, blank=True)
 
     class Meta:
         verbose_name_plural = 'Training Information'

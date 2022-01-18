@@ -234,8 +234,15 @@ class UserAcademicInfoRetrieveView(generics.RetrieveUpdateDestroyAPIView):
 class UserDetailView(generics.RetrieveAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.UserDetailsSerializer
-    queryset = models.User.objects.all()
     lookup_field = 'id'
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_hr or user.is_superuser:
+            queryset = models.User.objects.all()
+        else:
+            queryset = models.User.objects.filter(id=self.request.user.id)
+        return queryset
 
 
 # Updating Academic information
