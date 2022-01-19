@@ -1,5 +1,6 @@
 from rest_framework import generics, permissions
 from UserApp.permissions import IsHrUser
+from django.db.models import Q
 from . import serializer
 from . import models
 
@@ -34,6 +35,19 @@ class SubmittedAnswerListView(generics.ListAPIView):
 """
 Filter questions Sections
 """
+
+
+class FilterQuestionListView(generics.ListAPIView):
+    """
+    filter question list with search field
+    """
+    serializer_class = serializer.FilterQuestionListSerializer
+
+    def get_queryset(self):
+        queryset = models.JobApplyFilterQuestionModel.objects.all()
+        department = self.request.query_params.get('department')
+        text_type = self.request.query_params.get('text_type')
+        return queryset.filter(Q(department__department__icontains=department), Q(fieldType__fieldType__icontains=text_type))
 
 
 class FilterQuestionView(generics.ListCreateAPIView):

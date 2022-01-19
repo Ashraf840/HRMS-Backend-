@@ -2,7 +2,6 @@ from rest_framework import serializers
 from . import models
 
 
-
 class FieldSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.FieldTypeModels
@@ -72,6 +71,27 @@ class SubmittedAnswerListSerializer(serializers.ModelSerializer):
         }
 
 
+class DepartmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.UserDepartmentModel
+        fields = '__all__'
+
+
+class FieldTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.FieldTypeModels
+        fields = '__all__'
+
+
+class FilterQuestionListSerializer(serializers.ModelSerializer):
+    department = DepartmentSerializer()
+    fieldType = FieldTypeSerializer()
+
+    class Meta:
+        model = models.JobApplyFilterQuestionModel
+        fields = '__all__'
+
+
 class FilterQuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.JobApplyFilterQuestionModel
@@ -80,7 +100,6 @@ class FilterQuestionSerializer(serializers.ModelSerializer):
 
 class FilterQuestionAnswerSerializer(serializers.ModelSerializer):
     question = FilterQuestionSerializer()
-
 
     class Meta:
         model = models.FilterQuestionAnswerModel
@@ -91,7 +110,6 @@ class FilterQuestionAnswerSerializer(serializers.ModelSerializer):
         filterQus = models.JobApplyFilterQuestionModel.objects.create(**question)
         qusAns = models.FilterQuestionAnswerModel.objects.create(question=filterQus, **validated_data)
         return qusAns
-
 
 # class FilterQuestionResponseSerializer(serializers.ModelSerializer):
 #     class Meta:

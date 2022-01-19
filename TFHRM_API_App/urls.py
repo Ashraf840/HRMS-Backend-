@@ -1,7 +1,7 @@
 from django.urls import path
 # Importing Views from QuizApp
 from QuizApp.views import QuestionAnswerSetView, SubmittedAnswerView, SubmittedAnswerListView, \
-    FilterQuestionView
+    FilterQuestionView, FilterQuestionListView
 # importing Views from RecruitmentManagementApp views
 from RecruitmentManagementApp.views import AllUserDetailView, JobPostView, AppliedForJobView, JobDescriptionView, \
     JobDescriptionUpdateDeleteView, JobListView, FilterQuestionResponseListView, FilterQuestionResponseView, \
@@ -84,6 +84,7 @@ urlpatterns = [
 
     # Filter question list
     path('filter_question/', FilterQuestionView.as_view(), name='filter_questions'),
+    path('filter_question_list/', FilterQuestionListView.as_view(), name='filter_questions'),
     path('filter_question/<dep_id>/', FilterQuestionView.as_view(), name='filter_questions'),
     path('filter_question_res/', FilterQuestionResponseView.as_view(), name='filter_questions_response'),
     path('filter_question_res_list/', FilterQuestionResponseListView.as_view(), name='filter_questions_response_list'),
