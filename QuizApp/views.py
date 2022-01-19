@@ -60,6 +60,12 @@ class FilterQuestionView(generics.ListCreateAPIView):
         except:
             return models.FilterQuestionAnswerModel.objects.all()
 
+
+class FilterQuestionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = serializer.FilterQuestionAnswerSerializer
+    queryset = models.FilterQuestionAnswerModel.objects.all()
+    lookup_field = 'id'
+
 # class FilterQuestionResponseView(generics.CreateAPIView):
 #     serializer_class = serializer.FilterQuestionResponseSerializer
 #     queryset = models.FilterQuestionsResponseModel.objects.all()
