@@ -202,10 +202,22 @@ class AppliedUserDetailsView(generics.ListAPIView):
     serializer_class = serializer.AppliedUserDetailsSerializer
     queryset = UserJobAppliedModel.objects.all()
 
-    # def get_queryset(self):
-    #     queryset = UserJobAppliedModel.objects.all()
-    #     # print(queryset.count())
-    #     return queryset
+    def get_queryset(self):
+        queryset = UserJobAppliedModel.objects.all()
+        search = self.request.query_params.get('search')
+        department = self.request.query_params.get('department')
+        shift = self.request.query_params.get('shift')
+        job_type = self.request.query_params.get('job_type')
+        return queryset.filter((Q(userId__full_name__icontains=search) |
+                                Q(jobPostId__jobTitle__icontains=search) |
+                                Q(jobPostId__department__department__icontains=search) |
+                                Q(jobPostId__jobType__icontains=search) |
+                                Q(jobPostId__shift__icontains=search)),
+                               Q(jobPostId__shift__icontains=shift),
+                               Q(jobPostId__department__department__icontains=department),
+                               Q(jobPostId__jobType__icontains=job_type)
+                               )
+
     # customizing default list view to provide more specific information like total applicant,shortlisted
     def list(self, request, *args, **kwargs):
         serializer = self.get_serializer(self.get_queryset(), many=True)
