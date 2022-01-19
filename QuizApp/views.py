@@ -47,7 +47,8 @@ class FilterQuestionListView(generics.ListAPIView):
         queryset = models.JobApplyFilterQuestionModel.objects.all()
         department = self.request.query_params.get('department')
         text_type = self.request.query_params.get('text_type')
-        return queryset.filter(Q(department__department__icontains=department), Q(fieldType__fieldType__icontains=text_type))
+        return queryset.filter(Q(department__department__icontains=department),
+                               Q(fieldType__fieldType__icontains=text_type))
 
 
 class FilterQuestionView(generics.ListCreateAPIView):
@@ -64,7 +65,10 @@ class FilterQuestionView(generics.ListCreateAPIView):
 class FilterQuestionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializer.FilterQuestionAnswerSerializer
     queryset = models.FilterQuestionAnswerModel.objects.all()
-    lookup_field = 'id'
+    lookup_field = 'question_id'
+
+    # def get_queryset(self):
+    #     qus_id = self.kwargs['question_id']
 
 # class FilterQuestionResponseView(generics.CreateAPIView):
 #     serializer_class = serializer.FilterQuestionResponseSerializer
