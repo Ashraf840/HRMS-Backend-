@@ -1,4 +1,7 @@
-from rest_framework import generics, permissions
+from django.http import Http404
+from rest_framework import generics, permissions, status
+from rest_framework.response import Response
+
 from UserApp.permissions import IsHrUser
 from django.db.models import Q
 from . import serializer
@@ -66,6 +69,17 @@ class FilterQuestionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializer.FilterQuestionAnswerSerializer
     queryset = models.FilterQuestionAnswerModel.objects.all()
     lookup_field = 'question_id'
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            # print(instance)
+            instance.question.delete()
+            self.perform_destroy(instance)
+        except Http404:
+            pass
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     # def get_queryset(self):
     #     qus_id = self.kwargs['question_id']

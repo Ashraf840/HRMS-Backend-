@@ -84,8 +84,10 @@ urlpatterns = [
 
     # Filter question list
     path('filter_question/', FilterQuestionView.as_view(), name='filter_questions'),
-    path('filter_question_update/<question_id>/', FilterQuestionUpdateDeleteView.as_view(), name='filter_questions_update_delete'),
-    path('filter_question_list/', FilterQuestionListView.as_view(), name='filter_questions_list_with_search_functionality'),
+    path('filter_question_update/<question_id>/', FilterQuestionUpdateDeleteView.as_view(),
+         name='filter_questions_update_delete'),
+    path('filter_question_list/', FilterQuestionListView.as_view(),
+         name='filter_questions_list_with_search_functionality'),  # filter_question_list/?department=&text_type=
     path('filter_question/<dep_id>/', FilterQuestionView.as_view(), name='filter_questions'),
     path('filter_question_res/', FilterQuestionResponseView.as_view(), name='filter_questions_response'),
     path('filter_question_res_list/', FilterQuestionResponseListView.as_view(), name='filter_questions_response_list'),
@@ -123,6 +125,8 @@ urlpatterns = [
     path('filter_qus_res_list/<user_id>/<job_id>/', FilterQuestionResponseListView.as_view(),
          name='filter_qus_res_list_admin'),
     path('applicant_list_details/', AppliedUserDetailsView.as_view(), name='admin_applied_user_list'),
+    # applicant_list_details/?search=&department=&shift=&job_type=
+
     path('admin_online_test_res_list/', AdminAppliedCandidateOnlineResView.as_view(),
          name='admin_online_test_response_list'),
     path('applicant_interview/', AdminInterviewerListView.as_view(), name='applicant_interviewer_list'),
