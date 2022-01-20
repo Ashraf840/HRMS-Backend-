@@ -232,6 +232,16 @@ class GroupOrSubjectSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class DesignationSerializer(serializers.ModelSerializer):
+    """
+    Employee designation serializer
+    """
+
+    class Meta:
+        model = models.UserDesignationModel
+        fields = '__all__'
+
+
 class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
@@ -346,7 +356,6 @@ class UserAcademicDetailsSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'user': {'read_only': True}
         }
-
 
 
 class UserCertificationsSerializer(serializers.ModelSerializer):

@@ -163,6 +163,11 @@ class UserProfileCompletionPercentageView(generics.ListAPIView):
         return Response(percentage)
 
 
+class DesignationView(generics.ListAPIView):
+    serializer_class = serializer.DesignationSerializer
+    queryset = models.UserDesignationModel.objects.all()
+
+
 class UpdateUserInfoView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializer.ProfileUpdateSerializer
     queryset = models.User.objects.all()
@@ -366,7 +371,6 @@ class AddTrainingExperienceView(generics.CreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
-
 class TrainingInfoListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated, IsCandidateUser]
     serializer_class = serializer.UserTrainingExperienceSerializer
@@ -423,7 +427,6 @@ class UpdateUserSkillsView(generics.RetrieveUpdateDestroyAPIView):
 
     # def get_queryset(self):
 
-
     def update(self, request, *args, **kwargs):
         skills = request.data.get('skills', [])
         # print(skills)
@@ -436,7 +439,6 @@ class UpdateUserSkillsView(generics.RetrieveUpdateDestroyAPIView):
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         return Response(serializer.data)
-
 
 
 class SkillsView(generics.CreateAPIView):
