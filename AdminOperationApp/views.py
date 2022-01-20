@@ -285,9 +285,10 @@ class RecruitmentNewApplicantView(generics.ListAPIView):
     serializer_class = serializer.RecruitmentNewApplicantSerializer
 
     def get_queryset(self):
-        search = self.get
+        search = self.request.query_params.get('search')
         queryset = UserJobAppliedModel.objects.all().order_by('-appliedDate')
-        return queryset
+        return queryset.filter(Q(jobPostId__jobType__icontains=search) | Q(jobPostId__shift__icontains=search) |
+                               Q(jobPostId__jobTitle__icontains=search) | Q(userId__full_name__icontains=search))
 
     def list(self, request, *args, **kwargs):
         serializer = self.get_serializer(self.get_queryset(), many=True)
