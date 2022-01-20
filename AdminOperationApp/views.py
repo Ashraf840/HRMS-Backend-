@@ -330,8 +330,9 @@ class TestAdminAppliedCandidateOnlineResView(generics.ListAPIView):
 
     def get_queryset(self):
         job_id = self.kwargs['job_id']
+        search = self.request.query_params.get('search')
         queryset = UserJobAppliedModel.objects.filter(jobPostId_id=job_id)
-        return queryset
+        return queryset.filter(Q(userId__full_name__icontains=search)| Q(userId__email__icontains=search))
 
 
 class RecruitmentPracticalTestResponseView(generics.ListAPIView):
