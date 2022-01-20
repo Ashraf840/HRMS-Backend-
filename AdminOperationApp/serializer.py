@@ -221,6 +221,8 @@ class TestOnlineTestResponseSerializer(serializers.ModelSerializer):
 
 class TestAdminAppliedCandidateOnlineResSerializer(serializers.ModelSerializer):
     onlineTestResponse = TestOnlineTestResponseSerializer(source='job_applied_online_response', many=True)
+    userId = UserSerializer()
+    jobProgressStatus = JobStatusSerializer()
 
     class Meta:
         model = UserJobAppliedModel
