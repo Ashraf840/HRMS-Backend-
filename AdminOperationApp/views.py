@@ -287,7 +287,7 @@ class RecruitmentNewApplicantView(generics.ListAPIView):
     def get_queryset(self):
         search = self.request.query_params.get('search')
         job_id = self.kwargs['job_id']
-        queryset = UserJobAppliedModel.objects.filter(jobPostId_id = job_id).order_by('-appliedDate')
+        queryset = UserJobAppliedModel.objects.filter(jobPostId_id=job_id).order_by('-appliedDate')
         return queryset.filter(Q(jobPostId__jobType__icontains=search) | Q(jobPostId__shift__icontains=search) |
                                Q(jobPostId__jobTitle__icontains=search) | Q(userId__full_name__icontains=search))
 
@@ -326,7 +326,11 @@ class RecruitmentPracticalTestResponseView(generics.ListAPIView):
     Recruitment practical test response and marks
     """
     serializer_class = serializer.RecruitmentPracticalTestResponseSerializer
-    queryset = PracticalTestResponseModel.objects.all()
+
+    def get_queryset(self):
+        job_id = self.kwargs['job_id']
+        queryset = PracticalTestResponseModel.objects.filter(appliedJob__jobPostId_id=job_id)
+        return queryset
 
 
 class AdminInterviewerListView(generics.ListAPIView):

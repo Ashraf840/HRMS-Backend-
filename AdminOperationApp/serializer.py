@@ -228,12 +228,22 @@ class PracticalTestMarkInputSerializer(serializers.ModelSerializer):
         }
 
 
+class JobAppliedUserSerializer(serializers.ModelSerializer):
+    jobPostId = JobSerializer()
+    jobProgressStatus = JobStatusSerializer()
+
+    class Meta:
+        model = UserJobAppliedModel
+        fields = '__all__'
+
+
 class RecruitmentPracticalTestResponseSerializer(serializers.ModelSerializer):
     """
     Recruitment practical test response and mark serializer
     """
     user = UserSerializer()
     practicalMark = PracticalTestMarkInputSerializer(source='appliedJob.practical_test_application')
+    appliedJob = JobAppliedUserSerializer()
 
     class Meta:
         model = models.PracticalTestResponseModel

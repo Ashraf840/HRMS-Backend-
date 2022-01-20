@@ -116,7 +116,7 @@ urlpatterns = [
     path('update_status/<id>/', UpdateCandidateStatusView.as_view(), name='update_status'),
     path('practical_test_mark_update/<jobApplication>/', PracticalTestMarkUpdateView.as_view(),
          name='practical_test_mark_input_view'),
-    path('recruitment_practical_test_res/', RecruitmentPracticalTestResponseView.as_view(),
+    path('recruitment_practical_test_res/<job_id>/', RecruitmentPracticalTestResponseView.as_view(),
          name='recruitment_practical_test_response'),
     path('recruitment_new_applicants/<job_id>/', RecruitmentNewApplicantView.as_view(),
          name='recruitment_new_applicant_list'),
