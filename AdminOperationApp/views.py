@@ -280,6 +280,21 @@ class AdminJobListView(generics.ListAPIView):
         return Response(responseData)
 
 
+class RecruitmentNewApplicantView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializer.RecruitmentNewApplicantSerializer
+
+    def get_queryset(self):
+        search = self.get
+        queryset = UserJobAppliedModel.objects.all().order_by('-appliedDate')
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        serializer = self.get_serializer(self.get_queryset(), many=True)
+        responseData = serializer.data
+        return Response(responseData)
+
+
 class FilterQuestionResponseListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.FilterQuestionResponseListSerializer

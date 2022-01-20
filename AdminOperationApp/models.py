@@ -108,7 +108,7 @@ class InterviewTimeScheduleModel(models.Model):
                                       related_name='application_id_applied_job', null=True)
     interviewer = models.ForeignKey(UserDesignationModel, on_delete=models.SET_NULL,
                                     related_name='interviewer_designation', null=True)
-    candidate = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='candidate_interview_user', null=True)
+    candidate = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='candidate_interview_user', null=True, blank=True)
     scheduleBy = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='meeting_scheduled_user',
                                    null=True)
     interviewDate = models.DateField()

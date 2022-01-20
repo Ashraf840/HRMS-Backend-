@@ -62,6 +62,19 @@ class SendPracticalTestSerializer(serializers.ModelSerializer):
         }
 
 
+class RecruitmentNewApplicantSerializer(serializers.ModelSerializer):
+    """
+    New applicant list serializer
+    """
+    userId = UserSerializer()
+    jobPostId = JobSerializer()
+    jobProgressStatus = JobStatusSerializer()
+
+    class Meta:
+        model = UserJobAppliedModel
+        fields = '__all__'
+
+
 class MarkingDuringInterviewSerializer(serializers.ModelSerializer):
     """
     Interviewer will mark Candidate During Interview based on few criteria.

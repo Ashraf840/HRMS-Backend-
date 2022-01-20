@@ -81,6 +81,8 @@ class FilterQuestionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
+
     # def get_queryset(self):
     #     qus_id = self.kwargs['question_id']
 

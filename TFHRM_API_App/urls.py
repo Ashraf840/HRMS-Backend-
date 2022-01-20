@@ -24,7 +24,7 @@ from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView, On
     SendPracticalTestView, RecruitmentAdminGraphView, MarkingDuringInterviewView, AddEmployeeInfoDuringOnboardView, \
     FilterQuestionResponseListView, PracticalTestMarkUpdateView, RecruitmentPracticalTestResponseView, \
     InterviewTimeScheduleView, AdminDocumentVerificationView, GenerateAppointmentLetterView, \
-    AppointmentLetterInformationView
+    AppointmentLetterInformationView, RecruitmentNewApplicantView
 
 from SupportApp import views as supportView
 
@@ -118,6 +118,9 @@ urlpatterns = [
          name='practical_test_mark_input_view'),
     path('recruitment_practical_test_res/', RecruitmentPracticalTestResponseView.as_view(),
          name='recruitment_practical_test_response'),
+    path('recruitment_new_applicants/', RecruitmentNewApplicantView.as_view(),
+         name='recruitment_new_applicant_list'),
+
     path('recruitment_dashboard_applicant/', RecruitmentAdminApplicantListView.as_view(),
          name='recruitment_dashboard_applicant'),
     path('recruitment_dashboard/<year>/', RecruitmentAdminGraphView.as_view(), name='recruitment_dashboard_graph_jobs'),
