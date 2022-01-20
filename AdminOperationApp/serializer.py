@@ -230,8 +230,10 @@ class TestAdminAppliedCandidateOnlineResSerializer(serializers.ModelSerializer):
         data = super(TestAdminAppliedCandidateOnlineResSerializer, self).to_representation(instance)
         # print(data)
         info = data.get('onlineTestResponse')
+        # print(info)
         # response = []
-        if len(info) > 0:
+        # print(len(info))
+        if len(info) == 0:
             data.clear()
         return data
 
