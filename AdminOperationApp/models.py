@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.signals import post_save, pre_delete
+from django.db.models.signals import post_save, pre_delete,post_delete
 from django.dispatch import receiver
 
 from UserApp.models import User, UserDesignationModel
@@ -47,6 +47,13 @@ def create_practical_test_mark(sender, instance, created, **kwargs):
         data = UserJobAppliedModel.objects.get(job_applied_practical_response__id=instance.id)
         # print(data)
         PracticalTestMarkInputModel.objects.create(jobApplication=data)
+
+
+# @receiver(post_delete, sender=PracticalTestResponseModel)
+# def delete_practical_test_mark(sender, instance, **kwargs):
+#     data = UserJobAppliedModel.objects.get(job_applied_practical_response__id=instance.id)
+#     print(data)
+#     PracticalTestMarkInputModel.objects.get(jobApplication__id=data.id).delete()
 
 
 class MarkingDuringInterviewModel(models.Model):
@@ -108,7 +115,8 @@ class InterviewTimeScheduleModel(models.Model):
                                       related_name='application_id_applied_job', null=True)
     interviewer = models.ForeignKey(UserDesignationModel, on_delete=models.SET_NULL,
                                     related_name='interviewer_designation', null=True)
-    candidate = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='candidate_interview_user', null=True, blank=True)
+    candidate = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='candidate_interview_user', null=True,
+                                  blank=True)
     scheduleBy = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='meeting_scheduled_user',
                                    null=True)
     interviewDate = models.DateField()
@@ -121,7 +129,8 @@ class InterviewTimeScheduleModel(models.Model):
 
 
 class GenerateAppointmentLetterModel(models.Model):
-    applicationId = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE, related_name='application_id_job_applied_user')
+    applicationId = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE,
+                                      related_name='application_id_job_applied_user')
     subjectLine = models.CharField(max_length=255, blank=True)
     joiningDate = models.DateField()
     grossSalary = models.IntegerField()
@@ -130,4 +139,3 @@ class GenerateAppointmentLetterModel(models.Model):
 
     def __str__(self):
         return f'{self.applicationId.userId.full_name} - {self.applicationId.jobPostId.jobTitle}'
-
