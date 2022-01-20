@@ -118,7 +118,7 @@ urlpatterns = [
          name='practical_test_mark_input_view'),
     path('recruitment_practical_test_res/', RecruitmentPracticalTestResponseView.as_view(),
          name='recruitment_practical_test_response'),
-    path('recruitment_new_applicants/', RecruitmentNewApplicantView.as_view(),
+    path('recruitment_new_applicants/<job_id>/', RecruitmentNewApplicantView.as_view(),
          name='recruitment_new_applicant_list'),
 
     path('recruitment_dashboard_applicant/', RecruitmentAdminApplicantListView.as_view(),
@@ -130,7 +130,7 @@ urlpatterns = [
     path('applicant_list_details/', AppliedUserDetailsView.as_view(), name='admin_applied_user_list'),
     # applicant_list_details/?search=&department=&shift=&job_type=
 
-    path('admin_online_test_res_list/', AdminAppliedCandidateOnlineResView.as_view(),
+    path('admin_online_test_res_list/<job_id>/', AdminAppliedCandidateOnlineResView.as_view(),
          name='admin_online_test_response_list'),
     path('applicant_interview/', AdminInterviewerListView.as_view(), name='applicant_interviewer_list'),
     path('interview_schedule/', InterviewTimeScheduleView.as_view(), name='interview_time_schedule'),
