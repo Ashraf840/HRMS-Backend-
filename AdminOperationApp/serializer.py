@@ -213,6 +213,29 @@ class AdminAppliedCandidateOnlineResSerializer(serializers.ModelSerializer):
         return data
 
 
+class TestOnlineTestResponseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OnlineTestResponseModel
+        fields = '__all__'
+
+
+class TestAdminAppliedCandidateOnlineResSerializer(serializers.ModelSerializer):
+    onlineTestResponse = TestOnlineTestResponseSerializer(source='job_applied_online_response', many=True)
+
+    class Meta:
+        model = UserJobAppliedModel
+        fields = '__all__'
+
+    def to_representation(self, instance):
+        data = super(TestAdminAppliedCandidateOnlineResSerializer, self).to_representation(instance)
+        # print(data)
+        info = data.get('onlineTestResponse')
+        # response = []
+        if len(info) > 0:
+            data.clear()
+        return data
+
+
 class PracticalTestMarkInputSerializer(serializers.ModelSerializer):
     """
     Practical Test Mark input serializer

@@ -320,6 +320,19 @@ class AdminAppliedCandidateOnlineResView(generics.ListAPIView):
         queryset = OnlineTestResponseModel.objects.filter(appliedJob__jobPostId_id=job_id)
         return queryset
 
+    # def list(self, request, *args, **kwargs):
+    #     serializer = self.get_serializer(self.get_queryset(), many=True)
+    #
+
+
+class TestAdminAppliedCandidateOnlineResView(generics.ListAPIView):
+    serializer_class = serializer.TestAdminAppliedCandidateOnlineResSerializer
+
+    def get_queryset(self):
+        job_id = self.kwargs['job_id']
+        queryset = UserJobAppliedModel.objects.filter(jobPostId_id=job_id)
+        return queryset
+
 
 class RecruitmentPracticalTestResponseView(generics.ListAPIView):
     """

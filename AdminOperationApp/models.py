@@ -49,11 +49,10 @@ def create_practical_test_mark(sender, instance, created, **kwargs):
         PracticalTestMarkInputModel.objects.create(jobApplication=data)
 
 
-# @receiver(post_delete, sender=PracticalTestResponseModel)
-# def delete_practical_test_mark(sender, instance, **kwargs):
-#     data = UserJobAppliedModel.objects.get(job_applied_practical_response__id=instance.id)
-#     print(data)
-#     PracticalTestMarkInputModel.objects.get(jobApplication__id=data.id).delete()
+@receiver(pre_delete, sender=PracticalTestResponseModel)
+def delete_practical_test_mark(sender, instance, **kwargs):
+    data = UserJobAppliedModel.objects.get(job_applied_practical_response__id=instance.id)
+    PracticalTestMarkInputModel.objects.get(jobApplication_id=data.id).delete()
 
 
 class MarkingDuringInterviewModel(models.Model):

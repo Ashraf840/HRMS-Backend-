@@ -24,7 +24,7 @@ from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView, On
     SendPracticalTestView, RecruitmentAdminGraphView, MarkingDuringInterviewView, AddEmployeeInfoDuringOnboardView, \
     FilterQuestionResponseListView, PracticalTestMarkUpdateView, RecruitmentPracticalTestResponseView, \
     InterviewTimeScheduleView, AdminDocumentVerificationView, GenerateAppointmentLetterView, \
-    AppointmentLetterInformationView, RecruitmentNewApplicantView
+    AppointmentLetterInformationView, RecruitmentNewApplicantView, TestAdminAppliedCandidateOnlineResView
 
 from SupportApp import views as supportView
 
@@ -130,8 +130,9 @@ urlpatterns = [
     path('applicant_list_details/', AppliedUserDetailsView.as_view(), name='admin_applied_user_list'),
     # applicant_list_details/?search=&department=&shift=&job_type=
 
-    path('admin_online_test_res_list/<job_id>/', AdminAppliedCandidateOnlineResView.as_view(),
-         name='admin_online_test_response_list'),
+    path('admin_online_test_res_list/<job_id>/', TestAdminAppliedCandidateOnlineResView.as_view(), name='admin_online_test_response_list'),
+    # path('admin_online_test_res_list/<job_id>/', AdminAppliedCandidateOnlineResView.as_view(),
+    #      name='admin_online_test_response_list'),
     path('applicant_interview/', AdminInterviewerListView.as_view(), name='applicant_interviewer_list'),
     path('interview_schedule/', InterviewTimeScheduleView.as_view(), name='interview_time_schedule'),
     path('marking_during_interview/', MarkingDuringInterviewView.as_view(),
@@ -148,6 +149,6 @@ urlpatterns = [
          name='add_employee_info_during_onboard'),
 
     path('support_ticket/', supportView.SupportTicketView.as_view(), name='support_ticketing'),
-    path('support_message/<ticketId>/', supportView.SupportMessageView.as_view(), name='support_message')
+    path('support_message/<ticketId>/', supportView.SupportMessageView.as_view(), name='support_message'),
 
 ]
