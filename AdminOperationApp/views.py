@@ -357,8 +357,10 @@ class AdminInterviewerListView(generics.ListAPIView):
 
     def get_queryset(self):
         jobId = self.kwargs['job_id']
+        search = self.request.query_params.get('search')
         queryset = UserJobAppliedModel.objects.filter(jobProgressStatus__status='F2F Interview', jobPostId_id=jobId)
-        return queryset
+        return queryset.filter(Q(userId__full_name__icontains=search) |
+                               Q(userId__email__icontains=search))
 
     # def get(self, request, *args, **kwargs):
     #     data = self.get_serializer(self.get_queryset(), many=True)

@@ -127,7 +127,8 @@ class InterviewTimeScheduleModel(models.Model):
         return f'{self.interviewDate} - {self.interviewer}'
 
 
-# class FinalSalaryNegociation
+class FinalSalaryNegotiationModel(models.Model):
+    assignedBy = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 class GenerateAppointmentLetterModel(models.Model):
