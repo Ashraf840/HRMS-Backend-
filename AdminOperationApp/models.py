@@ -127,6 +127,9 @@ class InterviewTimeScheduleModel(models.Model):
         return f'{self.interviewDate} - {self.interviewer}'
 
 
+# class FinalSalaryNegociation
+
+
 class GenerateAppointmentLetterModel(models.Model):
     applicationId = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE,
                                       related_name='application_id_job_applied_user')
@@ -138,3 +141,5 @@ class GenerateAppointmentLetterModel(models.Model):
 
     def __str__(self):
         return f'{self.applicationId.userId.full_name} - {self.applicationId.jobPostId.jobTitle}'
+
+

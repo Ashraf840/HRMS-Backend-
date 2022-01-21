@@ -462,8 +462,13 @@ class SelectedForDocumentView(generics.ListAPIView):
 
     def get_queryset(self):
         jobId = self.kwargs['job_id']
+        search = self.request.query_params.get('search')
         queryset = DocumentSubmissionModel.objects.filter(applied_job__jobPostId_id=jobId)
-        return queryset
+        return queryset.filter(Q(user__email__icontains=search) |
+                               Q(user__full_name__icontains=search) |
+                               Q(applied_job__jobPostId__jobTitle__icontains=search) |
+                               Q(applied_job__jobPostId__jobType__icontains=search)
+                               )
 
 
 class AdminDocumentVerificationView(generics.ListAPIView):
