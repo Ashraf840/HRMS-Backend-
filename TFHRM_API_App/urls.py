@@ -90,7 +90,7 @@ urlpatterns = [
          name='filter_questions_list_with_search_functionality'),  # filter_question_list/?department=&text_type=
     path('filter_question/<dep_id>/', FilterQuestionView.as_view(), name='filter_questions'),
     path('filter_question_res/', FilterQuestionResponseView.as_view(), name='filter_questions_response'),
-    path('filter_question_res_list/', FilterQuestionResponseListView.as_view(), name='filter_questions_response_list'),
+    path('filter_question_res_list/<user_id>/<job_id>/', FilterQuestionResponseListView.as_view(), name='filter_questions_response_list'),
 
     # Online and practical Test Response model
 
