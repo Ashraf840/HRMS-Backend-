@@ -299,7 +299,7 @@ class AdminInterviewerListSerializer(serializers.ModelSerializer):
     practicalTest = PracticalTestResponseSerializer(source='job_applied_practical_response')
     practicalTestMarks = PracticalTestMarkInputSerializer(source='practical_test_application')
     interviewFeedback = MarkingListDuringInterviewSerializer(source='applied_job_user_applied_model', many=True)
-    interviewTime = InterviewTimeScheduleSerializer(source='application_id_applied_job')
+    interviewSchedule = InterviewTimeScheduleSerializer(source='application_id_applied_job',many=True)
     userId = UserSerializer()
     jobProgressStatus = JobStatusSerializer()
     jobPostId = JobSerializer()
