@@ -7,12 +7,12 @@ from RecruitmentManagementApp.models import PracticalTestModel, UserJobAppliedMo
 
 # Create your models here.
 markingValue = (
-    ('5', 'A'),
-    ('4', 'B'),
-    ('3', 'C'),
-    ('2', 'D'),
-    ('1', 'E'),
-    ('0', 'F'),
+    ('A', 'A'),
+    ('B', 'B'),
+    ('C', 'C'),
+    ('D', 'D'),
+    ('E', 'E'),
+    ('F', 'F'),
 )
 
 
@@ -77,33 +77,34 @@ class MarkingDuringInterviewModel(models.Model):
     expectedJoiningData = models.DateField(blank=True)
     comment = models.TextField(blank=True)
 
-    def summary(self):
-        marks = [self.behavior, self.personality, self.dressSense, self.professionalism, self.engSpeaking,
-                 self.eagerness, self.flexibility, self.technicalKnowledge]
-        temp = 0
-        marks = list(filter(None, marks))
-        intMark = []
-        for i in marks:
-            if int(i) >= 0:
-                temp += 1
-                intMark.append(int(i))
-
-        # print(temp)
-        res = sum(intMark) / temp
-        response = ''
-        if 4.5 <= res <= 5:
-            response = 'Good Fit'
-        elif res > 4:
-            response = 'Suitable'
-        elif res > 3:
-            response = 'Average'
-        elif res < 3:
-            response = 'Not Fit'
-
-        return response
+    # def summary(self):
+    #     marks = [self.behavior, self.personality, self.dressSense, self.professionalism, self.engSpeaking,
+    #              self.eagerness, self.flexibility, self.technicalKnowledge]
+    #     temp = 0
+    #     marks = list(filter(None, marks))
+    #     intMark = []
+    #     for i in marks:
+    #         if int(i) >= 0:
+    #             temp += 1
+    #             intMark.append(int(i))
+    #
+    #     # print(temp)
+    #     res = sum(intMark) / temp
+    #     response = ''
+    #     if 4.5 <= res <= 5:
+    #         response = 'Good Fit'
+    #     elif res > 4:
+    #         response = 'Suitable'
+    #     elif res > 3:
+    #         response = 'Average'
+    #     elif res < 3:
+    #         response = 'Not Fit'
+    #
+    #     return response
 
     def __str__(self):
-        return f'user: {self.candidate.full_name}, Feedback: {self.summary()}'
+        # return f'user: {self.candidate.full_name}, Feedback: {self.summary()}'
+        return f'user: {self.candidate.full_name}'
 
 
 class InterviewTimeScheduleModel(models.Model):

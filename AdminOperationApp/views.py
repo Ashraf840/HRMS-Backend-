@@ -362,6 +362,8 @@ class AdminInterviewerListView(generics.ListAPIView):
         return queryset.filter(Q(userId__full_name__icontains=search) |
                                Q(userId__email__icontains=search))
 
+    # def list(self, request, *args, **kwargs):
+
     # def get(self, request, *args, **kwargs):
     #     data = self.get_serializer(self.get_queryset(), many=True)
     #     print(data)
