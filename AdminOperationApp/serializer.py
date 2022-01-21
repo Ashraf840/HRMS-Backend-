@@ -277,6 +277,20 @@ class RecruitmentPracticalTestResponseSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class InterviewTimeScheduleSerializer(serializers.ModelSerializer):
+    """
+    Interview time scheduling
+    """
+
+    class Meta:
+        model = models.InterviewTimeScheduleModel
+        fields = '__all__'
+
+        extra_kwargs = {
+            'scheduleBy': {'read_only': True}
+        }
+
+
 class AdminInterviewerListSerializer(serializers.ModelSerializer):
     """
     selected user for interview. will show online,practical test result will show
@@ -285,6 +299,7 @@ class AdminInterviewerListSerializer(serializers.ModelSerializer):
     practicalTest = PracticalTestResponseSerializer(source='job_applied_practical_response')
     practicalTestMarks = PracticalTestMarkInputSerializer(source='practical_test_application')
     interviewFeedback = MarkingListDuringInterviewSerializer(source='applied_job_user_applied_model', many=True)
+    interviewTime = InterviewTimeScheduleSerializer(source='application_id_applied_job')
     userId = UserSerializer()
     jobProgressStatus = JobStatusSerializer()
     jobPostId = JobSerializer()
@@ -323,20 +338,6 @@ class AddEmployeeInfoDuringOnboardSerializer(serializers.ModelSerializer):
         # fields = '__all__'
         extra_kwargs = {
             'user': {'read_only': True}
-        }
-
-
-class InterviewTimeScheduleSerializer(serializers.ModelSerializer):
-    """
-    Interview time scheduling
-    """
-
-    class Meta:
-        model = models.InterviewTimeScheduleModel
-        fields = '__all__'
-
-        extra_kwargs = {
-            'scheduleBy': {'read_only': True}
         }
 
 
