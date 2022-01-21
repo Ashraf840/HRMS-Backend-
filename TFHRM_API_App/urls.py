@@ -133,7 +133,7 @@ urlpatterns = [
     path('admin_online_test_res_list/<job_id>/', TestAdminAppliedCandidateOnlineResView.as_view(), name='admin_online_test_response_list'),
     # path('admin_online_test_res_list/<job_id>/', AdminAppliedCandidateOnlineResView.as_view(),
     #      name='admin_online_test_response_list'),
-    path('applicant_interview/', AdminInterviewerListView.as_view(), name='applicant_interviewer_list'),
+    path('applicant_interview/<job_id>/', AdminInterviewerListView.as_view(), name='applicant_interviewer_list'),
     path('interview_schedule/', InterviewTimeScheduleView.as_view(), name='interview_time_schedule'),
     path('marking_during_interview/', MarkingDuringInterviewView.as_view(),
          name='marking_during_interview_interviewer'),

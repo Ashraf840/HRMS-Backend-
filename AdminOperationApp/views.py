@@ -352,8 +352,12 @@ class AdminInterviewerListView(generics.ListAPIView):
     """
     selected for interview stage
     """
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.AdminInterviewerListSerializer
-    queryset = UserJobAppliedModel.objects.filter(jobProgressStatus__status='F2F Interview')
+    def get_queryset(self):
+        jobId = self.kwargs['job_id']
+        queryset = UserJobAppliedModel.objects.filter(jobProgressStatus__status='F2F Interview', jobPostId_id=jobId)
+        return queryset
 
     # def get(self, request, *args, **kwargs):
     #     data = self.get_serializer(self.get_queryset(), many=True)
