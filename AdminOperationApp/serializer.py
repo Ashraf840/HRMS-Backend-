@@ -345,6 +345,35 @@ class InterviewTimeScheduleSerializer(serializers.ModelSerializer):
 """
 
 
+class OnlineTestResSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OnlineTestResponseModel
+        fields = '__all__'
+
+
+class PracticalTestResSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.PracticalTestMarkInputModel
+        fields = '__all__'
+
+
+class HrFeedbackInterviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.MarkingDuringInterviewModel
+        fields = '__all__'
+
+
+class SelectedForDocumentationSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    onlineTestRes = OnlineTestResSerializer(source='applied_job.job_applied_online_response', many=True)
+    practicalTestRes = PracticalTestResSerializer(source='applied_job.practical_test_application')
+    feedback = HrFeedbackInterviewSerializer(source='applied_job.applied_job_user_applied_model', many=True)
+
+    class Meta:
+        model = DocumentSubmissionModel
+        fields = '__all__'
+
+
 class AdminDocumentVerificationSerializer(serializers.ModelSerializer):
     user = UserSerializer()
 

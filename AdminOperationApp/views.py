@@ -354,6 +354,7 @@ class AdminInterviewerListView(generics.ListAPIView):
     """
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.AdminInterviewerListSerializer
+
     def get_queryset(self):
         jobId = self.kwargs['job_id']
         queryset = UserJobAppliedModel.objects.filter(jobProgressStatus__status='F2F Interview', jobPostId_id=jobId)
@@ -453,6 +454,16 @@ class InterviewTimeScheduleView(generics.CreateAPIView):
 """
 =======================Document section =======================
 """
+
+
+class SelectedForDocumentView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializer.SelectedForDocumentationSerializer
+
+    def get_queryset(self):
+        jobId = self.kwargs['job_id']
+        queryset = DocumentSubmissionModel.objects.filter(applied_job__jobPostId_id=jobId)
+        return queryset
 
 
 class AdminDocumentVerificationView(generics.ListAPIView):
