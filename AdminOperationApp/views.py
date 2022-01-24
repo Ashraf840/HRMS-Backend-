@@ -455,6 +455,43 @@ class InterviewTimeScheduleView(generics.CreateAPIView):
         serializer.save(scheduleBy=self.request.user)
 
 
+class InterviewTimeUpdateView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializer.InterviewTimeScheduleSerializer
+    queryset = models.InterviewTimeScheduleModel.objects.all()
+    lookup_field = 'id'
+
+    def perform_update(self, serializer):
+        serializer.save(scheduleBy=self.request.user)
+
+
+"""
+=======================salary section =======================
+"""
+
+
+class FinalSalaryView(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializer.FinalSalarySerializer
+    queryset = models.FinalSalaryNegotiationModel.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save(assignedBy=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        jobApplicaion = UserJobAppliedModel.objects.get(id=serializer.data.get('jobApplication'))
+        # print(jobApplicaion)
+        jobStatus = jobApplicaion.jobPostId.jobProgressStatus.filter()
+        # print(jobStatus.filter(status='Document Submission').get())
+        jobApplicaion.jobProgressStatus = jobStatus.filter(status='Document Submission').get()
+        jobApplicaion.save()
+
+        return Response(serializer.data)
+
+
 """
 =======================Document section =======================
 """

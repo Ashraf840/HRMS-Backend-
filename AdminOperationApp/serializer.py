@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
-from UserApp.models import User, UserDepartmentModel, EmployeeInfoModel
+from UserApp.models import User, UserDepartmentModel, EmployeeInfoModel, UserDesignationModel
 from . import models
+from django.db.models import Q
 from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel, OnlineTestResponseModel, \
     FilterQuestionsResponseModelHR, DocumentSubmissionModel
 from RecruitmentManagementApp.serializer import OnlineTestResponseSerializer, PracticalTestResponseSerializer, \
@@ -281,6 +282,12 @@ class InterviewTimeScheduleSerializer(serializers.ModelSerializer):
     """
     Interview time scheduling
     """
+    interviewer = serializers.SlugRelatedField(queryset=UserDesignationModel.objects.filter(Q(designation='CEO') |
+                                                                                            Q(designation='HR') |
+                                                                                            Q(designation='GM')),
+                                               slug_field='designation')
+
+    # scheduleBy = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='full_name')
 
     class Meta:
         model = models.InterviewTimeScheduleModel
@@ -338,6 +345,20 @@ class AddEmployeeInfoDuringOnboardSerializer(serializers.ModelSerializer):
         # fields = '__all__'
         extra_kwargs = {
             'user': {'read_only': True}
+        }
+
+
+"""
+==================Salary section==================
+"""
+
+
+class FinalSalarySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.FinalSalaryNegotiationModel
+        fields = '__all__'
+        extra_kwargs = {
+            'assignedBy': {'read_only': True}
         }
 
 

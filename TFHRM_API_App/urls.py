@@ -24,7 +24,8 @@ from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView, On
     SendPracticalTestView, RecruitmentAdminGraphView, MarkingDuringInterviewView, AddEmployeeInfoDuringOnboardView, \
     FilterQuestionResponseListView, PracticalTestMarkUpdateView, RecruitmentPracticalTestResponseView, \
     InterviewTimeScheduleView, AdminDocumentVerificationView, GenerateAppointmentLetterView, \
-    AppointmentLetterInformationView, RecruitmentNewApplicantView, TestAdminAppliedCandidateOnlineResView, SelectedForDocumentView
+    AppointmentLetterInformationView, RecruitmentNewApplicantView, TestAdminAppliedCandidateOnlineResView, \
+    SelectedForDocumentView, InterviewTimeUpdateView, FinalSalaryView
 
 from SupportApp import views as supportView
 
@@ -135,6 +136,8 @@ urlpatterns = [
     #      name='admin_online_test_response_list'),
     path('applicant_interview/<job_id>/', AdminInterviewerListView.as_view(), name='applicant_interviewer_list'),
     path('interview_schedule/', InterviewTimeScheduleView.as_view(), name='interview_time_schedule'),
+    path('interview_schedule_update/<id>/', InterviewTimeUpdateView.as_view(), name='interview_time_schedule_update_delete'),
+    path('final_salary_set/', FinalSalaryView.as_view(), name='final_salary_set_during_final_interview'),
     path('marking_during_interview/', MarkingDuringInterviewView.as_view(),
          name='marking_during_interview_interviewer'),
     # Document verification
