@@ -34,6 +34,23 @@ class OnlineTestLinkView(generics.ListAPIView):
         return OnlineTestModel.objects.filter(jobInfo_id=id)
 
 
+class RejectCandidateStatusView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializer.JobStatusRejectSerializer
+    queryset = UserJobAppliedModel.objects.all()
+    lookup_field = 'id'
+
+    def update(self, request, *args, **kwargs):
+        applicationData = UserJobAppliedModel.objects.get(id=self.kwargs['id'])
+        status = applicationData.jobPostId.jobProgressStatus.filter()
+        applicationData.jobProgressStatus = status.get(status='Rejected')
+        applicationData.save()
+        """
+        need to add rejection mail validation
+        """
+        return Response({'detail': 'rejected'})
+
+
 class SendPracticalTestView(generics.ListCreateAPIView):
     """
     set and send practical test link to the candidate
@@ -191,8 +208,6 @@ class RecruitmentAdminApplicantListView(generics.ListAPIView):
     serializer_class = serializer.AdminDashboardSerializer
     queryset = UserJobAppliedModel.objects.all().order_by('-id')
     pagination_class = Pagination
-
-
 
 
 class AdminJobListView(generics.ListAPIView):

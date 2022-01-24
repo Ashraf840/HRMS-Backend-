@@ -256,6 +256,12 @@ class PracticalTestMarkInputSerializer(serializers.ModelSerializer):
         }
 
 
+class JobStatusRejectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserJobAppliedModel
+        fields = ''
+
+
 class JobAppliedUserSerializer(serializers.ModelSerializer):
     jobPostId = JobSerializer()
     jobProgressStatus = JobStatusSerializer()
@@ -391,6 +397,7 @@ class SelectedForDocumentationSerializer(serializers.ModelSerializer):
     onlineTestRes = OnlineTestResSerializer(source='applied_job.job_applied_online_response', many=True)
     practicalTestRes = PracticalTestResSerializer(source='applied_job.practical_test_application')
     feedback = HrFeedbackInterviewSerializer(source='applied_job.applied_job_user_applied_model', many=True)
+
     class Meta:
         model = DocumentSubmissionModel
         fields = '__all__'

@@ -25,7 +25,7 @@ from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView, On
     FilterQuestionResponseListView, PracticalTestMarkUpdateView, RecruitmentPracticalTestResponseView, \
     InterviewTimeScheduleView, AdminDocumentVerificationView, GenerateAppointmentLetterView, \
     AppointmentLetterInformationView, RecruitmentNewApplicantView, TestAdminAppliedCandidateOnlineResView, \
-    SelectedForDocumentView, InterviewTimeUpdateView, FinalSalaryView
+    SelectedForDocumentView, InterviewTimeUpdateView, FinalSalaryView, RejectCandidateStatusView
 
 from SupportApp import views as supportView
 
@@ -113,6 +113,7 @@ urlpatterns = [
          name='references_information_update_delete'),
 
     #     Admin section URL
+    path('reject_candidate/<id>/', RejectCandidateStatusView.as_view(), name='reject_candidate'),
     path('send_practical_test/', SendPracticalTestView.as_view(), name='admin_send_practical_test'),
     path('update_status/<id>/', UpdateCandidateStatusView.as_view(), name='update_status'),
     path('practical_test_mark_update/<jobApplication>/', PracticalTestMarkUpdateView.as_view(),
