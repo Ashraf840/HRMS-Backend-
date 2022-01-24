@@ -99,16 +99,6 @@ class PracticalTestMarkUpdateView(generics.RetrieveUpdateDestroyAPIView):
     #     print(serializer)
 
 
-class RecruitmentAdminApplicantListView(generics.ListAPIView):
-    """
-    Recruitment job list for recruitment admin dashboard
-    """
-    permission_classes = [IsAuthenticated]
-    serializer_class = serializer.AdminDashboardSerializer
-    queryset = UserJobAppliedModel.objects.all().order_by('-id')
-    pagination_class = Pagination
-
-
 class RecruitmentAdminGraphView(generics.ListAPIView):
     """
     Admin dashboard for recruitment site.
@@ -193,6 +183,58 @@ class RecruitmentAdminGraphView(generics.ListAPIView):
         return Response(responseData)
 
 
+class RecruitmentAdminApplicantListView(generics.ListAPIView):
+    """
+    Recruitment job list for recruitment admin dashboard
+    """
+    permission_classes = [IsAuthenticated]
+    serializer_class = serializer.AdminDashboardSerializer
+    queryset = UserJobAppliedModel.objects.all().order_by('-id')
+    pagination_class = Pagination
+
+
+
+
+class AdminJobListView(generics.ListAPIView):
+    """
+    All job List will be shown here for admin
+    """
+    permission_classes = [IsAuthenticated, IsHrUser]
+    serializer_class = serializer.AdminJobListSerializer
+
+    def get_queryset(self):
+        queryset = JobPostModel.objects.all()
+        search = self.request.query_params.get('search')
+        jobType = self.request.query_params.get('jobType')
+        department = self.request.query_params.get('department')
+        # expire = self.request.query_params.get('expire')
+        shift = self.request.query_params.get('shift')
+
+        return queryset.filter(
+            (Q(jobType__icontains=search) | Q(shift__icontains=search) | Q(department__department__icontains=search) |
+             Q(jobTitle__icontains=search)),
+            Q(jobType__icontains=jobType), Q(shift__icontains=shift),
+            Q(department__department__icontains=department))
+
+    def list(self, request, *args, **kwargs):
+        serializer = self.get_serializer(self.get_queryset(), many=True)
+        responseData = serializer.data
+
+        totalJob = self.get_queryset().count()
+        totalInterview = UserJobAppliedModel.objects.filter(jobProgressStatus__status='interview').count()
+        totalHired = UserJobAppliedModel.objects.filter(jobProgressStatus__status='hired').count()
+        totalApplicant = UserJobAppliedModel.objects.all().count()
+
+        diction = {
+            'totalJob': totalJob,
+            'totalInterview': totalInterview,
+            'totalHired': totalHired,
+            'totalApplicant': totalApplicant,
+        }
+        responseData.append(diction)
+        return Response(responseData)
+
+
 class AppliedUserDetailsView(generics.ListAPIView):
     """
     admin will see the all applied user details and sort summary of recruitment like total applicant, hired,
@@ -235,46 +277,6 @@ class AppliedUserDetailsView(generics.ListAPIView):
             'rejectedCandidate': rejectedCandidate,
             'hiredCandidate': hiredCandidate
 
-        }
-        responseData.append(diction)
-        return Response(responseData)
-
-
-class AdminJobListView(generics.ListAPIView):
-    """
-    All job List will be shown here for admin
-    """
-    permission_classes = [IsAuthenticated, IsHrUser]
-    serializer_class = serializer.AdminJobListSerializer
-
-    def get_queryset(self):
-        queryset = JobPostModel.objects.all()
-        search = self.request.query_params.get('search')
-        jobType = self.request.query_params.get('jobType')
-        department = self.request.query_params.get('department')
-        # expire = self.request.query_params.get('expire')
-        shift = self.request.query_params.get('shift')
-
-        return queryset.filter(
-            (Q(jobType__icontains=search) | Q(shift__icontains=search) | Q(department__department__icontains=search) |
-             Q(jobTitle__icontains=search)),
-            Q(jobType__icontains=jobType), Q(shift__icontains=shift),
-            Q(department__department__icontains=department))
-
-    def list(self, request, *args, **kwargs):
-        serializer = self.get_serializer(self.get_queryset(), many=True)
-        responseData = serializer.data
-
-        totalJob = self.get_queryset().count()
-        totalInterview = UserJobAppliedModel.objects.filter(jobProgressStatus__status='interview').count()
-        totalHired = UserJobAppliedModel.objects.filter(jobProgressStatus__status='hired').count()
-        totalApplicant = UserJobAppliedModel.objects.all().count()
-
-        diction = {
-            'totalJob': totalJob,
-            'totalInterview': totalInterview,
-            'totalHired': totalHired,
-            'totalApplicant': totalApplicant,
         }
         responseData.append(diction)
         return Response(responseData)
