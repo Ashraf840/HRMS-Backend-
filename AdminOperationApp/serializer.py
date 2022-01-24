@@ -387,10 +387,10 @@ class HrFeedbackInterviewSerializer(serializers.ModelSerializer):
 
 class SelectedForDocumentationSerializer(serializers.ModelSerializer):
     user = UserSerializer()
+    applied_job = JobAppliedUserSerializer()
     onlineTestRes = OnlineTestResSerializer(source='applied_job.job_applied_online_response', many=True)
     practicalTestRes = PracticalTestResSerializer(source='applied_job.practical_test_application')
     feedback = HrFeedbackInterviewSerializer(source='applied_job.applied_job_user_applied_model', many=True)
-
     class Meta:
         model = DocumentSubmissionModel
         fields = '__all__'
