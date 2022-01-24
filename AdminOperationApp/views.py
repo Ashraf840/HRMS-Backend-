@@ -458,8 +458,11 @@ class InterviewTimeScheduleView(generics.CreateAPIView):
 class InterviewTimeUpdateView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.InterviewTimeScheduleSerializer
-    queryset = models.InterviewTimeScheduleModel.objects.all()
-    lookup_field = 'id'
+    lookup_field = 'applicationId_id'
+
+    def get_queryset(self):
+        queryset = models.InterviewTimeScheduleModel.objects.filter(applicationId_id=self.kwargs['applicationId_id'])
+        return queryset
 
     def perform_update(self, serializer):
         serializer.save(scheduleBy=self.request.user)
