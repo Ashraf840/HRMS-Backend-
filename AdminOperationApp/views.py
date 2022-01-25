@@ -542,12 +542,12 @@ class AdminDocumentVerificationView(generics.ListAPIView):
         applicationId = self.kwargs['applied_job']
         serializer = self.get_serializer(self.get_queryset(), many=True)
         responseData = serializer.data
-        references = ReferenceInformationModel.objects.filter(applied_job=applicationId)
+        # references = ReferenceInformationModel.objects.filter(applied_job=applicationId)
         jobApplication = UserJobAppliedModel.objects.get(id=applicationId)
         jobDetails = JobPostModel.objects.get(id=jobApplication.jobPostId.id)
         jobName = jobDetails.jobTitle
         progressStatus = jobApplication.jobProgressStatus.status
-        responseData.append({'references': references})
+        # responseData.append({'references': references})
         responseData.append(
             {
                 'jobTitle': jobName,

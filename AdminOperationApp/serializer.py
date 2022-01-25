@@ -6,7 +6,7 @@ from django.db.models import Q
 from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel, OnlineTestResponseModel, \
     FilterQuestionsResponseModelHR, DocumentSubmissionModel
 from RecruitmentManagementApp.serializer import OnlineTestResponseSerializer, PracticalTestResponseSerializer, \
-    JobStatusSerializer, FilterQuestionSerializer
+    JobStatusSerializer, FilterQuestionSerializer, ReferenceInformationSerializer
 
 
 class DeptSerializer(serializers.ModelSerializer):
@@ -405,6 +405,7 @@ class SelectedForDocumentationSerializer(serializers.ModelSerializer):
 
 class AdminDocumentVerificationSerializer(serializers.ModelSerializer):
     user = UserSerializer()
+    references = ReferenceInformationSerializer(source='applied_job.references_submission_applied_job', many=True)
 
     class Meta:
         model = DocumentSubmissionModel
