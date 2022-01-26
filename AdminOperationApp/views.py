@@ -7,7 +7,7 @@ from UserApp.models import User, UserDepartmentModel, EmployeeInfoModel
 from . import serializer
 from . import models
 from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel, OnlineTestResponseModel, \
-    FilterQuestionsResponseModelHR, PracticalTestResponseModel, DocumentSubmissionModel, ReferenceInformationModel
+    FilterQuestionsResponseModelHR, PracticalTestResponseModel, DocumentSubmissionModel, ReferenceInformationModel, JobStatusModel
 from rest_framework.permissions import IsAuthenticated
 from UserApp.permissions import IsHrUser
 from .utils import Util
@@ -42,7 +42,7 @@ class RejectCandidateStatusView(generics.RetrieveUpdateDestroyAPIView):
 
     def update(self, request, *args, **kwargs):
         applicationData = UserJobAppliedModel.objects.get(id=self.kwargs['id'])
-        status = applicationData.jobPostId.jobProgressStatus.filter()
+        status = JobStatusModel.objects.all()
         applicationData.jobProgressStatus = status.get(status='Rejected')
         applicationData.save()
         """
