@@ -362,7 +362,7 @@ class RecruitmentPracticalTestResponseView(generics.ListAPIView):
     def get_queryset(self):
         job_id = self.kwargs['job_id']
         search = self.request.query_params.get('search')
-        queryset = PracticalTestResponseModel.objects.filter(appliedJob__jobPostId_id=job_id)
+        queryset = PracticalTestResponseModel.objects.filter(appliedJob__jobPostId_id=job_id, appliedJob__jobProgressStatus__status='Practical Test')
         return queryset.filter(Q(user__email__icontains=search) | Q(user__full_name__icontains=search))
 
 
