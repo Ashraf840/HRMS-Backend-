@@ -7,7 +7,8 @@ from UserApp.models import User, UserDepartmentModel, EmployeeInfoModel
 from . import serializer
 from . import models
 from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel, OnlineTestResponseModel, \
-    FilterQuestionsResponseModelHR, PracticalTestResponseModel, DocumentSubmissionModel, ReferenceInformationModel, JobStatusModel
+    FilterQuestionsResponseModelHR, PracticalTestResponseModel, DocumentSubmissionModel, ReferenceInformationModel, \
+    JobStatusModel
 from rest_framework.permissions import IsAuthenticated
 from UserApp.permissions import IsHrUser
 from .utils import Util
@@ -470,6 +471,23 @@ class InterviewTimeScheduleView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(scheduleBy=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+
+        try:
+            applicationData = UserJobAppliedModel.objects.get(id=serializer.data.get('applicationId'))
+            jobStatus = JobStatusModel.objects.all()
+            if applicationData.jobProgressStatus.status == 'Practical Test':
+                applicationData.jobProgressStatus = jobStatus.get(status='F2F Interview')
+                applicationData.save()
+
+        except:
+            pass
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class InterviewTimeUpdateView(generics.RetrieveUpdateDestroyAPIView):
