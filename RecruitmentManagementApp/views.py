@@ -433,12 +433,14 @@ class PracticalTestResponseView(generics.CreateAPIView):
                 if data.jobProgressStatus.status == 'Practical Test':
                     serializer = self.get_serializer(data=request.data)
                     if serializer.is_valid():
+                        # print('valid')
                         self.perform_create(serializer)
-                        headers = self.get_success_headers(serializer.data)
+                        # print('valid2')
+                        # headers = self.get_success_headers(serializer.data)
                         # data.jobProgressStatus = models.JobStatusModel.objects.get(status='document')
                         # data.save()
 
-                        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+                        return Response(serializer.data, status=status.HTTP_201_CREATED)
                 else:
                     return Response({'detail': 'You can not attend this test.'}, status=status.HTTP_400_BAD_REQUEST)
         except:
