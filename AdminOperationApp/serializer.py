@@ -397,6 +397,7 @@ class SelectedForDocumentationSerializer(serializers.ModelSerializer):
     onlineTestRes = OnlineTestResSerializer(source='job_applied_online_response', many=True)
     practicalTestRes = PracticalTestResSerializer(source='practical_test_application')
     feedback = HrFeedbackInterviewSerializer(source='applied_job_user_applied_model', many=True)
+    jobProgressStatus = JobStatusSerializer()
 
     class Meta:
         model = UserJobAppliedModel
