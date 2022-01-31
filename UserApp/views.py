@@ -441,7 +441,7 @@ class UpdateUserSkillsView(generics.RetrieveUpdateDestroyAPIView):
         return Response(serializer.data)
 
 
-class SkillsView(generics.CreateAPIView):
+class SkillsView(generics.ListCreateAPIView):
     serializer_class = serializer.SkillsSerializer
     queryset = models.SkillsModel.objects.all()
 
