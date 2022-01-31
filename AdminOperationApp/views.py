@@ -510,7 +510,8 @@ class InterviewTimeUpdateView(generics.RetrieveUpdateDestroyAPIView):
         return queryset
 
     def perform_update(self, serializer):
-        applicationData = models.InterviewTimeScheduleModel.objects.get(applicationId_id=self.kwargs['applicationId_id'])
+        applicationData = models.InterviewTimeScheduleModel.objects.get(
+            applicationId_id=self.kwargs['applicationId_id'])
         email_body = 'Hi ' + applicationData.applicationId.userId.full_name + \
                      f'New schedule updated check portal' \
                      'Prepare yourself.'
@@ -561,12 +562,31 @@ class SelectedForDocumentView(generics.ListAPIView):
         jobId = self.kwargs['job_id']
         search = self.request.query_params.get('search')
         # queryset = DocumentSubmissionModel.objects.filter(applied_job__jobPostId_id=jobId)
-        queryset = UserJobAppliedModel.objects.filter(jobPostId_id=jobId, jobProgressStatus__status='Document Submission')
+        queryset = UserJobAppliedModel.objects.filter(jobPostId_id=jobId,
+                                                      jobProgressStatus__status='Document Submission')
         return queryset.filter(Q(userId__email__icontains=search) |
                                Q(userId__full_name__icontains=search) |
                                Q(jobPostId__jobTitle__icontains=search) |
                                Q(jobPostId__jobType__icontains=search)
                                )
+
+
+# class DocumentRequestView(generics.RetrieveAPIView):
+#     permission_classes = [permissions.IsAuthenticated]
+#     serializer_class = serializer.DocumentRequestSerializer
+#     queryset = UserJobAppliedModel.objects.all()
+#     lookup_field = 'id'
+#     def get(self, request, *args, **kwargs):
+#         serializer = self.get_serializer()
+#         applicationData = UserJobAppliedModel.objects.get(id=self.kwargs['id'])
+#         email_body = 'Hi ' + applicationData.userId.full_name + \
+#                      f' you are selected for the Interview stage.' \
+#                      'Prepare yourself.'
+#
+#         data = {'email_body': email_body, 'to_email': applicationData.userId.email,
+#                 'email_subject': 'Status of the Screening Test'}
+#         Util.send_email(data)
+#         return Response(serializer.data)
 
 
 class AdminDocumentVerificationView(generics.ListAPIView):
@@ -614,7 +634,6 @@ class DocumentVerifiedView(generics.RetrieveUpdateAPIView):
     # def get_queryset(self):
     #     queryset = DocumentSubmissionModel.objects.filter(applied_job_id=self.kwargs['applied_job'])
     #     return queryset
-
 
 
 class GenerateAppointmentLetterView(generics.CreateAPIView):

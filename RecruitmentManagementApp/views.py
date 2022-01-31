@@ -530,11 +530,10 @@ class ReferenceInformationView(generics.CreateAPIView):
                             status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
 
-class ReferenceInformationUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+class ReferenceInformationUpdateDeleteView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated, IsAuthor]
     serializer_class = serializer.ReferenceInformationSerializer
-
-    lookup_field = 'applied_job'
+    # lookup_field = 'applied_job'
 
     def get_queryset(self):
         applied_job = self.kwargs['applied_job']

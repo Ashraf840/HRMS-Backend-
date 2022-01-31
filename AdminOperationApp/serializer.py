@@ -405,6 +405,12 @@ class SelectedForDocumentationSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class DocumentRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserJobAppliedModel
+        fields = ['id']
+
+
 class AdminDocumentVerificationSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     references = ReferenceInformationSerializer(source='applied_job.references_submission_applied_job', many=True)
