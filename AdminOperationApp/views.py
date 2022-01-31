@@ -362,7 +362,8 @@ class RecruitmentPracticalTestResponseView(generics.ListAPIView):
     def get_queryset(self):
         job_id = self.kwargs['job_id']
         search = self.request.query_params.get('search')
-        queryset = PracticalTestResponseModel.objects.filter(appliedJob__jobPostId_id=job_id, appliedJob__jobProgressStatus__status='Practical Test')
+        queryset = PracticalTestResponseModel.objects.filter(appliedJob__jobPostId_id=job_id,
+                                                             appliedJob__jobProgressStatus__status='Practical Test')
         return queryset.filter(Q(user__email__icontains=search) | Q(user__full_name__icontains=search))
 
 
@@ -583,6 +584,18 @@ class AdminDocumentVerificationView(generics.ListAPIView):
     #     serializer = self.get_serializer(self.get_object())
     #     print(serializer.data)
     #     return Response()
+
+
+class DocumentVerifiedView(generics.RetrieveUpdateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializer.AdminDocumentVerifySerializer
+    queryset = DocumentSubmissionModel.objects.all()
+    lookup_field = 'applied_job'
+
+    # def get_queryset(self):
+    #     queryset = DocumentSubmissionModel.objects.filter(applied_job_id=self.kwargs['applied_job'])
+    #     return queryset
+
 
 
 class GenerateAppointmentLetterView(generics.CreateAPIView):

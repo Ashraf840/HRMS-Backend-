@@ -25,7 +25,8 @@ from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView, On
     FilterQuestionResponseListView, PracticalTestMarkUpdateView, RecruitmentPracticalTestResponseView, \
     InterviewTimeScheduleView, AdminDocumentVerificationView, GenerateAppointmentLetterView, \
     AppointmentLetterInformationView, RecruitmentNewApplicantView, TestAdminAppliedCandidateOnlineResView, \
-    SelectedForDocumentView, InterviewTimeUpdateView, FinalSalaryView, RejectCandidateStatusView
+    SelectedForDocumentView, InterviewTimeUpdateView, FinalSalaryView, RejectCandidateStatusView, \
+    DocumentVerifiedView
 
 from SupportApp import views as supportView
 
@@ -91,7 +92,8 @@ urlpatterns = [
          name='filter_questions_list_with_search_functionality'),  # filter_question_list/?department=&text_type=
     path('filter_question/<dep_id>/', FilterQuestionView.as_view(), name='filter_questions'),
     path('filter_question_res/', FilterQuestionResponseView.as_view(), name='filter_questions_response'),
-    path('filter_question_res_list/<user_id>/<job_id>/', FilterQuestionResponseListView.as_view(), name='filter_questions_response_list_user'),
+    path('filter_question_res_list/<user_id>/<job_id>/', FilterQuestionResponseListView.as_view(),
+         name='filter_questions_response_list_user'),
 
     # Online and practical Test Response model
 
@@ -132,20 +134,24 @@ urlpatterns = [
     path('applicant_list_details/', AppliedUserDetailsView.as_view(), name='admin_applied_user_list'),
     # applicant_list_details/?search=&department=&shift=&job_type=
 
-    path('admin_online_test_res_list/<job_id>/', TestAdminAppliedCandidateOnlineResView.as_view(), name='admin_online_test_response_list'),
+    path('admin_online_test_res_list/<job_id>/', TestAdminAppliedCandidateOnlineResView.as_view(),
+         name='admin_online_test_response_list'),
     # path('admin_online_test_res_list/<job_id>/', AdminAppliedCandidateOnlineResView.as_view(),
     #      name='admin_online_test_response_list'),
     path('applicant_interview/<job_id>/', AdminInterviewerListView.as_view(), name='applicant_interviewer_list'),
     path('interview_schedule/', InterviewTimeScheduleView.as_view(), name='interview_time_schedule'),
-    path('interview_schedule_update/<applicationId_id>/', InterviewTimeUpdateView.as_view(), name='interview_time_schedule_update_delete'),
+    path('interview_schedule_update/<applicationId_id>/', InterviewTimeUpdateView.as_view(),
+         name='interview_time_schedule_update_delete'),
     path('final_salary_set/', FinalSalaryView.as_view(), name='final_salary_set_during_final_interview'),
     path('marking_during_interview/', MarkingDuringInterviewView.as_view(),
          name='marking_during_interview_interviewer'),
     # Document verification
     path('recruitment_user_documents_list/<job_id>/', SelectedForDocumentView.as_view(),
-         name='document_verification_recruitment'),
+         name='document_stage_recruitment'),
     path('recruitment_documents_verification/<applied_job>/', AdminDocumentVerificationView.as_view(),
          name='document_verification_recruitment'),
+    path('verify_documents/<applied_job>/', DocumentVerifiedView.as_view(), name='verify_documents_during_onboard'),
+
     path('generate_appointment_letter/', GenerateAppointmentLetterView.as_view(),
          name='generate_appointment_letter_during_onboarding'),
     path('appointment_letter_details/<applied_job>/', AppointmentLetterInformationView.as_view(),

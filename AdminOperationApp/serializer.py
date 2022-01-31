@@ -412,6 +412,12 @@ class AdminDocumentVerificationSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class AdminDocumentVerifySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DocumentSubmissionModel
+        fields = ['is_verified']
+
+
 class GenerateAppointmentLetterSerializer(serializers.ModelSerializer):
     """
     On-boarding section for candidate where admin will set appointment letter and others documents
