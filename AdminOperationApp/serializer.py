@@ -413,9 +413,16 @@ class AdminDocumentVerificationSerializer(serializers.ModelSerializer):
 
 
 class AdminDocumentVerifySerializer(serializers.ModelSerializer):
+    # comments = serializers.CharField(max_length=255, allow_blank=True)
+
     class Meta:
         model = DocumentSubmissionModel
         fields = ['is_verified']
+
+    # def update(self, instance, validated_data):
+    #     print(validated_data)
+    #     comments = validated_data.pop('comments')
+    #     # data =
 
 
 class GenerateAppointmentLetterSerializer(serializers.ModelSerializer):

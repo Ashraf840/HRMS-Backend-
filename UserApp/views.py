@@ -427,18 +427,18 @@ class UpdateUserSkillsView(generics.RetrieveUpdateDestroyAPIView):
 
     # def get_queryset(self):
 
-    def update(self, request, *args, **kwargs):
-        skills = request.data.get('skills', [])
-        # print(skills)
-        for skill in skills:
-            models.SkillsModel.objects.get_or_create(skillName=skill)
-        instance = self.get_object()
-        instance.skills = request.data.get("skills")
-        instance.save()
-        serializer = self.get_serializer(instance)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        return Response(serializer.data)
+    # def update(self, request, *args, **kwargs):
+    #     skills = request.data.get('skills', [])
+    #     # print(skills)
+    #     for skill in skills:
+    #         models.SkillsModel.objects.get_or_create(skillName=skill)
+    #     instance = self.get_object()
+    #     instance.skills = request.data.get("skills")
+    #     instance.save()
+    #     serializer = self.get_serializer(instance)
+    #     serializer.is_valid(raise_exception=True)
+    #     self.perform_update(serializer)
+    #     return Response(serializer.data)
 
 
 class SkillsView(generics.ListCreateAPIView):
