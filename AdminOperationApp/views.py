@@ -485,6 +485,15 @@ class InterviewTimeScheduleView(generics.CreateAPIView):
                 applicationData.jobProgressStatus = jobStatus.get(status='F2F Interview')
                 applicationData.save()
 
+                email_body = 'Hi ' + applicationData.userId.full_name + \
+                             f' you are selected for the Interview stage.' \
+                             'Prepare yourself.'
+
+                data = {'email_body': email_body, 'to_email': applicationData.userId.email,
+                        'email_subject': 'Status of the Screening Test'}
+                Util.send_email(data)
+
+
         except:
             pass
 
@@ -501,6 +510,14 @@ class InterviewTimeUpdateView(generics.RetrieveUpdateDestroyAPIView):
         return queryset
 
     def perform_update(self, serializer):
+        applicationData = models.InterviewTimeScheduleModel.objects.get(applicationId_id=self.kwargs['applicationId_id'])
+        email_body = 'Hi ' + applicationData.applicationId.userId.full_name + \
+                     f'New schedule updated check portal' \
+                     'Prepare yourself.'
+
+        data = {'email_body': email_body, 'to_email': applicationData.applicationId.userId.email,
+                'email_subject': 'Status of the Screening Test'}
+        Util.send_email(data)
         serializer.save(scheduleBy=self.request.user)
 
 
@@ -561,6 +578,7 @@ class AdminDocumentVerificationView(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         applicationId = self.kwargs['applied_job']
         serializer = self.get_serializer(self.get_queryset(), many=True)
+        # print(serializer)
         responseData = serializer.data
         # references = ReferenceInformationModel.objects.filter(applied_job=applicationId)
         jobApplication = UserJobAppliedModel.objects.get(id=applicationId)
