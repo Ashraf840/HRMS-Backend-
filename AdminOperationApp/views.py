@@ -543,11 +543,12 @@ class SelectedForDocumentView(generics.ListAPIView):
     def get_queryset(self):
         jobId = self.kwargs['job_id']
         search = self.request.query_params.get('search')
-        queryset = DocumentSubmissionModel.objects.filter(applied_job__jobPostId_id=jobId)
-        return queryset.filter(Q(user__email__icontains=search) |
-                               Q(user__full_name__icontains=search) |
-                               Q(applied_job__jobPostId__jobTitle__icontains=search) |
-                               Q(applied_job__jobPostId__jobType__icontains=search)
+        # queryset = DocumentSubmissionModel.objects.filter(applied_job__jobPostId_id=jobId)
+        queryset = UserJobAppliedModel.objects.filter(jobPostId_id=jobId, jobProgressStatus__status='Document Submission')
+        return queryset.filter(Q(userId__email__icontains=search) |
+                               Q(userId__full_name__icontains=search) |
+                               Q(jobPostId__jobTitle__icontains=search) |
+                               Q(jobPostId__jobType__icontains=search)
                                )
 
 

@@ -425,8 +425,6 @@ class UpdateUserSkillsView(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.UserSkillsModel.objects.all()
     lookup_field = 'user_id'
 
-    # def get_queryset(self):
-
     # def update(self, request, *args, **kwargs):
     #     skills = request.data.get('skills', [])
     #     # print(skills)
