@@ -392,7 +392,7 @@ class HrFeedbackInterviewSerializer(serializers.ModelSerializer):
 
 
 class SelectedForDocumentationSerializer(serializers.ModelSerializer):
-    userid = UserSerializer()
+    userId = UserSerializer()
     # applied_job = JobAppliedUserSerializer()
     onlineTestRes = OnlineTestResSerializer(source='job_applied_online_response', many=True)
     practicalTestRes = PracticalTestResSerializer(source='practical_test_application')
