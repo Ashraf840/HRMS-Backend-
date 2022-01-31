@@ -67,7 +67,7 @@ urlpatterns = [
     path('add_user_skills/', AddUserSkillsView.as_view(), name='add_user_skills'),
     path('update_user_skills/<user_id>/', UpdateUserSkillsView.as_view(), name='update_user_skills'),
     # Hr operations
-    path('add_skills/', SkillsView.as_view(), name="add_new_skills"),
+    path('skills/', SkillsView.as_view(), name="add_new_skills_list"),
 
     # for Candidate to Apply for Jobs
     path('job_post/', JobCreateView.as_view(), name='job_post_with_online_test_link'),
