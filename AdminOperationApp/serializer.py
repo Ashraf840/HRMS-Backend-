@@ -290,6 +290,7 @@ class InterviewTimeScheduleSerializer(serializers.ModelSerializer):
     """
     interviewer = serializers.SlugRelatedField(queryset=UserDesignationModel.objects.filter(Q(designation='CEO') |
                                                                                             Q(designation='HR') |
+                                                                                            Q(designation='PM') |
                                                                                             Q(designation='GM')),
                                                slug_field='designation')
 
