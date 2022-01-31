@@ -26,7 +26,7 @@ from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView, On
     InterviewTimeScheduleView, AdminDocumentVerificationView, GenerateAppointmentLetterView, \
     AppointmentLetterInformationView, RecruitmentNewApplicantView, TestAdminAppliedCandidateOnlineResView, \
     SelectedForDocumentView, InterviewTimeUpdateView, FinalSalaryView, RejectCandidateStatusView, \
-    DocumentVerifiedView, DocumentRequestView
+    DocumentVerifiedView
 
 from SupportApp import views as supportView
 
@@ -148,7 +148,7 @@ urlpatterns = [
     # Document verification
     path('recruitment_user_documents_list/<job_id>/', SelectedForDocumentView.as_view(),
          name='document_stage_recruitment'),
-    path('documents_request/<id>/', DocumentRequestView.as_view(), name='document_request'),
+    # path('documents_request/<id>/', DocumentRequestView.as_view(), name='document_request'),
     path('recruitment_documents_verification/<applied_job>/', AdminDocumentVerificationView.as_view(),
          name='document_verification_recruitment'),
     path('verify_documents/<applied_job>/', DocumentVerifiedView.as_view(), name='verify_documents_during_onboard'),
