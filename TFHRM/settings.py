@@ -24,7 +24,7 @@ import sys
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = BASE_DIR.as_posix() + 'templates'
 STATIC_DIR = BASE_DIR.as_posix() + 'static'
-MEDIA_DIR = BASE_DIR/'media'
+MEDIA_DIR = BASE_DIR.as_posix() + 'media'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -244,7 +244,7 @@ STATIC_ROOT = BASE_DIR.joinpath('staticfiles')
 STATICFILES_DIRS = ['static']
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = 'media'
+MEDIA_ROOT = BASE_DIR.joinpath('media')
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
