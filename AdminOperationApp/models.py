@@ -129,9 +129,9 @@ class InterviewTimeScheduleModel(models.Model):
 
 
 class FinalSalaryNegotiationModel(models.Model):
+    jobApplication = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE, related_name='job_application_final_salary')
     assignedBy = models.ForeignKey(User, on_delete=models.CASCADE)
     finalSalary = models.IntegerField()
-    jobApplication = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE, related_name='job_application_final_salary')
 
     def __str__(self):
         return f'{self.assignedBy} : {self.finalSalary}'

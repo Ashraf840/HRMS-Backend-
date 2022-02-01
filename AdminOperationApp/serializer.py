@@ -399,6 +399,7 @@ class SelectedForDocumentationSerializer(serializers.ModelSerializer):
     practicalTestRes = PracticalTestResSerializer(source='practical_test_application')
     feedback = HrFeedbackInterviewSerializer(source='applied_job_user_applied_model', many=True)
     jobProgressStatus = JobStatusSerializer()
+    finalSalary = FinalSalarySerializer(source='job_application_final_salary', many=True)
 
     class Meta:
         model = UserJobAppliedModel
@@ -440,6 +441,7 @@ class OnboardListSerializer(serializers.ModelSerializer):
     practicalTestRes = PracticalTestResSerializer(source='practical_test_application')
     feedback = HrFeedbackInterviewSerializer(source='applied_job_user_applied_model', many=True)
     jobProgressStatus = JobStatusSerializer()
+    finalSalary = FinalSalarySerializer(source='job_application_final_salary', many=True)
 
     class Meta:
         model = UserJobAppliedModel
