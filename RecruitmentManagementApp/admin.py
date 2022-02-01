@@ -23,3 +23,5 @@ admin.site.register(models.OnlineTestResponseModel)
 admin.site.register(models.JobStatusModel, StatusModel)
 admin.site.register(models.DocumentSubmissionModel)
 admin.site.register(models.ReferenceInformationModel)
+admin.site.register(models.OfficialDocumentsModel)
+

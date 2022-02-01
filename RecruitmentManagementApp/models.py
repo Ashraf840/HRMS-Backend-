@@ -16,6 +16,7 @@ practical question set model
 class JobStatusModel(models.Model):
     status = models.CharField(max_length=50, blank=False, null=False)
     statusOrder = models.IntegerField()
+
     # is_completed = models.BooleanField(default=False, blank=True)
 
     def __str__(self):
@@ -86,6 +87,7 @@ class FilterQuestionsResponseModelHR(models.Model):
     response = models.CharField(max_length=255, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='response_by')
     jobPost = models.ForeignKey(JobPostModel, on_delete=models.CASCADE, related_name='job_info')
+
     # appliedJob = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE,
     #                                related_name='filter_question_job_application')
 
@@ -217,3 +219,11 @@ class ReferenceInformationModel(models.Model):
 
     def __str__(self):
         return f'pk: {self.pk} reference: {self.name}'
+
+
+class OfficialDocumentsModel(models.Model):
+    applicationId = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE, related_name='application')
+    appointmentLetter = models.FileField(upload_to=content_file_name, blank=True)
+
+    def __str__(self):
+        return f'{self.id} {self.applicationId.userId.full_name}'

@@ -34,9 +34,9 @@ SECRET_KEY = 'django-insecure-^^fv-&)8of=nhg48zj7$u_=i$ju%br7@ioy39010nexw*k5+t=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# ALLOWED_HOSTS = ['0.0.0.0', '44.242.38.198', '127.0.0.1', 'tfhrm.herokuapp.com', 'careeradmin.techforing.com',
-#                  'www.careeradmin.techforing.com']
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['0.0.0.0', '44.242.38.198', '127.0.0.1', 'tfhrm.herokuapp.com', 'careeradmin.techforing.com',
+                 'www.careeradmin.techforing.com']
+# ALLOWED_HOSTS = ['*']
 
 # Initialise environment variables
 """
@@ -81,10 +81,9 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     # whitenoise for heroku hosting
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    # 'whitenoise.middleware.WhiteNoiseMiddleware',
     # cors header middleware
     'corsheaders.middleware.CorsMiddleware',
-
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -128,7 +127,7 @@ SIMPLE_JWT = {
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR/'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -147,12 +146,12 @@ ROOT_URLCONF = 'TFHRM.urls'
 # ============== sqlite3 Db ==============
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 
 # ============== postgresql Db ==============
@@ -172,21 +171,21 @@ Dev server DB
 """
 
 # ============== mysql Db ==============
-DATABASES = {
-     'default': {
-         'ENGINE': 'django.db.backends.mysql',
-         'NAME': 'hrm_techforing',
-         'USER': 'root',
-         'PASSWORD': 'hOLL4m&*%$',
-         'OPTIONS': {
-             'sql_mode': 'traditional',
-         }
-     }
- }
+# DATABASES = {
+#      'default': {
+#          'ENGINE': 'django.db.backends.mysql',
+#          'NAME': 'hrm_techforing',
+#          'USER': 'root',
+#          'PASSWORD': 'hOLL4m&*%$',
+#          'OPTIONS': {
+#              'sql_mode': 'traditional',
+#          }
+#      }
+#  }
 
 # ============== securing proxy for heroku hosting ==============
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT = True
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# SECURE_SSL_REDIRECT = True
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -252,6 +251,11 @@ MEDIA_ROOT = 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
+# CORS_ALLOWED_ORIGINS = [
+#     '*'
+# ]
+
+
 
 import os
 
