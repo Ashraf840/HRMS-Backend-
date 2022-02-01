@@ -12,28 +12,24 @@ from RecruitmentManagementApp.models import UserJobAppliedModel, OfficialDocumen
 
 class GeneratePDF(APIView):
     def get(self, request, applicationId):
-        try:
-            checkRedundant = OfficialDocumentsModel.objects.filter(applicationId_id=applicationId)
-            if checkRedundant is not None:
-                return Response({'detail': 'Already created'})
-        except:
-            userInfo = UserJobAppliedModel.objects.filter(applicationId_id=applicationId)
-            prams = {
-                'today': datetime.date.today(),
-                'user_info': userInfo
-            }
-            file_name, status = save_pdf(prams)
+        print(applicationId)
+        checkRedundant = OfficialDocumentsModel.objects.filter(applicationId=applicationId)
+        print(checkRedundant)
+        if len(checkRedundant) > 0:
+            return Response({'detail': 'Already created'})
+        userInfo = UserJobAppliedModel.objects.get(id=applicationId)
+        prams = {
+            'today': datetime.date.today(),
+            'user_info': userInfo
+        }
+        file_name, status = save_pdf(prams)
 
-            if not status:
-                return Response({'detail': 'pdf generate failed'})
-            else:
-
-                return Response({
-                    'status': 200,
-                    'path': f'/media/OfficialDocuments/{file_name}.pdf'
-                })
-
-
-
-
-
+        if not status:
+            return Response({'detail': 'pdf generate failed'})
+        else:
+            OfficialDocumentsModel.objects.create(applicationId=userInfo,
+                                                  appointmentLetter=f'/OfficialDocuments/{file_name}.pdf')
+            return Response({
+                'status': 200,
+                'path': f'/media/OfficialDocuments/{file_name}.pdf'
+            })
