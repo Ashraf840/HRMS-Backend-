@@ -16,7 +16,8 @@ class GeneratePDF(APIView):
         checkRedundant = OfficialDocumentsModel.objects.filter(applicationId=applicationId)
         # print(checkRedundant)
         if len(checkRedundant) > 0:
-            return Response({'detail': 'Already created'})
+            data = checkRedundant.get()
+            return Response({'detail': 'Already created', 'appointment_letter': data.appointmentLetter})
         userInfo = UserJobAppliedModel.objects.get(id=applicationId)
         prams = {
             'today': datetime.date.today(),
