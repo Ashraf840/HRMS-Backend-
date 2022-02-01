@@ -29,7 +29,7 @@ class GeneratePDF(APIView):
             return Response({'detail': 'pdf generate failed'})
         else:
             OfficialDocumentsModel.objects.create(applicationId=userInfo,
-                                                  appointmentLetter=f'OfficialDocuments/{file_name}.pdf')
+                                                  appointmentLetter=f'/OfficialDocuments/{file_name}.pdf')
             return Response({
                 'status': 200,
                 'path': f'/media/OfficialDocuments/{file_name}.pdf'
