@@ -13,7 +13,7 @@ def save_pdf(params: dict):
     pdf = pisa.pisaDocument(BytesIO(html.encode('UTF-8')), response)
     file_name = uuid.uuid4()
     try:
-        with open(f'{settings.BASE_DIR.joinpath("media")}/OfficialDocuments/{file_name}.pdf', 'wb+') as output:
+        with open(f'{settings.MEDIA_DIR}/OfficialDocuments/{file_name}.pdf', 'wb+') as output:
             pdf = pisa.pisaDocument(BytesIO(html.encode('UTF-8')), output)
 
     except Exception as e:
