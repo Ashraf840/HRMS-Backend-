@@ -427,10 +427,11 @@ class AdminDocumentVerifySerializer(serializers.ModelSerializer):
         model = DocumentSubmissionModel
         fields = ['is_verified']
 
-    # def update(self, instance, validated_data):
-    #     print(validated_data)
-    #     comments = validated_data.pop('comments')
-    #     # data =
+
+class CommentsOnDocumentsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CommentsOnDocumentsModel
+        fields = '__all__'
 
 
 class GenerateAppointmentLetterSerializer(serializers.ModelSerializer):

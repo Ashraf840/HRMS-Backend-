@@ -74,6 +74,7 @@ INSTALLED_APPS = [
     'QuizApp',
     'AdminOperationApp',
     'SupportApp',
+    'pdfGenerator',
 
 ]
 

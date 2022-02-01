@@ -636,6 +636,12 @@ class DocumentVerifiedView(generics.RetrieveUpdateAPIView):
     #     return queryset
 
 
+class CommentsOnDocumentsView(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializer.CommentsOnDocumentsSerializer
+    queryset = models.CommentsOnDocumentsModel.objects.all()
+
+
 class GenerateAppointmentLetterView(generics.CreateAPIView):
     serializer_class = serializer.GenerateAppointmentLetterSerializer
     queryset = models.GenerateAppointmentLetterModel.objects.all()

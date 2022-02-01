@@ -150,5 +150,11 @@ class GenerateAppointmentLetterModel(models.Model):
         return f'{self.applicationId.userId.full_name} - {self.applicationId.jobPostId.jobTitle}'
 
 
+class CommentsOnDocumentsModel(models.Model):
+    applicationId = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE, related_name='application_documents_comment')
+    comments = models.TextField(blank=True)
+
+    def __str__(self):
+        return f'{self.applicationId} {self.comments}'
 
 
