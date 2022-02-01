@@ -32,5 +32,5 @@ class GeneratePDF(APIView):
                                                   appointmentLetter=f'/OfficialDocuments/{file_name}.pdf')
             return Response({
                 'status': 200,
-                'path': f'/media/OfficialDocuments/{file_name}.pdf'
+                'path': f'media/OfficialDocuments/{file_name}.pdf'
             })
