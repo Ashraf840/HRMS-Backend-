@@ -642,6 +642,23 @@ class CommentsOnDocumentsView(generics.CreateAPIView):
     queryset = models.CommentsOnDocumentsModel.objects.all()
 
 
+class SelectedForOnboardView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializer.OnboardListSerializer
+
+    def get_queryset(self):
+        jobId = self.kwargs['job_id']
+        search = self.request.query_params.get('search')
+        # queryset = DocumentSubmissionModel.objects.filter(applied_job__jobPostId_id=jobId)
+        queryset = UserJobAppliedModel.objects.filter(jobPostId_id=jobId,
+                                                      jobProgressStatus__status='Onboarding')
+        return queryset.filter(Q(userId__email__icontains=search) |
+                               Q(userId__full_name__icontains=search) |
+                               Q(jobPostId__jobTitle__icontains=search) |
+                               Q(jobPostId__jobType__icontains=search)
+                               )
+
+
 class GenerateAppointmentLetterView(generics.CreateAPIView):
     serializer_class = serializer.GenerateAppointmentLetterSerializer
     queryset = models.GenerateAppointmentLetterModel.objects.all()

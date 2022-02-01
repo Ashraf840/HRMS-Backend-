@@ -12,9 +12,9 @@ from RecruitmentManagementApp.models import UserJobAppliedModel, OfficialDocumen
 
 class GeneratePDF(APIView):
     def get(self, request, applicationId):
-        print(applicationId)
+        # print(applicationId)
         checkRedundant = OfficialDocumentsModel.objects.filter(applicationId=applicationId)
-        print(checkRedundant)
+        # print(checkRedundant)
         if len(checkRedundant) > 0:
             return Response({'detail': 'Already created'})
         userInfo = UserJobAppliedModel.objects.get(id=applicationId)

@@ -434,6 +434,18 @@ class CommentsOnDocumentsSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class OnboardListSerializer(serializers.ModelSerializer):
+    userId = UserSerializer()
+    onlineTestRes = OnlineTestResSerializer(source='job_applied_online_response', many=True)
+    practicalTestRes = PracticalTestResSerializer(source='practical_test_application')
+    feedback = HrFeedbackInterviewSerializer(source='applied_job_user_applied_model', many=True)
+    jobProgressStatus = JobStatusSerializer()
+
+    class Meta:
+        model = UserJobAppliedModel
+        fields = '__all__'
+
+
 class GenerateAppointmentLetterSerializer(serializers.ModelSerializer):
     """
     On-boarding section for candidate where admin will set appointment letter and others documents
