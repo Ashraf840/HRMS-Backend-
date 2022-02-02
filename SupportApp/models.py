@@ -20,8 +20,8 @@ class ServiceModel(models.Model):
 class TicketingForSupportModel(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='support_request_user')
     ticketReason = models.ForeignKey(TicketReasonModel, on_delete=models.CASCADE, related_name='ticketing_reason')
-    service = models.ForeignKey(ServiceModel, on_delete=models.CASCADE, related_name='service_support_service')
-    # query = models.CharField(max_length=255)
+    # service = models.ForeignKey(ServiceModel, on_delete=models.CASCADE, related_name='service_support_service')
+    query = models.CharField(max_length=255)
     time = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
 
