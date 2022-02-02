@@ -16,8 +16,6 @@ class SupportTicketSerializer(serializers.ModelSerializer):
     ticketReason = serializers.SlugRelatedField(queryset=models.TicketReasonModel.objects.all(),
                                                 slug_field='reason')
 
-    service = serializers.SlugRelatedField(queryset=models.ServiceModel.objects.all(),
-                                           slug_field='serviceName')
 
     class Meta:
         model = models.TicketingForSupportModel
