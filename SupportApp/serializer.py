@@ -30,7 +30,7 @@ class SupportMessageSerializer(serializers.ModelSerializer):
     """
     message based on the ticket
     """
-    user = serializers.SlugRelatedField(read_only=True, slug_field='full_name')
+    user = serializers.SlugRelatedField(read_only=True, slug_field='id')
 
     class Meta:
         model = models.SupportMessageModel
