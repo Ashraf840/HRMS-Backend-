@@ -30,7 +30,7 @@ class TicketingForSupportModel(models.Model):
         return self.message_support_ticket.filter(ticket_id=self.id).count()
 
     def __str__(self):
-        return f'{self.service.serviceName}'
+        return f'{self.ticketReason.reason}'
 
 
 class SupportMessageModel(models.Model):
