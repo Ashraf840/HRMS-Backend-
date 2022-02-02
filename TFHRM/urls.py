@@ -22,7 +22,7 @@ urlpatterns = [
     path('', include('UserApp.urls')),
     path('', include('RecruitmentManagementApp.urls')),
     path('api/', include('TFHRM_API_App.urls')),
-    path('pdf/', include('pdfGenerator.urls')),
+    # path('pdf/', include('pdfGenerator.urls')),
 
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
