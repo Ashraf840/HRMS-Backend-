@@ -15,7 +15,6 @@ class GeneratePDF(APIView):
     def get(self, request, applicationId):
         # print(applicationId)
         checkRedundant = OfficialDocumentsModel.objects.filter(applicationId=applicationId)
-
         # print(checkRedundant)
         if len(checkRedundant) > 0:
             # data = checkRedundant.get()

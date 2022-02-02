@@ -40,9 +40,25 @@ class IsAdminUser(permissions.BasePermission):
     def has_permission(self, request, view):
         permission = False
         designation = UserApp.models.EmployeeInfoModel.objects.get(user_id=request.user).designation.designation
-        if designation == 'CEO' or designation == 'GM':
+        if designation == 'CEO' or designation == 'GM' or designation == 'HR'or designation == 'PM':
             permission = True
         return bool((request.user and request.user.is_hr) or permission)
+
+
+class IsEmployee(permissions.BasePermission):
+    """
+    Allows access only to Admin users.
+    like CEO, GM , HR,
+    """
+    message = 'You are not authorised to view this page.'
+
+    def has_permission(self, request, view):
+        permission = False
+        user = UserApp.models.EmployeeInfoModel.objects.get(user_id=request.user)
+        if user.user.is_employee:
+            permission = True
+        return bool((request.user and request.user.is_hr) or permission)
+
 
 class IsCandidateUser(permissions.BasePermission):
     """

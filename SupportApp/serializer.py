@@ -15,13 +15,15 @@ class SupportTicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.TicketingForSupportModel
         fields = '__all__'
+        extra_kwargs = {
+            'read_only': True,
+        }
 
 
 class SupportMessageSerializer(serializers.ModelSerializer):
     """
     message based on the ticket
     """
-
 
     class Meta:
         model = models.SupportMessageModel

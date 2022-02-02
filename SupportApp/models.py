@@ -22,6 +22,7 @@ class TicketingForSupportModel(models.Model):
     ticketReason = models.ForeignKey(TicketReasonModel, on_delete=models.CASCADE, related_name='ticketing_reason')
     service = models.ForeignKey(ServiceModel, on_delete=models.CASCADE, related_name='service_support_service')
     time = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=True)
 
     @property
     def total_message(self):
