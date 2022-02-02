@@ -29,6 +29,7 @@ from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView, On
     DocumentVerifiedView, CommentsOnDocumentsView, SelectedForOnboardView
 
 from SupportApp import views as supportView
+from pdfGenerator import views as pdfGen
 
 app_name = 'tfhrm_api'
 
@@ -163,6 +164,10 @@ urlpatterns = [
     # Update official email during onboard
     path('add_employee_info/<id>/', AddEmployeeInfoDuringOnboardView.as_view(),
          name='add_employee_info_during_onboard'),
+
+    # Onboard Pdf generator api
+    path('<applicationId>/', pdfGen.GeneratePDF.as_view()),
+    path('view/<applicationId>/', pdfGen.ViewAppointMentLetterView.as_view()),
 
     path('support_ticket/', supportView.SupportTicketView.as_view(), name='support_ticketing'),
     path('support_message/<ticketId>/', supportView.SupportMessageView.as_view(), name='support_message'),
