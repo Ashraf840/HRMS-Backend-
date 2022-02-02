@@ -39,7 +39,7 @@ class SupportMessageModel(models.Model):
     message = models.CharField(max_length=255, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='message_user')
     userName = models.ForeignKey(User, on_delete=models.CASCADE, related_name='message_user_name')
-    userImage = models.URLField(blank=True)
+    userImage = models.TextField(blank=True)
     time = models.DateTimeField(auto_now=True)
     is_read = models.BooleanField(default=False)
 
