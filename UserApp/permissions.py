@@ -53,11 +53,7 @@ class IsEmployee(permissions.BasePermission):
     message = 'You are not authorised to view this page.'
 
     def has_permission(self, request, view):
-        permission = False
-        user = UserApp.models.EmployeeInfoModel.objects.get(user_id=request.user)
-        if user.user.is_employee:
-            permission = True
-        return bool((request.user and request.user.is_hr) or permission)
+        return bool(request.user and request.user.is_employee)
 
 
 class IsCandidateUser(permissions.BasePermission):

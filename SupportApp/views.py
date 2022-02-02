@@ -2,6 +2,8 @@ from rest_framework import generics, status, permissions
 from SupportApp import serializer, models
 from rest_framework.response import Response
 from UserApp.permissions import IsAdminUser, IsEmployee, IsCandidateUser, IsAuthor
+from UserApp.models import User
+from django.conf import settings
 
 
 # Create your views here.
@@ -31,8 +33,9 @@ class SupportMessageView(generics.ListCreateAPIView):
         return queryset
 
     def perform_create(self, serializer):
+        image = str(settings.BASE_DIR) + f'/media/' + str(User.objects.get(id=self.request.user.id).profile_pic)
         serializer.save(ticket=models.TicketingForSupportModel.objects.get(id=self.kwargs['ticketId']),
-                        user=self.request.user)
+                        user=self.request.user, userImage=image, userName=self.request.user)
 
     def create(self, request, *args, **kwargs):
         ticket = models.TicketingForSupportModel.objects.get(id=self.kwargs['ticketId'])
@@ -55,5 +58,24 @@ class SupportMessageView(generics.ListCreateAPIView):
                 if msg.user != self.request.user:
                     msg.is_read = True
                     msg.save()
+            # userName = self.request.user.full_name
+            # response.append({'userName':userName})
             return Response(response)
         return Response({'detail': 'You are not employee or author'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CloseTicketView(generics.UpdateAPIView):
+    permission_classes = [permissions.IsAuthenticated, IsEmployee]
+    serializer_class = serializer.SupportTicketCloseSerializer
+    lookup_field = 'id'
+
+    def get_queryset(self):
+        return models.TicketingForSupportModel.objects.filter(id=self.kwargs['id'])
+
+    # def perform_update(self, serializer):
+    #     data = models.TicketingForSupportModel.objects.get(id=self.kwargs['id'])
+    #     if data.is_active:
+    #         data.is_active = False
+    #     else:
+    #         data.is_active = True
+    #     serializer.save()

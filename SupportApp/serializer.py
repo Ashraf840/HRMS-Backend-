@@ -16,7 +16,6 @@ class SupportTicketSerializer(serializers.ModelSerializer):
     ticketReason = serializers.SlugRelatedField(queryset=models.TicketReasonModel.objects.all(),
                                                 slug_field='reason')
 
-
     class Meta:
         model = models.TicketingForSupportModel
         fields = '__all__'
@@ -30,14 +29,22 @@ class SupportMessageSerializer(serializers.ModelSerializer):
     """
     message based on the ticket
     """
+
     user = serializers.SlugRelatedField(read_only=True, slug_field='id')
+    userName = serializers.SlugRelatedField(read_only=True, slug_field='full_name')
 
     class Meta:
         model = models.SupportMessageModel
         fields = '__all__'
         extra_kwargs = {
-            # 'user': {'read_only': True},
+            'userImage': {'read_only': True},
             'is_read': {'read_only': True},
             'ticket': {'read_only': True},
 
         }
+
+
+class SupportTicketCloseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.TicketingForSupportModel
+        fields = ['is_active']

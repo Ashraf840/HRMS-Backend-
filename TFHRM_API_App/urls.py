@@ -170,6 +170,7 @@ urlpatterns = [
     path('appointment_letter_view/<applicationId>/', pdfGen.ViewAppointMentLetterView.as_view()),
 
     path('support_ticket/', supportView.SupportTicketView.as_view(), name='support_ticketing'),
+    path('support_ticket_close/<id>/', supportView.CloseTicketView.as_view(), name='support_ticket_close'),
     path('support_message/<ticketId>/', supportView.SupportMessageView.as_view(), name='support_message'),
 
 ]

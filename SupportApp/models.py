@@ -38,6 +38,8 @@ class SupportMessageModel(models.Model):
                                related_name='message_support_ticket')
     message = models.CharField(max_length=255, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='message_user')
+    userName = models.ForeignKey(User, on_delete=models.CASCADE, related_name='message_user_name')
+    userImage = models.URLField(blank=True)
     time = models.DateTimeField(auto_now=True)
     is_read = models.BooleanField(default=False)
 
