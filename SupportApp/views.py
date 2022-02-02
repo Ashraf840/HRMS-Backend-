@@ -33,7 +33,7 @@ class SupportMessageView(generics.ListCreateAPIView):
         return queryset
 
     def perform_create(self, serializer):
-        image = str(settings.BASE_DIR) + f'/media/' + str(User.objects.get(id=self.request.user.id).profile_pic)
+        image = self.request.user.profile_pic.url
         serializer.save(ticket=models.TicketingForSupportModel.objects.get(id=self.kwargs['ticketId']),
                         user=self.request.user, userImage=image, userName=self.request.user)
 
