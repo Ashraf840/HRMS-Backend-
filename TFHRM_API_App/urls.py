@@ -166,8 +166,8 @@ urlpatterns = [
          name='add_employee_info_during_onboard'),
 
     # Onboard Pdf generator api
-    path('<applicationId>/', pdfGen.GeneratePDF.as_view()),
-    path('view/<applicationId>/', pdfGen.ViewAppointMentLetterView.as_view()),
+    path('pdf_gen/<applicationId>/', pdfGen.GeneratePDF.as_view()),
+    path('appointment_letter_view/<applicationId>/', pdfGen.ViewAppointMentLetterView.as_view()),
 
     path('support_ticket/', supportView.SupportTicketView.as_view(), name='support_ticketing'),
     path('support_message/<ticketId>/', supportView.SupportMessageView.as_view(), name='support_message'),
