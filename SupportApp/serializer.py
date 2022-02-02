@@ -12,11 +12,17 @@ class SupportTicketSerializer(serializers.ModelSerializer):
         total = getattr(filters, 'total_message')
         return total
 
+    ticketReason = serializers.SlugRelatedField(queryset=models.TicketReasonModel.objects.all(),
+                                                slug_field='reason')
+
+    service = serializers.SlugRelatedField(queryset=models.ServiceModel.objects.all(),
+                                           slug_field='serviceName')
+
     class Meta:
         model = models.TicketingForSupportModel
         fields = '__all__'
         extra_kwargs = {
-            'read_only': True,
+            'user': {'read_only': True}
         }
 
 
