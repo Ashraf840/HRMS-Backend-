@@ -50,10 +50,10 @@ class SupportMessageView(generics.ListCreateAPIView):
         if self.request.user.is_employee or (self.request.user == ticket.user):
             serializer = self.get_serializer(self.get_queryset(), many=True)
             response = serializer.data
-            message = models.SupportMessageModel.objects.filter()
-            for i in message:
-                if i.user != self.request.user:
-                    i.is_read = True
-                    i.save()
+            message = models.SupportMessageModel.objects.filter(ticket_id=self.kwargs['ticketId'])
+            for msg in message:
+                if msg.user != self.request.user:
+                    msg.is_read = True
+                    msg.save()
             return Response(response)
         return Response({'detail': 'You are not employee or author'}, status=status.HTTP_400_BAD_REQUEST)

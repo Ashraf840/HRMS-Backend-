@@ -12,6 +12,7 @@ class SupportTicketSerializer(serializers.ModelSerializer):
         total = getattr(filters, 'total_message')
         return total
 
+    user = serializers.SlugRelatedField(read_only=True, slug_field='full_name')
     ticketReason = serializers.SlugRelatedField(queryset=models.TicketReasonModel.objects.all(),
                                                 slug_field='reason')
 
@@ -22,7 +23,8 @@ class SupportTicketSerializer(serializers.ModelSerializer):
         model = models.TicketingForSupportModel
         fields = '__all__'
         extra_kwargs = {
-            'user': {'read_only': True}
+            'user': {'read_only': True},
+            'is_active': {'read_only': True}
         }
 
 
@@ -30,13 +32,14 @@ class SupportMessageSerializer(serializers.ModelSerializer):
     """
     message based on the ticket
     """
+    user = serializers.SlugRelatedField(read_only=True, slug_field='full_name')
 
     class Meta:
         model = models.SupportMessageModel
         fields = '__all__'
         extra_kwargs = {
+            # 'user': {'read_only': True},
             'is_read': {'read_only': True},
-            'user': {'read_only': True},
             'ticket': {'read_only': True},
 
         }
