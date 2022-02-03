@@ -4,7 +4,7 @@ from UserApp.models import User, UserDepartmentModel, EmployeeInfoModel, UserDes
 from . import models
 from django.db.models import Q
 from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel, OnlineTestResponseModel, \
-    FilterQuestionsResponseModelHR, DocumentSubmissionModel, OfficialDocumentsModel
+    FilterQuestionsResponseModelHR, DocumentSubmissionModel, OfficialDocumentsModel, ReferenceInformationModel
 from RecruitmentManagementApp.serializer import OnlineTestResponseSerializer, PracticalTestResponseSerializer, \
     JobStatusSerializer, FilterQuestionSerializer, ReferenceInformationSerializer
 
@@ -474,3 +474,9 @@ class OfficialDocumentsSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'applicationId': {'read_only': True}
         }
+
+
+class ReferenceVerificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReferenceInformationModel
+        fields = 'refVerified'

@@ -26,7 +26,8 @@ from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView, On
     InterviewTimeScheduleView, AdminDocumentVerificationView, GenerateAppointmentLetterView, \
     AppointmentLetterInformationView, RecruitmentNewApplicantView, TestAdminAppliedCandidateOnlineResView, \
     SelectedForDocumentView, InterviewTimeUpdateView, FinalSalaryView, RejectCandidateStatusView, \
-    DocumentVerifiedView, CommentsOnDocumentsView, SelectedForOnboardView, OfficialDocStoreView, OfficialDocumentsView
+    DocumentVerifiedView, CommentsOnDocumentsView, SelectedForOnboardView, OfficialDocStoreView, OfficialDocumentsView,\
+    ReferenceVerificationView
 
 from SupportApp import views as supportView
 from pdfGenerator import views as pdfGen
@@ -154,11 +155,13 @@ urlpatterns = [
          name='document_verification_recruitment'),
 
     path('verify_documents/<applied_job>/', DocumentVerifiedView.as_view(), name='verify_documents_during_onboard'),
+    path('verify_reference/<id>/', ReferenceVerificationView.as_view(), name='verify_reference_during_onboard'),
     path('comment_on_documents/', CommentsOnDocumentsView.as_view(), name='comment_on_documents'),
     path('recruitment_user_onboard_list/<job_id>/', SelectedForOnboardView.as_view(),
          name='recruitment_user_onboard_list'),
-    path('generate_appointment_letter/', GenerateAppointmentLetterView.as_view(),
-         name='generate_appointment_letter_during_onboarding'),
+
+    # path('generate_appointment_letter/', GenerateAppointmentLetterView.as_view(),
+    #      name='generate_appointment_letter_during_onboarding'),
     path('appointment_letter_details/<applied_job>/', AppointmentLetterInformationView.as_view(),
          name='appointment_letter_details_for_pdf'),
     path('appointment_letter_save/<applicationId>/', OfficialDocumentsView.as_view(), name='d'),
@@ -172,9 +175,12 @@ urlpatterns = [
 
     # store doc file
     path('stored_docs/', OfficialDocStoreView.as_view(), name='store_onboard_document_nda_nca'),
-    # path('appointment_letter_info/<applicationId>/', AppointmentLetterInfoView.as_view(), name='appointment_letter_info'),
+
+    # path('appointment_letter_info/<applicationId>/', AppointmentLetterInfoView.as_view(),
+    # name='appointment_letter_info'),
 
     # support system
+    path('ticket_reason/', supportView.TicketReasonView.as_view(), name='support_ticket_reason'),
     path('support_ticket/', supportView.SupportTicketView.as_view(), name='support_ticketing'),
     path('support_ticket_close/<id>/', supportView.CloseTicketView.as_view(), name='support_ticket_close'),
     path('support_message/<ticketId>/', supportView.SupportMessageView.as_view(), name='support_message'),

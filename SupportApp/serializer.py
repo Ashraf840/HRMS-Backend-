@@ -2,6 +2,12 @@ from rest_framework import serializers
 from SupportApp import models
 
 
+class TicketReasonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.TicketReasonModel
+        fields = '__all__'
+
+
 class SupportTicketSerializer(serializers.ModelSerializer):
     """
     Ticketing for support

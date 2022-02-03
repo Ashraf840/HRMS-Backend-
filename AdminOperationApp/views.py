@@ -9,6 +9,7 @@ from . import models
 from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel, OnlineTestResponseModel, \
     FilterQuestionsResponseModelHR, PracticalTestResponseModel, DocumentSubmissionModel, ReferenceInformationModel, \
     JobStatusModel, OfficialDocumentsModel
+from RecruitmentManagementApp.serializer import ReferenceInformationSerializer
 from rest_framework.permissions import IsAuthenticated
 from UserApp import permissions as customPermission
 from .utils import Util
@@ -648,7 +649,20 @@ class CommentsOnDocumentsView(generics.CreateAPIView):
     queryset = models.CommentsOnDocumentsModel.objects.all()
 
 
+class ReferenceVerificationView(generics.RetrieveUpdateAPIView):
+    """
+    Reference verification
+    """
+    permission_classes = [permissions.IsAuthenticated, customPermission.IsEmployee]
+    serializer_class = serializer.ReferenceVerificationSerializer
+    queryset = ReferenceInformationModel.objects.all()
+    lookup_field = 'id'
+
+
 class SelectedForOnboardView(generics.ListAPIView):
+    """
+    selected for onboard  candidate list
+    """
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.OnboardListSerializer
 
@@ -721,6 +735,8 @@ class AppointmentLetterInformationView(generics.ListAPIView):
         })
 
         return Response(responseData)
+
+
 
 
 class OfficialDocumentsView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView):

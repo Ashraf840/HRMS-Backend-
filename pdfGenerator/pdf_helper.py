@@ -12,11 +12,11 @@ def save_pdf(params: dict):
     template = get_template('pdfGenerator/appointment.html')
     html = template.render(params)
     response = BytesIO()
-    pdf = pisa.pisaDocument(BytesIO(html.encode('ISO-8859-1')), response)
+    pdf = pisa.pisaDocument(BytesIO(html.encode('UTF-8')), response)
     file_name = uuid.uuid4()
     try:
         with open(str(settings.BASE_DIR)+f'/media/OfficialDocuments/{file_name}.pdf', 'wb+') as output:
-            pdf = pisa.pisaDocument(BytesIO(html.encode()), output)
+            pdf = pisa.pisaDocument(BytesIO(html.encode('UTF-8')), output)
 
     except Exception as e:
         print(e)

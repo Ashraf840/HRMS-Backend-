@@ -7,6 +7,12 @@ from django.conf import settings
 
 
 # Create your views here.
+class TicketReasonView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializer.TicketReasonSerializer
+    queryset = models.TicketReasonModel.objects.all()
+
+
 class SupportTicketView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.SupportTicketSerializer
