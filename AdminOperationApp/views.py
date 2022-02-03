@@ -712,8 +712,8 @@ class AppointmentLetterInformationView(generics.ListCreateAPIView):
         responseData = serializer.data
         applicationId = self.kwargs['applied_job']
         userInformation = UserJobAppliedModel.objects.get(id=applicationId)
-        data = models.FinalSalaryNegotiationModel.objects.get(jobApplication=applicationId).finalSalary
-        grossSalary = int(data.grossSalary)
+        data = models.FinalSalaryNegotiationModel.objects.get(jobApplication=applicationId)
+        grossSalary = int(data.finalSalary)
         basicSalary = grossSalary * .5
         homeAllowance = basicSalary * .6
         medicalAllowance = basicSalary * .2
