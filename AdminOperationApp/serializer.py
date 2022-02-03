@@ -460,11 +460,22 @@ class GenerateAppointmentLetterSerializer(serializers.ModelSerializer):
     """
 
     class Meta:
-        model = models.GenerateAppointmentLetterModel
+        model = UserJobAppliedModel
         fields = '__all__'
-        # extra_kwargs = {
-        #     'applicationId': {'read_only': True}
-        # }
+
+
+
+# class GenerateAppointmentLetterSerializer(serializers.ModelSerializer):
+#     """
+#     On-boarding section for candidate where admin will set appointment letter and others documents
+#     """
+#
+#     class Meta:
+#         model = models.GenerateAppointmentLetterModel
+#         fields = '__all__'
+#         # extra_kwargs = {
+#         #     'applicationId': {'read_only': True}
+#         # }
 
 
 class OfficialDocumentsSerializer(serializers.ModelSerializer):

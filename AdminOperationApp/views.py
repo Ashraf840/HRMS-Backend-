@@ -699,20 +699,20 @@ class GenerateAppointmentLetterView(generics.CreateAPIView):
                         status=status.HTTP_208_ALREADY_REPORTED)
 
 
-class AppointmentLetterInformationView(generics.ListAPIView):
+class AppointmentLetterInformationView(generics.ListCreateAPIView):
     serializer_class = serializer.GenerateAppointmentLetterSerializer
 
     def get_queryset(self):
         applicationId = self.kwargs['applied_job']
-        queryset = models.GenerateAppointmentLetterModel.objects.filter(applicationId=applicationId)
+        queryset = UserJobAppliedModel.objects.filter(id=applicationId)
         return queryset
 
     def list(self, request, *args, **kwargs):
-        applicationId = self.kwargs['applied_job']
-        userInformation = UserJobAppliedModel.objects.get(id=applicationId)
         serializer = self.get_serializer(self.get_queryset(), many=True)
         responseData = serializer.data
-        data = self.get_queryset().get()
+        applicationId = self.kwargs['applied_job']
+        userInformation = UserJobAppliedModel.objects.get(id=applicationId)
+        data = models.FinalSalaryNegotiationModel.objects.get(jobApplication=applicationId).finalSalary
         grossSalary = int(data.grossSalary)
         basicSalary = grossSalary * .5
         homeAllowance = basicSalary * .6
@@ -735,8 +735,6 @@ class AppointmentLetterInformationView(generics.ListAPIView):
         })
 
         return Response(responseData)
-
-
 
 
 class OfficialDocumentsView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView):

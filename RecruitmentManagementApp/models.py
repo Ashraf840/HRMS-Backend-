@@ -226,6 +226,10 @@ def appointment_file_name(instance, filename):
     return '/'.join(['OfficialDocuments', filename])
 
 
+# class ReferenceAuthorConfirmationResModel(models.Model):
+#
+
+
 class OfficialDocumentsModel(models.Model):
     applicationId = models.ForeignKey(UserJobAppliedModel, on_delete=models.SET_NULL, related_name='application', null=True)
     appointmentLetter = models.TextField()

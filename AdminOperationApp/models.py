@@ -159,8 +159,6 @@ class GenerateAppointmentLetterModel(models.Model):
     subjectLine = models.CharField(max_length=255, blank=True)
     joiningDate = models.DateField()
     grossSalary = models.IntegerField()
-    jobDescription = models.TextField()
-    termsCondition = models.TextField()
 
     def __str__(self):
         return f'{self.applicationId.userId.full_name} - {self.applicationId.jobPostId.jobTitle}'
