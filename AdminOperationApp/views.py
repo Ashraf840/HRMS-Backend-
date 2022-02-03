@@ -8,9 +8,9 @@ from . import serializer
 from . import models
 from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel, OnlineTestResponseModel, \
     FilterQuestionsResponseModelHR, PracticalTestResponseModel, DocumentSubmissionModel, ReferenceInformationModel, \
-    JobStatusModel
+    JobStatusModel, OfficialDocumentsModel
 from rest_framework.permissions import IsAuthenticated
-from UserApp.permissions import IsHrUser
+from UserApp import permissions as customPermission
 from .utils import Util
 
 
@@ -21,6 +21,12 @@ class Pagination(pagination.PageNumberPagination):
     page_size = 5
     page_size_query_param = 'limit'
     max_page_size = 5
+
+
+class OfficialDocStoreView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated, customPermission.IsEmployee]
+    serializer_class = serializer.OfficialDocStoreSerializer
+    queryset = models.OfficialDocStore.objects.all()
 
 
 class OnlineTestLinkView(generics.ListAPIView):
@@ -215,7 +221,7 @@ class AdminJobListView(generics.ListAPIView):
     """
     All job List will be shown here for admin
     """
-    permission_classes = [IsAuthenticated, IsHrUser]
+    permission_classes = [IsAuthenticated, customPermission.IsHrUser]
     serializer_class = serializer.AdminJobListSerializer
 
     def get_queryset(self):
@@ -256,7 +262,7 @@ class AppliedUserDetailsView(generics.ListAPIView):
     admin will see the all applied user details and sort summary of recruitment like total applicant, hired,
     rejected or on shortlisted applicant.
     """
-    permission_classes = [IsAuthenticated, IsHrUser]
+    permission_classes = [IsAuthenticated, customPermission.IsHrUser]
     serializer_class = serializer.AppliedUserDetailsSerializer
     queryset = UserJobAppliedModel.objects.all()
 
@@ -715,3 +721,18 @@ class AppointmentLetterInformationView(generics.ListAPIView):
         })
 
         return Response(responseData)
+
+
+class OfficialDocumentsView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = serializer.OfficialDocumentsSerializer
+    queryset = OfficialDocumentsModel.objects.all()
+    lookup_field = 'applicationId'
+
+    def perform_create(self, serializer):
+
+        try:
+            redundant = OfficialDocumentsModel.objects.filter(applicationId=self.kwargs['applicationId'])
+            if not redundant:
+                serializer.save(applicationId=UserJobAppliedModel.objects.get(id=self.kwargs['applicationId']))
+        except AssertionError as ae:
+            raise

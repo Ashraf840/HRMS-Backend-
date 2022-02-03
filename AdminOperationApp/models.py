@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.signals import post_save, pre_delete,post_delete
+from django.db.models.signals import post_save, pre_delete, post_delete
 from django.dispatch import receiver
 
 from UserApp.models import User, UserDesignationModel
@@ -14,6 +14,21 @@ markingValue = (
     ('E', 'E'),
     ('F', 'F'),
 )
+
+
+def doc_file_name(instance, filename):
+    return '/'.join(['OfficialDocumentsStore', filename])
+
+
+class OfficialDocStore(models.Model):
+    """
+    official documents store here for reuse
+    """
+    docName = models.CharField(max_length=50)
+    docFile = models.FileField(upload_to=doc_file_name)
+
+    def __str__(self):
+        return f'{self.docName}'
 
 
 class PracticalTestUserModel(models.Model):
@@ -129,7 +144,8 @@ class InterviewTimeScheduleModel(models.Model):
 
 
 class FinalSalaryNegotiationModel(models.Model):
-    jobApplication = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE, related_name='job_application_final_salary')
+    jobApplication = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE,
+                                       related_name='job_application_final_salary')
     assignedBy = models.ForeignKey(User, on_delete=models.CASCADE)
     finalSalary = models.IntegerField()
 
@@ -151,10 +167,9 @@ class GenerateAppointmentLetterModel(models.Model):
 
 
 class CommentsOnDocumentsModel(models.Model):
-    applicationId = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE, related_name='application_documents_comment')
+    applicationId = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE,
+                                      related_name='application_documents_comment')
     comments = models.TextField(blank=True)
 
     def __str__(self):
         return f'{self.applicationId} {self.comments}'
-
-

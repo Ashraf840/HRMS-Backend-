@@ -64,7 +64,7 @@ class SupportMessageView(generics.ListCreateAPIView):
         return Response({'detail': 'You are not employee or author'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class CloseTicketView(generics.UpdateAPIView):
+class CloseTicketView(generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticated, IsEmployee]
     serializer_class = serializer.SupportTicketCloseSerializer
     lookup_field = 'id'

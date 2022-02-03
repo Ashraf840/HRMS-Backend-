@@ -4,9 +4,15 @@ from UserApp.models import User, UserDepartmentModel, EmployeeInfoModel, UserDes
 from . import models
 from django.db.models import Q
 from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel, OnlineTestResponseModel, \
-    FilterQuestionsResponseModelHR, DocumentSubmissionModel
+    FilterQuestionsResponseModelHR, DocumentSubmissionModel, OfficialDocumentsModel
 from RecruitmentManagementApp.serializer import OnlineTestResponseSerializer, PracticalTestResponseSerializer, \
     JobStatusSerializer, FilterQuestionSerializer, ReferenceInformationSerializer
+
+
+class OfficialDocStoreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.OfficialDocStore
+        fields = '__all__'
 
 
 class DeptSerializer(serializers.ModelSerializer):
@@ -459,3 +465,12 @@ class GenerateAppointmentLetterSerializer(serializers.ModelSerializer):
         # extra_kwargs = {
         #     'applicationId': {'read_only': True}
         # }
+
+
+class OfficialDocumentsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OfficialDocumentsModel
+        fields = '__all__'
+        extra_kwargs = {
+            'applicationId': {'read_only': True}
+        }

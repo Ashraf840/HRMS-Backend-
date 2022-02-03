@@ -26,7 +26,7 @@ from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView, On
     InterviewTimeScheduleView, AdminDocumentVerificationView, GenerateAppointmentLetterView, \
     AppointmentLetterInformationView, RecruitmentNewApplicantView, TestAdminAppliedCandidateOnlineResView, \
     SelectedForDocumentView, InterviewTimeUpdateView, FinalSalaryView, RejectCandidateStatusView, \
-    DocumentVerifiedView, CommentsOnDocumentsView, SelectedForOnboardView
+    DocumentVerifiedView, CommentsOnDocumentsView, SelectedForOnboardView, OfficialDocStoreView, OfficialDocumentsView
 
 from SupportApp import views as supportView
 from pdfGenerator import views as pdfGen
@@ -161,6 +161,7 @@ urlpatterns = [
          name='generate_appointment_letter_during_onboarding'),
     path('appointment_letter_details/<applied_job>/', AppointmentLetterInformationView.as_view(),
          name='appointment_letter_details_for_pdf'),
+    path('appointment_letter_save/<applicationId>/', OfficialDocumentsView.as_view(), name='d'),
     # Update official email during onboard
     path('add_employee_info/<id>/', AddEmployeeInfoDuringOnboardView.as_view(),
          name='add_employee_info_during_onboard'),
@@ -169,6 +170,11 @@ urlpatterns = [
     path('pdf_gen/<applicationId>/', pdfGen.GeneratePDF.as_view()),
     path('appointment_letter_view/<applicationId>/', pdfGen.ViewAppointMentLetterView.as_view()),
 
+    # store doc file
+    path('stored_docs/', OfficialDocStoreView.as_view(), name='store_onboard_document_nda_nca'),
+    # path('appointment_letter_info/<applicationId>/', AppointmentLetterInfoView.as_view(), name='appointment_letter_info'),
+
+    # support system
     path('support_ticket/', supportView.SupportTicketView.as_view(), name='support_ticketing'),
     path('support_ticket_close/<id>/', supportView.CloseTicketView.as_view(), name='support_ticket_close'),
     path('support_message/<ticketId>/', supportView.SupportMessageView.as_view(), name='support_message'),

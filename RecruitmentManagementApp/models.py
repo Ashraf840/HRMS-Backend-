@@ -226,8 +226,8 @@ def appointment_file_name(instance, filename):
 
 
 class OfficialDocumentsModel(models.Model):
-    applicationId = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE, related_name='application')
-    appointmentLetter = models.FileField(upload_to=appointment_file_name, blank=True)
+    applicationId = models.ForeignKey(UserJobAppliedModel, on_delete=models.SET_NULL, related_name='application', null=True)
+    appointmentLetter = models.TextField()
 
     def __str__(self):
         return f'{self.id} {self.applicationId.userId.full_name}'
