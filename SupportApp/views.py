@@ -16,7 +16,7 @@ class SupportTicketView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         if self.request.user.is_employee:
-            queryset = models.TicketingForSupportModel.objects.all()
+            queryset = models.TicketingForSupportModel.objects.all().order_by('-updateTime')
         else:
             queryset = models.TicketingForSupportModel.objects.filter(user=self.request.user)
 
