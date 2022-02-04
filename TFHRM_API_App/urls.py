@@ -164,7 +164,7 @@ urlpatterns = [
     #      name='generate_appointment_letter_during_onboarding'),
     path('appointment_letter_details/<applied_job>/', AppointmentLetterInformationView.as_view(),
          name='appointment_letter_details_for_pdf'),
-    path('appointment_letter_save/<applicationId>/', OfficialDocumentsView.as_view(), name='d'),
+    path('appointment_letter_save/<applicationId>/', OfficialDocumentsView.as_view(), name='appointment_letter_save'),
     # Update official email during onboard
     path('add_employee_info/<id>/', AddEmployeeInfoDuringOnboardView.as_view(),
          name='add_employee_info_during_onboard'),

@@ -664,6 +664,42 @@ class ReferenceVerificationView(generics.RetrieveUpdateAPIView):
     queryset = ReferenceInformationModel.objects.all()
     lookup_field = 'id'
 
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        refId = self.kwargs['id']
+        refInfo = ReferenceInformationModel.objects.get(id=refId)
+        refCheck = ReferenceInformationModel.objects.filter(applied_job=refInfo.applied_job)
+
+        count = 0
+        for ref in refCheck:
+            if ref.is_verified:
+                count += 1
+
+            if len(refCheck) == count:
+                refInfo.applied_job.jobProgressStatus = JobStatusModel.objects.get(status='Onboarding')
+                refInfo.applied_job.save()
+
+                email_body = f'Hi  {refInfo.applied_job.userId.full_name} Your Verification is completed please join ' \
+                             f'office ASAP '
+                data = {'email_body': email_body, 'to_email': refInfo.applied_job.userId.email,
+                        'email_subject': 'Update'}
+                Util.send_email(data)
+
+    def get(self, request, *args, **kwargs):
+        ser = self.get_serializer(self.get_queryset())
+        response = ser.data
+        refId = self.kwargs['id']
+        refInfo = ReferenceInformationModel.objects.get(id=refId)
+
+        email_body = f'Hi  {refInfo.name}, {refInfo.applied_job.userId.full_name} applied for the position {refInfo.applied_job.jobPostId.jobTitle}' \
+                     f' He add you as reference. Please fill the form below.'
+        data = {'email_body': email_body, 'to_email': refInfo.email,
+                'email_subject': 'Reference checking.'}
+        Util.send_email(data)
+        refInfo.is_sent = True
+        refInfo.save()
+        return Response(response)
+
 
 class SelectedForOnboardView(generics.ListAPIView):
     """

@@ -441,7 +441,6 @@ class PracticalTestResponseView(generics.CreateAPIView):
                     return Response({'detail': 'You have already taken the test.'}, status=status.HTTP_400_BAD_REQUEST)
             except:
                 data = models.UserJobAppliedModel.objects.get(id=applied_job)
-
                 if data.jobProgressStatus.status == 'Practical Test':
                     serializer = self.get_serializer(data=request.data)
                     if serializer.is_valid():
