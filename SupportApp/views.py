@@ -4,6 +4,9 @@ from rest_framework.response import Response
 from UserApp.permissions import IsAdminUser, IsEmployee, IsCandidateUser, IsAuthor
 from UserApp.models import User
 from django.conf import settings
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+import plivo
 
 
 # Create your views here.
@@ -78,10 +81,5 @@ class CloseTicketView(generics.RetrieveUpdateAPIView):
     def get_queryset(self):
         return models.TicketingForSupportModel.objects.filter(id=self.kwargs['id'])
 
-    # def perform_update(self, serializer):
-    #     data = models.TicketingForSupportModel.objects.get(id=self.kwargs['id'])
-    #     if data.is_active:
-    #         data.is_active = False
-    #     else:
-    #         data.is_active = True
-    #     serializer.save()
+
+

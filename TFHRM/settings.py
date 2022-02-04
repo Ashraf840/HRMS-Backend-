@@ -270,3 +270,10 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'pranto.techforing@gmail.com'
 EMAIL_HOST_PASSWORD = 'tehctrahgvpjsuoz'
+
+# Plivo access
+# PLIVO_ID = 'MAOGQ0MZI1MTMZYZC4YW'
+# AUTH_TOKEN = 'N2JmMDljMjFmYmNkMDRjZDI5ODYwMzQ3OGU5NzRh'
+# SENDER_ID = '+1 904-207-7424'
+
+

@@ -216,6 +216,7 @@ class ReferenceInformationModel(models.Model):
     relationWithReferer = models.CharField(max_length=100)
     email = models.EmailField(max_length=100)
     attachedFile = models.FileField(upload_to=content_file_name, blank=True, null=True)
+    callRecord = models.FileField(upload_to=content_file_name, blank=True, null=True)
     is_verified = models.BooleanField(default=False)
 
     def __str__(self):

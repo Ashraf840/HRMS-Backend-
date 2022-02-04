@@ -490,4 +490,4 @@ class OfficialDocumentsSerializer(serializers.ModelSerializer):
 class ReferenceVerificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReferenceInformationModel
-        fields = ['is_verified']
+        fields = ['is_verified', 'callRecord']

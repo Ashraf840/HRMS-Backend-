@@ -30,7 +30,7 @@ class OfficialDocStoreView(generics.ListCreateAPIView):
     queryset = models.OfficialDocStore.objects.all()
 
 
-class OnlineTestLinkView(generics.ListAPIView):
+class OnlineTestLinkView(generics.ListCreateAPIView):
     """
     Online link will be visible for specific jobs
     """

@@ -9,6 +9,7 @@ from QuizApp.models import FilterQuestionAnswerModel
 from . import serializer
 from UserApp.permissions import IsHrUser, EditPermission, IsAuthor
 from . import models
+from SupportApp import sms
 
 
 # For Admin to view all Users Information
@@ -157,12 +158,13 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        for val in serializer.data:
-            jobPostId = val['jobPost']
-            break
-        filterQusResponse = models.FilterQuestionsResponseModelHR.objects.filter(user=self.request.user, jobPost_id=jobPostId)
+        # print(serializer.data)
+        jobPostId = serializer.data['jobPost']
+
+        filterQusResponse = models.FilterQuestionsResponseModelHR.objects.filter(user=self.request.user,
+                                                                                 jobPost_id=jobPostId)
         # print(serializer.data['jobPost'])
-        print(filterQusResponse)
+        # print(filterQusResponse)
         jobFilterQuestion = models.UserJobAppliedModel.objects.get(jobPostId=jobPostId, userId=self.request.user)
         # print(jobFilterQuestion)
 
@@ -207,7 +209,13 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
                         data = {'email_body': email_body, 'to_email': self.request.user.email,
                                 'email_subject': 'Status of the Screening Test'}
                         utils.Util.send_email(data)
-                        # print(jobFilterQuestion.jobProgressStatus.status)
+
+                        """============SMS sending functionality============"""
+                        # msg = 'Hi ' + self.request.user.full_name + \
+                        #       f' Congratulations you have been selected for the {jobProgress[i + 1].status} stage.'
+                        # smsData = {'dest_num': self.request.user.phone_number, 'msg': msg}
+                        # sms.sendsms_response(smsData)
+
                         break
             else:
                 jobFilterQuestion.jobProgressStatus = models.JobStatusModel.objects.get(status='Rejected')
@@ -226,8 +234,6 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
 
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         return Response({'detail': 'new response added'})
-
-
 
 
 class FilterQuestionResponseListView(generics.ListAPIView):
@@ -360,7 +366,8 @@ class OnlineTestResponseView(generics.CreateAPIView):
                             if sta.status == jobApplication.jobProgressStatus.status:
                                 update = statusList[i + 1]
                                 # print(update.status)
-                                jobApplication.jobProgressStatus = models.JobStatusModel.objects.get(status=update.status)
+                                jobApplication.jobProgressStatus = models.JobStatusModel.objects.get(
+                                    status=update.status)
                                 jobApplication.save()
                                 # email sending option
                                 email_body = 'Hi ' + self.request.user.full_name + \
@@ -412,6 +419,7 @@ class PracticalTestResponseView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.PracticalTestResponseSerializer
     queryset = models.PracticalTestResponseModel.objects.all()
+
     # parser_classes = [MultiPartParser, FormParser]
 
     def perform_create(self, serializer):
@@ -533,6 +541,7 @@ class ReferenceInformationView(generics.CreateAPIView):
 class ReferenceInformationUpdateDeleteView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated, IsAuthor]
     serializer_class = serializer.ReferenceInformationSerializer
+
     # lookup_field = 'applied_job'
 
     def get_queryset(self):
