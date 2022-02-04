@@ -251,7 +251,7 @@ class PracticalTestView(generics.ListCreateAPIView):
         serializer.save(user=self.request.user)
 
 
-class PracticalTestForApplicantView(generics.RetrieveAPIView):
+class PracticalTestForApplicantView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.PracticalTestSerializer
     lookup_field = 'jobInfo'
@@ -259,6 +259,9 @@ class PracticalTestForApplicantView(generics.RetrieveAPIView):
     def get_queryset(self):
         queryset = models.PracticalTestModel.objects.filter(jobInfo_id=self.kwargs['jobInfo'])
         return queryset
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 class JobCreateView(generics.ListCreateAPIView):
