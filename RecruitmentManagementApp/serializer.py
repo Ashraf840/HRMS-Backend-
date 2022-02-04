@@ -207,7 +207,8 @@ class DocumentationSubmissionSerializer(serializers.ModelSerializer):
 class ReferenceInformationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ReferenceInformationModel
-        fields = '__all__'
+        # fields = '__all__'
+        exclude = ['callRecord', ]
         extra_kwargs = {
             'user': {'read_only': True},
             'applied_job': {'read_only': True},
