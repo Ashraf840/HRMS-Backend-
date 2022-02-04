@@ -159,8 +159,9 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         # print(serializer.data)
-        jobPostId = serializer.data['jobPost']
-
+        for val in serializer.data:
+            jobPostId = val['jobPost']
+            break
         filterQusResponse = models.FilterQuestionsResponseModelHR.objects.filter(user=self.request.user,
                                                                                  jobPost_id=jobPostId)
         # print(serializer.data['jobPost'])
