@@ -197,7 +197,7 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
                     # jobFilterQuestion.jobProgressStatus.status = jobProgress[i + 1]
                     # print(jobFilterQuestion.jobProgressStatus.status)
                     # print()
-                    if jobFilterQuestion.jobProgressStatus.status == progress.status:
+                    if jobFilterQuestion.jobProgressStatus.status == progress.status or 'new':
                         # print(jobFilterQuestion.jobProgressStatus.status)
                         # print(jobProgress[1+i].status)
                         jobFilterQuestion.jobProgressStatus = models.JobStatusModel.objects.get(
