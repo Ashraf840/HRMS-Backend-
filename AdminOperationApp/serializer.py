@@ -54,9 +54,9 @@ class AdminOnlineTestLinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = OnlineTestModel
         fields = '__all__'
-        extra_kwargs = {
-            'jobInfo': {'read_only': True}
-        }
+        # extra_kwargs = {
+        #     # 'jobInfo': {'read_only': True}
+        # }
 
 
 class SendPracticalTestSerializer(serializers.ModelSerializer):
