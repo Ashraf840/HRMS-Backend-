@@ -41,6 +41,12 @@ class OnlineTestLinkView(generics.ListCreateAPIView):
         id = self.kwargs['jobInfo']
         return OnlineTestModel.objects.filter(jobInfo_id=id)
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
 class RejectCandidateStatusView(generics.RetrieveUpdateDestroyAPIView):
     # permission_classes = [permissions.IsAuthenticated]

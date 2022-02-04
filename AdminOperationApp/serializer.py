@@ -418,9 +418,21 @@ class DocumentRequestSerializer(serializers.ModelSerializer):
         fields = ['id']
 
 
+class ReferenceInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReferenceInformationModel
+        fields = '__all__'
+        # exclude = ['callRecord', 'is_verified', ]
+        extra_kwargs = {
+            'user': {'read_only': True},
+            'applied_job': {'read_only': True},
+            'refVerified': {'read_only': True}
+        }
+
+
 class AdminDocumentVerificationSerializer(serializers.ModelSerializer):
     user = UserSerializer()
-    references = ReferenceInformationSerializer(source='applied_job.references_submission_applied_job', many=True)
+    references = ReferenceInfoSerializer(source='applied_job.references_submission_applied_job', many=True)
 
     class Meta:
         model = DocumentSubmissionModel
@@ -462,7 +474,6 @@ class GenerateAppointmentLetterSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserJobAppliedModel
         fields = '__all__'
-
 
 
 # class GenerateAppointmentLetterSerializer(serializers.ModelSerializer):
