@@ -208,7 +208,7 @@ class ReferenceInformationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ReferenceInformationModel
         # fields = '__all__'
-        exclude = ['callRecord', ]
+        exclude = ['callRecord', 'is_verified', ]
         extra_kwargs = {
             'user': {'read_only': True},
             'applied_job': {'read_only': True},
