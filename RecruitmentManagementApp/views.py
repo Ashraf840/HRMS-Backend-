@@ -156,6 +156,7 @@ class FilterQuestionListView(generics.ListAPIView):
         text_type = self.request.query_params.get('text_type')
         return queryset.filter((Q(jobId__jobType__icontains=jobId) |
                                 Q(jobId__jobTitle__icontains=jobId) |
+                                Q(jobId__department__department__icontains=jobId) |
                                 Q(fieldType__fieldType__icontains=text_type)))
 
 
