@@ -230,8 +230,9 @@ class UserTrainingExperienceModel(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='training_info_user')
     vendorName = models.CharField(max_length=255)
     topicName = models.CharField(max_length=255)
-    startDate = models.DateField()
-    completeDate = models.DateField()
+    startDate = models.DateField(blank=True)
+    completeDate = models.DateField(blank=True)
+    courseDuration = models.CharField(max_length=100, blank=True)
     certificateImage = models.FileField(upload_to=certificate_file_name, blank=True)
 
     class Meta:
@@ -248,7 +249,8 @@ class UserWorkingExperienceModel(models.Model):
     position = models.CharField(max_length=255, null=True)
     joinDate = models.DateField(null=True)
     quitDate = models.DateField(blank=True, null=True)
-    responsibility = models.CharField(max_length=255, null=True)
+    responsibility = models.TextField(blank=True, null=True)
+    jobAchievement = models.TextField(blank=True,)
 
     class Meta:
         verbose_name_plural = 'Work Experience'
