@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from UserApp.models import User
 from UserApp import utils
 from . import serializer
-from UserApp.permissions import IsHrUser, EditPermission, IsAuthor
+from UserApp.permissions import IsHrUser, EditPermission, IsAuthor, IsEmployee
 from . import models
 from SupportApp import sms
 
@@ -158,6 +158,7 @@ class FilterQuestionListView(generics.ListAPIView):
 
 
 class FilterQuestionView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated, IsEmployee]
     serializer_class = serializer.FilterQuestionAnswerSerializer
 
     def get_queryset(self):
@@ -166,6 +167,12 @@ class FilterQuestionView(generics.ListCreateAPIView):
             return models.FilterQuestionAnswerModel.objects.filter(department=id)
         except:
             return models.FilterQuestionAnswerModel.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class FilterQuestionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
