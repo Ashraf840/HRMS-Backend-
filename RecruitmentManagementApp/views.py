@@ -1,11 +1,11 @@
 import datetime
+from django.http import Http404
 from django.db.models import Q
 from rest_framework import generics, permissions, status
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from UserApp.models import User
 from UserApp import utils
-from QuizApp.models import FilterQuestionAnswerModel
 from . import serializer
 from UserApp.permissions import IsHrUser, EditPermission, IsAuthor
 from . import models
@@ -136,6 +136,55 @@ class MyJobListView(generics.ListAPIView):
 #     #     u_id = self.kwargs['u_id']
 #     #     id = self.kwargs['id']
 #     #     return models.UserJobAppliedModel.objects.all()
+
+
+"""
+Filter questions Sections
+"""
+
+
+class FilterQuestionListView(generics.ListAPIView):
+    """
+    filter question list with search field
+    """
+    serializer_class = serializer.FilterQuestionListSerializer
+
+    def get_queryset(self):
+        queryset = models.JobApplyFilterQuestionModel.objects.all()
+        department = self.request.query_params.get('department')
+        text_type = self.request.query_params.get('text_type')
+        return queryset.filter(Q(department__department__icontains=department),
+                               Q(fieldType__fieldType__icontains=text_type))
+
+
+class FilterQuestionView(generics.ListCreateAPIView):
+    serializer_class = serializer.FilterQuestionAnswerSerializer
+
+    def get_queryset(self):
+        try:
+            id = self.kwargs['dep_id']
+            return models.FilterQuestionAnswerModel.objects.filter(department=id)
+        except:
+            return models.FilterQuestionAnswerModel.objects.all()
+
+
+class FilterQuestionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = serializer.FilterQuestionAnswerSerializer
+    queryset = models.FilterQuestionAnswerModel.objects.all()
+    lookup_field = 'question_id'
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            # print(instance)
+            instance.question.delete()
+            self.perform_destroy(instance)
+        except Http404:
+            pass
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 """
 Filter question response,
 Filter question response List ,
@@ -158,24 +207,32 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        # print(serializer.data)
-        for val in serializer.data:
-            jobPostId = val['jobPost']
-            break
+        # print(serializer.data['jobPost'])
+        if len(serializer.data) > 1:
+            for val in serializer.data:
+                if val == 'id':
+                    jobPostId = serializer.data['jobPost']
+                    break
+                else:
+                    jobPostId = val['jobPost']
+                # break
+        else:
+            jobPostId = serializer.data['jobPost']
+
         filterQusResponse = models.FilterQuestionsResponseModelHR.objects.filter(user=self.request.user,
                                                                                  jobPost_id=jobPostId)
         # print(serializer.data['jobPost'])
         # print(filterQusResponse)
         jobFilterQuestion = models.UserJobAppliedModel.objects.get(jobPostId=jobPostId, userId=self.request.user)
-        # print(jobFilterQuestion)
+        noOfQus = models.JobApplyFilterQuestionModel.objects.filter(jobId=jobPostId)
 
-        totalQuestion = jobFilterQuestion.jobPostId.filterQuestions.count()
+        totalQuestion = noOfQus.count()
         totalResponse = filterQusResponse.count()
         # print(totalQuestion)
         score = 0
         if totalResponse == totalQuestion:
             for res in filterQusResponse:
-                questionAnswer = FilterQuestionAnswerModel.objects.get(question=res.questions)
+                questionAnswer = models.FilterQuestionAnswerModel.objects.get(question=res.questions)
 
                 if questionAnswer.answer.lower() == res.response.lower():
                     score += 1

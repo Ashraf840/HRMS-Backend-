@@ -24,4 +24,7 @@ admin.site.register(models.JobStatusModel, StatusModel)
 admin.site.register(models.DocumentSubmissionModel)
 admin.site.register(models.ReferenceInformationModel)
 admin.site.register(models.OfficialDocumentsModel)
+admin.site.register(models.FieldTypeModels)
+admin.site.register(models.JobApplyFilterQuestionModel)
+admin.site.register(models.FilterQuestionAnswerModel)
 

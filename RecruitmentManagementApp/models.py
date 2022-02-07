@@ -1,6 +1,5 @@
 from django.db import models
 from UserApp.models import UserDepartmentModel, User
-from QuizApp.models import JobApplyFilterQuestionModel
 from UserApp.models import UserDepartmentModel
 
 # Create your models here.
@@ -47,7 +46,7 @@ class JobPostModel(models.Model):
     jobType = models.CharField(verbose_name="job type", max_length=50, choices=jobType)
     jobDescription = models.TextField(null=True)
     # uploadCV = models.FileField(upload_to='user/')
-    filterQuestions = models.ManyToManyField(JobApplyFilterQuestionModel, related_name='filter_question_list')
+    # filterQuestions = models.ManyToManyField(JobApplyFilterQuestionModel, related_name='filter_question_list')
     jobProgressStatus = models.ManyToManyField(JobStatusModel, related_name='job_progress_statusM2M')
     is_active = models.BooleanField(default=True)
 
@@ -61,6 +60,42 @@ class JobPostModel(models.Model):
 
     def __str__(self):
         return f'{self.id} {self.jobTitle} {self.shift}'
+
+
+# ============job apply filter questions section============
+class FieldTypeModels(models.Model):
+    fieldType = models.CharField(verbose_name='Field Type', max_length=50)
+
+    class Meta:
+        verbose_name_plural = 'Field Type'
+
+    def __str__(self):
+        return f'{self.fieldType}'
+
+
+class JobApplyFilterQuestionModel(models.Model):
+    fieldType = models.ForeignKey(FieldTypeModels, on_delete=models.CASCADE, related_name='filter_question_field_type')
+    jobId = models.ForeignKey(JobPostModel, on_delete=models.CASCADE, related_name='filter_qus_job_info')
+    question = models.CharField(max_length=255, verbose_name='filter_question')
+
+    class Meta:
+        verbose_name_plural = 'Filter Question List'
+
+    def __str__(self):
+        return f'{self.fieldType}, {self.question}'
+
+
+class FilterQuestionAnswerModel(models.Model):
+    """
+    Filter question answer will be stored here for check and select candidate for next stage
+    """
+
+    question = models.OneToOneField(JobApplyFilterQuestionModel, on_delete=models.CASCADE,
+                                    related_name='job_apply_filter_question_answer')
+    answer = models.CharField(max_length=255, blank=True)
+
+    def __str__(self):
+        return f'{self.answer}'
 
 
 class UserJobAppliedModel(models.Model):
@@ -233,7 +268,8 @@ def appointment_file_name(instance, filename):
 
 
 class OfficialDocumentsModel(models.Model):
-    applicationId = models.ForeignKey(UserJobAppliedModel, on_delete=models.SET_NULL, related_name='application', null=True)
+    applicationId = models.ForeignKey(UserJobAppliedModel, on_delete=models.SET_NULL, related_name='application',
+                                      null=True)
     appointmentLetter = models.TextField()
 
     def __str__(self):

@@ -1,7 +1,4 @@
 from django.urls import path
-# Importing Views from QuizApp
-from QuizApp.views import QuestionAnswerSetView, SubmittedAnswerView, SubmittedAnswerListView, \
-    FilterQuestionView, FilterQuestionListView, FilterQuestionUpdateDeleteView
 # importing Views from RecruitmentManagementApp views
 from RecruitmentManagementApp.views import AllUserDetailView, JobPostView, AppliedForJobView, JobDescriptionView, \
     JobDescriptionUpdateDeleteView, JobListView, FilterQuestionResponseListView, FilterQuestionResponseView, \
@@ -9,7 +6,8 @@ from RecruitmentManagementApp.views import AllUserDetailView, JobPostView, Appli
     PracticalTestView, JobCreateView, OnlineTestResponseView, PracticalTestResponseView, \
     UpdateCandidateStatusView, MyJobListView, JobStatusView, PracticalTestForApplicantView, \
     OnlineTestResponseListView, DocumentSubmissionView, \
-    DocumentSubmissionUpdateDeleteView, ReferenceInformationView, ReferenceInformationUpdateDeleteView
+    DocumentSubmissionUpdateDeleteView, ReferenceInformationView, ReferenceInformationUpdateDeleteView, \
+    FilterQuestionView, FilterQuestionUpdateDeleteView, FilterQuestionListView
 # importing Views from UserApp views
 from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
     CustomTokenObtainPairView, UpdateAcademicInfoView, AddAcademicInfoView, \
@@ -82,9 +80,9 @@ urlpatterns = [
     path('my_jobs/', MyJobListView.as_view(), name='my_jobs'),
 
     path('applied_job/', AppliedForJobView.as_view(), name='applied_for_jobs'),
-    path('qus_ans/', QuestionAnswerSetView.as_view(), name='question_ans'),
-    path('submit_ans/', SubmittedAnswerView.as_view(), name='submit_ans'),
-    path('submitted_ans_list/', SubmittedAnswerListView.as_view(), name='submitted_ans_list'),
+    # path('qus_ans/', QuestionAnswerSetView.as_view(), name='question_ans'),
+    # path('submit_ans/', SubmittedAnswerView.as_view(), name='submit_ans'),
+    # path('submitted_ans_list/', SubmittedAnswerListView.as_view(), name='submitted_ans_list'),
 
     # Filter question list
     path('filter_question/', FilterQuestionView.as_view(), name='filter_questions'),

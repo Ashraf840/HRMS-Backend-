@@ -102,6 +102,71 @@ class PracticalTestSerializer(serializers.ModelSerializer):
     #     return practicalTest
 
 
+# Filter questions section
+
+class DepartmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.UserDepartmentModel
+        fields = '__all__'
+
+
+class FieldTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.FieldTypeModels
+        fields = '__all__'
+
+
+class FilterQuestionAnsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.FilterQuestionAnswerModel
+        fields = ['answer', ]
+
+
+class FilterQuestionListSerializer(serializers.ModelSerializer):
+    department = DepartmentSerializer()
+    fieldType = FieldTypeSerializer()
+    answer = FilterQuestionAnsSerializer(source='job_apply_filter_question_answer')
+
+    class Meta:
+        model = models.JobApplyFilterQuestionModel
+        fields = '__all__'
+
+
+# class FilterQuestionSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = models.JobApplyFilterQuestionModel
+#         fields = '__all__'
+
+
+class FilterQuestionAnswerSerializer(serializers.ModelSerializer):
+    question = FilterQuestionSerializer()
+
+    class Meta:
+        model = models.FilterQuestionAnswerModel
+        fields = '__all__'
+
+    def create(self, validated_data):
+        question = validated_data.pop('question')
+        filterQus = models.JobApplyFilterQuestionModel.objects.create(**question)
+        qusAns = models.FilterQuestionAnswerModel.objects.create(question=filterQus, **validated_data)
+        return qusAns
+
+    def update(self, instance, validated_data):
+        questionsData = validated_data.pop('question')
+        instance.answer = validated_data.get('answer', instance.answer)
+        instance.save()
+        # questions = (instance.question)
+        # print(questions)
+        # questions = list(questions)
+        # qus =questions.pop(0)
+        questions = instance.question
+        questions.question = questionsData.get('question', questions.question)
+        questions.fieldType = questionsData.get('fieldType', questions.fieldType)
+        questions.department = questionsData.get('department', questions.department)
+        questions.save()
+        return instance
+
+
 class FilterQuestionResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.FilterQuestionsResponseModelHR
