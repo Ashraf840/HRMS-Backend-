@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from UserApp.models import User
 from UserApp import utils
 from . import serializer
-from UserApp.permissions import IsHrUser, EditPermission, IsAuthor, IsEmployee
+from UserApp.permissions import IsHrUser, EditPermission, IsAuthor, IsEmployee, IsCandidateUser, IsAdminUser
 from . import models
 from SupportApp import sms
 
@@ -147,14 +147,26 @@ class FilterQuestionListView(generics.ListAPIView):
     """
     filter question list with search field
     """
+    permission_classes = [permissions.IsAuthenticated, IsEmployee]
     serializer_class = serializer.FilterQuestionListSerializer
 
     def get_queryset(self):
         queryset = models.JobApplyFilterQuestionModel.objects.all()
-        department = self.request.query_params.get('department')
+        jobId = self.request.query_params.get('job_id')
         text_type = self.request.query_params.get('text_type')
-        return queryset.filter(Q(department__department__icontains=department),
-                               Q(fieldType__fieldType__icontains=text_type))
+        return queryset.filter((Q(jobId__jobType__icontains=jobId) |
+                                Q(jobId__jobTitle__icontains=jobId) |
+                                Q(fieldType__fieldType__icontains=text_type)))
+
+
+class CandidateFilterQuestionListView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated, IsCandidateUser]
+    serializer_class = serializer.FilterQuestionSerializer
+
+    def get_queryset(self):
+        jobId = self.kwargs['jobId']
+        queryset = models.JobApplyFilterQuestionModel.objects.filter(jobId=jobId)
+        return queryset
 
 
 class FilterQuestionView(generics.ListCreateAPIView):
@@ -162,11 +174,7 @@ class FilterQuestionView(generics.ListCreateAPIView):
     serializer_class = serializer.FilterQuestionAnswerSerializer
 
     def get_queryset(self):
-        try:
-            id = self.kwargs['dep_id']
-            return models.FilterQuestionAnswerModel.objects.filter(department=id)
-        except:
-            return models.FilterQuestionAnswerModel.objects.all()
+        return models.FilterQuestionAnswerModel.objects.all()
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))

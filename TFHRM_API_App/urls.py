@@ -7,7 +7,7 @@ from RecruitmentManagementApp.views import AllUserDetailView, JobPostView, Appli
     UpdateCandidateStatusView, MyJobListView, JobStatusView, PracticalTestForApplicantView, \
     OnlineTestResponseListView, DocumentSubmissionView, \
     DocumentSubmissionUpdateDeleteView, ReferenceInformationView, ReferenceInformationUpdateDeleteView, \
-    FilterQuestionView, FilterQuestionUpdateDeleteView, FilterQuestionListView
+    FilterQuestionView, FilterQuestionUpdateDeleteView, FilterQuestionListView, CandidateFilterQuestionListView
 # importing Views from UserApp views
 from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
     CustomTokenObtainPairView, UpdateAcademicInfoView, AddAcademicInfoView, \
@@ -24,7 +24,7 @@ from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView, On
     InterviewTimeScheduleView, AdminDocumentVerificationView, GenerateAppointmentLetterView, \
     AppointmentLetterInformationView, RecruitmentNewApplicantView, TestAdminAppliedCandidateOnlineResView, \
     SelectedForDocumentView, InterviewTimeUpdateView, FinalSalaryView, RejectCandidateStatusView, \
-    DocumentVerifiedView, CommentsOnDocumentsView, SelectedForOnboardView, OfficialDocStoreView, OfficialDocumentsView,\
+    DocumentVerifiedView, CommentsOnDocumentsView, SelectedForOnboardView, OfficialDocStoreView, OfficialDocumentsView, \
     ReferenceVerificationView
 
 from SupportApp import views as supportView
@@ -90,6 +90,9 @@ urlpatterns = [
          name='filter_questions_update_delete'),
     path('filter_question_list/', FilterQuestionListView.as_view(),
          name='filter_questions_list_with_search_functionality'),  # filter_question_list/?department=&text_type=
+    path('candidate_filter_qus/<jobId>/', CandidateFilterQuestionListView.as_view(),
+         name='candidate_filter_question_list'),
+
     path('filter_question/<dep_id>/', FilterQuestionView.as_view(), name='filter_questions'),
     path('filter_question_res/', FilterQuestionResponseView.as_view(), name='filter_questions_response'),
     path('filter_question_res_list/<user_id>/<job_id>/', FilterQuestionResponseListView.as_view(),

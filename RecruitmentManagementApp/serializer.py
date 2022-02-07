@@ -123,19 +123,13 @@ class FilterQuestionAnsSerializer(serializers.ModelSerializer):
 
 
 class FilterQuestionListSerializer(serializers.ModelSerializer):
-    department = DepartmentSerializer()
+    # department = DepartmentSerializer()
     fieldType = FieldTypeSerializer()
     answer = FilterQuestionAnsSerializer(source='job_apply_filter_question_answer')
 
     class Meta:
         model = models.JobApplyFilterQuestionModel
         fields = '__all__'
-
-
-# class FilterQuestionSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = models.JobApplyFilterQuestionModel
-#         fields = '__all__'
 
 
 class FilterQuestionAnswerSerializer(serializers.ModelSerializer):
