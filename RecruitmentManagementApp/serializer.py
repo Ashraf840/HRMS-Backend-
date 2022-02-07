@@ -122,8 +122,16 @@ class FilterQuestionAnsSerializer(serializers.ModelSerializer):
         fields = ['answer', ]
 
 
+class JobDetailsForFilterQusSer(serializers.ModelSerializer):
+    department = DepartmentSerializer()
+
+    class Meta:
+        model = models.JobPostModel
+        fields = ['jobTitle', 'department', 'shift']
+
+
 class FilterQuestionListSerializer(serializers.ModelSerializer):
-    # department = DepartmentSerializer()
+    jobId = JobDetailsForFilterQusSer()
     fieldType = FieldTypeSerializer()
     answer = FilterQuestionAnsSerializer(source='job_apply_filter_question_answer')
 
