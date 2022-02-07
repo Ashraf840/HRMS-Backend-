@@ -46,6 +46,11 @@ class SupportMessageModel(models.Model):
     time = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
 
+    @receiver(post_save, sender=TicketingForSupportModel)
+    def create_support_message(sender, instance, created, **kwargs):
+        if created:
+            SupportMessageModel.objects.create(ticket=instance, user=instance.user, message=instance.query, userName=instance.user)
+
     def __str__(self):
         return f'{self.message}'
 

@@ -176,7 +176,8 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
         if totalResponse == totalQuestion:
             for res in filterQusResponse:
                 questionAnswer = FilterQuestionAnswerModel.objects.get(question=res.questions)
-                if questionAnswer.answer == res.response:
+
+                if questionAnswer.answer.lower() == res.response.lower():
                     score += 1
 
                 if not questionAnswer.answer == res.response:

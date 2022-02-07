@@ -313,6 +313,12 @@ class UserSkillsSerializer(serializers.ModelSerializer):
         userSkills.skills.add(*skills)
         return userSkills
 
+    # def update(self, instance, validated_data):
+    #     instance.skills = validated_data.get('skills', instance.skills)
+    #     print(instance)
+    #     instance.save()
+    #     return instance
+
 
 class UserInformationSerializer(serializers.ModelSerializer):
     class Meta:

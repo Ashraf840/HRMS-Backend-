@@ -2,6 +2,8 @@
 Problem may occur just because of serializer name
 it may conflict
 """
+from _testcapi import raise_exception
+
 import jwt
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
@@ -425,18 +427,24 @@ class UpdateUserSkillsView(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.UserSkillsModel.objects.all()
     lookup_field = 'user_id'
 
-    # def update(self, request, *args, **kwargs):
-    #     skills = request.data.get('skills', [])
-    #     # print(skills)
-    #     for skill in skills:
-    #         models.SkillsModel.objects.get_or_create(skillName=skill)
-    #     instance = self.get_object()
-    #     instance.skills = request.data.get("skills")
-    #     instance.save()
-    #     serializer = self.get_serializer(instance)
-    #     serializer.is_valid(raise_exception=True)
-    #     self.perform_update(serializer)
-    #     return Response(serializer.data)
+    # def perform_update(self, serializer):
+    #     serializer.save()
+
+    def update(self, request, *args, **kwargs):
+        try:
+            skills = request.data.getlist('skills')
+        except:
+            skills = request.data.get('skills')
+
+        for skill in skills:
+            models.SkillsModel.objects.get_or_create(skillName=skill)
+
+        partial = True
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
 
 
 class SkillsView(generics.ListCreateAPIView):
