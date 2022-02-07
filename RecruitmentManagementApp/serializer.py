@@ -212,7 +212,7 @@ class MyJobListSerializer(serializers.ModelSerializer):
         user.pop('is_candidate')
         user.pop('groups')
         user.pop('user_permissions')
-        data.get('jobPostId').pop('filterQuestions')
+        # data.get('jobPostId').pop('filterQuestions')
         data.get('jobPostId').pop('user')
 
         return data
