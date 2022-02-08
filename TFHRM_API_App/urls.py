@@ -89,7 +89,7 @@ urlpatterns = [
     path('filter_question_update/<question_id>/', FilterQuestionUpdateDeleteView.as_view(),
          name='filter_questions_update_delete'),
     path('filter_question_list/', FilterQuestionListView.as_view(),
-         name='filter_questions_list_with_search_functionality'),  # filter_question_list/?department=&text_type=
+         name='filter_questions_list_with_search_functionality'),  # filter_question_list/?search=
     path('candidate_filter_qus/<jobId>/', CandidateFilterQuestionListView.as_view(),
          name='candidate_filter_question_list'),
 
