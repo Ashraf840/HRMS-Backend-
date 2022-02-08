@@ -164,7 +164,8 @@ class FilterQuestionAnswerSerializer(serializers.ModelSerializer):
         questions = instance.question
         questions.question = questionsData.get('question', questions.question)
         questions.fieldType = questionsData.get('fieldType', questions.fieldType)
-        questions.department = questionsData.get('department', questions.department)
+        questions.jobId = questionsData.get('jobId', questions.jobId)
+        # questions.department = questionsData.get('department', questions.department)
         questions.save()
         return instance
 
