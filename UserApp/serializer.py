@@ -47,7 +47,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
                         'is_hr': self.user.is_hr,
                         'is_employee': self.user.is_employee,
                         'email_validated': self.user.email_validated,
-
+                        'profile_pic': self.user.profile_pic,
                     }
                     data.update({'user': obj})
                     return data
@@ -436,20 +436,17 @@ class UpdateAcademicInformationSerializer(serializers.ModelSerializer):
             'user': {'read_only': True}
         }
 
-#
-# class DocumentationSubmissionSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = models.DocumentSubmissionModel
-#         fields = '__all__'
-#         extra_kwargs = {
-#             'user': {'read_only': True}
-#         }
-#
-#
-# class ReferenceInformationSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = models.ReferenceInformationModel
-#         fields = '__all__'
-#         extra_kwargs = {
-#             'user': {'read_only':True}
-#         }
+
+"""
+Password change and reset section
+"""
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    model = models.User
+    """
+    Serializer for password change endpoint.
+    """
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+

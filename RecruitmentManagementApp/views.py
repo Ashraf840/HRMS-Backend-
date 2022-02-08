@@ -56,10 +56,29 @@ class AppliedForJobView(generics.CreateAPIView):
     queryset = models.UserJobAppliedModel.objects.all()
 
     def perform_create(self, serializer):
-        serializer.save(userId=self.request.user, jobProgressStatus=models.JobStatusModel.objects.get(status='new'))
+        jobId = serializer.validated_data['jobPostId']
+        applicationData = models.UserJobAppliedModel.objects.filter(jobPostId=jobId, userId=self.request.user)
+        if applicationData:
+            return Response({'detail': 'Already Applied for this position.'})
+        else:
+            serializer.save(userId=self.request.user, jobProgressStatus=models.JobStatusModel.objects.get(status='new'))
+            jobId = serializer.data['jobPostId']
+            checkFilterQuestions = models.JobApplyFilterQuestionModel.objects.filter(jobId=jobId)
+            if len(checkFilterQuestions) < 1:
+                jobInfo = models.JobPostModel.objects.get(id=jobId).jobProgressStatus.all()
+                jobApplication = applicationData.get()
+                for state in jobInfo:
+                    if state.status != 'new':
+                        jobApplication.jobProgressStatus = state
+                        jobApplication.save()
+                        email_body = 'Hi ' + self.request.user.full_name + \
+                                     f' Congratulations you have been selected for the {state.status} stage.' \
+                                     'All the best in your job search!'
 
-    # def create(self, request, *args, **kwargs):
-    #     try:
+                        data = {'email_body': email_body, 'to_email': self.request.user.email,
+                                'email_subject': 'Status of the Screening Test'}
+                        utils.Util.send_email(data)
+                        break
 
 
 # GET data from Database
@@ -126,16 +145,6 @@ class MyJobListView(generics.ListAPIView):
     def get_queryset(self):
         return models.UserJobAppliedModel.objects.filter(userId_id=self.request.user.id)
 
-
-# class AppliedJobUpdateView(generics.RetrieveUpdateDestroyAPIView):
-#     permission_classes = [permissions.IsAuthenticated]
-#     serializer_class = serializer.UpdateAppliedJobSerializer
-#     lookup_field = 'id'
-#     queryset = models.UserJobAppliedModel.objects.all()
-#     # def get_queryset(self):
-#     #     u_id = self.kwargs['u_id']
-#     #     id = self.kwargs['id']
-#     #     return models.UserJobAppliedModel.objects.all()
 
 
 """
@@ -218,96 +227,97 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
         serializer.save(user=self.request.user)
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        # print(serializer.data['jobPost'])
-        if len(serializer.data) > 1:
-            for val in serializer.data:
-                if val == 'id':
-                    jobPostId = serializer.data['jobPost']
-                    break
-                else:
-                    jobPostId = val['jobPost']
-                # break
-        else:
-            jobPostId = serializer.data['jobPost']
-
-        filterQusResponse = models.FilterQuestionsResponseModelHR.objects.filter(user=self.request.user,
-                                                                                 jobPost_id=jobPostId)
-        # print(serializer.data['jobPost'])
-        # print(filterQusResponse)
-        jobFilterQuestion = models.UserJobAppliedModel.objects.get(jobPostId=jobPostId, userId=self.request.user)
-        noOfQus = models.JobApplyFilterQuestionModel.objects.filter(jobId=jobPostId)
-
-        totalQuestion = noOfQus.count()
-        totalResponse = filterQusResponse.count()
-        # print(totalQuestion)
-        score = 0
-        if totalResponse == totalQuestion:
-            for res in filterQusResponse:
-                questionAnswer = models.FilterQuestionAnswerModel.objects.get(question=res.questions)
-
-                if questionAnswer.answer.lower() == res.response.lower():
-                    score += 1
-
-                if not questionAnswer.answer == res.response:
-                    try:
-                        resNum = int(res.response)
-                        answer = int(questionAnswer.answer)
-                        if 1000 < answer <= resNum:
-                            score += 1
-                        elif answer < 1000 and answer <= resNum:
-                            score += 1
-                    except:
-                        pass
-            # print(score)
-
-            if totalQuestion - 1 <= score:
-                jobProgress = jobFilterQuestion.jobPostId.jobProgressStatus.all()
-                for i, progress in enumerate(jobProgress):
-                    # jobFilterQuestion.jobProgressStatus.status = jobProgress[i + 1]
-                    # print(jobFilterQuestion.jobProgressStatus.status)
-                    # print()
-                    if jobFilterQuestion.jobProgressStatus.status == progress.status:
-                        # print(jobFilterQuestion.jobProgressStatus.status)
-                        # print(jobProgress[1+i].status)
-                        jobFilterQuestion.jobProgressStatus = models.JobStatusModel.objects.get(
-                            status=jobProgress[i + 1].status)
-                        jobFilterQuestion.save()
-                        email_body = 'Hi ' + self.request.user.full_name + \
-                                     f' Congratulations you have been selected for the {jobProgress[i + 1].status} stage.' \
-                                     'All the best in your job search!'
-
-                        data = {'email_body': email_body, 'to_email': self.request.user.email,
-                                'email_subject': 'Status of the Screening Test'}
-                        utils.Util.send_email(data)
-
-                        """============SMS sending functionality============"""
-                        # msg = 'Hi ' + self.request.user.full_name + \
-                        #       f' Congratulations you have been selected for the {jobProgress[i + 1].status} stage.'
-                        # smsData = {'dest_num': self.request.user.phone_number, 'msg': msg}
-                        # sms.sendsms_response(smsData)
-
+        checkApplication = models.UserJobAppliedModel.objects.filter(userId=self.request.user,
+                                                                     jobPostId=request.data.get('jobPost'))
+        if len(checkApplication) >= 1:
+            serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            # print(serializer.data['jobPost'])
+            if len(serializer.data) > 1:
+                for val in serializer.data:
+                    if val == 'id':
+                        jobPostId = serializer.data['jobPost']
                         break
+                    else:
+                        jobPostId = val['jobPost']
+                    # break
             else:
-                jobFilterQuestion.jobProgressStatus = models.JobStatusModel.objects.get(status='Rejected')
-                jobFilterQuestion.save()
+                jobPostId = serializer.data['jobPost']
 
-                email_body = 'Hi ' + self.request.user.full_name + \
-                             ' We regret to inform you that we have decided to move forward with other candidates at ' \
-                             'this time. We will definitely keep you in mind for future opportunities that may be a ' \
-                             'good fit.' \
-                             'All the best in your job search!'
+            filterQusResponse = models.FilterQuestionsResponseModelHR.objects.filter(user=self.request.user,
+                                                                                     jobPost_id=jobPostId)
 
-                data = {'email_body': email_body, 'to_email': self.request.user.email,
-                        'email_subject': 'Status of the Screening Test'}
+            jobFilterQuestion = models.UserJobAppliedModel.objects.get(jobPostId=jobPostId, userId=self.request.user)
+            noOfQus = models.JobApplyFilterQuestionModel.objects.filter(jobId=jobPostId)
 
-                utils.Util.send_email(data)
+            totalQuestion = noOfQus.count()
+            totalResponse = filterQusResponse.count()
 
-            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-        return Response({'detail': 'new response added'})
+            score = 0
+            if totalResponse == totalQuestion:
+                for res in filterQusResponse:
+                    questionAnswer = models.FilterQuestionAnswerModel.objects.get(question=res.questions)
+
+                    if questionAnswer.answer.lower() == res.response.lower():
+                        score += 1
+
+                    if not questionAnswer.answer == res.response:
+                        try:
+                            resNum = int(res.response)
+                            answer = int(questionAnswer.answer)
+                            if 1000 < answer <= resNum:
+                                score += 1
+                            elif answer < 1000 and answer <= resNum:
+                                score += 1
+                        except:
+                            pass
+
+
+                if totalQuestion - 1 <= score:
+                    jobProgress = jobFilterQuestion.jobPostId.jobProgressStatus.all()
+                    for i, progress in enumerate(jobProgress):
+
+                        if jobFilterQuestion.jobProgressStatus.status == progress.status:
+
+                            jobFilterQuestion.jobProgressStatus = models.JobStatusModel.objects.get(
+                                status=jobProgress[i + 1].status)
+                            jobFilterQuestion.save()
+                            email_body = 'Hi ' + self.request.user.full_name + \
+                                         f' Congratulations you have been selected for the {jobProgress[i + 1].status} stage.' \
+                                         'All the best in your job search!'
+
+                            data = {'email_body': email_body, 'to_email': self.request.user.email,
+                                    'email_subject': 'Status of the Screening Test'}
+                            utils.Util.send_email(data)
+
+                            """============SMS sending functionality============"""
+                            # msg = 'Hi ' + self.request.user.full_name + \
+                            #       f' Congratulations you have been selected for the {jobProgress[i + 1].status} stage.'
+                            # smsData = {'dest_num': self.request.user.phone_number, 'msg': msg}
+                            # sms.sendsms_response(smsData)
+
+                            break
+                else:
+                    jobFilterQuestion.jobProgressStatus = models.JobStatusModel.objects.get(status='Rejected')
+                    jobFilterQuestion.save()
+
+                    email_body = 'Hi ' + self.request.user.full_name + \
+                                 ' We regret to inform you that we have decided to move forward with other candidates at ' \
+                                 'this time. We will definitely keep you in mind for future opportunities that may be a ' \
+                                 'good fit.' \
+                                 'All the best in your job search!'
+
+                    data = {'email_body': email_body, 'to_email': self.request.user.email,
+                            'email_subject': 'Status of the Screening Test'}
+
+                    utils.Util.send_email(data)
+
+                return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+            return Response({'detail': 'new response added'})
+        else:
+            return Response({'detail': 'No application found'})
 
 
 class FilterQuestionResponseListView(generics.ListAPIView):
@@ -364,11 +374,6 @@ class OnlineTestResponseListView(generics.ListAPIView):
 
     def get_queryset(self):
         id = self.kwargs['applied_job']
-        # onlineTestLink = models.OnlineTestModel.objects.filter(
-        #     jobInfo=models.UserJobAppliedModel.objects.get(id=self.kwargs['applied_job']).id)
-        # print(models.OnlineTestResponseModel.objects.filter(user=self.request.user,
-        #                                                      appliedJob=models.UserJobAppliedModel.objects.get(
-        #                                                          id=id)))
         return models.OnlineTestResponseModel.objects.filter(user=self.request.user,
                                                              appliedJob=models.UserJobAppliedModel.objects.get(
                                                                  id=id))
@@ -380,7 +385,7 @@ class OnlineTestResponseListView(generics.ListAPIView):
         id = self.kwargs['applied_job']
         jobPostId = models.UserJobAppliedModel.objects.get(id=id).jobPostId
         onlineTestLink = models.OnlineTestModel.objects.filter(jobInfo=jobPostId)
-        # print(len(onlineTestLink))
+
         if len(onlineTestLink) != 0:
             # data = models.OnlineTestResponseModel.objects.filter(user=self.request.user,
             #                                                      appliedJob=models.UserJobAppliedModel.objects.get(id=id))
@@ -497,7 +502,6 @@ class PracticalTestResponseView(generics.CreateAPIView):
     serializer_class = serializer.PracticalTestResponseSerializer
     queryset = models.PracticalTestResponseModel.objects.all()
 
-    # parser_classes = [MultiPartParser, FormParser]
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user,
@@ -518,13 +522,7 @@ class PracticalTestResponseView(generics.CreateAPIView):
                 if data.jobProgressStatus.status == 'Practical Test':
                     serializer = self.get_serializer(data=request.data)
                     if serializer.is_valid():
-                        # print('valid')
                         self.perform_create(serializer)
-                        # print('valid2')
-                        # headers = self.get_success_headers(serializer.data)
-                        # data.jobProgressStatus = models.JobStatusModel.objects.get(status='document')
-                        # data.save()
-
                         return Response(serializer.data, status=status.HTTP_201_CREATED)
                 else:
                     return Response({'detail': 'You can not attend this test.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -571,10 +569,6 @@ class DocumentSubmissionView(generics.CreateAPIView):
                             status=status.HTTP_403_FORBIDDEN)
             # more validation will be a plus.
 
-        # try:
-
-        # except:
-        #     return Response({'detail': ''}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class DocumentSubmissionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):

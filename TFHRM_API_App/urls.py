@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 # importing Views from RecruitmentManagementApp views
 from RecruitmentManagementApp.views import AllUserDetailView, JobPostView, AppliedForJobView, JobDescriptionView, \
     JobDescriptionUpdateDeleteView, JobListView, FilterQuestionResponseListView, FilterQuestionResponseView, \
@@ -15,7 +15,7 @@ from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
     AddTrainingExperienceView, UpdateUserInfoView, UpdateTrainingExperienceView, VerifyEmailView, SkillsView, \
     AcademicInfoListView, WorkInfoListView, CertificationInfoListView, TrainingInfoListView, AddUserSkillsView, \
     HRMCustomTokenObtainPairView, DegreeTitleView, UserProfileCompletionPercentageView, EducationLevelView, \
-    DepartmentView, UpdateUserSkillsView, DesignationView
+    DepartmentView, UpdateUserSkillsView, DesignationView, ChangePasswordView
 
 from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView, OnlineTestLinkView, \
     RecruitmentAdminApplicantListView, AdminInterviewerListView, AdminAppliedCandidateOnlineResView, \
@@ -42,6 +42,7 @@ urlpatterns = [
     path('hrm_login/', HRMCustomTokenObtainPairView.as_view(), name='hrm-login_employee'),  # Login url for employee
     path('profile_completion_percentage/', UserProfileCompletionPercentageView.as_view(),
          name='profile_completion_percentage'),
+    path('change_password/', ChangePasswordView.as_view(), name='change-password'),
 
     # employee
     path('users/<id>/', UserDetailView.as_view(), name='users'),  # user details

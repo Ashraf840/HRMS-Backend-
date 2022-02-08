@@ -14,10 +14,8 @@ from pathlib import Path
 from datetime import timedelta
 import os.path
 import sys
+
 # import environ
-
-
-
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -44,7 +42,6 @@ env = environ.Env()
 environ.Env.read_env(BASE_DIR.joinpath('.env'))
 """
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -57,13 +54,13 @@ INSTALLED_APPS = [
     # Installed Packages
     'rest_framework',
     'rest_framework_simplejwt',
+    'django_rest_passwordreset',
     # 'rest_framework_simplejwt.token_blacklist',
     'django_cleanup',
 
     # Corsheaders
     'corsheaders',
     'drf_multiple_model',
-
     'drf_yasg',
     'django_filters',
 
@@ -127,7 +124,7 @@ SIMPLE_JWT = {
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR/'templates'],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -152,7 +149,6 @@ ROOT_URLCONF = 'TFHRM.urls'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
-
 
 # ============== postgresql Db ==============
 # DATABASES = {
@@ -261,8 +257,6 @@ CORS_ALLOWED_ORIGINS = [
 
 ]
 
-
-
 import os
 
 EMAIL_USE_TLS = True
@@ -275,5 +269,3 @@ EMAIL_HOST_PASSWORD = 'tehctrahgvpjsuoz'
 # PLIVO_ID = 'MAOGQ0MZI1MTMZYZC4YW'
 # AUTH_TOKEN = 'N2JmMDljMjFmYmNkMDRjZDI5ODYwMzQ3OGU5NzRh'
 # SENDER_ID = '+1 904-207-7424'
-
-

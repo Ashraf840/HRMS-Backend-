@@ -157,10 +157,6 @@ class FilterQuestionAnswerSerializer(serializers.ModelSerializer):
         questionsData = validated_data.pop('question')
         instance.answer = validated_data.get('answer', instance.answer)
         instance.save()
-        # questions = (instance.question)
-        # print(questions)
-        # questions = list(questions)
-        # qus =questions.pop(0)
         questions = instance.question
         questions.question = questionsData.get('question', questions.question)
         questions.fieldType = questionsData.get('fieldType', questions.fieldType)

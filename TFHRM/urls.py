@@ -14,16 +14,16 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path,include
+from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('UserApp.urls')),
-    path('', include('RecruitmentManagementApp.urls')),
-    path('api/', include('TFHRM_API_App.urls')),
-    # path('pdf/', include('pdfGenerator.urls')),
-
-
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
+                  path('admin/', admin.site.urls),
+                  path('', include('UserApp.urls')),
+                  path('', include('RecruitmentManagementApp.urls')),
+                  path('api/', include('TFHRM_API_App.urls')),
+                  # path('pdf/', include('pdfGenerator.urls')),
+                  path('api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
+                    # reset/password_reset/confirm   url for confirm mail address
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
