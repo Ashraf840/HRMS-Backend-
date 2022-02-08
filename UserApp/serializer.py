@@ -47,13 +47,13 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
                         'is_hr': self.user.is_hr,
                         'is_employee': self.user.is_employee,
                         'email_validated': self.user.email_validated,
-                        'profile_pic': self.user.profile_pic,
+                        'profile_pic': str(self.user.profile_pic),
                     }
                     data.update({'user': obj})
                     return data
 
                 else:
-                    msg = "You email is not verified.please chek your email and verify to login"
+                    msg = "You email is not verified.please check your email and verify to login"
             else:
                 msg = "Your account is not active"
         else:
