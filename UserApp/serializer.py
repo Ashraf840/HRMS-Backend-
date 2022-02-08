@@ -3,7 +3,7 @@ from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from . import models
-
+from django.contrib.sites.shortcuts import get_current_site
 # class UserInfoModelSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = EmployeeInfoModel
@@ -38,6 +38,8 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         if self.user.is_candidate:
             if self.user.is_active:
                 if self.user.email_validated:
+                    request = self.context.get('request')
+
                     obj = {
                         'id': self.user.id,
                         'email': self.user.email,
@@ -47,7 +49,8 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
                         'is_hr': self.user.is_hr,
                         'is_employee': self.user.is_employee,
                         'email_validated': self.user.email_validated,
-                        'profile_pic': str(self.user.profile_pic),
+                        'profile_pic': request.build_absolute_uri(str(self.user.profile_pic.url)),
+
                     }
                     data.update({'user': obj})
                     return data
