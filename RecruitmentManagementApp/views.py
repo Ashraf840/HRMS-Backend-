@@ -357,7 +357,7 @@ class PracticalTestForApplicantView(generics.ListCreateAPIView, generics.Retriev
         file = serializer.validated_data.get('practicalFile')
         link = serializer.validated_data.get('testLink')
         if link == '' and file is None:
-            return Response({'message': 'Please insert a file or a test link.'})
+            raise Exception({'message': 'Please insert a file or a test link.'})
         else:
             self.perform_create(serializer)
         return Response(serializer.data,status=status.HTTP_201_CREATED)
