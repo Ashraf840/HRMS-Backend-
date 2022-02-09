@@ -499,8 +499,17 @@ class InterviewTimeScheduleView(generics.CreateAPIView):
                 applicationData.save()
 
                 email_body = 'Hi ' + applicationData.userId.full_name + \
-                             f' you are selected for the Interview stage.' \
-                             'Prepare yourself.'
+                             f'Congratulations! You have passed all tests  and qualified for a verbal interview. ' \
+                             f'You are requested to come to our office. Interview schedule and office location is given below-\n' \
+                             f'Interview Schedule: \n' \
+                             f'Interview location: {serializer.data["interviewLocation"]}\n' \
+                             f'Date: {serializer.data["interviewDate"]} \n' \
+                             f'Time: {serializer.data["interviewTime"]}\n' \
+                             f'Office Address: House: 149 (4th floor), Lane: 1, Baridhara DOHS, Dhaka.\n' \
+                             'Thanks & Regards,\n' \
+                             'HR Department\n' \
+                             'TechForing Limited.\n' \
+                             'www.techforing.com'
 
                 data = {'email_body': email_body, 'to_email': applicationData.userId.email,
                         'email_subject': 'Status of the Screening Test'}
@@ -523,6 +532,7 @@ class InterviewTimeUpdateView(generics.RetrieveUpdateDestroyAPIView):
         return queryset
 
     def perform_update(self, serializer):
+        serializer.save(scheduleBy=self.request.user)
         applicationData = models.InterviewTimeScheduleModel.objects.get(
             applicationId_id=self.kwargs['applicationId_id'])
         email_body = 'Hi ' + applicationData.applicationId.userId.full_name + \
@@ -532,7 +542,6 @@ class InterviewTimeUpdateView(generics.RetrieveUpdateDestroyAPIView):
         data = {'email_body': email_body, 'to_email': applicationData.applicationId.userId.email,
                 'email_subject': 'Status of the Screening Test'}
         Util.send_email(data)
-        serializer.save(scheduleBy=self.request.user)
 
 
 """

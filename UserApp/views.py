@@ -78,10 +78,13 @@ class RegisterView(generics.GenericAPIView):
         current_site = get_current_site(request).domain
         relativeLink = reverse('tfhrm_api:email-verify')
         absurl = 'http://' + current_site + relativeLink + "?token=" + str(token)
-        email_body = 'Hi ' + user.full_name + \
-                     ' Use the link below to verify your email \n' + absurl
+
+        email_body = f'Hi {user.full_name},\n' \
+                     f'Were happy you signed up for Techforing Career. To start exploring the Techforing Career Please confirm your email address. ' \
+                     f'Verification link {absurl}'
+
         data = {'email_body': email_body, 'to_email': user.email,
-                'email_subject': 'Verify your email'}
+                'email_subject': 'Verification Email'}
 
         Util.send_email(data)
         return Response(user_data, status=status.HTTP_201_CREATED)

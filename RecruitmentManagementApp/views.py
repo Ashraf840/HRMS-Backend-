@@ -281,12 +281,28 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
                             jobFilterQuestion.jobProgressStatus = models.JobStatusModel.objects.get(
                                 status=jobProgress[i + 1].status)
                             jobFilterQuestion.save()
-                            email_body = 'Hi ' + self.request.user.full_name + \
-                                         f' Congratulations you have been selected for the {jobProgress[i + 1].status} stage.' \
-                                         'All the best in your job search!'
+                            selectStatus = jobProgress[i + 1].status
+                            # email_body = 'Hi ' + self.request.user.full_name + \
+                            #              f' Congratulations you have been selected for the {jobProgress[i + 1].status} stage.' \
+                            #              'All the best in your job search!'
+
+                            email_body = f'Dear {self.request.user.full_name}, ' \
+                                         f'Thank you for your application and interest in joining TechForing. You have been shortlisted for the {questionAnswer.question.jobId.jobTitle} position.\n' \
+                                         f'At TechForing, we have a straightforward recruitment procedure and these {selectStatus} are one of them. We take these tests to understand your values, analytical ability, and expertise related to the position. This is a crucial and mandatory step to qualify for the position.\n' \
+                                         f'You are requested to log into the recruitment portal and participate in the test. Link: https://career.techforing.com/\n' \
+                                         f'NB: Follow the deadline and instructions strictly.\n' \
+                                         f'Deadline: {datetime.date.today() + datetime.timedelta(hours=72)}\n\n\n' \
+                                         f'Instructions:\n' \
+                                         f'1. Use login credentials that you created when you applied.\n' \
+                                         f'2. After completing the test, don’t forget to take the screenshot of your score.\n' \
+                                         f'3. Upload your score and screenshots of your score as instructed.\n\n\n' \
+                                         f'Thanks & Regards,\n' \
+                                         f'HR Department\n' \
+                                         f'TechForing Limited.\n' \
+                                         f'www.techforing.com'
 
                             data = {'email_body': email_body, 'to_email': self.request.user.email,
-                                    'email_subject': 'Status of the Screening Test'}
+                                    'email_subject': 'Screening Test result.'}
                             utils.Util.send_email(data)
 
                             """============SMS sending functionality============"""
@@ -300,11 +316,15 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
                     jobFilterQuestion.jobProgressStatus = models.JobStatusModel.objects.get(status='Rejected')
                     jobFilterQuestion.save()
 
-                    email_body = 'Hi ' + self.request.user.full_name + \
+                    email_body = f'Hi ' + self.request.user.full_name + \
                                  ' We regret to inform you that we have decided to move forward with other candidates at ' \
                                  'this time. We will definitely keep you in mind for future opportunities that may be a ' \
                                  'good fit.' \
-                                 'All the best in your job search!'
+                                 'All the best in your job search!\n\n' \
+                                 'Thanks & Regards,\n' \
+                                 'HR Department\n' \
+                                 'TechForing Limited.\n' \
+                                 'www.techforing.com'
 
                     data = {'email_body': email_body, 'to_email': self.request.user.email,
                             'email_subject': 'Status of the Screening Test'}
@@ -450,9 +470,15 @@ class OnlineTestResponseView(generics.CreateAPIView):
                             if testMark.testMark < 50:
                                 jobApplication.jobProgressStatus = models.JobStatusModel.objects.get(status='Rejected')
                                 jobApplication.save()
-                                email_body = 'Hi ' + self.request.user.full_name + \
-                                             f' sorry you are not selected for the next stage.' \
-                                             'All the best for your job searching.'
+                                email_body = f'Hi ' + self.request.user.full_name + \
+                                             'We regret to inform you that we have decided to move forward with other candidates at ' \
+                                             'this time. We will definitely keep you in mind for future opportunities that may be a ' \
+                                             'good fit.' \
+                                             'All the best in your job search!\n\n' \
+                                             'Thanks & Regards,\n' \
+                                             'HR Department\n' \
+                                             'TechForing Limited.\n' \
+                                             'www.techforing.com'
 
                                 data = {'email_body': email_body, 'to_email': self.request.user.email,
                                         'email_subject': 'Status of the Screening Test'}
@@ -468,8 +494,14 @@ class OnlineTestResponseView(generics.CreateAPIView):
                                 jobApplication.save()
                                 # email sending option
                                 email_body = 'Hi ' + self.request.user.full_name + \
-                                             f' Congratulations you have been selected for the {update.status} stage.' \
-                                             'All the best for this step.'
+                                             f'Congratulations! We are happy to inform you that you have passed the {sta.status} and have been selected for the second round of interview which consists of a {update.status}.' \
+                                             f' Please read carefully and submit the task within the given deadline. We expect you to carry out the task with full honesty. Follow the deadline and instructions easily.' \
+                                             f'Deadline: {datetime.date.today() + datetime.timedelta(hours=72)}\n\n' \
+                                             f'Go to our recruitment portal and follow the instruction\n' \
+                                             f'Thanks & Regards,\n' \
+                                             f'HR Department\n' \
+                                             f'TechForing Limited.\n' \
+                                             f'www.techforing.com'
 
                                 data = {'email_body': email_body, 'to_email': self.request.user.email,
                                         'email_subject': f'Status of the {statusList[i]} Screening Test'}
@@ -486,30 +518,6 @@ class OnlineTestResponseView(generics.CreateAPIView):
         else:
             return Response({'detail': 'You are not allowed to attend online test.'},
                             status=status.HTTP_400_BAD_REQUEST)
-
-        # try:
-        #     try:
-        #         check_redundancy = models.OnlineTestResponseModel.objects.get(user=self.request.user,
-        #                                                                       appliedJob_id=job_id)
-        #         if check_redundancy is not None:
-        #             return Response({'detail': 'You have already taken the test.'}, status=status.HTTP_400_BAD_REQUEST)
-        #     except:
-        #         print('except')
-        #         appliedJobData = models.UserJobAppliedModel.objects.get(userId=self.request.user, id=job_id)
-        #         # print(appliedJobData.jobProgressStatus.status == 'online')
-        #         if appliedJobData.jobProgressStatus.status == 'online':
-        #             serializer = self.get_serializer(data=request.data)
-        #             # print(serializer)
-        #             serializer.is_valid(raise_exception=True)
-        #             self.perform_create(serializer)
-        #             headers = self.get_success_headers(serializer.data)
-        #             appliedJobData.jobProgressStatus = models.JobStatusModel.objects.get(status='practical')
-        #             appliedJobData.save()
-        #             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-        #         else:
-        #             return Response({'detail': 'You can not attend this test.'}, status=status.HTTP_400_BAD_REQUEST)
-        # except:
-        #     return Response({'detail': 'No Data found'}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
 
 class PracticalTestResponseView(generics.CreateAPIView):
