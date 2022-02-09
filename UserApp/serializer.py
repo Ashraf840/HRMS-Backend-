@@ -96,17 +96,31 @@ class HRMCustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         if self.user.is_employee:
             if self.user.is_active:
                 if self.user.email_validated:
-                    obj = {
-                        'id': self.user.id,
-                        'email': self.user.email,
-                        'full_name': self.user.full_name,
-                        'phone_number': self.user.phone_number,
-                        'is_candidate': self.user.is_candidate,
-                        'is_hr': self.user.is_hr,
-                        'is_employee': self.user.is_employee,
-                        'email_validated': self.user.email_validated,
-
-                    }
+                    request = self.context.get('request')
+                    try:
+                        obj = {
+                            'id': self.user.id,
+                            'email': self.user.email,
+                            'full_name': self.user.full_name,
+                            'phone_number': self.user.phone_number,
+                            'is_candidate': self.user.is_candidate,
+                            'is_hr': self.user.is_hr,
+                            'is_employee': self.user.is_employee,
+                            'email_validated': self.user.email_validated,
+                            'profile_pic': request.build_absolute_uri(str(self.user.profile_pic.url)),
+                        }
+                    except:
+                        obj = {
+                            'id': self.user.id,
+                            'email': self.user.email,
+                            'full_name': self.user.full_name,
+                            'phone_number': self.user.phone_number,
+                            'is_candidate': self.user.is_candidate,
+                            'is_hr': self.user.is_hr,
+                            'is_employee': self.user.is_employee,
+                            'email_validated': self.user.email_validated,
+                            'profile_pic': 'default.jpg',
+                        }
                     data.update({'user': obj})
                     return data
 
