@@ -57,7 +57,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     # profile_pic = models.ImageField(upload_to='users/', default='users/default.png')
     profile_pic = ResizedImageField(upload_to='users/', blank=True, help_text='Size Recommended: 512x512',
-                                    size=[512, 512], quality=100, force_format='JPEG')
+                                    size=[512, 512], quality=100, force_format='JPEG', default='default.jpg')
     phone_number = models.CharField(max_length=30, blank=True)
     nid = models.CharField(max_length=30, null=True)
     nationality = models.CharField(max_length=50, null=True, blank=True)
