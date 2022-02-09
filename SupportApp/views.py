@@ -42,7 +42,10 @@ class SupportMessageView(generics.ListCreateAPIView):
         return queryset
 
     def perform_create(self, serializer):
-        image = self.request.user.profile_pic.url
+        try:
+            image = self.request.user.profile_pic.url
+        except:
+            image = 'https://careeradmin.techforing.com/media/users/default.jpg'
         serializer.save(ticket=models.TicketingForSupportModel.objects.get(id=self.kwargs['ticketId']),
                         user=self.request.user, userImage=image, userName=self.request.user)
 
