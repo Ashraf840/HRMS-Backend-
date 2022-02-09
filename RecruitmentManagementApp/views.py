@@ -146,7 +146,6 @@ class MyJobListView(generics.ListAPIView):
         return models.UserJobAppliedModel.objects.filter(userId_id=self.request.user.id)
 
 
-
 """
 Filter questions Sections
 """
@@ -274,13 +273,11 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
                         except:
                             pass
 
-
                 if totalQuestion - 1 <= score:
                     jobProgress = jobFilterQuestion.jobPostId.jobProgressStatus.all()
                     for i, progress in enumerate(jobProgress):
 
                         if jobFilterQuestion.jobProgressStatus.status == progress.status:
-
                             jobFilterQuestion.jobProgressStatus = models.JobStatusModel.objects.get(
                                 status=jobProgress[i + 1].status)
                             jobFilterQuestion.save()
@@ -345,7 +342,12 @@ class PracticalTestForApplicantView(generics.ListCreateAPIView, generics.Retriev
         return queryset
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        file = serializer.validated_data.get('practicalFile')
+        link = serializer.validated_data.get('testLink')
+        if link == '' and file is None:
+            raise ValueError({'message': 'No file or link inserted.'})
+        else:
+            serializer.save(user=self.request.user)
 
 
 class JobCreateView(generics.ListCreateAPIView):
@@ -502,7 +504,6 @@ class PracticalTestResponseView(generics.CreateAPIView):
     serializer_class = serializer.PracticalTestResponseSerializer
     queryset = models.PracticalTestResponseModel.objects.all()
 
-
     def perform_create(self, serializer):
         serializer.save(user=self.request.user,
                         appliedJob=models.UserJobAppliedModel.objects.get(id=self.kwargs['job_id']))
@@ -568,7 +569,6 @@ class DocumentSubmissionView(generics.CreateAPIView):
             return Response({'detail': 'You are not selected for Document Submission'},
                             status=status.HTTP_403_FORBIDDEN)
             # more validation will be a plus.
-
 
 
 class DocumentSubmissionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
