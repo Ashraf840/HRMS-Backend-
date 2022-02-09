@@ -342,12 +342,25 @@ class PracticalTestForApplicantView(generics.ListCreateAPIView, generics.Retriev
         return queryset
 
     def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+        # file = serializer.validated_data.get('practicalFile')
+        # link = serializer.validated_data.get('testLink')
+        # if link == '' and file is None:
+        #     # raise ValueError({'message': 'No file or link inserted.'})
+        #     return Response({'message': 'Please insert a file or a test link.'})
+        # else:
+        #     serializer.save(user=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
         file = serializer.validated_data.get('practicalFile')
         link = serializer.validated_data.get('testLink')
         if link == '' and file is None:
-            raise ValueError({'message': 'No file or link inserted.'})
+            return Response({'message': 'Please insert a file or a test link.'})
         else:
-            serializer.save(user=self.request.user)
+            self.perform_create(serializer)
+        return Response(serializer.data,status=status.HTTP_201_CREATED)
 
 
 class JobCreateView(generics.ListCreateAPIView):
