@@ -226,8 +226,15 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
         serializer.save(user=self.request.user)
 
     def create(self, request, *args, **kwargs):
-        checkApplication = models.UserJobAppliedModel.objects.filter(userId=self.request.user,
-                                                                     jobPostId=request.data.get('jobPost'))
+        reqData = request.data
+        if (type(reqData) == type([])):
+            for job_list in request.data:
+                jobId = job_list.get('jobPost')
+                break
+        else:
+            jobId = request.data['jobPost']
+
+        checkApplication = models.UserJobAppliedModel.objects.filter(userId=self.request.user, jobPostId_id=jobId)
         if len(checkApplication) >= 1:
             serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))
             serializer.is_valid(raise_exception=True)
