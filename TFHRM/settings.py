@@ -270,13 +270,13 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     '0.0.0.0',
     '44.242.38.198',
-    'careeradmin.techforing.com',
-    'career.techforing.com',
-    'hrms.techforing.com',
-    '127.0.0.1',
-    '127.0.0.1:8000',
-    'localhost:3001',
-    'localhost:3000',
+    'https://careeradmin.techforing.com',
+    'https://career.techforing.com',
+    'https://hrms.techforing.com',
+    'http://127.0.0.1',
+    'http://127.0.0.1:8000',
+    'http://localhost:3001',
+    'http://localhost:3000',
 
 ]
 
