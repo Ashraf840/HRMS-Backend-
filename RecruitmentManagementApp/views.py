@@ -69,7 +69,6 @@ class AppliedForJobView(generics.CreateAPIView):
                 jobApplication = applicationData.get()
 
                 for state in jobInfo:
-                    print(state.status)
                     if state.status != 'new':
                         jobApplication.jobProgressStatus = state
                         jobApplication.save()
@@ -242,17 +241,13 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
             headers = self.get_success_headers(serializer.data)
-            # print(serializer.data['jobPost'])
-            if len(serializer.data) > 1:
-                for val in serializer.data:
-                    if val == 'id':
-                        jobPostId = serializer.data['jobPost']
-                        break
-                    else:
-                        jobPostId = val['jobPost']
-                    # break
-            else:
-                jobPostId = serializer.data['jobPost']
+            for val in serializer.data:
+                if val == 'id':
+                    jobPostId = serializer.data['jobPost']
+                    break
+                else:
+                    jobPostId = val['jobPost']
+                    break
 
             filterQusResponse = models.FilterQuestionsResponseModelHR.objects.filter(user=self.request.user,
                                                                                      jobPost_id=jobPostId)
@@ -282,6 +277,7 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
                         except:
                             pass
 
+
                 if totalQuestion - 1 <= score:
                     jobProgress = jobFilterQuestion.jobPostId.jobProgressStatus.all()
                     for i, progress in enumerate(jobProgress):
@@ -291,9 +287,7 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
                                 status=jobProgress[i + 1].status)
                             jobFilterQuestion.save()
                             selectStatus = jobProgress[i + 1].status
-                            # email_body = 'Hi ' + self.request.user.full_name + \
-                            #              f' Congratulations you have been selected for the {jobProgress[i + 1].status} stage.' \
-                            #              'All the best in your job search!'
+                            # ========Email send functionality========
 
                             email_body = f'Dear {self.request.user.full_name}\n, ' \
                                          f'Thank you for your application and interest in joining TechForing. You have been shortlisted for the {questionAnswer.question.jobId.jobTitle} position.\n' \
