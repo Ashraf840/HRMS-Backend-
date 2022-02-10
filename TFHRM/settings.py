@@ -267,9 +267,9 @@ MEDIA_ROOT = BASE_DIR.joinpath('media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ORIGIN_ALLOW_ALL = False
 # CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = [
-    '0.0.0.0',
-    '44.242.38.198',
+CORS_ORIGIN_WHITELIST = [
+    'http://0.0.0.0',
+    'https://44.242.38.198',
     'https://careeradmin.techforing.com',
     'https://career.techforing.com',
     'https://hrms.techforing.com',
