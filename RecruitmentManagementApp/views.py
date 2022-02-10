@@ -69,6 +69,7 @@ class AppliedForJobView(generics.CreateAPIView):
                 jobApplication = applicationData.get()
 
                 for state in jobInfo:
+                    print(state.status)
                     if state.status != 'new':
                         jobApplication.jobProgressStatus = state
                         jobApplication.save()
