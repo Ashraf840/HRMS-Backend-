@@ -207,6 +207,7 @@ class UserAcademicInfoModel(models.Model):
     cgpaOutOf = models.DecimalField(max_digits=10, decimal_places=2, blank=True, default=0)
 
     class Meta:
+        ordering = ['year']
         verbose_name_plural = 'Academic Information'
 
     def __str__(self):

@@ -4,6 +4,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from . import models
 from django.contrib.sites.shortcuts import get_current_site
+
 # class UserInfoModelSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = EmployeeInfoModel
@@ -450,6 +451,7 @@ class UserDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.User
+
         fields = '__all__'
         extra_kwargs = {
             'password': {'write_only': True}
@@ -478,4 +480,3 @@ class ChangePasswordSerializer(serializers.Serializer):
     """
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
-
