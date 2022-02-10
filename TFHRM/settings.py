@@ -37,13 +37,15 @@ DEBUG = True
 # ALLOWED_HOSTS = ['*']
 
 ALLOWED_HOSTS = [
-    'https://careeradmin.techforing.com',
-    'https://career.techforing.com',
-    'https://hrms.techforing.com',
-    'http://127.0.0.1',
-    'http://127.0.0.1:8000',
-    'http://localhost:3001',
-    'http://localhost:3000',
+    '0.0.0.0',
+    '44.242.38.198',
+    'careeradmin.techforing.com',
+    'career.techforing.com',
+    'hrms.techforing.com',
+    '127.0.0.1',
+    '127.0.0.1:8000',
+    'localhost:3001',
+    'localhost:3000',
 ]
 
 # Initialise environment variables
@@ -178,16 +180,16 @@ Dev server DB
 
 # ============== mysql Db ==============
 DATABASES = {
-     'default': {
-         'ENGINE': 'django.db.backends.mysql',
-         'NAME': 'hrm_techforing',
-         'USER': 'root',
-         'PASSWORD': 'hOLL4m&*%$',
-         'OPTIONS': {
-             'sql_mode': 'traditional',
-         }
-     }
- }
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'hrm_techforing',
+        'USER': 'root',
+        'PASSWORD': 'hOLL4m&*%$',
+        'OPTIONS': {
+            'sql_mode': 'traditional',
+        }
+    }
+}
 
 # ============== securing proxy for heroku hosting ==============
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -266,13 +268,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
-    'https://careeradmin.techforing.com',
-    'https://career.techforing.com',
-    'https://hrms.techforing.com',
-    'http://127.0.0.1',
-    'http://127.0.0.1:8000',
-    'http://localhost:3001',
-    'http://localhost:3000',
+    '0.0.0.0',
+    '44.242.38.198',
+    'careeradmin.techforing.com',
+    'career.techforing.com',
+    'hrms.techforing.com',
+    '127.0.0.1',
+    '127.0.0.1:8000',
+    'localhost:3001',
+    'localhost:3000',
 
 ]
 
