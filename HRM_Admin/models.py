@@ -3,7 +3,6 @@ from UserApp import models as userModel
 
 # Create your models here.
 
-
 project_status = (
     ('new', 'new'),
     ('on_progress', 'On Progress'),
@@ -24,7 +23,7 @@ class EmployeeInformationModel(models.Model):
     joining_date = models.DateField(blank=True)
 
     def __str__(self):
-        return f'{self.user.full_name}, {self.emp_department.department}'
+        return f'{self.user.full_name}, {self.emp_department.department} - {self.designation.designation}'
 
 
 class EmployeeSalaryModel(models.Model):
