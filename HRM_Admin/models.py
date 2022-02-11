@@ -70,7 +70,7 @@ class EmployeeEmergencyContactModel(models.Model):
 class EmployeeBankInfoModel(models.Model):
     employee = models.OneToOneField(EmployeeInformationModel, on_delete=models.CASCADE,
                                     related_name='employee_bank_info')
-    accountNo = models.CharField(max_length=100)
+    account_no = models.CharField(max_length=100)
     account_name = models.CharField(max_length=255, blank=True)
     bank_name = models.CharField(max_length=255, blank=True)
 
