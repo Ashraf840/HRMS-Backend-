@@ -107,6 +107,7 @@ class HRMCustomTokenObtainPairSerializer(TokenObtainPairSerializer):
                             'is_candidate': self.user.is_candidate,
                             'is_hr': self.user.is_hr,
                             'is_employee': self.user.is_employee,
+                            'is_superuser': self.user.is_superuser,
                             'email_validated': self.user.email_validated,
                             'profile_pic': request.build_absolute_uri(str(self.user.profile_pic.url)),
                         }
@@ -119,6 +120,7 @@ class HRMCustomTokenObtainPairSerializer(TokenObtainPairSerializer):
                             'is_candidate': self.user.is_candidate,
                             'is_hr': self.user.is_hr,
                             'is_employee': self.user.is_employee,
+                            'is_superuser': self.user.is_superuser,
                             'email_validated': self.user.email_validated,
                             'profile_pic': 'default.jpg',
                         }

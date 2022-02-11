@@ -23,6 +23,7 @@ urlpatterns = [
                   path('', include('UserApp.urls')),
                   path('', include('RecruitmentManagementApp.urls')),
                   path('api/', include('TFHRM_API_App.urls')),
+                  path('api/hrm_admin/', include('HRM_Admin.urls')),
                   # path('pdf/', include('pdfGenerator.urls')),
                   path('api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
                     # reset/password_reset/confirm   url for confirm mail address
