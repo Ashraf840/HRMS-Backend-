@@ -75,4 +75,4 @@ class EmployeeBankInfoModel(models.Model):
     bank_name = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
-        return f'{self.employee.user.full_name}, {self.accountNo}'
+        return f'{self.employee.user.full_name}, {self.account_no}'
