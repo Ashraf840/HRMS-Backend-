@@ -25,7 +25,7 @@ class Pagination(pagination.PageNumberPagination):
 
 
 class OfficialDocStoreView(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticated, customPermission.IsEmployee]
+    permission_classes = [customPermission.Authenticated, customPermission.IsEmployee]
     serializer_class = serializer.OfficialDocStoreSerializer
     queryset = models.OfficialDocStore.objects.all()
 
@@ -49,7 +49,7 @@ class OnlineTestLinkView(generics.ListCreateAPIView):
 
 
 class RejectCandidateStatusView(generics.RetrieveUpdateDestroyAPIView):
-    # permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [customPermission.Authenticated]
     serializer_class = serializer.JobStatusRejectSerializer
     queryset = UserJobAppliedModel.objects.all()
     lookup_field = 'id'
@@ -69,7 +69,7 @@ class SendPracticalTestView(generics.ListCreateAPIView):
     """
     set and send practical test link to the candidate
     """
-    permission_classes = [permissions.IsAuthenticated]  # admin permission required
+    permission_classes = [customPermission.Authenticated]  # admin permission required
     serializer_class = serializer.SendPracticalTestSerializer
     queryset = models.PracticalTestUserModel.objects.all()
 
@@ -100,7 +100,7 @@ class PracticalTestMarkUpdateView(generics.RetrieveUpdateDestroyAPIView):
     """
     practical test mark will be given and evaluate candidate practical test mark
     """
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [customPermission.Authenticated]
     serializer_class = serializer.PracticalTestMarkInputSerializer
     # queryset = models.PracticalTestMarkInputModel.objects.filter(jobApplication_id='jobApplication')
     lookup_field = 'jobApplication'
@@ -312,7 +312,7 @@ class AppliedUserDetailsView(generics.ListAPIView):
 
 
 class RecruitmentNewApplicantView(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [customPermission.Authenticated]
     serializer_class = serializer.RecruitmentNewApplicantSerializer
 
     def get_queryset(self):
@@ -329,7 +329,7 @@ class RecruitmentNewApplicantView(generics.ListAPIView):
 
 
 class FilterQuestionResponseListView(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [customPermission.Authenticated]
     serializer_class = serializer.FilterQuestionResponseListSerializer
 
     def get_queryset(self):
@@ -343,7 +343,7 @@ class AdminAppliedCandidateOnlineResView(generics.ListAPIView):
     """
     Online test response list
     """
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [customPermission.Authenticated]
     serializer_class = serializer.AdminAppliedCandidateOnlineResSerializer
 
     def get_queryset(self):
@@ -384,7 +384,7 @@ class AdminInterviewerListView(generics.ListAPIView):
     """
     selected for interview stage
     """
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [customPermission.Authenticated]
     serializer_class = serializer.AdminInterviewerListSerializer
 
     def get_queryset(self):
@@ -403,7 +403,7 @@ class AdminInterviewerListView(generics.ListAPIView):
 
 
 class MarkingDuringInterviewView(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [customPermission.Authenticated]
     serializer_class = serializer.MarkingDuringInterviewSerializer
     queryset = models.MarkingDuringInterviewModel.objects.all()
 
@@ -427,7 +427,7 @@ class MarkingDuringInterviewView(generics.ListCreateAPIView):
 #     """
 #     Provide a official Email to the selected candidate
 #     """
-#     permission_classes = [permissions.IsAuthenticated]
+#     permission_classes = [customPermission.Authenticated]
 #     serializer_class = serializer.UpdateEmailDuringOnboardingSerializer
 #     queryset = User.objects.all()
 #     lookup_field = 'id'
@@ -452,7 +452,7 @@ class MarkingDuringInterviewView(generics.ListCreateAPIView):
 #         # print(officialEmail)
 
 class AddEmployeeInfoDuringOnboardView(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [customPermission.Authenticated]
     serializer_class = serializer.AddEmployeeInfoDuringOnboardSerializer
     queryset = EmployeeInfoModel.objects.all()
 
@@ -479,7 +479,7 @@ class AddEmployeeInfoDuringOnboardView(generics.CreateAPIView):
 
 
 class InterviewTimeScheduleView(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [customPermission.Authenticated]
     serializer_class = serializer.InterviewTimeScheduleSerializer
     queryset = models.InterviewTimeScheduleModel.objects.all()
 
@@ -523,7 +523,7 @@ class InterviewTimeScheduleView(generics.CreateAPIView):
 
 
 class InterviewTimeUpdateView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [customPermission.Authenticated]
     serializer_class = serializer.InterviewTimeScheduleSerializer
     lookup_field = 'applicationId_id'
 
@@ -550,7 +550,7 @@ class InterviewTimeUpdateView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class FinalSalaryView(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [customPermission.Authenticated]
     serializer_class = serializer.FinalSalarySerializer
     queryset = models.FinalSalaryNegotiationModel.objects.all()
 
@@ -577,7 +577,7 @@ class FinalSalaryView(generics.CreateAPIView):
 
 
 class SelectedForDocumentView(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [customPermission.Authenticated]
     serializer_class = serializer.SelectedForDocumentationSerializer
 
     def get_queryset(self):
@@ -594,7 +594,7 @@ class SelectedForDocumentView(generics.ListAPIView):
 
 
 # class DocumentRequestView(generics.RetrieveAPIView):
-#     permission_classes = [permissions.IsAuthenticated]
+#     permission_classes = [customPermission.Authenticated]
 #     serializer_class = serializer.DocumentRequestSerializer
 #     queryset = UserJobAppliedModel.objects.all()
 #     lookup_field = 'id'
@@ -648,7 +648,7 @@ class AdminDocumentVerificationView(generics.ListAPIView):
 
 
 class DocumentVerifiedView(generics.RetrieveUpdateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [customPermission.Authenticated]
     serializer_class = serializer.AdminDocumentVerifySerializer
     queryset = DocumentSubmissionModel.objects.all()
     lookup_field = 'applied_job'
@@ -659,7 +659,7 @@ class DocumentVerifiedView(generics.RetrieveUpdateAPIView):
 
 
 class CommentsOnDocumentsView(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [customPermission.Authenticated]
     serializer_class = serializer.CommentsOnDocumentsSerializer
     queryset = models.CommentsOnDocumentsModel.objects.all()
 
@@ -668,7 +668,7 @@ class ReferenceVerificationView(generics.RetrieveUpdateAPIView):
     """
     Reference verification
     """
-    permission_classes = [permissions.IsAuthenticated, customPermission.IsEmployee]
+    permission_classes = [customPermission.Authenticated, customPermission.IsEmployee]
     serializer_class = serializer.ReferenceVerificationSerializer
     queryset = ReferenceInformationModel.objects.all()
     lookup_field = 'id'
@@ -714,7 +714,7 @@ class SelectedForOnboardView(generics.ListAPIView):
     """
     selected for onboard  candidate list
     """
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [customPermission.Authenticated]
     serializer_class = serializer.OnboardListSerializer
 
     def get_queryset(self):
@@ -731,6 +731,7 @@ class SelectedForOnboardView(generics.ListAPIView):
 
 
 class GenerateAppointmentLetterView(generics.CreateAPIView):
+    permission_classes = [customPermission.Authenticated]
     serializer_class = serializer.GenerateAppointmentLetterSerializer
     queryset = models.GenerateAppointmentLetterModel.objects.all()
 
@@ -751,6 +752,7 @@ class GenerateAppointmentLetterView(generics.CreateAPIView):
 
 
 class AppointmentLetterInformationView(generics.ListCreateAPIView):
+    permission_classes = [customPermission.Authenticated]
     serializer_class = serializer.GenerateAppointmentLetterSerializer
 
     def get_queryset(self):
@@ -789,6 +791,7 @@ class AppointmentLetterInformationView(generics.ListCreateAPIView):
 
 
 class OfficialDocumentsView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [customPermission.Authenticated]
     serializer_class = serializer.OfficialDocumentsSerializer
     queryset = OfficialDocumentsModel.objects.all()
     lookup_field = 'applicationId'

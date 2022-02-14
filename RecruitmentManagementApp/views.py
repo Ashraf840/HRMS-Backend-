@@ -7,21 +7,21 @@ from rest_framework.response import Response
 from UserApp.models import User
 from UserApp import utils
 from . import serializer
-from UserApp.permissions import IsHrUser, EditPermission, IsAuthor, IsEmployee, IsCandidateUser, IsAdminUser
+from UserApp.permissions import IsHrUser, EditPermission, IsAuthor, IsEmployee, IsCandidateUser, IsAdminUser,Authenticated
 from . import models
 from SupportApp import sms
 
 
 # For Admin to view all Users Information
 class AllUserDetailView(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [Authenticated]
     serializer_class = serializer.AllUserDetailsSerializer
     queryset = User.objects.all()
 
 
 # if user is HR then he/she can post a job
 class JobPostView(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsHrUser]
+    permission_classes = [Authenticated, IsHrUser]
     serializer_class = serializer.JobPostSerializer
     queryset = models.JobPostModel.objects.all()
 
@@ -40,7 +40,7 @@ class JobDescriptionView(generics.RetrieveAPIView):
 
 # Update/delete functionality for admin
 class JobDescriptionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsHrUser]
+    permission_classes = [Authenticated, IsHrUser]
     serializer_class = serializer.JobCreateSerializer
     lookup_field = 'id'
 
@@ -51,7 +51,7 @@ class JobDescriptionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
 
 # if User is Authenticated and IsCandidate then User can only apply
 class AppliedForJobView(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [Authenticated]
     serializer_class = serializer.AppliedForJobSerializer
     queryset = models.UserJobAppliedModel.objects.all()
 
@@ -140,7 +140,7 @@ class JobDataFilterView(generics.ListAPIView):
 
 
 class MyJobListView(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsAuthor, EditPermission]
+    permission_classes = [Authenticated, IsAuthor, EditPermission]
     serializer_class = serializer.MyJobListSerializer
 
     def get_queryset(self):
@@ -156,7 +156,7 @@ class FilterQuestionListView(generics.ListAPIView):
     """
     filter question list with search field
     """
-    permission_classes = [permissions.IsAuthenticated, IsEmployee]
+    permission_classes = [Authenticated, IsEmployee]
     serializer_class = serializer.FilterQuestionListSerializer
 
     def get_queryset(self):
@@ -169,7 +169,7 @@ class FilterQuestionListView(generics.ListAPIView):
 
 
 class CandidateFilterQuestionListView(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsCandidateUser]
+    permission_classes = [Authenticated, IsCandidateUser]
     serializer_class = serializer.FilterQuestionSerializer
 
     def get_queryset(self):
@@ -179,7 +179,7 @@ class CandidateFilterQuestionListView(generics.ListAPIView):
 
 
 class FilterQuestionView(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsEmployee]
+    permission_classes = [Authenticated, IsEmployee]
     serializer_class = serializer.FilterQuestionAnswerSerializer
 
     def get_queryset(self):
@@ -219,7 +219,7 @@ practical test response
 
 
 class FilterQuestionResponseView(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [Authenticated]
     serializer_class = serializer.FilterQuestionResponseSerializer
     queryset = models.FilterQuestionsResponseModelHR.objects.all()
 
@@ -341,13 +341,13 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
 
 
 class FilterQuestionResponseListView(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [Authenticated]
     serializer_class = serializer.FilterQuestionResponseSerializer
     queryset = models.FilterQuestionsResponseModelHR.objects.all()
 
 
 class PracticalTestView(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [Authenticated]
     serializer_class = serializer.PracticalTestSerializer
     queryset = models.PracticalTestModel.objects.all()
 
@@ -356,7 +356,7 @@ class PracticalTestView(generics.ListCreateAPIView):
 
 
 class PracticalTestForApplicantView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [Authenticated]
     serializer_class = serializer.PracticalTestSerializer
     lookup_field = 'jobInfo'
 
@@ -387,7 +387,7 @@ class PracticalTestForApplicantView(generics.ListCreateAPIView, generics.Retriev
 
 
 class JobCreateView(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [Authenticated]
     serializer_class = serializer.JobCreateSerializer
     queryset = models.JobPostModel.objects.all()
 
@@ -396,7 +396,7 @@ class JobCreateView(generics.ListCreateAPIView):
 
 
 class UpdateCandidateStatusView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsHrUser]
+    permission_classes = [Authenticated, IsHrUser]
     serializer_class = serializer.CandidateStatusChangeSerializer
     lookup_field = 'id'
 
@@ -406,7 +406,7 @@ class UpdateCandidateStatusView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class OnlineTestResponseListView(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [Authenticated]
     serializer_class = serializer.OnlineTestResponseSerializer
     parser_classes = [MultiPartParser, FormParser]
 
@@ -437,7 +437,7 @@ class OnlineTestResponseView(generics.CreateAPIView):
     """
     online test response view
     """
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [Authenticated]
     serializer_class = serializer.OnlineTestResponseSerializer
     queryset = models.OnlineTestResponseModel.objects.all()
 
@@ -524,7 +524,7 @@ class OnlineTestResponseView(generics.CreateAPIView):
 
 
 class PracticalTestResponseView(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [Authenticated]
     serializer_class = serializer.PracticalTestResponseSerializer
     queryset = models.PracticalTestResponseModel.objects.all()
 
@@ -563,7 +563,7 @@ User will upload during recruitment process -> ReferenceInformationView
 
 
 class DocumentSubmissionView(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [Authenticated]
     serializer_class = serializer.DocumentationSubmissionSerializer
     queryset = models.DocumentSubmissionModel.objects.all()
 
@@ -596,7 +596,7 @@ class DocumentSubmissionView(generics.CreateAPIView):
 
 
 class DocumentSubmissionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsAuthor]
+    permission_classes = [Authenticated, IsAuthor]
     serializer_class = serializer.DocumentationSubmissionSerializer
     # queryset = models.DocumentSubmissionModel.objects.all()
     lookup_field = 'applied_job'
@@ -607,7 +607,7 @@ class DocumentSubmissionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class ReferenceInformationView(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [Authenticated]
     serializer_class = serializer.ReferenceInformationSerializer
     queryset = models.ReferenceInformationModel.objects.all()
 
@@ -634,7 +634,7 @@ class ReferenceInformationView(generics.CreateAPIView):
 
 
 class ReferenceInformationUpdateDeleteView(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsAuthor]
+    permission_classes = [Authenticated, IsAuthor]
     serializer_class = serializer.ReferenceInformationSerializer
 
     # lookup_field = 'applied_job'

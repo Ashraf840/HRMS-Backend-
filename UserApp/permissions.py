@@ -4,6 +4,24 @@ from rest_framework import permissions
 import UserApp.models
 
 
+class Authenticated(permissions.BasePermission):
+    """
+    Allows access only to authenticated users.
+    """
+
+    def has_permission(self, request, view):
+        return bool(request.user and request.user.is_authenticated and request.user.email_validated)
+
+
+class EmployeeAuthenticated(permissions.BasePermission):
+    """
+    Allows access only to authenticated users.
+    """
+
+    def has_permission(self, request, view):
+        return bool(request.user and request.user.is_authenticated and request.user.email_validated and request.user.is_employee)
+
+
 class EditPermission(permissions.BasePermission):
     message = 'You are not authorize to edit this page'
 
@@ -40,7 +58,7 @@ class IsAdminUser(permissions.BasePermission):
     def has_permission(self, request, view):
         permission = False
         designation = UserApp.models.EmployeeInfoModel.objects.get(user_id=request.user).designation.designation
-        if designation == 'CEO' or designation == 'GM' or designation == 'HR'or designation == 'PM':
+        if designation == 'CEO' or designation == 'GM' or designation == 'HR' or designation == 'PM':
             permission = True
         return bool((request.user and request.user.is_hr) or permission)
 

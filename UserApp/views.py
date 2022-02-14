@@ -17,7 +17,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
 from . import models
 from . import serializer
-from .permissions import EditPermission, IsAuthor, IsCandidateUser
+from .permissions import EditPermission, IsAuthor, IsCandidateUser,Authenticated
 from .utils import Util
 
 
@@ -124,8 +124,39 @@ class VerifyEmailView(views.APIView):
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
 
 
+
+class EmployeeEmailVerifyView(views.APIView):
+    serializer_class = serializer.EmailVerificationSerializer
+
+    token_param_config = openapi.Parameter(
+        'token', in_=openapi.IN_QUERY, description='Description', type=openapi.TYPE_STRING)
+
+    @swagger_auto_schema(manual_parameters=[token_param_config])
+    def get(self, request):
+        token = request.GET.get('token')
+        try:
+            payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=['HS256'])
+            user = models.User.objects.get(id=payload['user_id'])
+            redirect_url = 'https://hrms.techforing.com/login'
+            if user.is_active:
+                if not user.email_validated:
+                    user.email_validated = True
+                    user.save()
+                    return HttpResponseRedirect(redirect_to=redirect_url)
+                else:
+                    return HttpResponseRedirect(redirect_to=redirect_url)
+
+            else:
+                return Response({'email': 'Activation failed'}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+        except jwt.ExpiredSignatureError as identifier:
+            return Response({'error': 'Activation Expired'}, status=status.HTTP_400_BAD_REQUEST)
+        except jwt.exceptions.DecodeError as identifier:
+            return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 class UserProfileCompletionPercentageView(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [Authenticated]
     serializer_class = serializer.UserProfileCompletionPercentageSerializer
 
     def get_queryset(self):
@@ -173,7 +204,7 @@ class DesignationView(generics.ListAPIView):
 
 
 class UpdateUserInfoView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [Authenticated]
     serializer_class = serializer.ProfileUpdateSerializer
     queryset = models.User.objects.all()
 
@@ -190,7 +221,7 @@ class UpdateUserInfoView(generics.RetrieveUpdateDestroyAPIView):
 # User info View
 # Retrieving data from User model data
 class UserInfoListView(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [Authenticated]
     serializer_class = serializer.UserSerializer
 
     def get_queryset(self):
@@ -201,13 +232,13 @@ class UserInfoListView(generics.ListCreateAPIView):
 # if user is authenticate user can Retrieve data
 # not needed
 class DepartmentView(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [Authenticated]
     serializer_class = serializer.UserDepartmentSerializer
     queryset = models.UserDepartmentModel.objects.all()
 
 
 class EducationLevelView(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [Authenticated]
     serializer_class = serializer.EducationLevelSerializer
     queryset = models.EducationLevelModel.objects.all()
 
@@ -216,7 +247,7 @@ class DegreeTitleView(generics.ListAPIView):
     """
     return data using the filter queries based on education level
     """
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [Authenticated]
     serializer_class = serializer.DegreeTitleSerializer
 
     def get_queryset(self):
@@ -225,7 +256,7 @@ class DegreeTitleView(generics.ListAPIView):
 
 
 class UserAcademicInfoListView(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [Authenticated]
     serializer_class = serializer.UserAcademicSerializer
 
     # queryset = models.UserAcademicInfoModel.objects.all()
@@ -235,7 +266,7 @@ class UserAcademicInfoListView(generics.ListCreateAPIView):
 
 
 class UserAcademicInfoRetrieveView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsCandidateUser]
+    permission_classes = [Authenticated, IsCandidateUser]
     serializer_class = serializer.UserAcademicSerializer
     # queryset = models.UserAcademicInfoModel.objects.all()
     lookup_field = 'id'
@@ -251,7 +282,7 @@ class UserAcademicInfoRetrieveView(generics.RetrieveUpdateDestroyAPIView):
 
 # specific User information retrieve
 class UserDetailView(generics.RetrieveAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [Authenticated]
     serializer_class = serializer.UserDetailsSerializer
     lookup_field = 'id'
 
@@ -267,7 +298,7 @@ class UserDetailView(generics.RetrieveAPIView):
 # Updating Academic information
 # academicInformation update view
 class AddAcademicInfoView(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsCandidateUser]
+    permission_classes = [Authenticated, IsCandidateUser]
     serializer_class = serializer.UserAcademicSerializer
     queryset = models.UserAcademicInfoModel.objects.all()
 
@@ -277,7 +308,7 @@ class AddAcademicInfoView(generics.CreateAPIView):
 
 # Academic Information Update Retrieve & Update View
 class AcademicInfoListView(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsCandidateUser]
+    permission_classes = [Authenticated, IsCandidateUser]
     serializer_class = serializer.UserAcademicSerializer
     queryset = models.UserAcademicInfoModel.objects.all()
 
@@ -290,7 +321,7 @@ class AcademicInfoListView(generics.ListAPIView):
 
 
 class UpdateAcademicInfoView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated, EditPermission, IsAuthor]
+    permission_classes = [Authenticated, EditPermission, IsAuthor]
     serializer_class = serializer.UpdateAcademicInformationSerializer
     # queryset = models.UserAcademicInfoModel.objects.all()
     lookup_field = 'id'
@@ -304,7 +335,7 @@ class UpdateAcademicInfoView(generics.RetrieveUpdateDestroyAPIView):
 
 # Work Experience CRUD Operations
 class AddWorkExperienceView(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [Authenticated]
     serializer_class = serializer.UserWorkExperienceSerializer
     queryset = models.UserWorkingExperienceModel.objects.all()
 
@@ -313,7 +344,7 @@ class AddWorkExperienceView(generics.CreateAPIView):
 
 
 class WorkInfoListView(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsCandidateUser]
+    permission_classes = [Authenticated, IsCandidateUser]
     serializer_class = serializer.UserAcademicSerializer
 
     # queryset = models.UserAcademicInfoModel.objects.all()
@@ -323,7 +354,7 @@ class WorkInfoListView(generics.ListAPIView):
 
 
 class UpdateWorkExpInfoView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [Authenticated]
     serializer_class = serializer.UserWorkExperienceSerializer
     # queryset = models.UserAcademicInfoModel.objects.all()
     lookup_field = 'id'
@@ -337,7 +368,7 @@ class UpdateWorkExpInfoView(generics.RetrieveUpdateDestroyAPIView):
 # Certification CRUD operations
 
 class AddCertificationsView(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [Authenticated]
     serializer_class = serializer.UserCertificationsSerializer
     queryset = models.UserCertificationsModel.objects.all()
 
@@ -346,7 +377,7 @@ class AddCertificationsView(generics.CreateAPIView):
 
 
 class CertificationInfoListView(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsCandidateUser]
+    permission_classes = [Authenticated, IsCandidateUser]
     serializer_class = serializer.UserCertificationsSerializer
 
     # queryset = models.UserCertificationsModel.objects.all()
@@ -356,7 +387,7 @@ class CertificationInfoListView(generics.ListAPIView):
 
 
 class UpdateCertificationsView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [Authenticated]
     serializer_class = serializer.UserCertificationsSerializer
     # queryset = models.UserAcademicInfoModel.objects.all()
     lookup_field = 'id'
@@ -370,7 +401,7 @@ class UpdateCertificationsView(generics.RetrieveUpdateDestroyAPIView):
 # Training CRUD operations
 
 class AddTrainingExperienceView(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [Authenticated]
     serializer_class = serializer.UserTrainingExperienceSerializer
     queryset = models.UserTrainingExperienceModel.objects.all()
 
@@ -386,7 +417,7 @@ class AddTrainingExperienceView(generics.CreateAPIView):
 
 
 class TrainingInfoListView(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsCandidateUser]
+    permission_classes = [Authenticated, IsCandidateUser]
     serializer_class = serializer.UserTrainingExperienceSerializer
 
     # queryset = models.UserAcademicInfoModel.objects.all()
@@ -396,7 +427,7 @@ class TrainingInfoListView(generics.ListAPIView):
 
 
 class UpdateTrainingExperienceView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [Authenticated]
     serializer_class = serializer.UserTrainingExperienceSerializer
     # queryset = models.UserAcademicInfoModel.objects.all()
     lookup_field = 'id'
@@ -411,7 +442,7 @@ class AddUserSkillsView(generics.ListCreateAPIView):
     """
     adding user skills if skill is not in the skill table automatically new will add to the database
     """
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [Authenticated]
     serializer_class = serializer.UserSkillsSerializer
     queryset = models.UserSkillsModel.objects.all()
 
@@ -434,7 +465,7 @@ class UpdateUserSkillsView(generics.RetrieveUpdateDestroyAPIView):
     """
     Updating user skills if skill is not in the skill table automatically new will add to the database
     """
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [Authenticated]
     serializer_class = serializer.UserSkillsSerializer
     queryset = models.UserSkillsModel.objects.all()
     lookup_field = 'user_id'
@@ -584,7 +615,7 @@ class ChangePasswordView(generics.UpdateAPIView):
     """
     serializer_class = serializer.ChangePasswordSerializer
     model = models.User
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = [Authenticated]
 
     def get_object(self, queryset=None):
         obj = self.request.user

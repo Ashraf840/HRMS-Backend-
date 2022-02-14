@@ -15,7 +15,7 @@ class EmployeeInformationModel(models.Model):
     Employee information model, emp salary, personal email, dpet, ect
     """
     user = models.OneToOneField(userModel.User, on_delete=models.CASCADE, related_name='employee_user_info')
-    personal_email = models.EmailField(unique=True, blank=True)
+    official_email = models.EmailField(unique=True, blank=True)
     emp_department = models.ForeignKey(userModel.UserDepartmentModel, on_delete=models.CASCADE, blank=True,
                                        related_name='employee_department')
     designation = models.ForeignKey(userModel.UserDesignationModel, on_delete=models.CASCADE, blank=True,

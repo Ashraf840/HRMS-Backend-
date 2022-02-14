@@ -1,7 +1,7 @@
 from rest_framework import generics, status, permissions
 from SupportApp import serializer, models
 from rest_framework.response import Response
-from UserApp.permissions import IsAdminUser, IsEmployee, IsCandidateUser, IsAuthor
+from UserApp.permissions import IsAdminUser, IsEmployee, IsCandidateUser, IsAuthor, Authenticated
 from UserApp.models import User
 from django.conf import settings
 from django.http import HttpResponse
@@ -11,13 +11,13 @@ import plivo
 
 # Create your views here.
 class TicketReasonView(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [Authenticated]
     serializer_class = serializer.TicketReasonSerializer
     queryset = models.TicketReasonModel.objects.all()
 
 
 class SupportTicketView(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [Authenticated]
     serializer_class = serializer.SupportTicketSerializer
 
     def perform_create(self, serializer):
@@ -33,7 +33,7 @@ class SupportTicketView(generics.ListCreateAPIView):
 
 
 class SupportMessageView(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticated, (IsAuthor or IsEmployee)]
+    permission_classes = [Authenticated, (IsAuthor or IsEmployee)]
     serializer_class = serializer.SupportMessageSerializer
 
     def get_queryset(self):
@@ -77,7 +77,7 @@ class SupportMessageView(generics.ListCreateAPIView):
 
 
 class CloseTicketView(generics.RetrieveUpdateAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsEmployee]
+    permission_classes = [Authenticated, IsEmployee]
     serializer_class = serializer.SupportTicketCloseSerializer
     lookup_field = 'id'
 
