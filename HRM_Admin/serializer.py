@@ -3,7 +3,19 @@ from HRM_Admin import models as hrm_admin
 from UserApp import models as user_model
 
 
+class EmployeeUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = user_model.User
+        fields = ['full_name']
+
+
 class EmployeeInformationSerializer(serializers.ModelSerializer):
+    user = serializers.SlugRelatedField(queryset=user_model.User.objects.all(), slug_field='full_name')
+    designation = serializers.SlugRelatedField(queryset=user_model.UserDesignationModel.objects.all(),
+                                               slug_field='designation')
+    emp_department = serializers.SlugRelatedField(queryset=user_model.UserDepartmentModel.objects.all(),
+                                                  slug_field='department')
+
     class Meta:
         model = hrm_admin.EmployeeInformationModel
         fields = '__all__'
