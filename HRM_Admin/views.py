@@ -101,5 +101,17 @@ class EmployeeInformationListView(generics.ListAPIView):
 
     def list(self, request, *args, **kwargs):
         serializer = self.get_serializer(self.get_queryset(), many=True)
-        responseData = serializer.data
-        return Response(responseData )
+
+        allUser = user_model.User.objects.filter(is_employee=True)
+        maleEmployee = allUser.filter(gender='Male').count()
+        femaleEmployee = allUser.filter(gender='Female').count()
+
+        serializerData = serializer.data
+        responseData = {
+            'employeeInfo': serializerData,
+            'gender': {
+                'male': maleEmployee,
+                'female': femaleEmployee
+            }
+        }
+        return Response(responseData)
