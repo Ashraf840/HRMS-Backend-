@@ -26,6 +26,7 @@ class JobPostModel(models.Model):
     shiftOption = (
         ('day', 'Day'),
         ('night', 'Night'),
+        ('roster', 'Roster'),
     )
     jobType = (
         ('part_time', 'Part Time'),

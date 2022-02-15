@@ -10,6 +10,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.core.mail import EmailMultiAlternatives
 
+
 # Create your views here.
 # class OnboardAnEmployeeView(generics.ListCreateAPIView):
 #     permission_classes = [custom_permission.EmployeeAuthenticated]
@@ -88,7 +89,6 @@ class AddEmployeeInfoView(generics.CreateAPIView):
         data = {'email_body': email_body, 'to_email': userInfo.email,
                 'email_subject': 'Verification Email'}
 
-
         utils.Util.send_email(data)
 
         return Response(serializer.data)
@@ -101,12 +101,10 @@ class EmployeeInformationListView(generics.ListAPIView):
 
     def list(self, request, *args, **kwargs):
         serializer = self.get_serializer(self.get_queryset(), many=True)
-
+        serializerData = serializer.data
         allUser = user_model.User.objects.filter(is_employee=True)
         maleEmployee = allUser.filter(gender='Male').count()
         femaleEmployee = allUser.filter(gender='Female').count()
-
-        serializerData = serializer.data
         responseData = {
             'employeeInfo': serializerData,
             'gender': {

@@ -140,7 +140,7 @@ class RecruitmentAdminGraphView(generics.ListAPIView):
     """
     permission_classes = [IsAuthenticated]
     serializer_class = serializer.AdminDashboardSerializer
-    queryset = UserJobAppliedModel.objects.all()[:5]
+    queryset = UserJobAppliedModel.objects.all().order_by('-id')[:5]
 
     def list(self, request, *args, **kwargs):
         # serializer = self.get_serializer(self.get_queryset(), many=True)
@@ -191,7 +191,7 @@ class RecruitmentAdminGraphView(generics.ListAPIView):
         }
 
         # recent job section
-        jobs = JobPostModel.objects.all().order_by('-lastDateOfApply')[:5]
+        jobs = JobPostModel.objects.all().order_by('-id')[:5]
         recentJobs = []
         for job in jobs:
             totalApplied = UserJobAppliedModel.objects.filter(jobPostId=job.id).count()
