@@ -43,7 +43,10 @@ class AddEmployeeInfoView(generics.CreateAPIView):
     queryset = hrm_admin_model.EmployeeSalaryModel
 
     def create(self, request, *args, **kwargs):
-        checkDesignation = user_model.UserDesignationModel.objects.get(id=request.data.get('employee.designation'))
+        print(request.data)
+        print(request.data.get('employee.designation'))
+        print(request.data['employee.designation'])
+        checkDesignation = user_model.UserDesignationModel.objects.get(id=request.data['employee.designation'])
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -61,7 +64,7 @@ class AddEmployeeInfoView(generics.CreateAPIView):
         userInfo.is_candidate = False
         userInfo.is_employee = True
         userInfo.email_validated = False
-        userInfo.email = request.data['employee.official_email']
+        userInfo.email = request.data['employee.email']
         userInfo.save()
 
         # Email activation email.
@@ -90,8 +93,7 @@ class AddEmployeeInfoView(generics.CreateAPIView):
                 'email_subject': 'Verification Email'}
 
         utils.Util.send_email(data)
-
-        return Response(serializer.data)
+        return Response({'message': 'Employee added successfully'})
 
 
 class EmployeeInformationListView(generics.ListAPIView):
