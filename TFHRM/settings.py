@@ -76,6 +76,9 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django_filters',
 
+    # Crontab
+    'django_crontab',
+
     # Installed Apps
     'UserApp',
     'RecruitmentManagementApp',
@@ -294,3 +297,8 @@ EMAIL_HOST_PASSWORD = 'tehctrahgvpjsuoz'
 # PLIVO_ID = 'MAOGQ0MZI1MTMZYZC4YW'
 # AUTH_TOKEN = 'N2JmMDljMjFmYmNkMDRjZDI5ODYwMzQ3OGU5NzRh'
 # SENDER_ID = '+1 904-207-7424'
+
+# Crontab
+CRONJOBS = [
+    ('0 0 * * *', 'HRM_User.cron.attendance_data')
+]

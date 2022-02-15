@@ -24,7 +24,8 @@ urlpatterns = [
                   path('', include('RecruitmentManagementApp.urls')),
                   path('api/', include('TFHRM_API_App.urls')),
                   path('api/hrm_admin/', include('HRM_Admin.urls')),
+                  path('api/hrm_user/', include('HRM_User.urls')),
                   # path('pdf/', include('pdfGenerator.urls')),
                   path('api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
-                    # reset/password_reset/confirm   url for confirm mail address
+                  # reset/password_reset/confirm   url for confirm mail address
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
