@@ -232,7 +232,7 @@ class AdminJobListView(generics.ListAPIView):
     serializer_class = serializer.AdminJobListSerializer
 
     def get_queryset(self):
-        queryset = JobPostModel.objects.all()
+        queryset = JobPostModel.objects.all().order_by('-id')
         search = self.request.query_params.get('search')
         jobType = self.request.query_params.get('jobType')
         department = self.request.query_params.get('department')
