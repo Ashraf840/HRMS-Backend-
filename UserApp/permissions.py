@@ -1,6 +1,8 @@
 from rest_framework import permissions
 
 # Custom Account Edit Permission Classes
+from rest_framework.permissions import SAFE_METHODS
+
 import UserApp.models
 
 
@@ -19,7 +21,21 @@ class EmployeeAuthenticated(permissions.BasePermission):
     """
 
     def has_permission(self, request, view):
-        return bool(request.user and request.user.is_authenticated and request.user.email_validated and request.user.is_employee)
+        return bool(
+            request.user and request.user.is_authenticated and request.user.email_validated and request.user.is_employee)
+
+
+class IsHrOrReadOnly(permissions.BasePermission):
+    """
+    Allows access only to authenticated users.
+    """
+
+    def has_permission(self, request, view):
+        return bool(
+            request.user and request.user.is_authenticated and request.user.email_validated
+            and request.user.is_hr or request.user.is_authenticated and request.user.is_employee
+            and request.user.email_validated and request.method in SAFE_METHODS
+        )
 
 
 class EditPermission(permissions.BasePermission):
