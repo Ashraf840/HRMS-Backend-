@@ -44,57 +44,80 @@ class AddEmployeeInfoView(generics.CreateAPIView):
     queryset = hrm_admin_model.EmployeeSalaryModel
 
     def create(self, request, *args, **kwargs):
-        checkDesignation = user_model.UserDesignationModel.objects.get(id=request.data['employee.designation'])
-        serializer = self.get_serializer(data=request.data)
+        user = request.data
+        serializer = self.serializer_class(data=user)
         serializer.is_valid(raise_exception=True)
-
-        userInfo = user_model.User.objects.get(id=request.data['employee.user'])
-
-        if checkDesignation.designation != 'CEO':
-            self.perform_create(serializer)
-            if checkDesignation.designation == 'HR':
-                userInfo.is_hr = True
-        else:
-            if userInfo.is_superuser:
-                # finalSalary = admin_operation_model.FinalSalaryNegotiationModel.objects.get(
-                #     jobApplication__userId__id=userInfo.id)
-                self.perform_create(serializer)
-            else:
-                return Response({'message': 'You are not superuser'})
-
-        userInfo.is_candidate = False
-        userInfo.is_employee = True
-        userInfo.email_validated = False
-        userInfo.email = request.data['employee.email']
-        userInfo.save()
-
-        # Email activation email.
-        token = RefreshToken.for_user(userInfo).access_token
+        serializer.save()
+        user_data = serializer.data
+        employee = user_data['employee']
+        user = user_model.User.objects.get(email=employee['user'].get('email'))
+        token = RefreshToken.for_user(user).access_token
         current_site = get_current_site(request).domain
-        relativeLink = reverse('tfhrm_api:employee-email-verify')
+        relativeLink = reverse('tfhrm_api:email-verify')
         absurl = 'http://' + current_site + relativeLink + "?token=" + str(token)
 
-        email_body = f'Hi {userInfo.full_name},\n' \
-                     f'Congratulation you profile has been updated. Please verify email and login into hrm site.' \
+        email_body = f'Hi {user.full_name},\n' \
+                     f'Congratulation You are officially appointed.To login please verify your account'\
                      f'Verification link {absurl}'
 
-        # html_message = render_to_string('html.html', context={})
-        # plain_message = strip_tags(html_message)
-        # email = EmailMultiAlternatives(
-        #     'subject',
-        #     plain_message,
-        #     'pranto.techforing@gmail.com',
-        #     ['zulkar.techforing@gmail.com']
-        # )
-        # email.attach_alternative(html_message,'text/html')
-        # email.send()
-        # email_body = plain_message
-
-        data = {'email_body': email_body, 'to_email': userInfo.email,
+        data = {'email_body': email_body, 'to_email': user.email,
                 'email_subject': 'Verification Email'}
 
         utils.Util.send_email(data)
-        return Response({'message': 'Employee added successfully'})
+        return Response(user_data)
+
+    # def create(self, request, *args, **kwargs):
+    #     checkDesignation = user_model.UserDesignationModel.objects.get(id=request.data['employee.designation'])
+    #     serializer = self.get_serializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #
+    #     userInfo = user_model.User.objects.get(id=request.data['employee.user'])
+    #
+    #     if checkDesignation.designation != 'CEO':
+    #         self.perform_create(serializer)
+    #         if checkDesignation.designation == 'HR':
+    #             userInfo.is_hr = True
+    #     else:
+    #         if userInfo.is_superuser:
+    #             # finalSalary = admin_operation_model.FinalSalaryNegotiationModel.objects.get(
+    #             #     jobApplication__userId__id=userInfo.id)
+    #             self.perform_create(serializer)
+    #         else:
+    #             return Response({'message': 'You are not superuser'})
+    #
+    #     userInfo.is_candidate = False
+    #     userInfo.is_employee = True
+    #     userInfo.email_validated = False
+    #     userInfo.email = request.data['employee.email']
+    #     userInfo.save()
+    #
+    #     # Email activation email.
+    #     token = RefreshToken.for_user(userInfo).access_token
+    #     current_site = get_current_site(request).domain
+    #     relativeLink = reverse('tfhrm_api:employee-email-verify')
+    #     absurl = 'http://' + current_site + relativeLink + "?token=" + str(token)
+    #
+    #     email_body = f'Hi {userInfo.full_name},\n' \
+    #                  f'Congratulation you profile has been updated. Please verify email and login into hrm site.' \
+    #                  f'Verification link {absurl}'
+    #
+    #     # html_message = render_to_string('html.html', context={})
+    #     # plain_message = strip_tags(html_message)
+    #     # email = EmailMultiAlternatives(
+    #     #     'subject',
+    #     #     plain_message,
+    #     #     'pranto.techforing@gmail.com',
+    #     #     ['zulkar.techforing@gmail.com']
+    #     # )
+    #     # email.attach_alternative(html_message,'text/html')
+    #     # email.send()
+    #     # email_body = plain_message
+    #
+    #     data = {'email_body': email_body, 'to_email': userInfo.email,
+    #             'email_subject': 'Verification Email'}
+    #
+    #     utils.Util.send_email(data)
+    #     return Response({'message': 'Employee added successfully'})
 
 
 class EmployeeInformationListView(generics.ListAPIView):
