@@ -1,6 +1,7 @@
 from django.db import models
 from UserApp import models as userModel
-
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 # Create your models here.
 
 project_status = (
@@ -75,3 +76,31 @@ class EmployeeBankInfoModel(models.Model):
 
     def __str__(self):
         return f'{self.employee.user.full_name}, {self.account_no}'
+
+
+class ModulePermissionModel(models.Model):
+    employee = models.OneToOneField(EmployeeInformationModel, on_delete=models.CASCADE,
+                                    related_name='module_permission_employee')
+    is_superuser = models.BooleanField(default=False)
+    is_ceo = models.BooleanField(default=False)
+    is_gm = models.BooleanField(default=False)
+    is_hrm = models.BooleanField(default=False)
+    is_hre = models.BooleanField(default=False)
+    is_accountant = models.BooleanField(default=False)
+    is_pm = models.BooleanField(default=False)
+    is_manager = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.employee}'
+
+
+@receiver(post_save, sender=EmployeeInformationModel)
+def create_practical_test_mark(sender, instance, created, **kwargs):
+    """
+    Create practical test response mark instance while submitting practical test response
+    """
+    if created:
+        data = ModulePermissionModel.objects.create(employee=instance)
+        return data
+
+
