@@ -3,6 +3,7 @@ from django.shortcuts import render
 from rest_framework import generics
 from HRM_Admin import models as hrm_admin_model, serializer as hrm_admin_serializer
 from UserApp import models as user_model, permissions as custom_permission, utils
+from AdminOperationApp import models as admin_operation_model
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
@@ -43,20 +44,20 @@ class AddEmployeeInfoView(generics.CreateAPIView):
     queryset = hrm_admin_model.EmployeeSalaryModel
 
     def create(self, request, *args, **kwargs):
-        print(request.data)
-        print(request.data.get('employee.designation'))
-        print(request.data['employee.designation'])
         checkDesignation = user_model.UserDesignationModel.objects.get(id=request.data['employee.designation'])
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         userInfo = user_model.User.objects.get(id=request.data['employee.user'])
+
         if checkDesignation.designation != 'CEO':
             self.perform_create(serializer)
             if checkDesignation.designation == 'HR':
                 userInfo.is_hr = True
         else:
             if userInfo.is_superuser:
+                # finalSalary = admin_operation_model.FinalSalaryNegotiationModel.objects.get(
+                #     jobApplication__userId__id=userInfo.id)
                 self.perform_create(serializer)
             else:
                 return Response({'message': 'You are not superuser'})
@@ -98,7 +99,7 @@ class AddEmployeeInfoView(generics.CreateAPIView):
 
 class EmployeeInformationListView(generics.ListAPIView):
     permission_classes = [custom_permission.EmployeeAuthenticated]
-    serializer_class = hrm_admin_serializer.EmployeeInformationSerializer
+    serializer_class = hrm_admin_serializer.EmployeeInformationListSerializer
     queryset = hrm_admin_model.EmployeeInformationModel.objects.all()
 
     def list(self, request, *args, **kwargs):
@@ -115,3 +116,15 @@ class EmployeeInformationListView(generics.ListAPIView):
             }
         }
         return Response(responseData)
+
+
+class EmployeeInformationView(generics.ListAPIView):
+    permission_classes = [custom_permission.Authenticated]
+    serializer_class = hrm_admin_serializer.EmployeeInformationSerializer
+
+    def get_queryset(self):
+        queryset = user_model.User.objects.filter(id=self.kwargs['user_id'])
+        return queryset
+
+
+

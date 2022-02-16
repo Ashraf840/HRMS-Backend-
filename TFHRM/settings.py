@@ -88,6 +88,7 @@ INSTALLED_APPS = [
     'SupportApp',
     'pdfGenerator',
     'HRM_Admin',
+    'HRM_controller',
     'HRM_User',
 
 ]

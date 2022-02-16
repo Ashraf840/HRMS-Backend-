@@ -24,6 +24,7 @@ urlpatterns = [
                   path('', include('RecruitmentManagementApp.urls')),
                   path('api/', include('TFHRM_API_App.urls')),
                   path('api/hrm_admin/', include('HRM_Admin.urls')),
+                  path('api/hrm_controller/', include('HRM_controller.urls')),
                   path('api/hrm_user/', include('HRM_User.urls')),
                   # path('pdf/', include('pdfGenerator.urls')),
                   path('api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
