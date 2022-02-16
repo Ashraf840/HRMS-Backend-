@@ -2,8 +2,6 @@
 Problem may occur just because of serializer name
 it may conflict
 """
-from _testcapi import raise_exception
-
 import jwt
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
@@ -11,13 +9,13 @@ from django.http.response import HttpResponseRedirect
 from django.urls import reverse
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import permissions, generics, status, views, parsers
+from rest_framework import permissions, generics, status, views
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
 from . import models
 from . import serializer
-from .permissions import EditPermission, IsAuthor, IsCandidateUser,Authenticated
+from .permissions import EditPermission, IsAuthor, IsCandidateUser, Authenticated
 from .utils import Util
 
 
@@ -198,7 +196,8 @@ class UserProfileCompletionPercentageView(generics.ListAPIView):
         return Response(percentage)
 
 
-class DesignationView(generics.ListAPIView):
+class DesignationView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     serializer_class = serializer.DesignationSerializer
     queryset = models.UserDesignationModel.objects.all()
 

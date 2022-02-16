@@ -26,15 +26,18 @@ class EmployeeInformationListSerializer(serializers.ModelSerializer):
 
 
 class EmployeeInformationCreateSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(validators=[UniqueValidator(queryset=user_model.User.objects.all(),
-                                                               message="Name already exists")])
+    # email = serializers.EmailField(validators=[UniqueValidator(queryset=user_model.User.objects.all(),
+    #                                                            message="Name already exists")])
+
+    user = user_serializer.RegisterSerializer()
 
     class Meta:
         model = hrm_admin.EmployeeInformationModel
-        fields = ['user', 'designation', 'emp_department', 'email', 'joining_date']
+        fields = ['user', 'designation', 'emp_department', 'joining_date']
 
 
 class SalaryInfoSerializer(serializers.ModelSerializer):
+    # user = user_serializer.RegisterSerializer()
     employee = EmployeeInformationCreateSerializer()
 
     class Meta:
@@ -47,10 +50,13 @@ class SalaryInfoSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         employeeInfo = validated_data.pop('employee')
-        employeeInfo.pop('email')
-        employee = hrm_admin.EmployeeInformationModel.objects.create(**employeeInfo)
-
+        user = employeeInfo.pop('user')
+        # employeeInfo.pop('email')
+        userData = user_model.User.objects.create(**user)
+        employee = hrm_admin.EmployeeInformationModel.objects.create(user=userData, **employeeInfo)
         salary = hrm_admin.EmployeeSalaryModel.objects.create(employee=employee, **validated_data)
+
+
         return salary
 
 
@@ -101,4 +107,3 @@ class EmployeeInformationSerializer(serializers.ModelSerializer):
         data.pop('user_permissions')
         data.pop('date_joined')
         return data
-
