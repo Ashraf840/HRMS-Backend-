@@ -96,9 +96,31 @@ class AllColleaguesView(generics.ListAPIView):
         return queryset
 
 
+class EmployeeEvaluationQuestionView(generics.ListAPIView):
+    """
+    1. Evaluation Questions and Possible Answers
+    """
+    serializer_class = hrm_serializers.EmployeeEvaluationQuestionSerializer
+    permission_classes = [user_permissions.EmployeeAuthenticated]
+    queryset = models.EmployeeCriteriaModel.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        queryset = models.EmployeeCriteriaModel.objects.all()
+        # data = json.loads(serialize('json', queryset))
+        data = hrm_serializers.EmployeeEvaluationQuestionSerializer(queryset, many=True)
+        print(queryset.count())
+        answers = []
+        for x, y in models.ratings:
+            answers.append({'id': x, 'criteria': y})
+        return response.Response({
+            'criteria': data.data,
+            'answers': answers,
+        })
+
+
 class EmployeeEvaluationView(generics.ListCreateAPIView):
     """
-    1. Employee Evaluation Create View
+    1. Employee Can Evaluate other Employees
     """
     serializer_class = hrm_serializers.EmployeeEvaluationSerializer
     permission_classes = [user_permissions.EmployeeAuthenticated]
@@ -148,18 +170,3 @@ class EmployeeEvaluationView(generics.ListCreateAPIView):
             })
         self.perform_create(ser)
         return response.Response(ser.data)
-
-
-class EmployeeEvaluationQuestionView(generics.ListAPIView):
-    serializer_class = hrm_serializers.EmployeeEvaluationQuestionSerializer
-    permission_classes = [user_permissions.EmployeeAuthenticated]
-    queryset = models.EmployeeCriteriaModel.objects.all()
-
-    def get(self, request, *args, **kwargs):
-        queryset = models.EmployeeCriteriaModel.objects.all()
-        # data = json.loads(serialize('json', queryset))
-        data = hrm_serializers.EmployeeEvaluationQuestionSerializer(queryset, many=True)
-        return response.Response({
-                'criteria': data.data,
-                'answers': models.ratings,
-            })
