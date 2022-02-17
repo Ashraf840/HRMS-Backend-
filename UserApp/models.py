@@ -138,6 +138,7 @@ class SkillsModel(models.Model):
 shift_options = (
     ('Day', 'Day'),
     ('Night', 'Night'),
+    ('Roster', 'Roster'),
 
 )
 

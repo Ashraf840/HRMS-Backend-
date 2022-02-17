@@ -15,7 +15,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
 from . import models
 from . import serializer
-from .permissions import EditPermission, IsAuthor, IsCandidateUser, Authenticated
+from .permissions import EditPermission, IsAuthor, IsCandidateUser, Authenticated, CandidateAdminAuthenticated
 from .utils import Util
 
 
@@ -197,7 +197,7 @@ class UserProfileCompletionPercentageView(generics.ListAPIView):
 
 
 class DesignationView(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [CandidateAdminAuthenticated]
     serializer_class = serializer.DesignationSerializer
     queryset = models.UserDesignationModel.objects.all()
 
@@ -231,13 +231,13 @@ class UserInfoListView(generics.ListCreateAPIView):
 # if user is authenticate user can Retrieve data
 # not needed
 class DepartmentView(generics.ListCreateAPIView):
-    permission_classes = [Authenticated]
+    permission_classes = [CandidateAdminAuthenticated]
     serializer_class = serializer.UserDepartmentSerializer
     queryset = models.UserDepartmentModel.objects.all()
 
 
 class EducationLevelView(generics.ListAPIView):
-    permission_classes = [Authenticated]
+    permission_classes = [CandidateAdminAuthenticated]
     serializer_class = serializer.EducationLevelSerializer
     queryset = models.EducationLevelModel.objects.all()
 
@@ -246,7 +246,7 @@ class DegreeTitleView(generics.ListAPIView):
     """
     return data using the filter queries based on education level
     """
-    permission_classes = [Authenticated]
+    permission_classes = [CandidateAdminAuthenticated]
     serializer_class = serializer.DegreeTitleSerializer
 
     def get_queryset(self):

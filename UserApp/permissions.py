@@ -25,6 +25,28 @@ class EmployeeAuthenticated(permissions.BasePermission):
             request.user and request.user.is_authenticated and request.user.email_validated and request.user.is_employee)
 
 
+class EmployeeAdminAuthenticated(permissions.BasePermission):
+    """
+    Allows access only to authenticated users.
+    """
+
+    def has_permission(self, request, view):
+        return bool(
+            (request.user and request.user.is_authenticated and request.user.email_validated
+             and request.user.is_employee) and (
+                        request.user.is_hr or request.user.is_superuser or request.method in SAFE_METHODS))
+
+class CandidateAdminAuthenticated(permissions.BasePermission):
+    """
+    Allows access only to authenticated users.
+    """
+
+    def has_permission(self, request, view):
+        return bool(
+            (request.user and request.user.is_authenticated and request.user.email_validated) and (
+                        request.user.is_hr or request.user.is_superuser or request.method in SAFE_METHODS))
+
+
 class IsHrOrReadOnly(permissions.BasePermission):
     """
     Allows access only to authenticated users.
@@ -86,7 +108,8 @@ class IsSuperUser(permissions.BasePermission):
     message = 'You are not authorised to view this page.'
 
     def has_permission(self, request, view):
-        return bool(request.user and request.user.is_authenticated and request.user.email_validated and request.user.is_superuser)
+        return bool(
+            request.user and request.user.is_authenticated and request.user.email_validated and request.user.is_superuser)
 
 
 class IsEmployee(permissions.BasePermission):
