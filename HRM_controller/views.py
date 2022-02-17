@@ -174,6 +174,11 @@ class EmployeeEvaluationView(generics.ListCreateAPIView):
 
 # Announcement/Notice Section
 class AnnouncementView(generics.ListCreateAPIView):
+    """
+    1. Section for creating announcement
+    2. Admin, HR, GM and CEO can create new announcement as well as view all announcements
+    3. Other employees can only view announcements related to their department
+    """
     serializer_class = hrm_serializers.AnnouncementSerializer
     permission_classes = [user_permissions.IsHrOrReadOnly]
 
@@ -190,8 +195,14 @@ class AnnouncementView(generics.ListCreateAPIView):
 
 
 class NoticeView(generics.ListCreateAPIView):
+    """
+    1. Section for creating notice
+    2. Admin, HR, GM and CEO can create new notice as well as view all notices
+    3. Other employees can only view notices related to their department
+    """
     serializer_class = hrm_serializers.NoticeSerializer
     permission_classes = [user_permissions.IsHrOrReadOnly]
+
     # queryset = models.NoticeModel.objects.all()
 
     def get_queryset(self):
@@ -202,4 +213,3 @@ class NoticeView(generics.ListCreateAPIView):
             queryset = models.NoticeModel.objects.filter(
                 department__in=[self.request.user.employee_user_info.emp_department])
         return queryset
-
