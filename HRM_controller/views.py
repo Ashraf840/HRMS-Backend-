@@ -155,5 +155,11 @@ class EmployeeEvaluationQuestionView(generics.ListAPIView):
     permission_classes = [user_permissions.EmployeeAuthenticated]
     queryset = models.EmployeeCriteriaModel.objects.all()
 
-    # def get(self, request, *args, **kwargs):
-    #
+    def get(self, request, *args, **kwargs):
+        queryset = models.EmployeeCriteriaModel.objects.all()
+        # data = json.loads(serialize('json', queryset))
+        data = hrm_serializers.EmployeeEvaluationQuestionSerializer(queryset, many=True)
+        return response.Response({
+                'criteria': data.data,
+                'answers': models.ratings,
+            })
