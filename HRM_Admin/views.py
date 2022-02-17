@@ -161,10 +161,19 @@ class EmployeeInformationView(generics.ListAPIView):
 
 
 class ManagePermissionAccessView(generics.RetrieveUpdateAPIView):
+    """
+    Custom permission added for all user
+    """
     permission_classes = [custom_permission.EmployeeAuthenticated, custom_permission.IsSuperUser]
     serializer_class = hrm_admin_serializer.ManagePermissionAccessSerializer
     queryset = hrm_admin_model.ModulePermissionModel.objects.all()
     lookup_field = 'employee__user_id'
+
+
+class EmployeeTrainingView(generics.ListCreateAPIView):
+    permission_classes = [custom_permission.EmployeeAdminAuthenticated]
+    serializer_class = hrm_admin_serializer.EmployeeTrainingSerializer
+    queryset = hrm_admin_model.TrainingModel.objects.all()
 
 
 

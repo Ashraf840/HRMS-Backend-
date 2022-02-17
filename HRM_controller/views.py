@@ -96,9 +96,31 @@ class AllColleaguesView(generics.ListAPIView):
         return queryset
 
 
+class EmployeeEvaluationQuestionView(generics.ListAPIView):
+    """
+    1. Evaluation Questions and Possible Answers
+    """
+    serializer_class = hrm_serializers.EmployeeEvaluationQuestionSerializer
+    permission_classes = [user_permissions.EmployeeAuthenticated]
+    queryset = models.EmployeeCriteriaModel.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        queryset = models.EmployeeCriteriaModel.objects.all()
+        # data = json.loads(serialize('json', queryset))
+        data = hrm_serializers.EmployeeEvaluationQuestionSerializer(queryset, many=True)
+        print(queryset.count())
+        answers = []
+        for x, y in models.ratings:
+            answers.append({'id': x, 'criteria': y})
+        return response.Response({
+            'criteria': data.data,
+            'answers': answers,
+        })
+
+
 class EmployeeEvaluationView(generics.ListCreateAPIView):
     """
-    1. Employee Evaluation Create View
+    1. Employee Can Evaluate other Employees
     """
     serializer_class = hrm_serializers.EmployeeEvaluationSerializer
     permission_classes = [user_permissions.EmployeeAuthenticated]
@@ -150,16 +172,46 @@ class EmployeeEvaluationView(generics.ListCreateAPIView):
         return response.Response(ser.data)
 
 
-class EmployeeEvaluationQuestionView(generics.ListAPIView):
-    serializer_class = hrm_serializers.EmployeeEvaluationQuestionSerializer
-    permission_classes = [user_permissions.EmployeeAuthenticated]
-    queryset = models.EmployeeCriteriaModel.objects.all()
+# Announcement/Notice Section
+class AnnouncementView(generics.ListCreateAPIView):
+    """
+    1. Section for creating announcement
+    2. Admin, HR, GM and CEO can create new announcement as well as view all announcements
+    3. Other employees can only view announcements related to their department
+    """
+    serializer_class = hrm_serializers.AnnouncementSerializer
+    permission_classes = [user_permissions.IsHrOrReadOnly]
 
-    def get(self, request, *args, **kwargs):
-        queryset = models.EmployeeCriteriaModel.objects.all()
-        # data = json.loads(serialize('json', queryset))
-        data = hrm_serializers.EmployeeEvaluationQuestionSerializer(queryset, many=True)
-        return response.Response({
-                'criteria': data.data,
-                'answers': models.ratings,
-            })
+
+    # queryset = models.AnnouncementModel.objects.all()
+
+    def get_queryset(self):
+        employee = self.request.user.employee_user_info.module_permission_employee
+        if employee.is_superuser or employee.is_ceo or employee.is_gm or employee.is_hrm:
+            queryset = models.AnnouncementModel.objects.all()
+        else:
+            queryset = models.AnnouncementModel.objects.filter(
+                department__in=[self.request.user.employee_user_info.emp_department])
+        return queryset
+
+
+class NoticeView(generics.ListCreateAPIView):
+    """
+    1. Section for creating notice
+    2. Admin, HR, GM and CEO can create new notice as well as view all notices
+    3. Other employees can only view notices related to their department
+    """
+    serializer_class = hrm_serializers.NoticeSerializer
+    permission_classes = [user_permissions.IsHrOrReadOnly]
+
+    # queryset = models.NoticeModel.objects.all()
+
+    def get_queryset(self):
+        employee = self.request.user.employee_user_info.module_permission_employee
+        if employee.is_superuser or employee.is_ceo or employee.is_gm or employee.is_hrm:
+            queryset = models.NoticeModel.objects.all()
+        else:
+            queryset = models.NoticeModel.objects.filter(
+                department__in=[self.request.user.employee_user_info.emp_department])
+        return queryset
+

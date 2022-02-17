@@ -11,6 +11,12 @@ project_status = (
     ('finished', 'Finished'),
 )
 
+employee_shift = (
+    ('day', 'Day'),
+    ('night', 'Night'),
+    ('roster', 'Roster'),
+)
+
 
 class EmployeeInformationModel(models.Model):
     """
@@ -22,6 +28,7 @@ class EmployeeInformationModel(models.Model):
                                        related_name='employee_department')
     designation = models.ForeignKey(userModel.UserDesignationModel, on_delete=models.CASCADE, blank=True,
                                     related_name='employee_designation')
+    shift = models.CharField(max_length=200, choices=employee_shift)
     joining_date = models.DateField(blank=True)
 
     def __str__(self):
@@ -96,10 +103,11 @@ class ModulePermissionModel(models.Model):
 
 
 class TrainingModel(models.Model):
+    department = models.ForeignKey(userModel.UserDepartmentModel, on_delete=models.CASCADE,
+                                   related_name='employee_training_department', blank=True, null=True)
+    passing_mark = models.PositiveIntegerField()
     training_name = models.CharField(max_length=255)
     training_link = models.URLField()
-    training_department = models.ForeignKey(userModel.UserDepartmentModel, on_delete=models.CASCADE,
-                                            related_name='training_department')
 
     def __str__(self):
         return f'{self.training_name}'

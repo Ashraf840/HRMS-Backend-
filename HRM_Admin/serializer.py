@@ -114,3 +114,11 @@ class ManagePermissionAccessSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'employee': {'read_only': True}
         }
+
+
+class EmployeeTrainingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = hrm_admin.TrainingModel
+        fields = '__all__'
+
+

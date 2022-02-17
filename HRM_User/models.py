@@ -1,12 +1,17 @@
 from django.db import models
 from UserApp import models as user_model
+from HRM_Admin import models as hrm_admin_model
 
 
 # Create your models here.
 
-# class EmployeeTestResult(models.Model):
-#     employee = models.ForeignKey(user_model.User, on_delete=models.CASCADE, related_name='employee_test_result_user')
-#     department = models.ForeignKey(user_model.UserDepartmentModel, on_delete=models.CASCADE, related_name='department_user')
+class EmployeeTrainingResponseResultModel(models.Model):
+    employee = models.ForeignKey(user_model.User, on_delete=models.CASCADE, related_name='employee_test_result_user')
+    test = models.ForeignKey(hrm_admin_model.TrainingModel, on_delete=models.CASCADE, related_name='employee_training_response')
+    test_mark = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f'{self.employee}, {self.test_mark}'
 
 # class EmployeeAttendanceAccessModel(models.Model):
 #     employee = models.OneToOneField(user_model.User, on_delete=models.CASCADE, related_name='attendance_access_user')
