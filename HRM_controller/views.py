@@ -84,6 +84,76 @@ class AllColleaguesView(generics.ListAPIView):
 
     def get_queryset(self):
         # if self.request.user.is
-        queryset = hrm_models.EmployeeInformationModel.objects.filter(~Q(user__email=self.request.user.email)).order_by('user__full_name')
+        employee = self.request.user.employee_user_info.module_permission_employee
+        if employee.is_superuser or employee.is_ceo or employee.is_gm or employee.is_hrm:
+            queryset = hrm_models.EmployeeInformationModel.objects.filter(
+                ~Q(user__email=self.request.user.email)).order_by('user__full_name')
+        else:
+            queryset = hrm_models.EmployeeInformationModel.objects.filter(
+                ~Q(user__email=self.request.user.email),
+                emp_department=self.request.user.employee_user_info.emp_department).order_by('user__full_name')
         # queryset = hrm_models.EmployeeInformationModel.objects.all()
         return queryset
+
+
+class EmployeeEvaluationView(generics.ListCreateAPIView):
+    """
+    1. Employee Evaluation Create View
+    """
+    serializer_class = hrm_serializers.EmployeeEvaluationSerializer
+    permission_classes = [user_permissions.EmployeeAuthenticated]
+    queryset = models.EmployeeEvaluationModel.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save(sender_user=self.request.user, receiver_user=user_models.User.objects.get(id=self.kwargs['id']))
+
+    def get(self, request, *args, **kwargs):
+        current_month = datetime.today().month
+        current_year = datetime.today().year
+        current_user = self.request.user
+
+        receiver_user = user_models.User.objects.get(id=self.kwargs['id'])
+
+        criteria = models.EmployeeCriteriaModel.objects.all()
+        evaluation = models.EmployeeEvaluationModel.objects.filter(sender_user=current_user,
+                                                                   receiver_user=receiver_user,
+                                                                   rating_date__month=current_month,
+                                                                   rating_date__year=current_year)
+        if criteria.count() <= evaluation.count():
+            return response.Response({
+                'message': 'Already Evaluated'
+            })
+        return response.Response('Create New')
+
+    def create(self, request, *args, **kwargs):
+        ser = self.get_serializer(data=request.data)
+        ser.is_valid(raise_exception=True)
+
+        current_month = datetime.today().month
+        current_year = datetime.today().year
+        current_user = self.request.user
+
+        receiver_user = user_models.User.objects.get(id=self.kwargs['id'])
+        current_criteria = (self.request.POST['criteria'])
+
+        criteria = models.EmployeeCriteriaModel.objects.all()
+        evaluation = models.EmployeeEvaluationModel.objects.filter(sender_user=current_user,
+                                                                   receiver_user=receiver_user,
+                                                                   rating_date__month=current_month,
+                                                                   rating_date__year=current_year)
+
+        if criteria.count() <= evaluation.count() or evaluation.filter(criteria__in=current_criteria):
+            return response.Response({
+                'message': 'Already Evaluated'
+            })
+        self.perform_create(ser)
+        return response.Response(ser.data)
+
+
+class EmployeeEvaluationQuestionView(generics.ListAPIView):
+    serializer_class = hrm_serializers.EmployeeEvaluationQuestionSerializer
+    permission_classes = [user_permissions.EmployeeAuthenticated]
+    queryset = models.EmployeeCriteriaModel.objects.all()
+
+    # def get(self, request, *args, **kwargs):
+    #
