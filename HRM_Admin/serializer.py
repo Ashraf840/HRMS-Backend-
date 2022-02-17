@@ -56,7 +56,6 @@ class SalaryInfoSerializer(serializers.ModelSerializer):
         employee = hrm_admin.EmployeeInformationModel.objects.create(user=userData, **employeeInfo)
         salary = hrm_admin.EmployeeSalaryModel.objects.create(employee=employee, **validated_data)
 
-
         return salary
 
 
@@ -84,7 +83,6 @@ class EmployeeInfoSerializer(serializers.ModelSerializer):
 
 
 class EmployeeInformationSerializer(serializers.ModelSerializer):
-    userInfo = user_serializer.UserInformationSerializer(source='user_info_user')
     academicInfo = user_serializer.UserAcademicDetailsSerializer(source='academic_info_user', many=True)
     certificationInfo = user_serializer.UserCertificationsSerializer(source='certification_info_user', many=True)
     trainingInfo = user_serializer.UserTrainingExperienceSerializer(source='training_info_user', many=True)
@@ -107,3 +105,12 @@ class EmployeeInformationSerializer(serializers.ModelSerializer):
         data.pop('user_permissions')
         data.pop('date_joined')
         return data
+
+
+class ManagePermissionAccessSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = hrm_admin.ModulePermissionModel
+        fields = '__all__'
+        extra_kwargs = {
+            'employee': {'read_only': True}
+        }

@@ -9,4 +9,5 @@ admin.site.register(hrm_admin.ProjectInformationModel)
 admin.site.register(hrm_admin.EmployeeBankInfoModel)
 admin.site.register(hrm_admin.EmployeeEmergencyContactModel)
 admin.site.register(hrm_admin.ModulePermissionModel)
+admin.site.register(hrm_admin.TrainingModel)
 

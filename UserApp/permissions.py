@@ -79,6 +79,16 @@ class IsAdminUser(permissions.BasePermission):
         return bool((request.user and request.user.is_hr) or permission)
 
 
+class IsSuperUser(permissions.BasePermission):
+    """
+    Superuser permission
+    """
+    message = 'You are not authorised to view this page.'
+
+    def has_permission(self, request, view):
+        return bool(request.user and request.user.is_authenticated and request.user.email_validated and request.user.is_superuser)
+
+
 class IsEmployee(permissions.BasePermission):
     """
     Allows access only to Admin users.

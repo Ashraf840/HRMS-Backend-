@@ -39,6 +39,9 @@ from django.core.mail import EmailMultiAlternatives
 
 
 class AddEmployeeInfoView(generics.CreateAPIView):
+    """
+    Add new employee from admin panel,
+    """
     permission_classes = [custom_permission.EmployeeAuthenticated]
     serializer_class = hrm_admin_serializer.SalaryInfoSerializer
     queryset = hrm_admin_model.EmployeeSalaryModel
@@ -121,6 +124,9 @@ class AddEmployeeInfoView(generics.CreateAPIView):
 
 
 class EmployeeInformationListView(generics.ListAPIView):
+    """
+    All Employee List
+    """
     permission_classes = [custom_permission.EmployeeAuthenticated]
     serializer_class = hrm_admin_serializer.EmployeeInformationListSerializer
     queryset = hrm_admin_model.EmployeeInformationModel.objects.all()
@@ -134,6 +140,7 @@ class EmployeeInformationListView(generics.ListAPIView):
         responseData = {
             'employeeInfo': serializerData,
             'gender': {
+                'total': allUser.count(),
                 'male': maleEmployee,
                 'female': femaleEmployee
             }
@@ -142,12 +149,25 @@ class EmployeeInformationListView(generics.ListAPIView):
 
 
 class EmployeeInformationView(generics.ListAPIView):
+    """
+    Employee information detailed view
+    """
     permission_classes = [custom_permission.Authenticated]
     serializer_class = hrm_admin_serializer.EmployeeInformationSerializer
 
     def get_queryset(self):
         queryset = user_model.User.objects.filter(id=self.kwargs['user_id'])
         return queryset
+
+
+class ManagePermissionAccessView(generics.RetrieveUpdateAPIView):
+    permission_classes = [custom_permission.EmployeeAuthenticated, custom_permission.IsSuperUser]
+    serializer_class = hrm_admin_serializer.ManagePermissionAccessSerializer
+    queryset = hrm_admin_model.ModulePermissionModel.objects.all()
+    lookup_field = 'employee__user_id'
+
+
+
 
 
 

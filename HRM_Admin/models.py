@@ -1,7 +1,7 @@
 from django.db import models
 from UserApp import models as userModel
 from django.dispatch import receiver
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_delete
 
 # Create your models here.
 
@@ -92,7 +92,17 @@ class ModulePermissionModel(models.Model):
     is_manager = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.employee}'
+        return f'{self.id} - {self.employee}'
+
+
+class TrainingModel(models.Model):
+    training_name = models.CharField(max_length=255)
+    training_link = models.URLField()
+    training_department = models.ForeignKey(userModel.UserDepartmentModel, on_delete=models.CASCADE,
+                                            related_name='training_department')
+
+    def __str__(self):
+        return f'{self.training_name}'
 
 
 @receiver(post_save, sender=EmployeeInformationModel)
@@ -106,3 +116,11 @@ def create_employee_module_permission(sender, instance, created, **kwargs):
         instance.user.save()
         data = ModulePermissionModel.objects.create(employee=instance)
         return data
+
+
+@receiver(pre_delete, sender=EmployeeInformationModel)
+def employee_deleted(sender, instance, using, **kwargs):
+    instance.user.is_employee = False
+    instance.user.is_hr = False
+    instance.user.is_active = False
+    instance.user.save()
