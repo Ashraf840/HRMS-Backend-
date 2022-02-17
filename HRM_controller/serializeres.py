@@ -54,29 +54,23 @@ class AllColleaguesSerializer(serializers.ModelSerializer):
     class Meta:
         model = hrm_models.EmployeeInformationModel
         fields = ['user', 'emp_department']
-        # depth = 2
 
-    # def to_representation(self, instance):
-    #     data = super(AllColleaguesSerializer, self).to_representation(instance)
-    #     user = data.get('user')
-    #     # emp_department = data.get('emp_department')
-    #
-    #     user.pop('password')
-    #     user.pop('last_login')
-    #     user.pop('nid')
-    #     user.pop('nationality')
-    #     user.pop('location')
-    #     user.pop('birthDate')
-    #     user.pop('date_joined')
-    #     user.pop('gender')
-    #     user.pop('is_staff')
-    #     user.pop('is_active')
-    #     user.pop('email_validated')
-    #     user.pop('is_superuser')
-    #     user.pop('is_employee')
-    #     user.pop('is_hr')
-    #     user.pop('is_candidate')
-    #     user.pop('groups')
-    #     user.pop('user_permissions')
-    #
-    #     return data
+
+class EmployeeEvaluationQuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.EmployeeCriteriaModel
+        fields = '__all__'
+
+
+class EmployeeEvaluationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.EmployeeEvaluationModel
+        fields = '__all__'
+        extra_kwargs = {
+            'sender_user': {
+                'read_only': True
+            },
+            'receiver_user': {
+                'read_only': True
+            }
+        }
