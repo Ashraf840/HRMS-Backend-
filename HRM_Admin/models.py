@@ -2,6 +2,7 @@ from django.db import models
 from UserApp import models as userModel
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+
 # Create your models here.
 
 project_status = (
@@ -95,12 +96,13 @@ class ModulePermissionModel(models.Model):
 
 
 @receiver(post_save, sender=EmployeeInformationModel)
-def create_practical_test_mark(sender, instance, created, **kwargs):
+def create_employee_module_permission(sender, instance, created, **kwargs):
     """
-    Create practical test response mark instance while submitting practical test response
+    Create permission access while assign employee info
     """
     if created:
+        instance.user.is_employee = True
+        instance.user.is_candidate = False
+        instance.user.save()
         data = ModulePermissionModel.objects.create(employee=instance)
         return data
-
-
