@@ -74,3 +74,17 @@ class EmployeeEvaluationSerializer(serializers.ModelSerializer):
                 'read_only': True
             }
         }
+
+
+# Announcement/Notice Section
+class AnnouncementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.AnnouncementModel
+        fields = '__all__'
+
+
+class NoticeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.NoticeModel
+        fields = '__all__'
+

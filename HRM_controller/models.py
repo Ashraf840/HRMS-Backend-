@@ -74,3 +74,16 @@ class EmployeeEvaluationModel(models.Model):
 
     def __str__(self):
         return f'{self.id} - {self.sender_user} - {self.receiver_user} - {self.ratings} - {self.rating_date.month}/{self.rating_date.year}'
+
+
+# Announcement and Notice
+class AnnouncementModel(models.Model):
+    department = models.ManyToManyField(user_model.UserDepartmentModel, related_name='announcement_department')
+    message = models.CharField(max_length=255)
+
+
+class NoticeModel(models.Model):
+    department = models.ManyToManyField(user_model.UserDepartmentModel, related_name='notice_department')
+    title = models.CharField(max_length=255)
+    message = models.TextField()
+    attachment = models.FileField()
