@@ -73,4 +73,4 @@ class EmployeeEvaluationModel(models.Model):
     rating_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.sender_user} - {self.receiver_user} - {self.ratings} - {self.rating_date.month}/{self.rating_date.year}'
+        return f'{self.id} - {self.sender_user} - {self.receiver_user} - {self.ratings} - {self.rating_date.month}/{self.rating_date.year}'
