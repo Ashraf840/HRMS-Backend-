@@ -124,7 +124,6 @@ class VerifyEmailView(views.APIView):
 
 class EmployeeEmailVerifyView(views.APIView):
     serializer_class = serializer.EmailVerificationSerializer
-
     token_param_config = openapi.Parameter(
         'token', in_=openapi.IN_QUERY, description='Description', type=openapi.TYPE_STRING)
 
@@ -136,6 +135,7 @@ class EmployeeEmailVerifyView(views.APIView):
             # print('token1')
             payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=['HS256'])
             # print('token2')
+            print(payload)
             user = models.User.objects.get(id=payload['user_id'])
             # print(email=payload['email'])
             redirect_url = 'https://hrms.techforing.com/login'
