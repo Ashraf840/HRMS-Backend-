@@ -9,3 +9,7 @@ admin.site.register(models.SurveyUserResponseModel)
 # Colleague Evaluation Section
 admin.site.register(models.EmployeeCriteriaModel)
 admin.site.register(models.EmployeeEvaluationModel)
+# Colleague Evaluation Section
+admin.site.register(models.AttendanceEmployeeShiftModel)
+admin.site.register(models.AttendanceEmployeeRelModel)
+admin.site.register(models.AttendanceEmployeeShiftRelModel)
