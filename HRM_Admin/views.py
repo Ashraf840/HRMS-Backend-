@@ -1,3 +1,5 @@
+import datetime
+
 from rest_framework.response import Response
 from rest_framework import generics
 from HRM_Admin import models as hrm_admin_model, serializer as hrm_admin_serializer
@@ -137,14 +139,19 @@ class EmployeeInformationListView(generics.ListAPIView):
         # print(serializer.data)
         serializerData = serializer.data
         allUser = user_model.User.objects.filter(is_employee=True)
+        # allUser = hrm_admin_model.EmployeeInformationModel.objects.filter()
         maleEmployee = allUser.filter(gender='Male').count()
         femaleEmployee = allUser.filter(gender='Female').count()
+        newEmployee = hrm_admin_model.EmployeeInformationModel.objects.filter(
+            joining_date__month=datetime.date.today().month, joining_date__year=datetime.date.today().year).count()
+
         responseData = {
             'employeeInfo': serializerData,
             'gender': {
                 'total': allUser.count(),
                 'male': maleEmployee,
-                'female': femaleEmployee
+                'female': femaleEmployee,
+                'new_employee': newEmployee
             }
         }
         return Response(responseData)
@@ -179,6 +186,3 @@ class EmployeeTrainingView(generics.ListCreateAPIView):
     permission_classes = [custom_permission.EmployeeAdminAuthenticated]
     serializer_class = hrm_admin_serializer.EmployeeTrainingSerializer
     queryset = hrm_admin_model.TrainingModel.objects.all()
-
-
-
