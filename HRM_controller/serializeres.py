@@ -88,3 +88,15 @@ class NoticeSerializer(serializers.ModelSerializer):
         model = models.NoticeModel
         fields = '__all__'
 
+
+# Attendance Section
+class AttendanceShiftSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.AttendanceEmployeeShiftModel
+        fields = '__all__'
+
+
+class AttendanceRegistrationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.AttendanceEmployeeRelModel
+        fields = '__all__'

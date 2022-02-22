@@ -1,6 +1,6 @@
 from django.db import models
 from UserApp import models as user_model
-from HRM_Admin import models as hrm_admin_model
+from HRM_Admin import models as hrm_models
 
 # Create your models here.
 
@@ -91,11 +91,29 @@ class NoticeModel(models.Model):
 
 
 # ==================Attendance Section==================
-# class AttendanceEmployeeRelModel(models.Model):
-#     employee = models.ForeignKey(hrm_admin_model.EmployeeInformationModel, on_delete=models.CASCADE,
-#                                  related_name='attendance_employee_relation')
-#     registration_id = models.CharField(max_length=50, unique=True)
-#     signature_id = models.CharField(max_length=50, unique=True)
-#
+class AttendanceEmployeeShiftModel(models.Model):
+    shift_name = models.CharField(max_length=255)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+
+    def __str__(self):
+        return f'{self.shift_name} - ({self.start_time}-{self.end_time})'
 
 
+class AttendanceEmployeeRelModel(models.Model):
+    employee = models.OneToOneField(hrm_models.EmployeeInformationModel, on_delete=models.CASCADE,
+                                    related_name='attendance_employee_relation', blank=True, null=True)
+    registration_id = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return f'{self.employee}, {self.registration_id}'
+
+
+class AttendanceEmployeeShiftRelModel(models.Model):
+    employee_relation = models.ForeignKey(AttendanceEmployeeRelModel, on_delete=models.CASCADE,
+                                          related_name='attendance_employee_relation')
+    shift = models.ForeignKey(AttendanceEmployeeShiftModel, on_delete=models.CASCADE,
+                              related_name='attendance_employee_shift')
+
+    def __str__(self):
+        return f'{self.employee_relation} - {self.shift}'

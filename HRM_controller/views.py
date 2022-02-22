@@ -1,3 +1,4 @@
+import requests
 from django.db.models import Q
 from django.shortcuts import render
 from rest_framework import generics, mixins, response, serializers
@@ -7,6 +8,7 @@ from datetime import datetime, date
 from django.core.serializers import serialize
 import json
 from HRM_Admin import models as hrm_models
+import ast
 
 
 # Create your views here.
@@ -182,7 +184,6 @@ class AnnouncementView(generics.ListCreateAPIView):
     serializer_class = hrm_serializers.AnnouncementSerializer
     permission_classes = [user_permissions.IsHrOrReadOnly]
 
-
     # queryset = models.AnnouncementModel.objects.all()
 
     def get_queryset(self):
@@ -215,3 +216,39 @@ class NoticeView(generics.ListCreateAPIView):
                 department__in=[self.request.user.employee_user_info.emp_department])
         return queryset
 
+
+# Attendance Section
+class AttendanceShiftView(generics.ListCreateAPIView, generics.RetrieveUpdateAPIView):
+    serializer_class = hrm_serializers.AttendanceShiftSerializer
+    permission_classes = [user_permissions.IsHrOrReadOnly]
+    queryset = models.AttendanceEmployeeShiftModel.objects.all()
+    lookup_field = 'id'
+
+
+class AttendanceRegistrationView(generics.ListCreateAPIView):
+    serializer_class = hrm_serializers.AttendanceRegistrationSerializer
+    permission_classes = [user_permissions.IsHrOrReadOnly]
+    queryset = models.AttendanceEmployeeRelModel.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        auth_user = 'Techforing_Ltd'
+        auth_code = "09345jljrksdfhhsr745h3j4w8dd9fs"
+        url = 'https://rumytechnologies.com/rams/json_api'
+
+        data = {
+            "operation": "fetch_user_in_device_list",
+            "auth_user": auth_user,
+            "auth_code": auth_code,
+        }
+
+        posts = requests.post(url, json=data)
+
+        all_employees = [item[0] for item in ast.literal_eval(posts.content.decode("utf-8").replace("u'", "'")
+                                                              .replace('((', '(').replace('))', ')'))]
+        for employee in all_employees:
+            try:
+                new_employee = models.AttendanceEmployeeRelModel.objects.get(registration_id=employee)
+            except:
+                new_employee = models.AttendanceEmployeeRelModel.objects.create(registration_id=employee)
+                new_employee.save()
+        return response.Response(all_employees)
