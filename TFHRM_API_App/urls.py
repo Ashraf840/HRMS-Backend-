@@ -35,7 +35,7 @@ app_name = 'tfhrm_api'
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),  # new user registration
     path('email-verify/', VerifyEmailView.as_view(), name="email-verify"),
-    path('employee_email-verify/', EmployeeEmailVerifyView.as_view(), name="employee-email-verify"),
+    path('employee-email-verify/', EmployeeEmailVerifyView.as_view(), name="employee-email-verify"),
     # email verification while creating new account
     path('users/', UserInfoListView.as_view(), name='users_list'),  # add new user from admin
     # Login url

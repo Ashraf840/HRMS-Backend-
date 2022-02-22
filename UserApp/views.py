@@ -122,7 +122,6 @@ class VerifyEmailView(views.APIView):
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-
 class EmployeeEmailVerifyView(views.APIView):
     serializer_class = serializer.EmailVerificationSerializer
 
@@ -132,14 +131,19 @@ class EmployeeEmailVerifyView(views.APIView):
     @swagger_auto_schema(manual_parameters=[token_param_config])
     def get(self, request):
         token = request.GET.get('token')
+        # print(token)
         try:
+            # print('token1')
             payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=['HS256'])
+            # print('token2')
             user = models.User.objects.get(id=payload['user_id'])
+            # print(email=payload['email'])
             redirect_url = 'https://hrms.techforing.com/login'
             if user.is_active:
                 if not user.email_validated:
                     user.email_validated = True
                     user.save()
+                    # return Response({'email': 'Successfully activated'}, status=status.HTTP_200_OK)
                     return HttpResponseRedirect(redirect_to=redirect_url)
                 else:
                     return HttpResponseRedirect(redirect_to=redirect_url)
@@ -150,7 +154,6 @@ class EmployeeEmailVerifyView(views.APIView):
             return Response({'error': 'Activation Expired'}, status=status.HTTP_400_BAD_REQUEST)
         except jwt.exceptions.DecodeError as identifier:
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 class UserProfileCompletionPercentageView(generics.ListAPIView):
@@ -641,5 +644,3 @@ class ChangePasswordView(generics.UpdateAPIView):
             return Response(response)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
