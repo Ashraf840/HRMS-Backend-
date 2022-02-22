@@ -182,6 +182,7 @@ class AnnouncementView(generics.ListCreateAPIView):
     serializer_class = hrm_serializers.AnnouncementSerializer
     permission_classes = [user_permissions.IsHrOrReadOnly]
 
+
     # queryset = models.AnnouncementModel.objects.all()
 
     def get_queryset(self):
@@ -213,3 +214,4 @@ class NoticeView(generics.ListCreateAPIView):
             queryset = models.NoticeModel.objects.filter(
                 department__in=[self.request.user.employee_user_info.emp_department])
         return queryset
+
