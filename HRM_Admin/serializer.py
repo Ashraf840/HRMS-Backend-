@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
-
+from RecruitmentManagementApp import serializer as recruitment_serializer
 from HRM_Admin import models as hrm_admin
 from UserApp import models as user_model, serializer as user_serializer
 
@@ -23,6 +23,38 @@ class EmployeeInformationListSerializer(serializers.ModelSerializer):
     class Meta:
         model = hrm_admin.EmployeeInformationModel
         fields = ['id', 'user', 'designation', 'emp_department', 'phone_number', 'email', 'joining_date']
+
+
+class EmployeeSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(source='user.email',
+                                   validators=[UniqueValidator(queryset=user_model.User.objects.all(),
+                                                               message="Email already exists")])
+
+    class Meta:
+        model = hrm_admin.EmployeeInformationModel
+        fields = ['email', 'user', 'designation', 'emp_department', 'joining_date']
+
+
+class OnboardNewEmployeeSerializer(serializers.ModelSerializer):
+    employee = EmployeeSerializer()
+
+    class Meta:
+        model = hrm_admin.EmployeeSalaryModel
+        fields = '__all__'
+        extra_kwargs = {
+            'employee': {'read_only': True},
+            # 'salary': {'read_only': True}
+        }
+
+    def create(self, validated_data):
+        employeeInfo = validated_data.pop('employee')
+        # user = employeeInfo.pop('user')
+        # employeeInfo.pop('email')
+        # userData = user_model.User.objects.create(**user)
+        employee = hrm_admin.EmployeeInformationModel.objects.create(**employeeInfo)
+        salary = hrm_admin.EmployeeSalaryModel.objects.create(employee=employee, **validated_data)
+
+        return salary
 
 
 class EmployeeInformationCreateSerializer(serializers.ModelSerializer):
@@ -91,6 +123,7 @@ class EmployeeInformationSerializer(serializers.ModelSerializer):
     jobPreference = user_serializer.UserJobPreferenceSerializer(source='job_preference_user', many=True)
     workExperience = user_serializer.UserWorkExperienceSerializer(source='working_experience_user', many=True)
     userSkills = user_serializer.UserSkillsSerializer(source='skills_user')
+    references = recruitment_serializer.ReferenceInformationSerializer(source='reference_information_user',many=True)
     employeeInfo = EmployeeInfoSerializer(source='employee_user_info')
 
     class Meta:
