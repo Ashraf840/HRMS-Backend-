@@ -18,6 +18,7 @@ class EmployeeInformationListSerializer(serializers.ModelSerializer):
     emp_department = serializers.SlugRelatedField(queryset=user_model.UserDepartmentModel.objects.all(),
                                                   slug_field='department')
     email = serializers.EmailField(source='user.email')
+    phone_number = serializers.EmailField(source='user.phone_number')
 
     class Meta:
         model = hrm_admin.EmployeeInformationModel
