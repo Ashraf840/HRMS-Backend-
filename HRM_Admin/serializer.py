@@ -76,6 +76,8 @@ class EmployeeInfoSerializer(serializers.ModelSerializer):
     employeeEmergencyContactInfo = EmployeeEmergencyContactSerializer(source='employee_emergency_contact_info',
                                                                       many=True)
     employeeSalaryInfo = EmployeeBankInformationSerializer(source='employee_bank_info')
+    designation = serializers.StringRelatedField()
+    emp_department = serializers.StringRelatedField()
 
     class Meta:
         model = hrm_admin.EmployeeInformationModel
