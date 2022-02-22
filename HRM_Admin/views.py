@@ -1,5 +1,5 @@
 import datetime
-
+from django.db.models import Q
 from rest_framework.response import Response
 from rest_framework import generics
 from HRM_Admin import models as hrm_admin_model, serializer as hrm_admin_serializer
@@ -132,23 +132,30 @@ class EmployeeInformationListView(generics.ListAPIView):
     """
     permission_classes = [custom_permission.EmployeeAuthenticated]
     serializer_class = hrm_admin_serializer.EmployeeInformationListSerializer
-    queryset = hrm_admin_model.EmployeeInformationModel.objects.all()
+
+    def get_queryset(self):
+        search = self.request.query_params.get('search')
+        queryset = hrm_admin_model.EmployeeInformationModel.objects.all()
+        return queryset.filter(Q(user__full_name__icontains=search) |
+                               Q(emp_department__department__icontains=search) |
+                               Q(designation__designation__icontains=search)|
+                               Q(user__email__icontains=search))
 
     def list(self, request, *args, **kwargs):
         serializer = self.get_serializer(self.get_queryset(), many=True)
         # print(serializer.data)
         serializerData = serializer.data
-        allUser = user_model.User.objects.filter(is_employee=True)
-        # allUser = hrm_admin_model.EmployeeInformationModel.objects.filter()
-        maleEmployee = allUser.filter(gender='Male').count()
-        femaleEmployee = allUser.filter(gender='Female').count()
+        allUser = hrm_admin_model.EmployeeInformationModel.objects.filter()
+        totalEmployee = allUser.count()
+        maleEmployee = allUser.filter(user__gender='Male').count()
+        femaleEmployee = allUser.filter(user__gender='Female').count()
         newEmployee = hrm_admin_model.EmployeeInformationModel.objects.filter(
             joining_date__month=datetime.date.today().month, joining_date__year=datetime.date.today().year).count()
 
         responseData = {
             'employeeInfo': serializerData,
             'gender': {
-                'total': allUser.count(),
+                'total': totalEmployee,
                 'male': maleEmployee,
                 'female': femaleEmployee,
                 'new_employee': newEmployee
