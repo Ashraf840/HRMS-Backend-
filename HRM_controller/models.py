@@ -1,5 +1,6 @@
 from django.db import models
 from UserApp import models as user_model
+from HRM_Admin import models as hrm_admin_model
 
 # Create your models here.
 
@@ -87,3 +88,14 @@ class NoticeModel(models.Model):
     title = models.CharField(max_length=255)
     message = models.TextField()
     attachment = models.FileField()
+
+
+# ==================Attendance Section==================
+# class AttendanceEmployeeRelModel(models.Model):
+#     employee = models.ForeignKey(hrm_admin_model.EmployeeInformationModel, on_delete=models.CASCADE,
+#                                  related_name='attendance_employee_relation')
+#     registration_id = models.CharField(max_length=50, unique=True)
+#     signature_id = models.CharField(max_length=50, unique=True)
+#
+
+

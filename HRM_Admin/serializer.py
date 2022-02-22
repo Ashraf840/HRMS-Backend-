@@ -21,7 +21,7 @@ class EmployeeInformationListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = hrm_admin.EmployeeInformationModel
-        fields = ['user', 'designation', 'emp_department', 'email', 'joining_date']
+        fields = ['id', 'user', 'designation', 'emp_department', 'email', 'joining_date']
 
 
 class EmployeeInformationCreateSerializer(serializers.ModelSerializer):
@@ -101,7 +101,9 @@ class EmployeeInformationSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super(EmployeeInformationSerializer, self).to_representation(instance)
         data.pop('groups')
+        data.pop('last_login')
         data.pop('user_permissions')
+        data.pop('email_validated')
         data.pop('date_joined')
         return data
 

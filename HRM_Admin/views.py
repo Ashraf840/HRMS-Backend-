@@ -158,7 +158,10 @@ class EmployeeInformationView(generics.ListAPIView):
     serializer_class = hrm_admin_serializer.EmployeeInformationSerializer
 
     def get_queryset(self):
-        queryset = user_model.User.objects.filter(id=self.kwargs['user_id'])
+        if self.request.user.is_hr or self.request.user.is_superuser:
+            queryset = user_model.User.objects.filter(id=self.kwargs['user_id'], is_employee=True)
+        else:
+            queryset = user_model.User.objects.filter(id=self.request.user.id)
         return queryset
 
 
@@ -176,3 +179,6 @@ class EmployeeTrainingView(generics.ListCreateAPIView):
     permission_classes = [custom_permission.EmployeeAdminAuthenticated]
     serializer_class = hrm_admin_serializer.EmployeeTrainingSerializer
     queryset = hrm_admin_model.TrainingModel.objects.all()
+
+
+
