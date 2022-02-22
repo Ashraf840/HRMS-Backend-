@@ -21,7 +21,7 @@ class EmployeeInformationListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = hrm_admin.EmployeeInformationModel
-        fields = ['id', 'user', 'designation', 'emp_department', 'email', 'joining_date']
+        fields = ['id', 'user', 'designation', 'emp_department', 'phone_number', 'email', 'joining_date']
 
 
 class EmployeeInformationCreateSerializer(serializers.ModelSerializer):
