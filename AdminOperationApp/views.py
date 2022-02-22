@@ -612,6 +612,7 @@ class SelectedForDocumentView(generics.ListAPIView):
 
 
 class AdminDocumentVerificationView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.AdminDocumentVerificationSerializer
 
     def get_queryset(self):

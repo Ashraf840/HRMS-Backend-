@@ -6,12 +6,16 @@ from UserApp import models as user_model, serializer as user_serializer
 
 
 class EmployeeUserSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = user_model.User
         fields = ['id', 'full_name']
 
 
 class EmployeeInformationListSerializer(serializers.ModelSerializer):
+    """
+    new employee add without career site.
+    """
     user = EmployeeUserSerializer()
     designation = serializers.SlugRelatedField(queryset=user_model.UserDesignationModel.objects.all(),
                                                slug_field='designation')
@@ -26,6 +30,9 @@ class EmployeeInformationListSerializer(serializers.ModelSerializer):
 
 
 class EmployeeSerializer(serializers.ModelSerializer):
+    """
+        Employee information update during onboard session
+    """
     email = serializers.EmailField(source='user.email',
                                    validators=[UniqueValidator(queryset=user_model.User.objects.all(),
                                                                message="Email already exists")])
