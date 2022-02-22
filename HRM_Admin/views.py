@@ -1,5 +1,4 @@
 from rest_framework.response import Response
-from django.shortcuts import render
 from rest_framework import generics
 from HRM_Admin import models as hrm_admin_model, serializer as hrm_admin_serializer
 from UserApp import models as user_model, permissions as custom_permission, utils
@@ -7,6 +6,8 @@ from AdminOperationApp import models as admin_operation_model
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
+
+# email formatting library file
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.core.mail import EmailMultiAlternatives
@@ -60,7 +61,7 @@ class AddEmployeeInfoView(generics.CreateAPIView):
         absurl = 'http://' + current_site + relativeLink + "?token=" + str(token)
 
         email_body = f'Hi {user.full_name},\n' \
-                     f'Congratulation You are officially appointed.To login please verify your account'\
+                     f'Congratulation You are officially appointed.To login please verify your account' \
                      f'Verification link {absurl}'
 
         data = {'email_body': email_body, 'to_email': user.email,
@@ -133,6 +134,7 @@ class EmployeeInformationListView(generics.ListAPIView):
 
     def list(self, request, *args, **kwargs):
         serializer = self.get_serializer(self.get_queryset(), many=True)
+        # print(serializer.data)
         serializerData = serializer.data
         allUser = user_model.User.objects.filter(is_employee=True)
         maleEmployee = allUser.filter(gender='Male').count()
@@ -174,9 +176,3 @@ class EmployeeTrainingView(generics.ListCreateAPIView):
     permission_classes = [custom_permission.EmployeeAdminAuthenticated]
     serializer_class = hrm_admin_serializer.EmployeeTrainingSerializer
     queryset = hrm_admin_model.TrainingModel.objects.all()
-
-
-
-
-
-

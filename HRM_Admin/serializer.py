@@ -17,8 +17,7 @@ class EmployeeInformationListSerializer(serializers.ModelSerializer):
                                                slug_field='designation')
     emp_department = serializers.SlugRelatedField(queryset=user_model.UserDepartmentModel.objects.all(),
                                                   slug_field='department')
-    email = serializers.EmailField(validators=[UniqueValidator(queryset=user_model.User.objects.all(),
-                                                               message="Name already exists")])
+    email = serializers.EmailField(source='user.email')
 
     class Meta:
         model = hrm_admin.EmployeeInformationModel
@@ -120,5 +119,3 @@ class EmployeeTrainingSerializer(serializers.ModelSerializer):
     class Meta:
         model = hrm_admin.TrainingModel
         fields = '__all__'
-
-
