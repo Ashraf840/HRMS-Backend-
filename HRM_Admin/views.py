@@ -138,7 +138,7 @@ class EmployeeInformationListView(generics.ListAPIView):
         queryset = hrm_admin_model.EmployeeInformationModel.objects.all()
         return queryset.filter(Q(user__full_name__icontains=search) |
                                Q(emp_department__department__icontains=search) |
-                               Q(designation__designation__icontains=search)|
+                               Q(designation__designation__icontains=search) |
                                Q(user__email__icontains=search))
 
     def list(self, request, *args, **kwargs):
@@ -149,8 +149,10 @@ class EmployeeInformationListView(generics.ListAPIView):
         totalEmployee = allUser.count()
         maleEmployee = allUser.filter(user__gender='Male').count()
         femaleEmployee = allUser.filter(user__gender='Female').count()
+        today = datetime.date.today()
+        prvDay = today - datetime.timedelta(days=30)
         newEmployee = hrm_admin_model.EmployeeInformationModel.objects.filter(
-            joining_date__month=datetime.date.today().month, joining_date__year=datetime.date.today().year).count()
+            joining_date__range=[prvDay, today]).count()
 
         responseData = {
             'employeeInfo': serializerData,
@@ -193,3 +195,4 @@ class EmployeeTrainingView(generics.ListCreateAPIView):
     permission_classes = [custom_permission.EmployeeAdminAuthenticated]
     serializer_class = hrm_admin_serializer.EmployeeTrainingSerializer
     queryset = hrm_admin_model.TrainingModel.objects.all()
+
