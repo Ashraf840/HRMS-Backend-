@@ -225,10 +225,11 @@ class AttendanceShiftView(generics.ListCreateAPIView, generics.RetrieveUpdateAPI
     lookup_field = 'id'
 
 
-class AttendanceRegistrationView(generics.ListCreateAPIView):
+class AttendanceRegistrationView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
     serializer_class = hrm_serializers.AttendanceRegistrationSerializer
     permission_classes = [user_permissions.IsHrOrReadOnly]
     queryset = models.AttendanceEmployeeRelModel.objects.all()
+    lookup_field = 'id'
 
     def get(self, request, *args, **kwargs):
         auth_user = 'Techforing_Ltd'
@@ -246,9 +247,10 @@ class AttendanceRegistrationView(generics.ListCreateAPIView):
         all_employees = [item[0] for item in ast.literal_eval(posts.content.decode("utf-8").replace("u'", "'")
                                                               .replace('((', '(').replace('))', ')'))]
         for employee in all_employees:
-            try:
-                new_employee = models.AttendanceEmployeeRelModel.objects.get(registration_id=employee)
-            except:
-                new_employee = models.AttendanceEmployeeRelModel.objects.create(registration_id=employee)
-                new_employee.save()
+            new_employee = models.AttendanceEmployeeRelModel.objects.get_or_create(registration_id=employee)
+            # try:
+            #     new_employee = models.AttendanceEmployeeRelModel.objects.get_or_create(registration_id=employee)
+            # except:
+            #     new_employee = models.AttendanceEmployeeRelModel.objects.create(registration_id=employee)
+            #     # new_employee.save()
         return response.Response(all_employees)
