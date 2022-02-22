@@ -124,7 +124,7 @@ class EmployeeInformationSerializer(serializers.ModelSerializer):
     workExperience = user_serializer.UserWorkExperienceSerializer(source='working_experience_user', many=True)
     userSkills = user_serializer.UserSkillsSerializer(source='skills_user')
     references = recruitment_serializer.ReferenceInformationSerializer(source='reference_information_user', many=True)
-    documents = recruitment_serializer.DocumentationSubmissionSerializer(source='document_submission_user')
+    documents = recruitment_serializer.DocumentationSubmissionSerializer(source='document_submission_user',many=True)
     employeeInfo = EmployeeInfoSerializer(source='employee_user_info')
 
     class Meta:
