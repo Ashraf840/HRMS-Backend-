@@ -1,15 +1,14 @@
 import datetime
-from django.http import Http404
 from django.db.models import Q
-from rest_framework import generics, permissions, status
+from django.http import Http404
+from rest_framework import generics, status
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
-from UserApp.models import User
 from UserApp import utils
-from . import serializer
-from UserApp.permissions import IsHrUser, EditPermission, IsAuthor, IsEmployee, IsCandidateUser, IsAdminUser,Authenticated
+from UserApp.models import User
+from UserApp.permissions import IsHrUser, EditPermission, IsAuthor, IsEmployee, IsCandidateUser, Authenticated
 from . import models
-from SupportApp import sms
+from . import serializer
 
 
 # For Admin to view all Users Information
@@ -496,19 +495,38 @@ class OnlineTestResponseView(generics.CreateAPIView):
                                     status=update.status)
                                 jobApplication.save()
                                 # email sending option
-                                email_body = 'Hi ' + self.request.user.full_name + \
-                                             f'Congratulations! We are happy to inform you that you have passed the {sta.status} and have been selected for the second round of interview which consists of a {update.status}.' \
-                                             f' Please read carefully and submit the task within the given deadline. We expect you to carry out the task with full honesty. Follow the deadline and instructions easily.' \
-                                             f'Deadline: {datetime.date.today() + datetime.timedelta(hours=72)}\n\n' \
-                                             f'Go to our recruitment portal and follow the instruction\n' \
-                                             f'Thanks & Regards,\n' \
-                                             f'HR Department\n' \
-                                             f'TechForing Limited.\n' \
-                                             f'www.techforing.com'
+                                if update.status == 'F2F Interview':
+                                    email_body = 'Hi ' + self.request.user.full_name + \
+                                                 f'Congratulations! We are happy to inform you that you have passed the ' \
+                                                 f'{sta.status} and have been selected for the second round of interview ' \
+                                                 f'Go to our recruitment portal and follow the instruction\n' \
+                                                 f'Thanks & Regards,\n' \
+                                                 f'HR Department\n' \
+                                                 f'TechForing Limited.\n' \
+                                                 f'www.techforing.com'
 
-                                data = {'email_body': email_body, 'to_email': self.request.user.email,
-                                        'email_subject': f'Status of the {statusList[i]} Screening Test'}
-                                utils.Util.send_email(data)
+                                    data = {'email_body': email_body, 'to_email': self.request.user.email,
+                                            'email_subject': f'Status of the {statusList[i]} Screening Test'}
+                                    utils.Util.send_email(data)
+                                else:
+
+                                    email_body = 'Hi ' + self.request.user.full_name + \
+                                                 f'Congratulations! We are happy to inform you that you have passed ' \
+                                                 f'the {sta.status} and have been selected for the second round of' \
+                                                 f' interview which consists of a {update.status}.' \
+                                                 f' Please read carefully and submit the task within the given' \
+                                                 f' deadline. We expect you to carry out the task with full honesty. ' \
+                                                 f'Follow the deadline and instructions easily.' \
+                                                 f'Deadline: {datetime.date.today() + datetime.timedelta(hours=72)}\n\n' \
+                                                 f'Go to our recruitment portal and follow the instruction\n' \
+                                                 f'Thanks & Regards,\n' \
+                                                 f'HR Department\n' \
+                                                 f'TechForing Limited.\n' \
+                                                 f'www.techforing.com'
+
+                                    data = {'email_body': email_body, 'to_email': self.request.user.email,
+                                            'email_subject': f'Status of the {statusList[i]} Screening Test'}
+                                    utils.Util.send_email(data)
                                 break
                         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
                     return Response({'testName': serializer.data['testName'], 'testMark': serializer.data['testMark']})
@@ -558,7 +576,6 @@ class PracticalTestResponseView(generics.CreateAPIView):
 """
 Document submission section during -> DocumentSubmissionView
 User will upload during recruitment process -> ReferenceInformationView
-
 """
 
 

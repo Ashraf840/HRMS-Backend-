@@ -86,15 +86,19 @@ class AllColleaguesView(generics.ListAPIView):
 
     def get_queryset(self):
         # if self.request.user.is
-        employee = self.request.user.employee_user_info.module_permission_employee
-        if employee.is_superuser or employee.is_ceo or employee.is_gm or employee.is_hrm:
+        try:
+            employee = self.request.user.employee_user_info.module_permission_employee
+            if employee.is_superuser or employee.is_ceo or employee.is_gm or employee.is_hrm:
+                queryset = hrm_models.EmployeeInformationModel.objects.filter(
+                    ~Q(user__email=self.request.user.email)).order_by('user__full_name')
+            else:
+                queryset = hrm_models.EmployeeInformationModel.objects.filter(
+                    ~Q(user__email=self.request.user.email),
+                    emp_department=self.request.user.employee_user_info.emp_department).order_by('user__full_name')
+            # queryset = hrm_models.EmployeeInformationModel.objects.all()
+        except:
             queryset = hrm_models.EmployeeInformationModel.objects.filter(
                 ~Q(user__email=self.request.user.email)).order_by('user__full_name')
-        else:
-            queryset = hrm_models.EmployeeInformationModel.objects.filter(
-                ~Q(user__email=self.request.user.email),
-                emp_department=self.request.user.employee_user_info.emp_department).order_by('user__full_name')
-        # queryset = hrm_models.EmployeeInformationModel.objects.all()
         return queryset
 
 
