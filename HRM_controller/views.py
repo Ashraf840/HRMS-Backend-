@@ -86,15 +86,19 @@ class AllColleaguesView(generics.ListAPIView):
 
     def get_queryset(self):
         # if self.request.user.is
-        employee = self.request.user.employee_user_info.module_permission_employee
-        if employee.is_superuser or employee.is_ceo or employee.is_gm or employee.is_hrm:
+        try:
+            employee = self.request.user.employee_user_info.module_permission_employee
+            if employee.is_superuser or employee.is_ceo or employee.is_gm or employee.is_hrm:
+                queryset = hrm_models.EmployeeInformationModel.objects.filter(
+                    ~Q(user__email=self.request.user.email)).order_by('user__full_name')
+            else:
+                queryset = hrm_models.EmployeeInformationModel.objects.filter(
+                    ~Q(user__email=self.request.user.email),
+                    emp_department=self.request.user.employee_user_info.emp_department).order_by('user__full_name')
+            # queryset = hrm_models.EmployeeInformationModel.objects.all()
+        except:
             queryset = hrm_models.EmployeeInformationModel.objects.filter(
                 ~Q(user__email=self.request.user.email)).order_by('user__full_name')
-        else:
-            queryset = hrm_models.EmployeeInformationModel.objects.filter(
-                ~Q(user__email=self.request.user.email),
-                emp_department=self.request.user.employee_user_info.emp_department).order_by('user__full_name')
-        # queryset = hrm_models.EmployeeInformationModel.objects.all()
         return queryset
 
 
@@ -158,7 +162,7 @@ class EmployeeEvaluationView(generics.ListCreateAPIView):
         current_user = self.request.user
 
         receiver_user = user_models.User.objects.get(id=self.kwargs['id'])
-        current_criteria = (self.request.POST['criteria'])
+        current_criteria = (self.request.data['criteria'])
 
         criteria = models.EmployeeCriteriaModel.objects.all()
         evaluation = models.EmployeeEvaluationModel.objects.filter(sender_user=current_user,
@@ -166,7 +170,7 @@ class EmployeeEvaluationView(generics.ListCreateAPIView):
                                                                    rating_date__month=current_month,
                                                                    rating_date__year=current_year)
 
-        if criteria.count() <= evaluation.count() or evaluation.filter(criteria__in=current_criteria):
+        if (criteria.count() <= evaluation.count()) or evaluation.filter(criteria_id=current_criteria):
             return response.Response({
                 'message': 'Already Evaluated'
             })

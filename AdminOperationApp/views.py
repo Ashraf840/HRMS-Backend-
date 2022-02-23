@@ -1,4 +1,7 @@
+import asyncio
 import datetime, calendar
+import time
+
 from django.db.models import Q
 from rest_framework import generics, permissions, status, pagination
 from rest_framework.exceptions import ValidationError
@@ -12,7 +15,7 @@ from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, O
 from RecruitmentManagementApp.serializer import ReferenceInformationSerializer
 from rest_framework.permissions import IsAuthenticated
 from UserApp import permissions as customPermission
-from .utils import Util
+from .utils import Util, send_mail2
 
 
 class Pagination(pagination.PageNumberPagination):
@@ -669,7 +672,7 @@ class ReferenceVerificationView(generics.RetrieveUpdateAPIView):
     """
     Reference verification
     """
-    permission_classes = [customPermission.Authenticated, customPermission.IsEmployee]
+    permission_classes = [customPermission.Authenticated, customPermission.EmployeeAdminAuthenticated]
     serializer_class = serializer.ReferenceVerificationSerializer
     queryset = ReferenceInformationModel.objects.all()
     lookup_field = 'id'
@@ -705,6 +708,14 @@ class ReferenceVerificationView(generics.RetrieveUpdateAPIView):
                      f' He add you as reference. Please fill the form below.'
         data = {'email_body': email_body, 'to_email': refInfo.email,
                 'email_subject': 'Reference checking.'}
+
+        # async def mail_send():
+        #     task = asyncio.gather(send_mail2(data))
+        #     await task
+        #
+        # # loop = asyncio.get_event_loop()
+        # asyncio.run(mail_send())
+
         Util.send_email(data)
         refInfo.is_sent = True
         refInfo.save()
