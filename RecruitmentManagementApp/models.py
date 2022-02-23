@@ -274,4 +274,4 @@ class OfficialDocumentsModel(models.Model):
     appointmentLetter = models.TextField()
 
     def __str__(self):
-        return f'{self.id} {self.applicationId.userId.full_name}'
+        return f'{self.id}'
