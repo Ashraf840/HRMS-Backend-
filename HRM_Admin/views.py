@@ -22,12 +22,10 @@ class OnboardAnEmployeeView(generics.ListCreateAPIView):
     queryset = hrm_admin_model.EmployeeSalaryModel.objects.all()
 
     def create(self, request, *args, **kwargs):
-        checkDesignation = user_model.UserDesignationModel.objects.get(id=request.data['employee.designation'])
+        checkDesignation = user_model.UserDesignationModel.objects.get(id=request.data['employee'].get('user'))
+        userInfo = user_model.User.objects.get(id=request.data['employee'].get('user'))
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-
-        userInfo = user_model.User.objects.get(id=request.data['employee.user'])
-
         if checkDesignation.designation != 'CEO':
             self.perform_create(serializer)
             if checkDesignation.designation == 'HR':
@@ -43,7 +41,7 @@ class OnboardAnEmployeeView(generics.ListCreateAPIView):
         userInfo.is_candidate = False
         userInfo.is_employee = True
         userInfo.email_validated = False
-        userInfo.email = request.data['employee.email']
+        userInfo.email = request.data['employee'].get('email')
         userInfo.save()
 
         # Email activation email.
@@ -226,6 +224,7 @@ class ManagePermissionAccessView(generics.RetrieveUpdateAPIView):
 
 
 class EmployeeTrainingView(generics.ListCreateAPIView):
+    """employee training information add"""
     permission_classes = [custom_permission.EmployeeAdminAuthenticated]
     serializer_class = hrm_admin_serializer.EmployeeTrainingSerializer
     queryset = hrm_admin_model.TrainingModel.objects.all()

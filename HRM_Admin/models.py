@@ -30,6 +30,7 @@ class EmployeeInformationModel(models.Model):
                                     related_name='employee_designation')
     shift = models.CharField(max_length=200, choices=employee_shift)
     joining_date = models.DateField(blank=True)
+    employee_is_permanent = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.user.full_name}, {self.emp_department.department} - {self.designation.designation}'
