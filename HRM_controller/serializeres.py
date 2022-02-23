@@ -90,6 +90,12 @@ class NoticeSerializer(serializers.ModelSerializer):
 
 
 # Attendance Section
+class CreateHolidaySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.HolidayModel
+        fields = '__all__'
+
+
 class AttendanceShiftSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.AttendanceEmployeeShiftModel

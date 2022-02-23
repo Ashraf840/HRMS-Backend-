@@ -91,6 +91,15 @@ class NoticeModel(models.Model):
 
 
 # ==================Attendance Section==================
+class HolidayModel(models.Model):
+    holiday_name = models.CharField(max_length=255)
+    holiday_date = models.DateField()
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f'{self.holiday_name} - {self.holiday_date} - {self.is_active}'
+
+
 class AttendanceEmployeeShiftModel(models.Model):
     shift_name = models.CharField(max_length=255)
     start_time = models.TimeField()
