@@ -77,7 +77,7 @@ class EmployeeEvaluationModel(models.Model):
         return f'{self.id} - {self.sender_user} - {self.receiver_user} - {self.ratings} - {self.rating_date.month}/{self.rating_date.year}'
 
 
-# Announcement and Notice
+# Announcement, Notice and Complain
 class AnnouncementModel(models.Model):
     department = models.ManyToManyField(user_model.UserDepartmentModel, related_name='announcement_department')
     message = models.CharField(max_length=255)
@@ -88,6 +88,18 @@ class NoticeModel(models.Model):
     title = models.CharField(max_length=255)
     message = models.TextField()
     attachment = models.FileField()
+
+
+class ComplainModel(models.Model):
+    complain_at = models.ForeignKey(hrm_models.EmployeeInformationModel, on_delete=models.CASCADE,
+                                    related_name='complain_employee')
+    complain_reason = models.CharField(max_length=255)
+    complain_details = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_resolved = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'Complained at - {self.complain_at}'
 
 
 # ==================Attendance Section==================

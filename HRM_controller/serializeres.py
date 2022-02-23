@@ -76,7 +76,7 @@ class EmployeeEvaluationSerializer(serializers.ModelSerializer):
         }
 
 
-# Announcement/Notice Section
+# Announcement, Notice and Complain Section
 class AnnouncementSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.AnnouncementModel
@@ -87,6 +87,36 @@ class NoticeSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.NoticeModel
         fields = '__all__'
+
+
+class ComplainSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ComplainModel
+        fields = '__all__'
+
+        extra_kwargs = {
+            'is_resolved': {
+                'read_only': True
+            }
+        }
+
+
+class ComplainResolvedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ComplainModel
+        fields = '__all__'
+
+        extra_kwargs = {
+            'complain_reason': {
+                'read_only': True
+            },
+            'complain_details': {
+                'read_only': True
+            },
+            'complain_at': {
+                'read_only': True
+            },
+        }
 
 
 # Attendance Section

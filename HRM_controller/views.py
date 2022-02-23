@@ -38,12 +38,7 @@ class SurveyQuestionView(generics.ListCreateAPIView):
                 'id': ans.id,
                 'answer': ans.answers
             })
-        # answers = json.loads(serialize('json', models.SurveyAnswerSheetModel.objects.all()))
 
-        # if questions.count() == user_answer.count():
-        #     return response.Response({
-        #         'message': 'You have already submitted survey this month.'
-        #     })
         data = hrm_serializers.SurveyQuestionSerializer(questions, many=True)
 
         return response.Response({'data': data.data, 'answers': answer_list})
@@ -56,11 +51,6 @@ class SurveyUserResponseView(generics.ListCreateAPIView):
     serializer_class = hrm_serializers.SurveyUserResponseSerializer
     permission_classes = [user_permissions.EmployeeAuthenticated]
     queryset = models.SurveyUserResponseModel.objects.all()
-
-    # def get_queryset(self):
-    #     current_month = datetime.today().strftime("%b")
-    #     user_answer = models.SurveyUserResponseModel.objects.filter(months__iexact=current_month)
-    #     return user_answer
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user, is_answered=True)
@@ -95,7 +85,6 @@ class AllColleaguesView(generics.ListAPIView):
     filterset_fields = ['emp_department']
 
     def get_queryset(self):
-        # if self.request.user.is
         try:
             employee = self.request.user.employee_user_info.module_permission_employee
             if employee.is_superuser or employee.is_ceo or employee.is_gm or employee.is_hrm:
@@ -105,7 +94,7 @@ class AllColleaguesView(generics.ListAPIView):
                 queryset = hrm_models.EmployeeInformationModel.objects.filter(
                     ~Q(user__email=self.request.user.email),
                     emp_department=self.request.user.employee_user_info.emp_department).order_by('user__full_name')
-            # queryset = hrm_models.EmployeeInformationModel.objects.all()
+
         except:
             queryset = hrm_models.EmployeeInformationModel.objects.filter(
                 ~Q(user__email=self.request.user.email)).order_by('user__full_name')
@@ -122,7 +111,6 @@ class EmployeeEvaluationQuestionView(generics.ListAPIView):
 
     def get(self, request, *args, **kwargs):
         queryset = models.EmployeeCriteriaModel.objects.all()
-        # data = json.loads(serialize('json', queryset))
         data = hrm_serializers.EmployeeEvaluationQuestionSerializer(queryset, many=True)
         print(queryset.count())
         answers = []
@@ -188,7 +176,7 @@ class EmployeeEvaluationView(generics.ListCreateAPIView):
         return response.Response(ser.data)
 
 
-# Announcement/Notice Section
+# Announcement, Notice and Complain Section
 class AnnouncementView(generics.ListCreateAPIView):
     """
     1. Section for creating announcement
@@ -197,8 +185,6 @@ class AnnouncementView(generics.ListCreateAPIView):
     """
     serializer_class = hrm_serializers.AnnouncementSerializer
     permission_classes = [user_permissions.IsHrOrReadOnly]
-
-    # queryset = models.AnnouncementModel.objects.all()
 
     def get_queryset(self):
         employee = self.request.user.employee_user_info.module_permission_employee
@@ -219,8 +205,6 @@ class NoticeView(generics.ListCreateAPIView):
     serializer_class = hrm_serializers.NoticeSerializer
     permission_classes = [user_permissions.IsHrOrReadOnly]
 
-    # queryset = models.NoticeModel.objects.all()
-
     def get_queryset(self):
         employee = self.request.user.employee_user_info.module_permission_employee
         if employee.is_superuser or employee.is_ceo or employee.is_gm or employee.is_hrm:
@@ -229,6 +213,20 @@ class NoticeView(generics.ListCreateAPIView):
             queryset = models.NoticeModel.objects.filter(
                 department__in=[self.request.user.employee_user_info.emp_department])
         return queryset
+
+
+class ComplainView(generics.ListCreateAPIView, generics.RetrieveUpdateAPIView):
+    serializer_class = hrm_serializers.ComplainSerializer
+    permission_classes = [user_permissions.EmployeeAuthenticated]
+    queryset = models.ComplainModel.objects.all()
+    lookup_field = 'id'
+
+
+class ComplainResolvedView(generics.RetrieveUpdateAPIView):
+    serializer_class = hrm_serializers.ComplainResolvedSerializer
+    permission_classes = [user_permissions.IsHrOrReadOnly]
+    queryset = models.ComplainModel.objects.all()
+    lookup_field = 'id'
 
 
 # Attendance Section
@@ -302,8 +300,8 @@ class CreateHolidaysView(generics.ListCreateAPIView, generics.RetrieveUpdateAPIV
         #     h_date = holiday.find_all('td')[1].find('time')['datetime']
         #     models.HolidayModel.objects.get_or_create(holiday_name=day, holiday_date=h_date)
 
-            # ls = [day, h_date]
-            # total_holidays.append(ls)
+        # ls = [day, h_date]
+        # total_holidays.append(ls)
 
         queryset = models.HolidayModel.objects.all()
         return queryset
