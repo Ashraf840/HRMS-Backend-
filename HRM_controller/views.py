@@ -170,7 +170,7 @@ class EmployeeEvaluationView(generics.ListCreateAPIView):
                                                                    rating_date__month=current_month,
                                                                    rating_date__year=current_year)
 
-        if criteria.count() <= evaluation.count() or evaluation.filter(criteria__in=current_criteria):
+        if (criteria.count() <= evaluation.count()) or evaluation.filter(criteria_id=current_criteria):
             return response.Response({
                 'message': 'Already Evaluated'
             })
