@@ -28,9 +28,24 @@ class Pagination(pagination.PageNumberPagination):
 
 
 class OfficialDocStoreView(generics.ListCreateAPIView):
-    permission_classes = [customPermission.Authenticated, customPermission.IsEmployee]
+    permission_classes = [customPermission.Authenticated]
     serializer_class = serializer.OfficialDocStoreSerializer
     queryset = models.OfficialDocStore.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        ser = self.get_serializer(self.get_queryset(), many=True)
+        responseData = ser.data
+
+        if self.request.user.is_candidate:
+            try:
+                id = self.kwargs['application_id']
+                appointmentLetter = OfficialDocumentsModel.objects.get(applicationId=id)
+                responseData.append({'appointment_letter': appointmentLetter.appointmentLetter})
+                return Response(responseData)
+            except:
+                return Response(responseData)
+        else:
+            return Response(responseData)
 
 
 class OnlineTestLinkView(generics.ListCreateAPIView):

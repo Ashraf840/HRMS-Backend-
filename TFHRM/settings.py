@@ -301,6 +301,5 @@ EMAIL_HOST_PASSWORD = 'tehctrahgvpjsuoz'
 
 # Crontab
 CRONJOBS = [
-    ('0 0 * * *', 'HRM_User.cron.attendance_data'),
-    ('0 0 15 1 *', 'HRM_User.cron.create_holiday'),
+    ('0 0 * * *', 'HRM_User.cron.attendance_data')
 ]
