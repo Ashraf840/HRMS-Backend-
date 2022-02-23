@@ -23,3 +23,7 @@ class EmployeeTrainingResponseResultModel(models.Model):
 #     date = models.DateField()
 #     in_time = models.TimeField()
 #     out_time = models.TimeField()
+
+
+
+#  ================= Employee
