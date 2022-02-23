@@ -40,9 +40,9 @@ class OfficialDocStoreView(generics.ListCreateAPIView):
                 id = self.kwargs['application_id']
                 try:
                     appointmentLetter = OfficialDocumentsModel.objects.get(applicationId=id)
-                    responseData.append({'appointment_letter': appointmentLetter.appointmentLetter})
+                    responseData.append({'docName': 'Appointment Letter', 'docFile': appointmentLetter.appointmentLetter})
                 except:
-                    responseData.append({'appointment_letter': ''})
+                    responseData.append({'docName': 'Appointment Letter', 'docFile': ''})
                 return Response(responseData)
             except:
                 return Response(responseData)
