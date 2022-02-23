@@ -162,7 +162,7 @@ class EmployeeEvaluationView(generics.ListCreateAPIView):
         current_user = self.request.user
 
         receiver_user = user_models.User.objects.get(id=self.kwargs['id'])
-        current_criteria = (self.request.POST['criteria'])
+        current_criteria = (self.request.data['criteria'])
 
         criteria = models.EmployeeCriteriaModel.objects.all()
         evaluation = models.EmployeeEvaluationModel.objects.filter(sender_user=current_user,
