@@ -127,9 +127,9 @@ def create_employee_module_permission(sender, instance, created, **kwargs):
         return data
 
 
-@receiver(pre_delete, sender=EmployeeInformationModel)
-def employee_deleted(sender, instance, using, **kwargs):
-    instance.user.is_employee = False
-    instance.user.is_hr = False
-    instance.user.is_active = False
-    instance.user.save()
+# @receiver(pre_delete, sender=EmployeeInformationModel)
+# def employee_deleted(sender, instance, using, **kwargs):
+#     instance.user.is_employee = False
+#     instance.user.is_hr = False
+#     instance.user.is_active = False
+#     instance.user.save()
