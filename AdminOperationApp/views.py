@@ -38,10 +38,11 @@ class OfficialDocStoreView(generics.ListCreateAPIView):
         if self.request.user.is_candidate:
             try:
                 id = self.kwargs['application_id']
-                # print(id)
-                appointmentLetter = OfficialDocumentsModel.objects.get(applicationId=id)
-                print(appointmentLetter.applicationId.id)
-                responseData.append({'appointment_letter': appointmentLetter.appointmentLetter})
+                try:
+                    appointmentLetter = OfficialDocumentsModel.objects.get(applicationId=id)
+                    responseData.append({'appointment_letter': appointmentLetter.appointmentLetter})
+                except:
+                    responseData.append({'appointment_letter': ''})
                 return Response(responseData)
             except:
                 return Response(responseData)
