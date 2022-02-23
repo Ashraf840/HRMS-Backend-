@@ -9,6 +9,8 @@ from django.core.serializers import serialize
 import json
 from HRM_Admin import models as hrm_models
 import ast
+from bs4 import BeautifulSoup
+import requests
 
 
 # Create your views here.
@@ -29,14 +31,22 @@ class SurveyQuestionView(generics.ListCreateAPIView):
         user_answer = models.SurveyUserResponseModel.objects.filter(user=current_user, ans_time__month=current_month,
                                                                     ans_time__year=current_year)
         questions = models.SurveyQuestionModel.objects.all()
-
-        if questions.count() == user_answer.count():
-            return response.Response({
-                'message': 'You have already submitted survey this month.'
+        answer_list = []
+        ans_queryset = models.SurveyAnswerSheetModel.objects.all()
+        for ans in ans_queryset:
+            answer_list.append({
+                'id': ans.id,
+                'answer': ans.answers
             })
+        # answers = json.loads(serialize('json', models.SurveyAnswerSheetModel.objects.all()))
+
+        # if questions.count() == user_answer.count():
+        #     return response.Response({
+        #         'message': 'You have already submitted survey this month.'
+        #     })
         data = hrm_serializers.SurveyQuestionSerializer(questions, many=True)
 
-        return response.Response({'data': data.data})
+        return response.Response({'data': data.data, 'answers': answer_list})
 
 
 class SurveyUserResponseView(generics.ListCreateAPIView):
@@ -223,6 +233,10 @@ class NoticeView(generics.ListCreateAPIView):
 
 # Attendance Section
 class AttendanceShiftView(generics.ListCreateAPIView, generics.RetrieveUpdateAPIView):
+    """
+    1. Manager can create employee shift
+    2. Manager can update shift time
+    """
     serializer_class = hrm_serializers.AttendanceShiftSerializer
     permission_classes = [user_permissions.IsHrOrReadOnly]
     queryset = models.AttendanceEmployeeShiftModel.objects.all()
@@ -230,6 +244,11 @@ class AttendanceShiftView(generics.ListCreateAPIView, generics.RetrieveUpdateAPI
 
 
 class AttendanceRegistrationView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+    """
+    1. This api suppose to register user data from access controller
+    2. Currently it only gets the existing data from access controller
+    3. Can not create new data because of problem in access controller api
+    """
     serializer_class = hrm_serializers.AttendanceRegistrationSerializer
     permission_classes = [user_permissions.IsHrOrReadOnly]
     queryset = models.AttendanceEmployeeRelModel.objects.all()
@@ -251,10 +270,40 @@ class AttendanceRegistrationView(generics.ListCreateAPIView, generics.RetrieveUp
         all_employees = [item[0] for item in ast.literal_eval(posts.content.decode("utf-8").replace("u'", "'")
                                                               .replace('((', '(').replace('))', ')'))]
         for employee in all_employees:
-            new_employee = models.AttendanceEmployeeRelModel.objects.get_or_create(registration_id=employee)
-            # try:
-            #     new_employee = models.AttendanceEmployeeRelModel.objects.get_or_create(registration_id=employee)
-            # except:
-            #     new_employee = models.AttendanceEmployeeRelModel.objects.create(registration_id=employee)
-            #     # new_employee.save()
+            models.AttendanceEmployeeRelModel.objects.get_or_create(registration_id=employee)
         return response.Response(all_employees)
+
+
+class CreateHolidaysView(generics.ListCreateAPIView, generics.RetrieveUpdateAPIView):
+    """
+    1. Scrap Holiday list from Internet (Example: https://www.officeholidays.com/countries/bangladesh/2022)
+    2. Update existing holiday
+    3. Create new holiday
+    """
+    serializer_class = hrm_serializers.CreateHolidaySerializer
+    permission_classes = [user_permissions.IsHrOrReadOnly]
+    queryset = models.HolidayModel.objects.all()
+    lookup_field = 'id'
+
+    def get_queryset(self):
+        # year = datetime.now().year
+        # url = f'https://www.officeholidays.com/countries/bangladesh/{year}'
+        #
+        # ### Web Scraping ###
+        # full_page = requests.get(url)
+        # full_page = full_page.content
+        # soup = BeautifulSoup(full_page, "html.parser")
+        #
+        # holidays = soup.find_all('tr', {'class': ['country', 'govt']})
+        #
+        # total_holidays = []
+        # for holiday in holidays:
+        #     day = holiday.find_all('td')[2].find('a').text
+        #     h_date = holiday.find_all('td')[1].find('time')['datetime']
+        #     models.HolidayModel.objects.get_or_create(holiday_name=day, holiday_date=h_date)
+
+            # ls = [day, h_date]
+            # total_holidays.append(ls)
+
+        queryset = models.HolidayModel.objects.all()
+        return queryset
