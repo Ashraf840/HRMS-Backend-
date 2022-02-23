@@ -111,7 +111,7 @@ class UserJobAppliedModel(models.Model):
     appliedDate = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.jobPostId}, {self.userId}'
+        return f'{self.id} - {self.jobPostId}, {self.userId}'
 
 
 class FilterQuestionsResponseModelHR(models.Model):

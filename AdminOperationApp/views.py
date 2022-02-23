@@ -35,11 +35,12 @@ class OfficialDocStoreView(generics.ListCreateAPIView):
     def list(self, request, *args, **kwargs):
         ser = self.get_serializer(self.get_queryset(), many=True)
         responseData = ser.data
-
         if self.request.user.is_candidate:
             try:
                 id = self.kwargs['application_id']
+                # print(id)
                 appointmentLetter = OfficialDocumentsModel.objects.get(applicationId=id)
+                print(appointmentLetter.applicationId.id)
                 responseData.append({'appointment_letter': appointmentLetter.appointmentLetter})
                 return Response(responseData)
             except:
