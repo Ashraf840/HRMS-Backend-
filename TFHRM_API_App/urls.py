@@ -169,15 +169,16 @@ urlpatterns = [
          name='appointment_letter_details_for_pdf'),
     path('appointment_letter_save/<applicationId>/', OfficialDocumentsView.as_view(), name='appointment_letter_save'),
     # Update official email during onboard
-    path('add_employee_info/<id>/', AddEmployeeInfoDuringOnboardView.as_view(),
-         name='add_employee_info_during_onboard'),
+    # path('add_employee_info/<id>/', AddEmployeeInfoDuringOnboardView.as_view(),
+    #      name='add_employee_info_during_onboard'),
 
     # Onboard Pdf generator api
-    path('pdf_gen/<applicationId>/', pdfGen.GeneratePDF.as_view()),
-    path('appointment_letter_view/<applicationId>/', pdfGen.ViewAppointMentLetterView.as_view()),
+    # path('pdf_gen/<applicationId>/', pdfGen.GeneratePDF.as_view()),
+    # path('appointment_letter_view/<applicationId>/', pdfGen.ViewAppointMentLetterView.as_view()),
 
     # store doc file
     path('stored_docs/', OfficialDocStoreView.as_view(), name='store_onboard_document_nda_nca'),
+    path('stored_docs/<application_id>/', OfficialDocStoreView.as_view(), name='store_onboard_document_nda_nca_user'),
 
     # path('appointment_letter_info/<applicationId>/', AppointmentLetterInfoView.as_view(),
     # name='appointment_letter_info'),

@@ -126,7 +126,6 @@ def create_employee_module_permission(sender, instance, created, **kwargs):
         data = ModulePermissionModel.objects.create(employee=instance)
         return data
 
-
 # @receiver(pre_delete, sender=EmployeeInformationModel)
 # def employee_deleted(sender, instance, using, **kwargs):
 #     instance.user.is_employee = False
