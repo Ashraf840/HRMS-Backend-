@@ -551,13 +551,13 @@ class PracticalTestResponseView(generics.ListCreateAPIView):
 
     def get(self, request, *args, **kwargs):
         try:
-            check_redundancy = models.PracticalTestResponseModel.objects.get(user=self.request.user,
-                                                                             appliedJob=self.kwargs['job_id'])
-            if check_redundancy is not None:
+            check_redundancy = models.PracticalTestResponseModel.objects.filter(user=self.request.user,
+                                                                                appliedJob=self.kwargs['job_id'])
+            if len(check_redundancy) >= 1:
                 return Response({'detail': 'You have already taken the test. Wait for review'},
                                 status=status.HTTP_400_BAD_REQUEST)
         except:
-            return Response({'detail': 'No job Found'},status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': 'No response Found'}, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request, *args, **kwargs):
         applied_job = self.kwargs['job_id']
