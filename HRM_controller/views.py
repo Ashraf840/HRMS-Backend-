@@ -314,14 +314,20 @@ class AttendanceRegistrationView(generics.ListCreateAPIView, generics.RetrieveUp
         for emp in employees:
             try:
                 employee_list.append({
-                    'id': emp.employee.id,
-                    'employee_name': emp.employee.user.full_name,
+                    'id': emp.id,
+                    'employee': {
+                        'employee_id': emp.employee.id,
+                        'employee_name': emp.employee.user.full_name
+                    },
                     'registration_id': emp.registration_id
                 })
             except:
                 employee_list.append({
-                    'id': None,
-                    'employee_name': None,
+                    'id': emp.id,
+                    'employee': {
+                        'employee_id': None,
+                        'employee_name': None
+                    },
                     'registration_id': emp.registration_id
                 })
         return response.Response(employee_list)

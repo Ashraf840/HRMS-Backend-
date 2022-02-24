@@ -576,8 +576,13 @@ class PracticalTestResponseView(generics.ListCreateAPIView):
             if data.jobProgressStatus.status == 'Practical Test':
                 serializer = self.get_serializer(data=request.data)
                 serializer.is_valid(raise_exception=True)
-                self.perform_create(serializer)
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+                testFile = serializer.validated_data['practicalTestResFiles']
+                testLink = serializer.validated_data['practicalTestResLink']
+                if testFile is not None or testLink != '':
+                    self.perform_create(serializer)
+                    return Response(serializer.data, status=status.HTTP_201_CREATED)
+                else:
+                    return Response({'detail': 'Please provide file or link'}, status=status.HTTP_204_NO_CONTENT)
             else:
                 return Response({'detail': 'You can not attend this test.'}, status=status.HTTP_400_BAD_REQUEST)
 
