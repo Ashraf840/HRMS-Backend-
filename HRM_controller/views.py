@@ -309,7 +309,22 @@ class AttendanceRegistrationView(generics.ListCreateAPIView, generics.RetrieveUp
                                                               .replace('((', '(').replace('))', ')'))]
         for employee in all_employees:
             models.AttendanceEmployeeRelModel.objects.get_or_create(registration_id=employee)
-        return response.Response(all_employees)
+        employees = models.AttendanceEmployeeRelModel.objects.all()
+        employee_list = []
+        for emp in employees:
+            try:
+                employee_list.append({
+                    'id': emp.employee.id,
+                    'employee_name': emp.employee.user.full_name,
+                    'registration_id': emp.registration_id
+                })
+            except:
+                employee_list.append({
+                    'id': None,
+                    'employee_name': None,
+                    'registration_id': emp.registration_id
+                })
+        return response.Response(employee_list)
 
 
 class CreateHolidaysView(generics.ListCreateAPIView, generics.RetrieveUpdateAPIView):
