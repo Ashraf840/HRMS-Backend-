@@ -110,7 +110,7 @@ urlpatterns = [
     # path('online_test_res/', OnlineTestResponseView, name='online_test_response'),
     # path('practical_test/', PracticalTestView.as_view(), name='practical_test'),
     path('practical_test/<jobInfo>/', PracticalTestForApplicantView.as_view(), name='practical_test_for_a_job'),
-    path('practical_test_res/<job_id>/', PracticalTestResponseView.as_view(), name='practical_test_response'),
+    path('practical_test_res/<application_id>/', PracticalTestResponseView.as_view(), name='practical_test_response'),
     # Document submission by user
     path('documents_submit/<job_id>/', DocumentSubmissionView.as_view(), name='document_submission_add'),
     path('documents/<applied_job>/', DocumentSubmissionUpdateDeleteView.as_view(),
