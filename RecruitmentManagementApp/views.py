@@ -556,8 +556,7 @@ class PracticalTestResponseView(generics.ListCreateAPIView):
             return Response({'detail': 'You have already taken the test. Wait for review'},
                             status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({'detail': 'No data Found'},
-                            status=status.HTTP_204_NO_CONTENT)
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
     def create(self, request, *args, **kwargs):
         applied_job = self.kwargs['application_id']
