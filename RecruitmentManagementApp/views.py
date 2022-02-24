@@ -276,7 +276,6 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
                         except:
                             pass
 
-
                 if totalQuestion - 1 <= score:
                     jobProgress = jobFilterQuestion.jobPostId.jobProgressStatus.all()
                     for i, progress in enumerate(jobProgress):
@@ -541,7 +540,7 @@ class OnlineTestResponseView(generics.CreateAPIView):
                             status=status.HTTP_400_BAD_REQUEST)
 
 
-class PracticalTestResponseView(generics.CreateAPIView):
+class PracticalTestResponseView(generics.ListCreateAPIView):
     permission_classes = [Authenticated]
     serializer_class = serializer.PracticalTestResponseSerializer
     queryset = models.PracticalTestResponseModel.objects.all()
@@ -550,13 +549,23 @@ class PracticalTestResponseView(generics.CreateAPIView):
         serializer.save(user=self.request.user,
                         appliedJob=models.UserJobAppliedModel.objects.get(id=self.kwargs['job_id']))
 
+    def get(self, request, *args, **kwargs):
+        try:
+            check_redundancy = models.PracticalTestResponseModel.objects.get(user=self.request.user,
+                                                                             appliedJob=self.kwargs['job_id'])
+            if check_redundancy is not None:
+                return Response({'detail': 'You have already taken the test. Wait for review'},
+                                status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response({'detail': 'No job Found'},status=status.HTTP_400_BAD_REQUEST)
+
     def create(self, request, *args, **kwargs):
         applied_job = self.kwargs['job_id']
         try:
             try:
                 check_redundancy = models.PracticalTestResponseModel.objects.get(user=self.request.user,
                                                                                  appliedJob=applied_job)
-                print(check_redundancy)
+                # print(check_redundancy)
                 if check_redundancy is not None:
                     return Response({'detail': 'You have already taken the test.'}, status=status.HTTP_400_BAD_REQUEST)
             except:

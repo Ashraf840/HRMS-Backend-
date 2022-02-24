@@ -67,13 +67,14 @@ class EmployeeLeaveRequestView(generics.ListCreateAPIView, generics.RetrieveUpda
         employee = hrm_admin_model.EmployeeInformationModel.objects.get(user=self.request.user)
         serializer.save(employee=employee, no_of_days=countDay)
 
-    # def update(self, request, *args, **kwargs):
-    #     instance = self.get_object()
-    #     serializer = self.get_serializer(instance, data=request.data, partial=True)
-    #     serializer.is_valid(raise_exception=True)
-    #     self.perform_update(serializer)
-    #     if self.request.user.is_hr or self.request.user.is_superuser:
-    #         employee = hrm_admin_model.EmployeeInformationModel.objects.get(user=self.request.user)
-    #         serializer.update(approved_by=employee)
-    #     return response.Response(serializer.data)
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        if self.request.user.is_hr or self.request.user.is_superuser:
+            leaveReq = models.LeaveRequestModel.objects.get(id=self.kwargs['id'])
+            leaveReq.approved_by = hrm_admin_model.EmployeeInformationModel.objects.get(user=self.request.user)
+            leaveReq.save()
+        return response.Response(serializer.data)
 
