@@ -294,11 +294,7 @@ class InterviewTimeScheduleSerializer(serializers.ModelSerializer):
     """
     Interview time scheduling
     """
-    interviewer = serializers.SlugRelatedField(queryset=UserDesignationModel.objects.filter(Q(designation='CEO') |
-                                                                                            Q(designation='HR') |
-                                                                                            Q(designation='PM') |
-                                                                                            Q(designation='GM')),
-                                               slug_field='designation')
+    interviewer = serializers.SlugRelatedField(queryset=UserDesignationModel.objects.all(), slug_field='designation')
 
     # scheduleBy = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='full_name')
 
