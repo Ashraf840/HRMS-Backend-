@@ -561,10 +561,10 @@ class PracticalTestResponseView(generics.ListCreateAPIView):
         applied_job = self.kwargs['application_id']
         try:
             try:
-                check_redundancy = models.PracticalTestResponseModel.objects.get(user=self.request.user,
-                                                                                 appliedJob=applied_job)
+                check_redundancy = models.PracticalTestResponseModel.objects.filter(user=self.request.user,
+                                                                                    appliedJob=applied_job)
                 # print(check_redundancy)
-                if check_redundancy is not None:
+                if len(check_redundancy) >= 1:
                     return Response({'detail': 'You have already taken the test.'}, status=status.HTTP_400_BAD_REQUEST)
             except:
                 data = models.UserJobAppliedModel.objects.get(id=applied_job)
@@ -572,8 +572,12 @@ class PracticalTestResponseView(generics.ListCreateAPIView):
                 if data.jobProgressStatus.status == 'Practical Test':
                     serializer = self.get_serializer(data=request.data)
                     if serializer.is_valid():
-                        self.perform_create(serializer)
-                        return Response(serializer.data, status=status.HTTP_201_CREATED)
+                        practicalLink = serializer.validated_data['practicalTestResLink']
+                        practicalFile = serializer.validated_data['practicalTestResFiles']
+                        if practicalLink != '' or practicalFile != '':
+                            self.perform_create(serializer)
+                            return Response(serializer.data, status=status.HTTP_201_CREATED)
+                        return Response({'detail': 'Please submit file or link'}, status=status.HTTP_400_BAD_REQUEST)
                 else:
                     return Response({'detail': 'You can not attend this test.'}, status=status.HTTP_400_BAD_REQUEST)
         except:
