@@ -1,9 +1,11 @@
+import datetime
+
 from _testcapi import raise_exception
 from django.shortcuts import render
 from HRM_User import models, serializers
+from HRM_Admin import models as hrm_admin_model, serializer as hrm_admin_serializer
 from UserApp import permissions as custom_permission
 from rest_framework import generics, response
-from django.core.serializers import serialize
 
 
 # Create your views here.
@@ -45,4 +47,15 @@ class EmployeeTrainingResponseResultView(generics.ListCreateAPIView):
         return response.Response(ser.data)
 
 
+#  ================= Employee Leave Section =================
+class EmployeeLeaveRequestView(generics.ListCreateAPIView):
+    permission_classes = [custom_permission.EmployeeAuthenticated]
+    serializer_class = serializers.EmployeeLeaveRequestSerializer
+    queryset = models.LeaveRequestModel.objects.all()
 
+    def perform_create(self, serializer):
+        dateFrom = serializer.validated_data['leave_from']
+        dateTo = serializer.validated_data['leave_to']
+        countDay = dateTo - dateFrom
+        employee = hrm_admin_model.EmployeeInformationModel.objects.get(user=self.request.user)
+        serializer.save(employee=employee, no_of_days=countDay)

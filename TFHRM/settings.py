@@ -161,6 +161,9 @@ ROOT_URLCONF = 'TFHRM.urls'
 # ============== sqlite3 Db ==============
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+"""
+Local server DB
+"""
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
@@ -168,17 +171,6 @@ ROOT_URLCONF = 'TFHRM.urls'
 #     }
 # }
 
-# ============== postgresql Db ==============
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'dbdaaoqq4cgvm',
-#         'USER': 'cjfglljlmnmjag',
-#         'PASSWORD': 'e140cf1105c3ff061e04c4d59895fb5b41ae979020257bdd7e4b662e99470870',
-#         'HOST': 'ec2-54-74-60-70.eu-west-1.compute.amazonaws.com',
-#         'PORT': '5432',
-#     }
-# }
 
 """
 Dev server DB

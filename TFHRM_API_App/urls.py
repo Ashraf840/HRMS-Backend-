@@ -174,7 +174,7 @@ urlpatterns = [
 
     # Onboard Pdf generator api
     # path('pdf_gen/<applicationId>/', pdfGen.GeneratePDF.as_view()),
-    # path('appointment_letter_view/<applicationId>/', pdfGen.ViewAppointMentLetterView.as_view()),
+    path('appointment_letter_view/<applicationId>/', pdfGen.ViewAppointMentLetterView.as_view()),
 
     # store doc file
     path('stored_docs/', OfficialDocStoreView.as_view(), name='store_onboard_document_nda_nca'),
