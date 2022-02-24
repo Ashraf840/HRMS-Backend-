@@ -351,7 +351,7 @@ class AttendanceRegistrationView(generics.ListCreateAPIView, generics.RetrieveUp
             instance.delete()
             return response.Response({'message': 'Deleted Successfully'})
 
-        return response.Response({'message': 'Failed to Delete'}, status=status.HTTP_404_NOT_FOUND)
+        return response.Response({'message': posts.content.decode("utf-8")}, status=status.HTTP_404_NOT_FOUND)
 
 
 class CreateHolidaysView(generics.ListCreateAPIView, generics.RetrieveUpdateAPIView):
