@@ -36,9 +36,10 @@ leave_type = (
     ('sick', 'Sick Leave'),
 )
 leave_status = (
-    'pending', 'Pending',
-    'approved', 'Approved',
-    'rejected', 'Rejected',
+    ('pending', 'Pending'),
+    ('approved', 'Approved'),
+    ('rejected', 'Rejected'),
+    ('canceled', 'Canceled')
 )
 
 
@@ -49,7 +50,7 @@ class LeaveRequestModel(models.Model):
     leave_from = models.DateField()
     leave_to = models.DateField()
     no_of_days = models.CharField(max_length=50, blank=True)
-    status = models.CharField(max_length=50, blank=True)
+    status = models.CharField(max_length=50, blank=True,choices=leave_status, default='pending')
     reason = models.TextField(blank=True)
     approved_by = models.ForeignKey(hrm_admin_model.EmployeeInformationModel, on_delete=models.SET_NULL, blank=True,
                                     null=True)
