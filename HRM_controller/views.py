@@ -74,24 +74,28 @@ class SurveyUserResponseView(generics.ListCreateAPIView):
         })
 
     def create(self, request, *args, **kwargs):
-        ser = self.get_serializer(data=request.data)
+        ser = self.get_serializer(data=request.data, many=isinstance(request.data, list))
         ser.is_valid(raise_exception=True)
         current_month = datetime.today().month
         current_year = datetime.today().year
         current_user = self.request.user
-        current_question = (self.request.data['question'])
+        for item in request.data:
+            current_question = (item['question'])
 
-        questions_count = models.SurveyQuestionModel.objects.all()
-        user_answer = models.SurveyUserResponseModel.objects.filter(user=current_user, ans_time__month=current_month,
-                                                                    ans_time__year=current_year)
+            questions_count = models.SurveyQuestionModel.objects.all()
+            user_answer = models.SurveyUserResponseModel.objects.filter(user=current_user,
+                                                                        ans_time__month=current_month,
+                                                                        ans_time__year=current_year)
 
-        if (questions_count.count() <= user_answer.count()) or user_answer.filter(question_id__in=current_question):
-            return response.Response({
-                'message': 'Already Evaluated'
-            })
+            if (questions_count.count() <= user_answer.count()) or user_answer.filter(question_id=current_question):
+                return response.Response({
+                    'message': 'Already Evaluated'
+                })
 
         self.perform_create(ser)
-        return response.Response(ser.data)
+        return response.Response({
+            'message': 'Evaluated'
+        })
 
 
 class SurveyDataView(generics.ListAPIView):
@@ -179,7 +183,7 @@ class EmployeeEvaluationView(generics.ListCreateAPIView):
         return response.Response('Create New')
 
     def create(self, request, *args, **kwargs):
-        ser = self.get_serializer(data=request.data)
+        ser = self.get_serializer(data=request.data, many=isinstance(request.data, list))
         ser.is_valid(raise_exception=True)
 
         current_month = datetime.today().month
@@ -187,20 +191,23 @@ class EmployeeEvaluationView(generics.ListCreateAPIView):
         current_user = self.request.user
 
         receiver_user = user_models.User.objects.get(id=self.kwargs['id'])
-        current_criteria = (self.request.data['criteria'])
+        for item in request.data:
+            current_criteria = (item['criteria'])
 
-        criteria = models.EmployeeCriteriaModel.objects.all()
-        evaluation = models.EmployeeEvaluationModel.objects.filter(sender_user=current_user,
-                                                                   receiver_user=receiver_user,
-                                                                   rating_date__month=current_month,
-                                                                   rating_date__year=current_year)
+            criteria = models.EmployeeCriteriaModel.objects.all()
+            evaluation = models.EmployeeEvaluationModel.objects.filter(sender_user=current_user,
+                                                                       receiver_user=receiver_user,
+                                                                       rating_date__month=current_month,
+                                                                       rating_date__year=current_year)
 
-        if (criteria.count() <= evaluation.count()) or evaluation.filter(criteria_id__in=current_criteria):
-            return response.Response({
-                'message': 'Already Evaluated'
-            })
+            if (criteria.count() <= evaluation.count()) or evaluation.filter(criteria_id=current_criteria):
+                return response.Response({
+                    'message': 'Already Evaluated'
+                })
         self.perform_create(ser)
-        return response.Response(ser.data)
+        return response.Response({
+            'message': 'Evaluated'
+        })
 
 
 # Announcement, Notice and Complain Section
