@@ -553,10 +553,9 @@ class PracticalTestResponseView(generics.ListCreateAPIView):
         check_redundancy = models.PracticalTestResponseModel.objects.filter(user=self.request.user,
                                                                             appliedJob=self.kwargs['application_id'])
         if len(check_redundancy) >= 1:
-            return Response({'detail': 'You have already taken the test. Wait for review'},
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': 'You have already taken the test. Wait for review'})
         else:
-            return Response([], status=status.HTTP_204_NO_CONTENT)
+            return Response([])
 
     def create(self, request, *args, **kwargs):
         applied_job = self.kwargs['application_id']
