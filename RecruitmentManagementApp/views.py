@@ -561,10 +561,10 @@ class PracticalTestResponseView(generics.ListCreateAPIView):
         applied_job = self.kwargs['application_id']
         try:
             try:
-                check_redundancy = models.PracticalTestResponseModel.objects.filter(user=self.request.user,
+                check_redundancy = models.PracticalTestResponseModel.objects.get(user=self.request.user,
                                                                                  appliedJob=applied_job)
                 # print(check_redundancy)
-                if len(check_redundancy) >= 1:
+                if check_redundancy is not None:
                     return Response({'detail': 'You have already taken the test.'}, status=status.HTTP_400_BAD_REQUEST)
             except:
                 data = models.UserJobAppliedModel.objects.get(id=applied_job)
