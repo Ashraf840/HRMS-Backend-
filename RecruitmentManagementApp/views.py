@@ -1,4 +1,6 @@
 import datetime
+
+from _testcapi import raise_exception
 from django.db.models import Q
 from django.http import Http404
 from rest_framework import generics, status
@@ -559,25 +561,25 @@ class PracticalTestResponseView(generics.ListCreateAPIView):
 
     def create(self, request, *args, **kwargs):
         applied_job = self.kwargs['application_id']
+        # try:
+        #
+        # except:
+        #     return Response({'detail': 'No Data found'}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
         try:
-            try:
-                check_redundancy = models.PracticalTestResponseModel.objects.get(user=self.request.user,
-                                                                                 appliedJob=applied_job)
-                # print(check_redundancy)
-                if check_redundancy is not None:
-                    return Response({'detail': 'You have already taken the test.'}, status=status.HTTP_400_BAD_REQUEST)
-            except:
-                data = models.UserJobAppliedModel.objects.get(id=applied_job)
-
-                if data.jobProgressStatus.status == 'Practical Test':
-                    serializer = self.get_serializer(data=request.data)
-                    if serializer.is_valid():
-                        self.perform_create(serializer)
-                        return Response(serializer.data, status=status.HTTP_201_CREATED)
-                else:
-                    return Response({'detail': 'You can not attend this test.'}, status=status.HTTP_400_BAD_REQUEST)
+            check_redundancy = models.PracticalTestResponseModel.objects.get(user=self.request.user,
+                                                                             appliedJob=applied_job)
+            # print(check_redundancy)
+            if check_redundancy is not None:
+                return Response({'detail': 'You have already taken the test.'}, status=status.HTTP_400_BAD_REQUEST)
         except:
-            return Response({'detail': 'No Data found'}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+            data = models.UserJobAppliedModel.objects.get(id=applied_job)
+            if data.jobProgressStatus.status == 'Practical Test':
+                serializer = self.get_serializer(data=request.data)
+                serializer.is_valid(raise_exception=True)
+                self.perform_create(serializer)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response({'detail': 'You can not attend this test.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 """

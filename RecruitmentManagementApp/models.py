@@ -196,7 +196,7 @@ class PracticalTestResponseModel(models.Model):
     appliedJob = models.OneToOneField(UserJobAppliedModel, on_delete=models.CASCADE,
                                       related_name='job_applied_practical_response')
     practicalTestResFiles = models.FileField(upload_to='practical_test/response/',
-                                             verbose_name='Practical test response', blank=True)
+                                             verbose_name='Practical test response', blank=True,null=True)
     practicalTestResLink = models.URLField(verbose_name='Practical test response', blank=True)
     submittedTime = models.DateTimeField(auto_now=True)
 
