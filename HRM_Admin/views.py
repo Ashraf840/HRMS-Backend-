@@ -166,12 +166,15 @@ class EmployeeInformationListView(generics.ListAPIView):
     serializer_class = hrm_admin_serializer.EmployeeInformationListSerializer
 
     def get_queryset(self):
-        search = self.request.query_params.get('search')
-        queryset = hrm_admin_model.EmployeeInformationModel.objects.all()
-        return queryset.filter(Q(user__full_name__icontains=search) |
-                               Q(emp_department__department__icontains=search) |
-                               Q(designation__designation__icontains=search) |
-                               Q(user__email__icontains=search))
+        try:
+            search = self.request.query_params.get('search')
+            queryset = hrm_admin_model.EmployeeInformationModel.objects.all()
+            return queryset.filter(Q(user__full_name__icontains=search) |
+                                   Q(emp_department__department__icontains=search) |
+                                   Q(designation__designation__icontains=search) |
+                                   Q(user__email__icontains=search))
+        except:
+            return hrm_admin_model.EmployeeInformationModel.objects.all()
 
     def list(self, request, *args, **kwargs):
         serializer = self.get_serializer(self.get_queryset(), many=True)
@@ -228,4 +231,3 @@ class EmployeeTrainingView(generics.ListCreateAPIView):
     permission_classes = [custom_permission.EmployeeAdminAuthenticated]
     serializer_class = hrm_admin_serializer.EmployeeTrainingSerializer
     queryset = hrm_admin_model.TrainingModel.objects.all()
-
