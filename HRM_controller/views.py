@@ -1,7 +1,7 @@
 import requests
 from django.db.models import Q
 from django.shortcuts import render
-from rest_framework import generics, mixins, response, serializers
+from rest_framework import generics, mixins, response, serializers, status
 from HRM_controller import serializeres as hrm_serializers, models
 from UserApp import permissions as user_permissions, models as user_models
 from datetime import datetime, date
@@ -331,6 +331,27 @@ class AttendanceRegistrationView(generics.ListCreateAPIView, generics.RetrieveUp
                     'registration_id': emp.registration_id
                 })
         return response.Response(employee_list)
+
+    def delete(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        auth_user = 'Techforing_Ltd'
+        auth_code = "09345jljrksdfhhsr745h3j4w8dd9fs"
+        url = 'https://rumytechnologies.com/rams/json_api'
+
+        data = {
+            "operation": "delete_permanently",
+            "auth_user": auth_user,
+            "auth_code": auth_code,
+            "username": instance.registration_id
+        }
+
+        posts = requests.post(url, json=data)
+        if posts.content.decode("utf-8") == 'User Successfully Deleted':
+            instance.delete()
+            return response.Response({'message': 'Deleted Successfully'})
+
+        return response.Response({'message': posts.content.decode("utf-8")}, status=status.HTTP_404_NOT_FOUND)
 
 
 class CreateHolidaysView(generics.ListCreateAPIView, generics.RetrieveUpdateAPIView):
