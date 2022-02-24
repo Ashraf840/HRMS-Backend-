@@ -33,6 +33,12 @@ class SurveyUserResponseSerializer(serializers.ModelSerializer):
         }
 
 
+class SurveyDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.SurveyUserResponseModel
+        fields = '__all__'
+
+
 # Employee Evaluation Section
 
 class AllUserSerializer(serializers.ModelSerializer):
