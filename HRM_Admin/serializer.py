@@ -6,7 +6,6 @@ from UserApp import models as user_model, serializer as user_serializer
 
 
 class EmployeeUserSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = user_model.User
         fields = ['id', 'full_name']
@@ -131,7 +130,7 @@ class EmployeeInformationSerializer(serializers.ModelSerializer):
     workExperience = user_serializer.UserWorkExperienceSerializer(source='working_experience_user', many=True)
     userSkills = user_serializer.UserSkillsSerializer(source='skills_user')
     references = recruitment_serializer.ReferenceInformationSerializer(source='reference_information_user', many=True)
-    documents = recruitment_serializer.DocumentationSubmissionSerializer(source='document_submission_user',many=True)
+    documents = recruitment_serializer.DocumentationSubmissionSerializer(source='document_submission_user', many=True)
     employeeInfo = EmployeeInfoSerializer(source='employee_user_info')
 
     class Meta:
@@ -162,6 +161,7 @@ class ManagePermissionAccessSerializer(serializers.ModelSerializer):
 
 
 class EmployeeTrainingSerializer(serializers.ModelSerializer):
+    # department = serializers.SlugRelatedField(queryset=user_model.UserDepartmentModel.objects.all(), slug_field='department')
     class Meta:
         model = hrm_admin.TrainingModel
         fields = '__all__'

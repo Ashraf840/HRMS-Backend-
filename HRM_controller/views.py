@@ -68,10 +68,11 @@ class SurveyUserResponseView(generics.ListCreateAPIView):
                 'message': 'You have already submitted survey this month.'
             }, status=status.HTTP_400_BAD_REQUEST)
         data = json.loads(serialize('json', user_answer))
+        # print(data[0])
+        for d in data:
+            d.pop('model')
 
-        return response.Response({
-            'data': data
-        })
+        return response.Response(data)
 
     def create(self, request, *args, **kwargs):
         ser = self.get_serializer(data=request.data, many=isinstance(request.data, list))
@@ -143,7 +144,7 @@ class EmployeeEvaluationQuestionView(generics.ListAPIView):
     def get(self, request, *args, **kwargs):
         queryset = models.EmployeeCriteriaModel.objects.all()
         data = hrm_serializers.EmployeeEvaluationQuestionSerializer(queryset, many=True)
-        print(queryset.count())
+        # print(queryset.count())
         answers = []
         for x, y in models.ratings:
             answers.append({'id': x, 'criteria': y})
