@@ -32,6 +32,6 @@ py manage.py migrate
 py manage.py createsuperuser
 ```
 
-_N.B: Currently Using sqlite database for development purpose._
+<!-- _N.B: Currently Using sqlite database for development purpose._ -->
 
 **_N.B: Never work on master branch. Create your own branch to work on._**
