@@ -33,7 +33,7 @@ class EmployeeInformationModel(models.Model):
     employee_is_permanent = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.user.full_name}, {self.emp_department.department} - {self.designation.designation}'
+        return f'{self.id} - {self.user.full_name}, {self.emp_department.department} - {self.designation.designation}'
 
 
 class EmployeeSalaryModel(models.Model):
@@ -73,7 +73,7 @@ class EmployeeEmergencyContactModel(models.Model):
     phoneNo = models.CharField(max_length=20, blank=True)
 
     def __str__(self):
-        return f'{self.employee.user.full_name}, {self.relation}'
+        return f'{self.id} - {self.employee.user.full_name}, {self.relation}'
 
 
 class EmployeeBankInfoModel(models.Model):
@@ -84,7 +84,7 @@ class EmployeeBankInfoModel(models.Model):
     bank_name = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
-        return f'{self.employee.user.full_name}, {self.account_no}'
+        return f'{self.id} - {self.employee.user.full_name}, {self.account_no}'
 
 
 class ModulePermissionModel(models.Model):
@@ -111,7 +111,7 @@ class TrainingModel(models.Model):
     training_link = models.URLField()
 
     def __str__(self):
-        return f'{self.training_name}'
+        return f'{self.id} - {self.training_name}'
 
 
 @receiver(post_save, sender=EmployeeInformationModel)

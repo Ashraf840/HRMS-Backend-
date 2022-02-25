@@ -34,7 +34,8 @@ class EmployeeAdminAuthenticated(permissions.BasePermission):
         return bool(
             (request.user and request.user.is_authenticated and request.user.email_validated
              and request.user.is_employee) and (
-                        request.user.is_hr or request.user.is_superuser or request.method in SAFE_METHODS))
+                    request.user.is_hr or request.user.is_superuser or request.method in SAFE_METHODS))
+
 
 class CandidateAdminAuthenticated(permissions.BasePermission):
     """
@@ -44,7 +45,7 @@ class CandidateAdminAuthenticated(permissions.BasePermission):
     def has_permission(self, request, view):
         return bool(
             (request.user and request.user.is_authenticated and request.user.email_validated) and (
-                        request.user.is_hr or request.user.is_superuser or request.method in SAFE_METHODS))
+                    request.user.is_hr or request.user.is_superuser or request.method in SAFE_METHODS))
 
 
 class IsHrOrReadOnly(permissions.BasePermission):
@@ -53,11 +54,11 @@ class IsHrOrReadOnly(permissions.BasePermission):
     """
 
     def has_permission(self, request, view):
-        return bool(
-            request.user and request.user.is_authenticated and request.user.email_validated
-            and request.user.is_hr or request.user.is_authenticated and request.user.is_employee
-            and request.user.email_validated and request.method in SAFE_METHODS
-        )
+        return bool(request.user.is_superuser or
+                    request.user and request.user.is_authenticated and request.user.email_validated
+                    and request.user.is_hr or request.user.is_authenticated and request.user.is_employee
+                    and request.user.email_validated and request.method in SAFE_METHODS
+                    )
 
 
 class EditPermission(permissions.BasePermission):
