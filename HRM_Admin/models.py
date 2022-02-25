@@ -108,7 +108,8 @@ class TrainingModel(models.Model):
                                    related_name='employee_training_department', blank=True, null=True)
     passing_mark = models.PositiveIntegerField()
     training_name = models.CharField(max_length=255)
-    training_link = models.URLField()
+    training_link = models.URLField(blank=True)
+    assign_date = models.DateField(auto_now_add=True, blank=True)
 
     def __str__(self):
         return f'{self.id} - {self.training_name}'
