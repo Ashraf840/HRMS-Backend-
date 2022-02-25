@@ -187,7 +187,7 @@ DATABASES = {
             'sql_mode': 'traditional',
         }
     }
-# }
+}
 
 # ============== securing proxy for heroku hosting ==============
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
