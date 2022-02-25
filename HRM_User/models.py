@@ -12,7 +12,7 @@ class EmployeeTrainingResponseResultModel(models.Model):
     test_mark = models.PositiveIntegerField()
 
     def __str__(self):
-        return f'{self.employee}, {self.test_mark}'
+        return f'{self.id} - {self.employee}, {self.test_mark}'
 
 
 # class EmployeeAttendanceAccessModel(models.Model):
@@ -56,7 +56,7 @@ class LeaveRequestModel(models.Model):
                                     null=True)
 
     def __str__(self):
-        return f'{self.employee}- {self.leave_type}'
+        return f'{self.id} - {self.employee}, {self.leave_type}'
 
 
 

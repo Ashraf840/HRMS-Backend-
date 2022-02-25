@@ -66,7 +66,7 @@ class SurveyUserResponseView(generics.ListCreateAPIView):
         if questions_count == user_answer.count():
             return response.Response({
                 'message': 'You have already submitted survey this month.'
-            })
+            }, status=status.HTTP_400_BAD_REQUEST)
         data = json.loads(serialize('json', user_answer))
 
         return response.Response({
@@ -90,7 +90,7 @@ class SurveyUserResponseView(generics.ListCreateAPIView):
             if (questions_count.count() <= user_answer.count()) or user_answer.filter(question_id=current_question):
                 return response.Response({
                     'message': 'Already Evaluated'
-                })
+                }, status=status.HTTP_400_BAD_REQUEST)
 
         self.perform_create(ser)
         return response.Response({
