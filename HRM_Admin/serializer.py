@@ -105,7 +105,7 @@ class SalaryInfoSerializer(serializers.ModelSerializer):
 class EmployeeSalarySerializer(serializers.ModelSerializer):
     class Meta:
         model = hrm_admin.EmployeeSalaryModel
-        fields = ['salary', ]
+        fields = '__all__'
 
 
 # Employee update section
@@ -155,7 +155,8 @@ class EmployeeBankInformationSerializer(serializers.ModelSerializer):
 class EmployeeInfoSerializer(serializers.ModelSerializer):
     employeeEmergencyContactInfo = EmployeeEmergencyContactSerializer(source='employee_emergency_contact_info',
                                                                       many=True)
-    employeeSalaryInfo = EmployeeBankInformationSerializer(source='employee_bank_info')
+    employeeBankInfo = EmployeeBankInformationSerializer(source='employee_bank_info')
+    employeeSalaryInfo = EmployeeSalarySerializer(source='employee_salary_employee')
     designation = serializers.StringRelatedField()
     emp_department = serializers.StringRelatedField()
 
@@ -180,7 +181,6 @@ class EmployeeInformationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = user_model.User
-
         fields = '__all__'
         extra_kwargs = {
             'password': {'write_only': True}
