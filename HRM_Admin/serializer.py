@@ -120,7 +120,7 @@ class EmployeeUpdateDeleteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = hrm_admin.EmployeeInformationModel
-        fields = ['user', 'emp_department', 'designation', 'shift', 'employee_is_permanent', 'salary']
+        fields = ['user', 'emp_department', 'designation', 'shift', 'joining_date', 'employee_is_permanent', 'salary']
 
     def update(self, instance, validated_data):
         # print(validated_data.pop('employee_salary_employee'))
