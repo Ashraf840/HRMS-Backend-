@@ -11,6 +11,14 @@ class EmployeeUserSerializer(serializers.ModelSerializer):
         fields = ['id', 'full_name']
 
 
+class EmployeeUserUpdateDeleteSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(allow_blank=True)
+
+    class Meta:
+        model = user_model.User
+        fields = ['id', 'email', 'full_name', 'phone_number', 'nid', 'nationality', 'location', 'birthDate', 'gender']
+
+
 class EmployeeInformationListSerializer(serializers.ModelSerializer):
     """
     new employee add without career site.
@@ -64,9 +72,6 @@ class OnboardNewEmployeeSerializer(serializers.ModelSerializer):
 
 
 class EmployeeInformationCreateSerializer(serializers.ModelSerializer):
-    # email = serializers.EmailField(validators=[UniqueValidator(queryset=user_model.User.objects.all(),
-    #                                                            message="Name already exists")])
-
     user = user_serializer.RegisterSerializer()
 
     class Meta:
@@ -97,7 +102,30 @@ class SalaryInfoSerializer(serializers.ModelSerializer):
         return salary
 
 
-# Employee information serializers
+# Employee update section
+class EmployeeUpdateDeleteSerializer(serializers.ModelSerializer):
+    """
+    Employee information update serializer
+    """
+    user = EmployeeUserUpdateDeleteSerializer()
+
+    class Meta:
+        model = hrm_admin.EmployeeInformationModel
+        fields = ['user', 'emp_department', 'designation', 'shift', 'employee_is_permanent']
+
+    def update(self, instance, validated_data):
+        if 'user' in validated_data:
+            nested_serializer = self.fields['user']
+            nested_instance = instance.user
+            nested_data = validated_data.pop('user')
+            email_valid = nested_data.get('email')
+            if instance.user.email == email_valid:
+                nested_data.pop('email')
+            nested_serializer.update(nested_instance, nested_data)
+        return super(EmployeeUpdateDeleteSerializer, self).update(instance, validated_data)
+
+
+# Employee extra information serializers
 class EmployeeEmergencyContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = hrm_admin.EmployeeEmergencyContactModel
@@ -123,6 +151,9 @@ class EmployeeInfoSerializer(serializers.ModelSerializer):
 
 
 class EmployeeInformationSerializer(serializers.ModelSerializer):
+    """
+    Employee details Information's
+    """
     academicInfo = user_serializer.UserAcademicDetailsSerializer(source='academic_info_user', many=True)
     certificationInfo = user_serializer.UserCertificationsSerializer(source='certification_info_user', many=True)
     trainingInfo = user_serializer.UserTrainingExperienceSerializer(source='training_info_user', many=True)
@@ -151,6 +182,7 @@ class EmployeeInformationSerializer(serializers.ModelSerializer):
         return data
 
 
+# Employee permission
 class ManagePermissionAccessSerializer(serializers.ModelSerializer):
     class Meta:
         model = hrm_admin.ModulePermissionModel

@@ -1,4 +1,7 @@
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 from UserApp import models as user_model
 from HRM_Admin import models as hrm_models
 
@@ -138,3 +141,22 @@ class AttendanceEmployeeShiftRelModel(models.Model):
 
     def __str__(self):
         return f'{self.employee_relation} - {self.shift}'
+
+
+class EmployeeAttendanceLogModel(models.Model):
+    employee = models.ForeignKey(hrm_models.EmployeeInformationModel, on_delete=models.CASCADE,
+                                 related_name='employee_attendance_log')
+    in_date = models.DateField()
+    in_time = models.TimeField()
+    out_date = models.DateField(blank=True)
+    out_time = models.TimeField(blank=True)
+    total_hour = models.CharField(max_length=30, blank=True)
+
+    def __str__(self):
+        return f'{self.employee.user.full_name} in {self.in_time}  out {self.out_time}'
+
+#
+# @receiver(post_save, sender=EmployeeAttendanceLogModel)
+# def save_profile(sender, instance, **kwargs):
+#     print(instance)
+#     instance.profile.save()

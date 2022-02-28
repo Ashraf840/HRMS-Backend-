@@ -1,6 +1,8 @@
 from django.contrib import admin
 from HRM_User import models
 
-# Register your models here.
+# Employee training response information
 admin.site.register(models.EmployeeTrainingResponseResultModel)
+
+# Attendance leave request
 admin.site.register(models.LeaveRequestModel)

@@ -21,4 +21,5 @@ urlpatterns = [
     path('attendance_shift/<id>/', views.AttendanceShiftView.as_view(), name='attendance_shift'),
     path('attendance_registration/', views.AttendanceRegistrationView.as_view(), name='attendance_registration'),
     path('attendance_registration/<id>/', views.AttendanceRegistrationView.as_view(), name='attendance_registration'),
+    path('attendance_log/', views.EmployeeAttendanceLogView.as_view(), name='employee_attendance_log'),
 ]

@@ -142,3 +142,9 @@ class AttendanceRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.AttendanceEmployeeRelModel
         fields = '__all__'
+
+
+class EmployeeAttendanceLogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.EmployeeAttendanceLogModel
+        fields = '__all__'
