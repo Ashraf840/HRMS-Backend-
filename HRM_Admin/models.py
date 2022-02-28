@@ -40,8 +40,8 @@ class EmployeeSalaryModel(models.Model):
     """
     employee salary will store here
     """
-    employee = models.ForeignKey(EmployeeInformationModel, on_delete=models.CASCADE,
-                                 related_name='employee_salary_employee')
+    employee = models.OneToOneField(EmployeeInformationModel, on_delete=models.CASCADE,
+                                    related_name='employee_salary_employee')
     salary = models.CharField(max_length=20, blank=True)
 
     def __str__(self):

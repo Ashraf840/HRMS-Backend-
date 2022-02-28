@@ -388,3 +388,10 @@ class CreateHolidaysView(generics.ListCreateAPIView, generics.RetrieveUpdateAPIV
 
         queryset = models.HolidayModel.objects.all()
         return queryset
+
+
+class EmployeeAttendanceLogView(generics.ListCreateAPIView):
+    permission_classes = [user_permissions.EmployeeAuthenticated]
+    serializer_class = hrm_serializers.EmployeeAttendanceLogSerializer
+    queryset = models.EmployeeAttendanceLogModel.objects.all()
+

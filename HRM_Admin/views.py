@@ -1,7 +1,7 @@
 import datetime
 from django.db.models import Q
 from rest_framework.response import Response
-from rest_framework import generics
+from rest_framework import generics, status
 from HRM_Admin import models as hrm_admin_model, serializer as hrm_admin_serializer
 from UserApp import models as user_model, permissions as custom_permission, utils
 from AdminOperationApp import models as admin_operation_model
@@ -201,6 +201,26 @@ class EmployeeInformationListView(generics.ListAPIView):
         return Response(responseData)
 
 
+class EmployeeInformationUpdateView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [custom_permission.EmployeeAdminAuthenticated]
+    serializer_class = hrm_admin_serializer.EmployeeUpdateDeleteSerializer
+    queryset = hrm_admin_model.EmployeeInformationModel.objects.all()
+    lookup_field = 'user_id'
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        req_email = request.data.get('user.email')
+        if instance.user.email != req_email:
+            email_validator = user_model.User.objects.filter(email=req_email)
+            if len(email_validator) > 0:
+                return Response({'message': 'Email already exists'}, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
+
+
 class EmployeeInformationView(generics.ListAPIView):
     """
     Employee information detailed view
@@ -246,4 +266,3 @@ class EmployeeTrainingUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = hrm_admin_serializer.EmployeeTrainingSerializer
     queryset = hrm_admin_model.TrainingModel.objects.all()
     lookup_field = 'id'
-
