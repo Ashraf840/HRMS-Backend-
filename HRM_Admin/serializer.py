@@ -115,6 +115,8 @@ class EmployeeUpdateDeleteSerializer(serializers.ModelSerializer):
     """
     user = EmployeeUserUpdateDeleteSerializer()
     salary = EmployeeSalarySerializer(source='employee_salary_employee')
+    emp_department = serializers.SlugRelatedField(queryset=user_model.UserDepartmentModel.objects.all(), slug_field='department')
+    designation = serializers.SlugRelatedField(queryset=user_model.UserDesignationModel.objects.all(), slug_field='designation')
 
     class Meta:
         model = hrm_admin.EmployeeInformationModel
