@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -155,8 +157,13 @@ class EmployeeAttendanceLogModel(models.Model):
     def __str__(self):
         return f'{self.employee.user.full_name} in {self.in_time}  out {self.out_time}'
 
-#
+
 # @receiver(post_save, sender=EmployeeAttendanceLogModel)
-# def save_profile(sender, instance, **kwargs):
-#     print(instance)
-#     instance.profile.save()
+# def save_total_hour(sender, instance, **kwargs):
+#     # print(instance.in_time)
+#     # print(instance.out_time)
+#     # total_hour = instance.out_time - instance.in_time
+#     #
+#     # print(total_hour)
+#     # instance.total_hour = str(total_hour)
+#     instance.save()
