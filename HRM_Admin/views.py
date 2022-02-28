@@ -232,14 +232,12 @@ class EmployeeTrainingView(generics.ListCreateAPIView):
     serializer_class = hrm_admin_serializer.EmployeeTrainingSerializer
 
     def get_queryset(self):
-        queryset = hrm_admin_model.TrainingModel.objects.all()
         try:
-            search = self.request.query_params('search')
-            return queryset.filter(Q(department__department__icontains=search) |
-                                   Q(training_name__icontains=search) |
-                                   Q(passing_mark__exact=search))
+            search = self.request.query_params.get('search')
+            return hrm_admin_model.TrainingModel.objects.filter(Q(department__department__icontains=search) |
+                                                                Q(training_name__icontains=search))
         except:
-            return queryset
+            return hrm_admin_model.TrainingModel.objects.all()
 
     # def list(self, request, *args, **kwargs):
     #     ser = self.get_serializer(self.get_queryset(), many=True)
