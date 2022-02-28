@@ -105,7 +105,7 @@ class SalaryInfoSerializer(serializers.ModelSerializer):
 class EmployeeSalarySerializer(serializers.ModelSerializer):
     class Meta:
         model = hrm_admin.EmployeeSalaryModel
-        fields = '__all__'
+        fields = ['salary',]
 
 
 # Employee update section
