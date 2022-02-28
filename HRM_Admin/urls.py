@@ -10,7 +10,7 @@ urlpatterns = [
     path('module_permission_access/<employee__user_id>/', hrm_admin_view.ManagePermissionAccessView.as_view(), name='module_permission_access'),
     # Employee training section
     path('employee_training/', hrm_admin_view.EmployeeTrainingView.as_view(), name='employee_training_information'),
-    path('employee_training/<id>/', hrm_admin_view.EmployeeTrainingView.as_view(), name='employee_training_information_update_delete'),
+    path('employee_training/<id>/', hrm_admin_view.EmployeeTrainingUpdateDeleteView.as_view(), name='employee_training_information_update_delete'),
 
 
 ]
