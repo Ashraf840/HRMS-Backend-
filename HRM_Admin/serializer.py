@@ -102,26 +102,40 @@ class SalaryInfoSerializer(serializers.ModelSerializer):
         return salary
 
 
+class EmployeeSalarySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = hrm_admin.EmployeeSalaryModel
+        fields = ['salary', ]
+
+
 # Employee update section
 class EmployeeUpdateDeleteSerializer(serializers.ModelSerializer):
     """
     Employee information update serializer
     """
     user = EmployeeUserUpdateDeleteSerializer()
+    salary = EmployeeSalarySerializer(source='employee_salary_employee')
 
     class Meta:
         model = hrm_admin.EmployeeInformationModel
-        fields = ['user', 'emp_department', 'designation', 'shift', 'employee_is_permanent']
+        fields = ['user', 'emp_department', 'designation', 'shift', 'employee_is_permanent', 'salary']
 
     def update(self, instance, validated_data):
+        # print(validated_data.pop('employee_salary_employee'))
         if 'user' in validated_data:
             nested_serializer = self.fields['user']
+            nested_serializer_salary = self.fields['salary']
             nested_instance = instance.user
+            nested_instance_salary = instance.employee_salary_employee
             nested_data = validated_data.pop('user')
+            nested_salary = validated_data.pop('employee_salary_employee')
+
             email_valid = nested_data.get('email')
             if instance.user.email == email_valid:
                 nested_data.pop('email')
+
             nested_serializer.update(nested_instance, nested_data)
+            nested_serializer_salary.update(nested_instance_salary, nested_salary)
         return super(EmployeeUpdateDeleteSerializer, self).update(instance, validated_data)
 
 
