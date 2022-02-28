@@ -226,11 +226,10 @@ class ManagePermissionAccessView(generics.RetrieveUpdateAPIView):
     lookup_field = 'employee__user_id'
 
 
-class EmployeeTrainingView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
-    """employee training information add"""
+class EmployeeTrainingView(generics.ListCreateAPIView):
+    """employee training information add List"""
     permission_classes = [custom_permission.EmployeeAdminAuthenticated]
     serializer_class = hrm_admin_serializer.EmployeeTrainingSerializer
-    lookup_field = 'id'
 
     def get_queryset(self):
         try:
@@ -239,3 +238,12 @@ class EmployeeTrainingView(generics.ListCreateAPIView, generics.RetrieveUpdateDe
                                                                 Q(training_name__icontains=search))
         except:
             return hrm_admin_model.TrainingModel.objects.all()
+
+
+class EmployeeTrainingUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    """employee training information add List"""
+    permission_classes = [custom_permission.EmployeeAdminAuthenticated]
+    serializer_class = hrm_admin_serializer.EmployeeTrainingSerializer
+    queryset = hrm_admin_model.TrainingModel.objects.all()
+    lookup_field = 'id'
+
