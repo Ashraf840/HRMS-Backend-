@@ -230,12 +230,18 @@ class EmployeeTrainingView(generics.ListCreateAPIView):
     """employee training information add"""
     permission_classes = [custom_permission.EmployeeAdminAuthenticated]
     serializer_class = hrm_admin_serializer.EmployeeTrainingSerializer
-    queryset = hrm_admin_model.TrainingModel.objects.all()
+
+    def get_queryset(self):
+        queryset = hrm_admin_model.TrainingModel.objects.all()
+        try:
+            search = self.request.query_params('search')
+            return queryset.filter(Q(department__department__icontains=search) |
+                                   Q(training_name__icontains=search) |
+                                   Q(passing_mark__exact=search))
+        except:
+            return queryset
 
     # def list(self, request, *args, **kwargs):
     #     ser = self.get_serializer(self.get_queryset(), many=True)
     #     responseData = ser.data
     #     print(responseData)
-
-
-
