@@ -1,9 +1,7 @@
 import datetime
-
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
 from UserApp import models as user_model
 from HRM_Admin import models as hrm_models
 
@@ -160,10 +158,9 @@ class EmployeeAttendanceLogModel(models.Model):
 
 # @receiver(post_save, sender=EmployeeAttendanceLogModel)
 # def save_total_hour(sender, instance, **kwargs):
-#     # print(instance.in_time)
-#     # print(instance.out_time)
-#     # total_hour = instance.out_time - instance.in_time
-#     #
-#     # print(total_hour)
-#     # instance.total_hour = str(total_hour)
+#     formt = '%H:%M:%S'
+#     total_hour = datetime.datetime.strptime(instance.out_time,formt) - datetime.datetime.strptime(instance.in_time,formt)
+#
+#     print(total_hour)
+#     instance.total_hour = str(total_hour)
 #     instance.save()
