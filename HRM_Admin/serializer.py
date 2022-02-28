@@ -161,7 +161,9 @@ class ManagePermissionAccessSerializer(serializers.ModelSerializer):
 
 
 class EmployeeTrainingSerializer(serializers.ModelSerializer):
-    # department = serializers.SlugRelatedField(queryset=user_model.UserDepartmentModel.objects.all(), slug_field='department')
+    department = serializers.SlugRelatedField(queryset=user_model.UserDepartmentModel.objects.all(),
+                                              slug_field='department')
+
     class Meta:
         model = hrm_admin.TrainingModel
         fields = '__all__'

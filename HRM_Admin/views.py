@@ -231,3 +231,11 @@ class EmployeeTrainingView(generics.ListCreateAPIView):
     permission_classes = [custom_permission.EmployeeAdminAuthenticated]
     serializer_class = hrm_admin_serializer.EmployeeTrainingSerializer
     queryset = hrm_admin_model.TrainingModel.objects.all()
+
+    # def list(self, request, *args, **kwargs):
+    #     ser = self.get_serializer(self.get_queryset(), many=True)
+    #     responseData = ser.data
+    #     print(responseData)
+
+
+
