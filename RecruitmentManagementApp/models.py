@@ -161,6 +161,7 @@ class PracticalTestModel(models.Model):
     jobInfo = models.OneToOneField(JobPostModel, on_delete=models.CASCADE, related_name='practical_job_info')
     practicalFile = models.FileField(verbose_name='Practical Test File', upload_to='users/files', blank=True)
     testLink = models.URLField(verbose_name='Test link', blank=True)
+    instruction = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f'{self.jobInfo}'
