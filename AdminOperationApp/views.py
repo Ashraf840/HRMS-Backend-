@@ -40,7 +40,8 @@ class OfficialDocStoreView(generics.ListCreateAPIView):
                 id = self.kwargs['application_id']
                 try:
                     appointmentLetter = OfficialDocumentsModel.objects.get(applicationId=id)
-                    responseData.append({'docName': 'Appointment Letter', 'docFile': appointmentLetter.appointmentLetter})
+                    responseData.append(
+                        {'docName': 'Appointment Letter', 'docFile': appointmentLetter.appointmentLetter})
                 except:
                     responseData.append({'docName': 'Appointment Letter', 'docFile': ''})
                 return Response(responseData)
@@ -694,26 +695,31 @@ class ReferenceVerificationView(generics.RetrieveUpdateAPIView):
     queryset = ReferenceInformationModel.objects.all()
     lookup_field = 'id'
 
-    def perform_update(self, serializer):
-        instance = serializer.save()
-        refId = self.kwargs['id']
-        refInfo = ReferenceInformationModel.objects.get(id=refId)
-        refCheck = ReferenceInformationModel.objects.filter(applied_job=refInfo.applied_job)
-
-        count = 0
-        for ref in refCheck:
-            if ref.is_verified:
-                count += 1
-
-            if len(refCheck) == count:
-                refInfo.applied_job.jobProgressStatus = JobStatusModel.objects.get(status='Onboarding')
-                refInfo.applied_job.save()
-
-                email_body = f'Hi  {refInfo.applied_job.userId.full_name} Your Verification is completed please join ' \
-                             f'office ASAP '
-                data = {'email_body': email_body, 'to_email': refInfo.applied_job.userId.email,
-                        'email_subject': 'Update'}
-                Util.send_email(data)
+    # def perform_update(self, serializer):
+    # refId = self.kwargs['id']
+    # documents = DocumentSubmissionModel.objects.get(applied_job__references_submission_applied_job=refId)
+    # if documents.is_verified:
+    #     instance = serializer.save()
+    #     refInfo = ReferenceInformationModel.objects.get(id=refId)
+    #     refCheck = ReferenceInformationModel.objects.filter(applied_job=refInfo.applied_job)
+    #
+    #     count = 0
+    #     for ref in refCheck:
+    #         if ref.is_verified:
+    #             count += 1
+    #
+    #         if len(refCheck) == count:
+    #             refInfo.applied_job.jobProgressStatus = JobStatusModel.objects.get(status='Onboarding')
+    #             refInfo.applied_job.save()
+    #
+    #             email_body = f'Hi  {refInfo.applied_job.userId.full_name} Your Verification is completed please join ' \
+    #                          f'office ASAP '
+    #             data = {'email_body': email_body, 'to_email': refInfo.applied_job.userId.email,
+    #                     'email_subject': 'Update'}
+    #             Util.send_email(data)
+    # else:
+    #     return Response({'message': 'Documents is not verified yet.'}, status=status.HTTP_400_BAD_REQUEST)
+    # raise ValueError
 
     def get(self, request, *args, **kwargs):
         ser = self.get_serializer(self.get_queryset())
@@ -733,10 +739,40 @@ class ReferenceVerificationView(generics.RetrieveUpdateAPIView):
         # # loop = asyncio.get_event_loop()
         # asyncio.run(mail_send())
 
-        Util.send_email(data)
+        # Util.send_email(data)
         refInfo.is_sent = True
         refInfo.save()
         return Response(response)
+
+    def update(self, request, *args, **kwargs):
+        refId = self.kwargs['id']
+        documents = DocumentSubmissionModel.objects.get(applied_job__references_submission_applied_job=refId)
+        if documents.is_verified:
+            instance = self.get_object()
+            serializer = self.get_serializer(instance, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            self.perform_update(serializer)
+            refInfo = ReferenceInformationModel.objects.get(id=refId)
+            refCheck = ReferenceInformationModel.objects.filter(applied_job=refInfo.applied_job)
+
+            count = 0
+            for ref in refCheck:
+                if ref.is_verified:
+                    count += 1
+
+                if len(refCheck) == count:
+                    refInfo.applied_job.jobProgressStatus = JobStatusModel.objects.get(status='Onboarding')
+                    refInfo.applied_job.save()
+
+                    email_body = f'Hi  {refInfo.applied_job.userId.full_name} Your Verification is completed please join ' \
+                                 f'office ASAP '
+                    data = {'email_body': email_body, 'to_email': refInfo.applied_job.userId.email,
+                            'email_subject': 'Update'}
+                    Util.send_email(data)
+        else:
+            return Response({'message': 'Documents is not verified yet.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(serializer.data)
 
 
 class SelectedForOnboardView(generics.ListAPIView):
