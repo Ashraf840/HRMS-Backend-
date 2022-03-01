@@ -93,10 +93,10 @@ class DepartmentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class FieldTypeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.FieldTypeModels
-        fields = '__all__'
+# class FieldTypeSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = models.FieldTypeModels
+#         fields = '__all__'
 
 
 class FilterQuestionAnsSerializer(serializers.ModelSerializer):
@@ -115,7 +115,7 @@ class JobDetailsForFilterQusSer(serializers.ModelSerializer):
 
 class FilterQuestionListSerializer(serializers.ModelSerializer):
     jobId = JobDetailsForFilterQusSer()
-    fieldType = FieldTypeSerializer()
+    # fieldType = FieldTypeSerializer()
     answer = FilterQuestionAnsSerializer(source='job_apply_filter_question_answer')
 
     class Meta:

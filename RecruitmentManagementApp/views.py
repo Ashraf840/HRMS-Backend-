@@ -162,11 +162,14 @@ class FilterQuestionListView(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = models.JobApplyFilterQuestionModel.objects.all()
-        search = self.request.query_params.get('search')
+        try:
+            search = self.request.query_params.get('search')
 
-        return queryset.filter(Q(jobId__jobTitle__icontains=search) |
-                               Q(question__icontains=search) |
-                               Q(fieldType__fieldType__icontains=search))
+            return queryset.filter(Q(jobId__jobTitle__icontains=search) |
+                                   Q(question__icontains=search) |
+                                   Q(fieldType__icontains=search))
+        except:
+            return queryset
 
 
 class CandidateFilterQuestionListView(generics.ListAPIView):

@@ -26,7 +26,6 @@ admin.site.register(models.DocumentSubmissionModel)
 admin.site.register(models.ReferenceInformationModel)
 admin.site.register(models.OfficialDocumentsModel)
 # filter questions sections
-admin.site.register(models.FieldTypeModels)
 admin.site.register(models.JobApplyFilterQuestionModel)
 admin.site.register(models.FilterQuestionAnswerModel)
 admin.site.register(models.FilterQuestionsResponseModelHR)
