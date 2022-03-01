@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 from UserApp.models import UserDepartmentModel, User
 from UserApp.models import UserDepartmentModel
 
@@ -15,8 +17,6 @@ practical question set model
 class JobStatusModel(models.Model):
     status = models.CharField(max_length=50, blank=False, null=False)
     statusOrder = models.IntegerField()
-
-    # is_completed = models.BooleanField(default=False, blank=True)
 
     def __str__(self):
         return f'{self.status}'
@@ -46,8 +46,6 @@ class JobPostModel(models.Model):
     vacancies = models.IntegerField()
     jobType = models.CharField(verbose_name="job type", max_length=50, choices=jobType)
     jobDescription = models.TextField(null=True)
-    # uploadCV = models.FileField(upload_to='user/')
-    # filterQuestions = models.ManyToManyField(JobApplyFilterQuestionModel, related_name='filter_question_list')
     jobProgressStatus = models.ManyToManyField(JobStatusModel, related_name='job_progress_statusM2M')
     is_active = models.BooleanField(default=True)
 
@@ -64,15 +62,6 @@ class JobPostModel(models.Model):
 
 
 # ============job apply filter questions section============
-# class FieldTypeModels(models.Model):
-#     fieldType = models.CharField(verbose_name='Field Type', max_length=50)
-#
-#     class Meta:
-#         verbose_name_plural = 'Field Type'
-#
-#     def __str__(self):
-#         return f'{self.fieldType}'
-
 
 field_type = (
     (1, 'Text'),
@@ -140,9 +129,6 @@ class FilterQuestionsResponseModelHR(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='response_by')
     jobPost = models.ForeignKey(JobPostModel, on_delete=models.CASCADE, related_name='job_info')
 
-    # appliedJob = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE,
-    #                                related_name='filter_question_job_application')
-
     def __str__(self):
         return f'{self.response}'
 
@@ -175,24 +161,6 @@ practical test response
 """
 
 
-#     order= models.T
-
-# status = (
-#         ('new', 'new'),
-#         ('online', 'online'),
-#         ('under_review', 'under_review'),
-#         ('practical', 'practical'),
-#         ('test_under_review', 'test_under_review'),
-#         ('interview', 'interview'),
-#         ('document', 'document'),
-#         ('reference', 'reference'),
-#         ('verification', 'verification'),
-#         ('appointed', 'appointed'),
-#         ('rejected', 'rejected')
-#
-#     )
-
-
 class OnlineTestResponseModel(models.Model):
     testName = models.CharField(max_length=200)
     testMark = models.IntegerField(blank=True, verbose_name='Test Mark')
@@ -221,18 +189,6 @@ class PracticalTestResponseModel(models.Model):
         return f'{self.user}'
 
 
-# class PracticalTestEvaluationModel(models.Model):
-#     choice = (
-#         ('A', 'A'),
-#         ('B', 'B'),
-#         ('C', 'C'),
-#         ('C', 'Fail'),
-#     )
-#     practicalTest = models.OneToOneField(PracticalTestResponseModel, on_delete=models.CASCADE,
-#                                          related_name='practical_test_evaluation_practical_res')
-#     grade = models.CharField(max_length=10,choices=choice)
-
-
 # for document naming
 def image_file_name(instance, filename):
     return '/'.join(['images', instance.user.full_name, filename])
@@ -243,17 +199,20 @@ def content_file_name(instance, filename):
 
 
 class DocumentSubmissionModel(models.Model):
+    """
+    Candidate personal documents will stored here
+    """
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='document_submission_user')
     applied_job = models.OneToOneField(UserJobAppliedModel, on_delete=models.CASCADE,
                                        related_name='document_submission_applied_job')
-    sscCertificate = models.FileField(upload_to=content_file_name, blank=True)
-    hscCertificate = models.FileField(upload_to=content_file_name, blank=True)
+    sscCertificate = models.FileField(upload_to=content_file_name)
+    hscCertificate = models.FileField(upload_to=content_file_name)
     graduationCertificate = models.FileField(upload_to=content_file_name, blank=True)
     postGraduationCertificate = models.FileField(upload_to=content_file_name, blank=True)
     nidCard = models.FileField(upload_to=content_file_name, blank=True)
     userPassportImage = models.ImageField(upload_to=image_file_name, blank=True)
-    passportSizePhoto = models.ImageField(upload_to=image_file_name, blank=True)
-    digitalSignature = models.ImageField(upload_to=image_file_name, blank=True)
+    passportSizePhoto = models.ImageField(upload_to=image_file_name)
+    digitalSignature = models.ImageField(upload_to=image_file_name)
     is_verified = models.BooleanField(default=False)
 
     def __str__(self):
@@ -261,6 +220,9 @@ class DocumentSubmissionModel(models.Model):
 
 
 class ReferenceInformationModel(models.Model):
+    """
+    candidate references information model
+    """
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reference_information_user')
     applied_job = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE,
                                     related_name='references_submission_applied_job')
@@ -277,12 +239,9 @@ class ReferenceInformationModel(models.Model):
         return f'pk: {self.pk} reference: {self.name}'
 
 
+# appointment letter naming function
 def appointment_file_name(instance, filename):
     return '/'.join(['OfficialDocuments', filename])
-
-
-# class ReferenceAuthorConfirmationResModel(models.Model):
-#
 
 
 class OfficialDocumentsModel(models.Model):
@@ -292,3 +251,9 @@ class OfficialDocumentsModel(models.Model):
 
     def __str__(self):
         return f'{self.id}'
+
+
+# Removing filter questions response garbage values
+@receiver(pre_delete, sender=UserJobAppliedModel)
+def log_deleted_question(sender, instance, **kwargs):
+    filterQus = FilterQuestionsResponseModelHR.objects.filter(user=instance.userId, jobPost=instance.jobPostId).delete()
