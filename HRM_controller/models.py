@@ -156,11 +156,12 @@ class EmployeeAttendanceLogModel(models.Model):
         return f'{self.employee.user.full_name} in {self.in_time}  out {self.out_time}'
 
 
-# @receiver(post_save, sender=EmployeeAttendanceLogModel)
-# def save_total_hour(sender, instance, **kwargs):
-#     formt = '%H:%M:%S'
-#     total_hour = datetime.datetime.strptime(instance.out_time,formt) - datetime.datetime.strptime(instance.in_time,formt)
-#
-#     print(total_hour)
-#     instance.total_hour = str(total_hour)
-#     instance.save()
+@receiver(post_save, sender=EmployeeAttendanceLogModel)
+def post_save(sender, instance, created, **kwargs):
+    in_time = datetime.datetime.combine(instance.in_date, instance.in_time)
+    out_time = datetime.datetime.combine(instance.out_date, instance.out_time)
+    total_hour = out_time - in_time
+
+    print(total_hour)
+    instance.total_hour = str(total_hour)
+    instance.save()

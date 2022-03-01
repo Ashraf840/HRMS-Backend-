@@ -86,6 +86,14 @@ class JobApplyFilterQuestionModel(models.Model):
         return f'{self.fieldType}, {self.question}'
 
 
+class JobFilterQuestionRadioButtonOptionModel(models.Model):
+    question = models.ForeignKey(JobApplyFilterQuestionModel, on_delete=models.CASCADE, related_name='filter_question_option_job',blank=True, null=True)
+    options = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f'{self.id}, {self.options}'
+
+
 class FilterQuestionAnswerModel(models.Model):
     """
     Filter question answer will be stored here for check and select candidate for next stage
@@ -196,7 +204,7 @@ class PracticalTestResponseModel(models.Model):
     appliedJob = models.OneToOneField(UserJobAppliedModel, on_delete=models.CASCADE,
                                       related_name='job_applied_practical_response')
     practicalTestResFiles = models.FileField(upload_to='practical_test/response/',
-                                             verbose_name='Practical test response', blank=True,null=True)
+                                             verbose_name='Practical test response', blank=True, null=True)
     practicalTestResLink = models.URLField(verbose_name='Practical test response', blank=True)
     submittedTime = models.DateTimeField(auto_now=True)
 
