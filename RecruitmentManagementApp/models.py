@@ -64,18 +64,25 @@ class JobPostModel(models.Model):
 
 
 # ============job apply filter questions section============
-class FieldTypeModels(models.Model):
-    fieldType = models.CharField(verbose_name='Field Type', max_length=50)
+# class FieldTypeModels(models.Model):
+#     fieldType = models.CharField(verbose_name='Field Type', max_length=50)
+#
+#     class Meta:
+#         verbose_name_plural = 'Field Type'
+#
+#     def __str__(self):
+#         return f'{self.fieldType}'
 
-    class Meta:
-        verbose_name_plural = 'Field Type'
 
-    def __str__(self):
-        return f'{self.fieldType}'
+field_type = (
+    (1, 'Text'),
+    (2, 'Radio'),
+    (3, 'Custom'),
+)
 
 
 class JobApplyFilterQuestionModel(models.Model):
-    fieldType = models.ForeignKey(FieldTypeModels, on_delete=models.CASCADE, related_name='filter_question_field_type')
+    fieldType = models.CharField(max_length=50, choices=field_type)
     jobId = models.ForeignKey(JobPostModel, on_delete=models.CASCADE, related_name='filter_qus_job_info')
     question = models.CharField(max_length=255, verbose_name='filter_question')
 
@@ -87,7 +94,8 @@ class JobApplyFilterQuestionModel(models.Model):
 
 
 class JobFilterQuestionRadioButtonOptionModel(models.Model):
-    question = models.ForeignKey(JobApplyFilterQuestionModel, on_delete=models.CASCADE, related_name='filter_question_option_job',blank=True, null=True)
+    question = models.ForeignKey(JobApplyFilterQuestionModel, on_delete=models.CASCADE,
+                                 related_name='filter_question_option_job', blank=True, null=True)
     options = models.CharField(max_length=255)
 
     def __str__(self):
