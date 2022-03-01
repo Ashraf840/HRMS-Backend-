@@ -9,6 +9,8 @@ from django_rest_passwordreset.signals import reset_password_token_created
 from django.shortcuts import HttpResponseRedirect
 from django.core.mail import send_mail
 from UserApp.utils import Util
+
+
 # from HRM_Admin import models as hrm_admin_model
 
 
@@ -308,21 +310,15 @@ Change and Reset Password section model
 
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
-
     # email_plaintext_message = f'{"https://career.techforing.com/set-new-password"}'
-    email_plaintext_message = 'https://career.techforing.com/set-new-password'
+    email_plaintext_message = 'https://career.techforing.com/auth/set-new-password/'
 
     email_body = 'Hi ' + \
                  f'{reset_password_token.user.full_name} Use this token to reset your password.\n' \
-                 f'token = {reset_password_token.key} \n' \
-                 f'{email_plaintext_message}'
+                 f'Visit the given link below to reset your password. \n' \
+                 f'{email_plaintext_message}{reset_password_token.key} \n'
+
     data = {'email_body': email_body, 'to_email': reset_password_token.user.email,
             'email_subject': 'Password Reset for Techforing'}
 
     Util.send_email(data)
-
-
-
-
-
-
