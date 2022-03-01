@@ -174,7 +174,7 @@ class FilterQuestionListView(generics.ListAPIView):
 
 class CandidateFilterQuestionListView(generics.ListAPIView):
     permission_classes = [Authenticated, IsCandidateUser]
-    serializer_class = serializer.FilterQuestionSerializer
+    serializer_class = serializer.CandidateFilterQuestionListSerializer
 
     def get_queryset(self):
         jobId = self.kwargs['jobId']

@@ -93,12 +93,6 @@ class DepartmentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-# class FieldTypeSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = models.FieldTypeModels
-#         fields = '__all__'
-
-
 class FilterQuestionAnsSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.FilterQuestionAnswerModel
@@ -115,7 +109,6 @@ class JobDetailsForFilterQusSer(serializers.ModelSerializer):
 
 class FilterQuestionListSerializer(serializers.ModelSerializer):
     jobId = JobDetailsForFilterQusSer()
-    # fieldType = FieldTypeSerializer()
     answer = FilterQuestionAnsSerializer(source='job_apply_filter_question_answer')
 
     class Meta:
@@ -140,7 +133,6 @@ class FilterQuestionAnswerSerializer(serializers.ModelSerializer):
         # extra_fields = ['filterQusOption']
 
     def create(self, validated_data):
-        # print(validated_data)
         question = validated_data.pop('question')
         if 'filter_question_option_job' in question:
             filterQusOption = question.pop('filter_question_option_job')
@@ -166,7 +158,20 @@ class FilterQuestionAnswerSerializer(serializers.ModelSerializer):
         return instance
 
 
+class CandidateFilterQuestionListSerializer(serializers.ModelSerializer):
+    filterQusOption = JobFilterQuestionRadioButtonOptionSerializer(source='filter_question_option_job', many=True)
+
+    class Meta:
+        model = models.JobApplyFilterQuestionModel
+        fields = '__all__'
+        extra_fields = ['filterQusOption']
+
+
 class FilterQuestionResponseSerializer(serializers.ModelSerializer):
+    """
+    Candidate filter questions response serializer
+    """
+
     class Meta:
         model = models.FilterQuestionsResponseModelHR
         fields = '__all__'
