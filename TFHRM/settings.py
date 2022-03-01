@@ -164,7 +164,6 @@ ROOT_URLCONF = 'TFHRM.urls'
 """
 Local server DB
 """
-
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
