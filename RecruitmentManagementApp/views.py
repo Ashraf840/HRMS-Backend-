@@ -861,3 +861,21 @@ class SignedAppointmentLetterSubmissionView(generics.CreateAPIView, generics.Ret
         else:
             return Response({'message': 'You are not allowed to submit this documents.'},
                             status=status.HTTP_400_BAD_REQUEST)
+
+
+# Withdraw job application
+class WithdrawApplicationView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [Authenticated]
+    serializer_class = serializer.CandidateStatusChangeSerializer
+    queryset = models.UserJobAppliedModel.objects.all()
+    lookup_field = 'id'
+
+    def update(self, request, *args, **kwargs):
+        applicationData = models.UserJobAppliedModel.objects.get(id=self.kwargs['id'], userId=self.request.user)
+        status = models.JobStatusModel.objects.all()
+        applicationData.jobProgressStatus = status.get(status='Withdrawn')
+        applicationData.save()
+        """
+        need to add Withdraw mail validation
+        """
+        return Response({'detail': 'Withdrawn'})
