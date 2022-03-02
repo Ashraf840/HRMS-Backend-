@@ -869,7 +869,7 @@ class WithdrawApplicationView(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.UserJobAppliedModel.objects.all()
     lookup_field = 'id'
 
-    def get(self, request, *args, **kwargs):
+    def update(self, request, *args, **kwargs):
         applicationData = models.UserJobAppliedModel.objects.get(id=self.kwargs['id'], userId=self.request.user)
         status = models.JobStatusModel.objects.all()
         applicationData.jobProgressStatus = status.get(status='Withdrawn')
