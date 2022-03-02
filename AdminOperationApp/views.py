@@ -11,7 +11,7 @@ from . import serializer
 from . import models
 from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel, OnlineTestResponseModel, \
     FilterQuestionsResponseModelHR, PracticalTestResponseModel, DocumentSubmissionModel, ReferenceInformationModel, \
-    JobStatusModel, OfficialDocumentsModel
+    JobStatusModel, OfficialDocumentsModel, SignedAppointmentLetterModel
 from RecruitmentManagementApp.serializer import ReferenceInformationSerializer
 from rest_framework.permissions import IsAuthenticated
 from UserApp import permissions as customPermission
@@ -42,6 +42,13 @@ class OfficialDocStoreView(generics.ListCreateAPIView):
                     appointmentLetter = OfficialDocumentsModel.objects.get(applicationId=id)
                     responseData.append(
                         {'docName': 'Appointment Letter', 'docFile': appointmentLetter.appointmentLetter})
+                    try:
+                        signedAppointment = SignedAppointmentLetterModel.objects.get(applicationId=id)
+                        responseData.append(
+                            {'docName': 'Signed Appointment Letter', 'docFile': signedAppointment.appointmentLetter})
+                    except:
+                        responseData.append({'docName': 'Appointment Letter', 'docFile': ''})
+
                 except:
                     responseData.append({'docName': 'Appointment Letter', 'docFile': ''})
                 return Response(responseData)
@@ -787,7 +794,8 @@ class SelectedForOnboardView(generics.ListAPIView):
         search = self.request.query_params.get('search')
         # queryset = DocumentSubmissionModel.objects.filter(applied_job__jobPostId_id=jobId)
         queryset = UserJobAppliedModel.objects.filter(jobPostId_id=jobId,
-                                                      jobProgressStatus__status='On Boarding', userId__is_candidate=True)
+                                                      jobProgressStatus__status='On Boarding',
+                                                      userId__is_candidate=True)
         return queryset.filter(Q(userId__email__icontains=search) |
                                Q(userId__full_name__icontains=search) |
                                Q(jobPostId__jobTitle__icontains=search) |
