@@ -1,9 +1,8 @@
 import datetime
-
 from _testcapi import raise_exception
 from django.db.models import Q
 from django.http import Http404
-from rest_framework import generics, status
+from rest_framework import generics, status,permissions
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from UserApp import utils
@@ -865,7 +864,7 @@ class SignedAppointmentLetterSubmissionView(generics.CreateAPIView, generics.Ret
 
 # Withdraw job application
 class WithdrawApplicationView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [Authenticated]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializer.CandidateStatusChangeSerializer
     queryset = models.UserJobAppliedModel.objects.all()
     lookup_field = 'id'
