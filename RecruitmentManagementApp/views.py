@@ -671,3 +671,54 @@ class ReferenceInformationUpdateDeleteView(generics.ListAPIView):
     def get_queryset(self):
         applied_job = self.kwargs['applied_job']
         return models.ReferenceInformationModel.objects.filter(applied_job=applied_job, user_id=self.request.user.id)
+
+
+# Signed appointment letter submission
+class SignedAppointmentLetterSubmissionView(generics.ListCreateAPIView):
+    permission_classes = [Authenticated]
+    serializer_class = serializer.SignedAppointmentLetterSerializer
+    queryset = models.SignedAppointmentLetterModel.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user, applicationId=models.UserJobAppliedModel.objects.get(id=self.kwargs['applicationId']))
+
+    def create(self, request, *args, **kwargs):
+        applicationId = self.kwargs['applicationId']
+        checkStatus = models.UserJobAppliedModel.objects.get(id=applicationId)
+        if checkStatus.jobProgressStatus.status == 'On Boarding':
+            try:
+                checkDocuments = models.DocumentSubmissionModel.objects.get(Q(applied_job=applicationId),
+                                                                            user=self.request.user)
+
+                if checkDocuments.is_verified:
+                    checkRef = models.ReferenceInformationModel.objects.filter(Q(applied_job=applicationId),
+                                                                               user=self.request.user)
+                    for ref in checkRef:
+                        if not ref.is_verified:
+                            return Response({'message': 'Your References is not verified yet.'},
+                                            status=status.HTTP_400_BAD_REQUEST)
+
+                    checkAppointment = models.OfficialDocumentsModel.objects.filter(applicationId=applicationId)
+                    if checkAppointment.count() > 0:
+                        checkSubmitted = models.SignedAppointmentLetterModel.objects.filter(
+                            Q(applicationId=applicationId),
+                            user=self.request.user)
+                        if checkSubmitted.count() < 1:
+                            ser = self.get_serializer(data=request.data)
+                            ser.is_valid(raise_exception=True)
+                            self.perform_create(ser)
+                            return Response(ser.data, status=status.HTTP_201_CREATED)
+                        else:
+                            return Response({'message': 'Already submitted.'}, status=status.HTTP_400_BAD_REQUEST)
+                    else:
+                        return Response({'message': 'Your Appointment letter is not ready yet.'},
+                                        status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    return Response({'message': 'Your Documents is not verified yet.'},
+                                    status=status.HTTP_400_BAD_REQUEST)
+            except:
+                return Response({'message': 'No Documents Found'}, status=status.HTTP_400_BAD_REQUEST)
+
+        else:
+            return Response({'message': 'You are not allowed to submit this documents.'},
+                            status=status.HTTP_400_BAD_REQUEST)

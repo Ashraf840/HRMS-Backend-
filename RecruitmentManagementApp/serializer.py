@@ -283,3 +283,14 @@ class ReferenceInformationSerializer(serializers.ModelSerializer):
             'applied_job': {'read_only': True},
             'refVerified': {'read_only': True}
         }
+
+
+# signed appointment letter section
+class SignedAppointmentLetterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.SignedAppointmentLetterModel
+        fields = '__all__'
+        extra_kwargs = {
+            'user': {'read_only': True},
+            'applicationId': {'read_only': True},
+        }
