@@ -114,7 +114,7 @@ class UserJobAppliedModel(models.Model):
     jobProgressStatus = models.ForeignKey(JobStatusModel, on_delete=models.CASCADE,
                                           related_name='job_applied_progress_status')
     # jobProgressStatus = models.CharField(max_length=30, choices=status, blank=True)
-    appliedDate = models.DateTimeField(auto_now=True)
+    appliedDate = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'{self.id} - {self.jobPostId}, {self.userId}'
