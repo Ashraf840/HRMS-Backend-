@@ -1,7 +1,6 @@
 import asyncio
 import datetime, calendar
 import time
-
 from django.db.models import Q
 from rest_framework import generics, permissions, status, pagination
 from rest_framework.exceptions import ValidationError
@@ -42,17 +41,9 @@ class OfficialDocStoreView(generics.ListCreateAPIView):
                     appointmentLetter = OfficialDocumentsModel.objects.get(applicationId=id)
                     responseData.append(
                         {'docName': 'Appointment Letter', 'docFile': appointmentLetter.appointmentLetter})
-
-
                 except:
                     responseData.append({'docName': 'Appointment Letter', 'docFile': ''})
 
-                try:
-                    signedAppointment = SignedAppointmentLetterModel.objects.get(applicationId=id)
-                    responseData.append(
-                        {'docName': 'Signed Appointment Letter', 'docFile': signedAppointment.appointmentLetter})
-                except:
-                    responseData.append({'docName': 'Signed Appointment Letter', 'docFile': ''})
                 return Response(responseData)
             except:
                 return Response(responseData)
