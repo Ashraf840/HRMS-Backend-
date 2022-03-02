@@ -51,10 +51,43 @@ class JobDescriptionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
 
 
 # if User is Authenticated and IsCandidate then User can only apply
-class AppliedForJobView(generics.CreateAPIView):
+class AppliedForJobView(generics.CreateAPIView, generics.RetrieveAPIView):
     permission_classes = [Authenticated]
     serializer_class = serializer.AppliedForJobSerializer
-    queryset = models.UserJobAppliedModel.objects.all()
+
+    def get_queryset(self):
+        if self.request.user.is_superuser or self.request.user.is_hr:
+            queryset = models.UserJobAppliedModel.objects.all()
+        else:
+            queryset = models.UserJobAppliedModel.objects.filter(userId=self.request.user)
+        return queryset
+
+    lookup_field = 'jobPostId_id'
+
+    def get(self, request, *args, **kwargs):
+        try:
+            checkApplication = models.UserJobAppliedModel.objects.filter(jobPostId=self.kwargs['jobPostId_id'],
+                                                                         userId=self.request.user)
+            if checkApplication.count() > 0:
+                for application in checkApplication:
+                    if application.jobProgressStatus.status != 'Withdrawn':
+                        return Response({'detail': 'Already apply for this Position.'},
+                                        status=status.HTTP_400_BAD_REQUEST)
+                    else:
+                        dayCount = application.appliedDate + datetime.timedelta(days=30)
+                        today = datetime.datetime.now().replace(tzinfo=datetime.timezone(offset=datetime.timedelta()))
+                        if today < dayCount:
+                            return Response(
+                                {'detail': 'You have withdraw your application, you can apply again after 30 days.'},
+                                status=status.HTTP_400_BAD_REQUEST)
+                        else:
+                            return Response('Apply')
+
+            return Response('Apply')
+        except:
+            data = self.get_serializer(self.get_queryset(), many=True)
+            responseData = data.data
+            return Response(responseData)
 
     def perform_create(self, serializer):
         jobId = serializer.validated_data['jobPostId']
@@ -151,9 +184,9 @@ class AppliedForJobView(generics.CreateAPIView):
             for index, application in enumerate(applicationData):
                 if applicationData.count() - 1 == index:
                     if application.jobProgressStatus.status == 'Withdrawn':
-                        dayCount = application.appliedDate + datetime.timedelta(days=0)
+                        dayCount = application.appliedDate + datetime.timedelta(days=30)
                         today = datetime.datetime.now().replace(tzinfo=datetime.timezone(offset=datetime.timedelta()))
-                        if today >= dayCount:
+                        if today > dayCount:
                             serializer = self.get_serializer(data=request.data)
                             serializer.is_valid(raise_exception=True)
                             self.perform_create(serializer)

@@ -81,6 +81,7 @@ urlpatterns = [
     path('my_jobs/', MyJobListView.as_view(), name='my_jobs'),
 
     path('applied_job/', AppliedForJobView.as_view(), name='applied_for_jobs'),
+    path('applied_job/<jobPostId_id>/', AppliedForJobView.as_view(), name='check_applied_for_jobs'),
 
 
     # Filter question list
