@@ -59,28 +59,118 @@ class AppliedForJobView(generics.CreateAPIView):
     def perform_create(self, serializer):
         jobId = serializer.validated_data['jobPostId']
         applicationData = models.UserJobAppliedModel.objects.filter(jobPostId=jobId, userId=self.request.user)
-        if applicationData:
-            return Response({'detail': 'Already Applied for this position.'})
-        else:
-            serializer.save(userId=self.request.user, jobProgressStatus=models.JobStatusModel.objects.get(status='new'))
-            jobId = serializer.data['jobPostId']
-            checkFilterQuestions = models.JobApplyFilterQuestionModel.objects.filter(jobId=jobId)
-            if len(checkFilterQuestions) < 1:
-                jobInfo = models.JobPostModel.objects.get(id=jobId).jobProgressStatus.all()
+
+        serializer.save(userId=self.request.user,
+                        jobProgressStatus=models.JobStatusModel.objects.get(status='new'))
+        jobId = serializer.data['jobPostId']
+        checkFilterQuestions = models.JobApplyFilterQuestionModel.objects.filter(jobId=jobId)
+        if len(checkFilterQuestions) < 1:
+            jobInfo = models.JobPostModel.objects.get(id=jobId).jobProgressStatus.all()
+            if applicationData.count() > 1:
+                for application in applicationData:
+                    if application.jobProgressStatus.status.lower() == 'new':
+                        jobApplication = applicationData.get()
+                        break
+            else:
                 jobApplication = applicationData.get()
 
-                for state in jobInfo:
-                    if state.status != 'new':
-                        jobApplication.jobProgressStatus = state
-                        jobApplication.save()
-                        email_body = 'Hi ' + self.request.user.full_name + \
-                                     f' Congratulations you have been selected for the {state.status} stage.' \
-                                     'All the best in your job search!'
+            for state in jobInfo:
+                if state.status != 'new':
+                    jobApplication.jobProgressStatus = state
+                    jobApplication.save()
+                    email_body = 'Hi ' + self.request.user.full_name + \
+                                 f' Congratulations you have been selected for the {state.status} stage.' \
+                                 'All the best in your job search!'
 
-                        data = {'email_body': email_body, 'to_email': self.request.user.email,
-                                'email_subject': 'Status of the Screening Test'}
-                        utils.Util.send_email(data)
-                        break
+                    data = {'email_body': email_body, 'to_email': self.request.user.email,
+                            'email_subject': 'Status of the Screening Test'}
+                    utils.Util.send_email(data)
+                    break
+
+        # jobId = serializer.validated_data['jobPostId']
+        # applicationData = models.UserJobAppliedModel.objects.filter(jobPostId=jobId, userId=self.request.user)
+        # # If application withdraw then they can apply again after 30 days.
+        # if applicationData.count() >= 1:
+        #     for application in applicationData:
+        #         if application.jobProgressStatus.status == 'Withdraw':
+        #             dayCount = application.appliedDate + datetime.timedelta(days=1)
+        #             today = datetime.datetime.now().replace(tzinfo=datetime.timezone(offset=datetime.timedelta()))
+        #             if today > dayCount:
+        #                 serializer.save(userId=self.request.user,
+        #                                 jobProgressStatus=models.JobStatusModel.objects.get(status='new'))
+        #                 jobId = serializer.data['jobPostId']
+        #                 checkFilterQuestions = models.JobApplyFilterQuestionModel.objects.filter(jobId=jobId)
+        #                 if len(checkFilterQuestions) < 1:
+        #                     jobInfo = models.JobPostModel.objects.get(id=jobId).jobProgressStatus.all()
+        #                     jobApplication = applicationData.get()
+        #
+        #                     for state in jobInfo:
+        #                         if state.status != 'new':
+        #                             jobApplication.jobProgressStatus = state
+        #                             jobApplication.save()
+        #                             email_body = 'Hi ' + self.request.user.full_name + \
+        #                                          f' Congratulations you have been selected for the {state.status} stage.' \
+        #                                          'All the best in your job search!'
+        #
+        #                             data = {'email_body': email_body, 'to_email': self.request.user.email,
+        #                                     'email_subject': 'Status of the Screening Test'}
+        #                             utils.Util.send_email(data)
+        #                             break
+        #             else:
+        #                 return Response(
+        #                     {'detail': 'You have withdraw your application, you can apply again after 30 days.'},
+        #                     status=status.HTTP_400_BAD_REQUEST)
+        #
+        #     return Response({'detail': 'Already Applied for this position.'}, status=status.HTTP_400_BAD_REQUEST)
+        # else:
+        #     serializer.save(userId=self.request.user, jobProgressStatus=models.JobStatusModel.objects.get(status='new'))
+        #     jobId = serializer.data['jobPostId']
+        #     checkFilterQuestions = models.JobApplyFilterQuestionModel.objects.filter(jobId=jobId)
+        #     if len(checkFilterQuestions) < 1:
+        #         jobInfo = models.JobPostModel.objects.get(id=jobId).jobProgressStatus.all()
+        #         jobApplication = applicationData.get()
+        #
+        #         for state in jobInfo:
+        #             if state.status != 'new':
+        #                 jobApplication.jobProgressStatus = state
+        #                 jobApplication.save()
+        #                 email_body = 'Hi ' + self.request.user.full_name + \
+        #                              f' Congratulations you have been selected for the {state.status} stage.' \
+        #                              'All the best in your job search!'
+        #
+        #                 data = {'email_body': email_body, 'to_email': self.request.user.email,
+        #                         'email_subject': 'Status of the Screening Test'}
+        #                 utils.Util.send_email(data)
+        #                 break
+
+    def create(self, request, *args, **kwargs):
+        jobId = request.data['jobPostId']
+        applicationData = models.UserJobAppliedModel.objects.filter(jobPostId=jobId, userId=self.request.user)
+        # If application withdraw then they can apply again after 30 days.
+        if applicationData.count() >= 1:
+            for index, application in enumerate(applicationData):
+                if applicationData.count() - 1 == index:
+                    if application.jobProgressStatus.status == 'Withdrawn':
+                        dayCount = application.appliedDate + datetime.timedelta(days=0)
+                        today = datetime.datetime.now().replace(tzinfo=datetime.timezone(offset=datetime.timedelta()))
+                        if today >= dayCount:
+                            serializer = self.get_serializer(data=request.data)
+                            serializer.is_valid(raise_exception=True)
+                            self.perform_create(serializer)
+                            return Response(serializer.data, status=status.HTTP_201_CREATED)
+                        else:
+                            return Response(
+                                {'detail': 'You have withdraw your application, you can apply again after 30 days.'},
+                                status=status.HTTP_400_BAD_REQUEST)
+
+                return Response({'detail': 'Already Applied for this position.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        else:
+            serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 # GET data from Database
@@ -680,7 +770,8 @@ class SignedAppointmentLetterSubmissionView(generics.ListCreateAPIView):
     queryset = models.SignedAppointmentLetterModel.objects.all()
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user, applicationId=models.UserJobAppliedModel.objects.get(id=self.kwargs['applicationId']))
+        serializer.save(user=self.request.user,
+                        applicationId=models.UserJobAppliedModel.objects.get(id=self.kwargs['applicationId']))
 
     def create(self, request, *args, **kwargs):
         applicationId = self.kwargs['applicationId']
