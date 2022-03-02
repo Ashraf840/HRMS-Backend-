@@ -24,7 +24,9 @@ admin.site.register(models.JobStatusModel, StatusModel)  # job status model
 # Official document, references submission section
 admin.site.register(models.DocumentSubmissionModel)
 admin.site.register(models.ReferenceInformationModel)
+# appointment letter, signed appointment letter
 admin.site.register(models.OfficialDocumentsModel)
+admin.site.register(models.SignedAppointmentLetterModel)
 # filter questions sections
 admin.site.register(models.JobApplyFilterQuestionModel)
 admin.site.register(models.FilterQuestionAnswerModel)

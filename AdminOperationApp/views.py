@@ -709,7 +709,7 @@ class ReferenceVerificationView(generics.RetrieveUpdateAPIView):
     #             count += 1
     #
     #         if len(refCheck) == count:
-    #             refInfo.applied_job.jobProgressStatus = JobStatusModel.objects.get(status='Onboarding')
+    #             refInfo.applied_job.jobProgressStatus = JobStatusModel.objects.get(status='On Boarding')
     #             refInfo.applied_job.save()
     #
     #             email_body = f'Hi  {refInfo.applied_job.userId.full_name} Your Verification is completed please join ' \
@@ -761,7 +761,7 @@ class ReferenceVerificationView(generics.RetrieveUpdateAPIView):
                     count += 1
 
                 if len(refCheck) == count:
-                    refInfo.applied_job.jobProgressStatus = JobStatusModel.objects.get(status='Onboarding')
+                    refInfo.applied_job.jobProgressStatus = JobStatusModel.objects.get(status='On Boarding')
                     refInfo.applied_job.save()
 
                     email_body = f'Hi  {refInfo.applied_job.userId.full_name} Your Verification is completed please join ' \
@@ -787,7 +787,7 @@ class SelectedForOnboardView(generics.ListAPIView):
         search = self.request.query_params.get('search')
         # queryset = DocumentSubmissionModel.objects.filter(applied_job__jobPostId_id=jobId)
         queryset = UserJobAppliedModel.objects.filter(jobPostId_id=jobId,
-                                                      jobProgressStatus__status='Onboarding', userId__is_candidate=True)
+                                                      jobProgressStatus__status='On Boarding', userId__is_candidate=True)
         return queryset.filter(Q(userId__email__icontains=search) |
                                Q(userId__full_name__icontains=search) |
                                Q(jobPostId__jobTitle__icontains=search) |

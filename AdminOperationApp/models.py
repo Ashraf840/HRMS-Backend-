@@ -20,6 +20,9 @@ def doc_file_name(instance, filename):
     return '/'.join(['OfficialDocumentsStore', filename])
 
 
+
+
+
 class OfficialDocStore(models.Model):
     """
     official documents store here for reuse
@@ -171,3 +174,6 @@ class CommentsOnDocumentsModel(models.Model):
 
     def __str__(self):
         return f'{self.applicationId} {self.comments}'
+
+
+

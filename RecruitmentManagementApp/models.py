@@ -3,6 +3,7 @@ from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from UserApp.models import UserDepartmentModel, User
 from UserApp.models import UserDepartmentModel
+from django.core.validators import FileExtensionValidator
 
 # Create your models here.
 """
@@ -244,6 +245,10 @@ def appointment_file_name(instance, filename):
     return '/'.join(['OfficialDocuments', filename])
 
 
+def signed_appointment_letter_name(instance, filename):
+    return '/'.join(['signed_appointment_letter', instance.user.full_name, filename])
+
+
 class OfficialDocumentsModel(models.Model):
     applicationId = models.ForeignKey(UserJobAppliedModel, on_delete=models.SET_NULL, related_name='application',
                                       null=True)
@@ -251,6 +256,17 @@ class OfficialDocumentsModel(models.Model):
 
     def __str__(self):
         return f'{self.id}'
+
+
+class SignedAppointmentLetterModel(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='signed_appointment_letter_user')
+    applicationId = models.OneToOneField(UserJobAppliedModel, on_delete=models.CASCADE,
+                                         related_name='signed_appointment_letter_application_id')
+    appointmentLetter = models.FileField(upload_to=signed_appointment_letter_name,
+                                         validators=[FileExtensionValidator(allowed_extensions=['pdf'])])
+
+    def __str__(self):
+        return f'{self.applicationId.userId.full_name}'
 
 
 # Removing filter questions response garbage values
