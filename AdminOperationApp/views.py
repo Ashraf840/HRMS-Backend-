@@ -70,7 +70,7 @@ class OnlineTestLinkView(generics.ListCreateAPIView):
 
 
 class RejectCandidateStatusView(generics.RetrieveUpdateDestroyAPIView):
-    # permission_classes = [customPermission.Authenticated]
+    permission_classes = [customPermission.EmployeeAdminAuthenticated]
     serializer_class = serializer.JobStatusRejectSerializer
     queryset = UserJobAppliedModel.objects.all()
     lookup_field = 'id'
