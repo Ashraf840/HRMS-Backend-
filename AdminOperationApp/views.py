@@ -1,20 +1,20 @@
-import asyncio
-import datetime, calendar
-import time
+import calendar
+import datetime
+
 from django.db.models import Q
 from rest_framework import generics, permissions, status, pagination
 from rest_framework.exceptions import ValidationError
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from UserApp.models import User, UserDepartmentModel, EmployeeInfoModel
-from . import serializer
-from . import models
+
 from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel, OnlineTestResponseModel, \
     FilterQuestionsResponseModelHR, PracticalTestResponseModel, DocumentSubmissionModel, ReferenceInformationModel, \
-    JobStatusModel, OfficialDocumentsModel, SignedAppointmentLetterModel
-from RecruitmentManagementApp.serializer import ReferenceInformationSerializer
-from rest_framework.permissions import IsAuthenticated
+    JobStatusModel, OfficialDocumentsModel
 from UserApp import permissions as customPermission
-from .utils import Util, send_mail2
+from UserApp.models import User, UserDepartmentModel, EmployeeInfoModel
+from . import models
+from . import serializer
+from .utils import Util
 
 
 class Pagination(pagination.PageNumberPagination):
