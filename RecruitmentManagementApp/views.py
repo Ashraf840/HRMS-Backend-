@@ -764,14 +764,29 @@ class ReferenceInformationUpdateDeleteView(generics.ListAPIView):
 
 
 # Signed appointment letter submission
-class SignedAppointmentLetterSubmissionView(generics.ListCreateAPIView):
+class SignedAppointmentLetterSubmissionView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [Authenticated]
     serializer_class = serializer.SignedAppointmentLetterSerializer
-    queryset = models.SignedAppointmentLetterModel.objects.all()
+    lookup_field = 'applicationId'
+
+    def get_queryset(self):
+        if self.request.user.is_hr or self.request.user.is_superuser:
+            queryset = models.SignedAppointmentLetterModel.objects.all()
+        else:
+            queryset = models.SignedAppointmentLetterModel.objects.filter(user=self.request.user)
+        return queryset
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user,
                         applicationId=models.UserJobAppliedModel.objects.get(id=self.kwargs['applicationId']))
+
+    def get(self, request, *args, **kwargs):
+        data = self.get_serializer(self.get_object())
+        responseData = data.data
+        if not responseData:
+            return Response({'message': 'No Documents Found'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response(responseData)
 
     def create(self, request, *args, **kwargs):
         applicationId = self.kwargs['applicationId']
