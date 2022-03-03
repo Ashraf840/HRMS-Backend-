@@ -124,7 +124,7 @@ class MarkingDuringInterviewModel(models.Model):
 
 locationType = (
     ('office', 'Office'),
-    ('online', 'Online'),
+    ('virtual', 'Virtual'),
 )
 
 
@@ -142,7 +142,7 @@ class InterviewTimeScheduleModel(models.Model):
                                    null=True)
     interviewDate = models.DateField()
     interviewTime = models.TimeField()
-    interviewLocationType = models.CharField(blank=True, max_length=50, choices=locationType)
+    interviewLocationType = models.CharField(max_length=50, choices=locationType, default='office')
     interviewLocation = models.TextField(blank=True, null=True)
     scheduleAssignDate = models.DateField(auto_now_add=True)
 
