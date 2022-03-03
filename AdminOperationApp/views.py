@@ -175,12 +175,12 @@ class RecruitmentAdminGraphView(generics.ListAPIView):
             deptApplicant = UserJobAppliedModel.objects.filter(
                 jobPostId__department__department=dept.department).count()
             totalApplicant = UserJobAppliedModel.objects.all().count()
-            percentage = int((deptApplicant * 100) / totalApplicant)
-            department_list.append(dept.department)
+            if totalApplicant == 0:
+                percentage = 0
+            else:
+                percentage = int((deptApplicant * 100) / totalApplicant)
             department_percent.append(percentage)
-            # graph = (
-            #     (dept.department, percentage)
-            # )
+            department_list.append(dept.department)
         departmentGraph = {
             'department_list': department_list,
             'department_percent': department_percent
@@ -194,17 +194,12 @@ class RecruitmentAdminGraphView(generics.ListAPIView):
 
         year = self.kwargs['year']
         for month in range(1, 13):
-            # if month > 0:
-            #     yearCheck = year
-            #
-            # else:
-            #     yearCheck = year - 1
             applicant = UserJobAppliedModel.objects.filter(appliedDate__month=month,
                                                            appliedDate__year=year).count()
 
             applicantByMonth.append(applicant)
             months.append(calendar.month_name[month])
-            # print(applicant)
+
 
         barCart = {
             'months': months,
@@ -231,7 +226,6 @@ class RecruitmentAdminGraphView(generics.ListAPIView):
 
         }
         responseData.append(diction)
-        # print(responseData)
         return Response(responseData)
 
 
@@ -254,17 +248,20 @@ class AdminJobListView(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = JobPostModel.objects.all().order_by('id')
-        search = self.request.query_params.get('search')
-        jobType = self.request.query_params.get('jobType')
-        department = self.request.query_params.get('department')
-        # expire = self.request.query_params.get('expire')
-        shift = self.request.query_params.get('shift')
+        try:
+            search = self.request.query_params.get('search')
+            jobType = self.request.query_params.get('jobType')
+            department = self.request.query_params.get('department')
+            # expire = self.request.query_params.get('expire')
+            shift = self.request.query_params.get('shift')
 
-        return queryset.filter(
-            (Q(jobType__icontains=search) | Q(shift__icontains=search) | Q(department__department__icontains=search) |
-             Q(jobTitle__icontains=search)),
-            Q(jobType__icontains=jobType), Q(shift__icontains=shift),
-            Q(department__department__icontains=department))
+            return queryset.filter(
+                (Q(jobType__icontains=search) | Q(shift__icontains=search) | Q(department__department__icontains=search) |
+                 Q(jobTitle__icontains=search)),
+                Q(jobType__icontains=jobType), Q(shift__icontains=shift),
+                Q(department__department__icontains=department))
+        except:
+            return queryset
 
     def list(self, request, *args, **kwargs):
         serializer = self.get_serializer(self.get_queryset(), many=True)
