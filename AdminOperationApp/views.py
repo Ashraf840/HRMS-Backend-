@@ -500,6 +500,9 @@ class AddEmployeeInfoDuringOnboardView(generics.CreateAPIView):
 
 
 class InterviewTimeScheduleView(generics.ListCreateAPIView):
+    """
+    Interview Schedule for a candidate
+    """
     permission_classes = [customPermission.Authenticated]
     serializer_class = serializer.InterviewTimeScheduleSerializer
     queryset = models.InterviewTimeScheduleModel.objects.all()
@@ -512,37 +515,51 @@ class InterviewTimeScheduleView(generics.ListCreateAPIView):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
 
-        try:
-            applicationData = UserJobAppliedModel.objects.get(id=serializer.data.get('applicationId'))
-            jobStatus = JobStatusModel.objects.all()
-            if applicationData.jobProgressStatus.status.lower() == ('Practical Test' or 'Online Test').lower():
-                applicationData.jobProgressStatus = jobStatus.get(status='F2F Interview')
-                applicationData.save()
+        applicationData = UserJobAppliedModel.objects.get(id=serializer.data.get('applicationId'))
+        # print(applicationData)
+        jobStatus = JobStatusModel.objects.all()
 
-                email_body = 'Hi ' + applicationData.userId.full_name + \
-                             f'Congratulations! You have passed all tests  and qualified for a verbal interview. ' \
-                             f'You are requested to come to our office. Interview schedule and office location is given below-\n' \
-                             f'Interview Schedule: \n' \
-                             f'Interview location: {serializer.data["interviewLocation"]}\n' \
-                             f'Date: {serializer.data["interviewDate"]} \n' \
-                             f'Time: {serializer.data["interviewTime"]}\n' \
-                             f'Office Address: House: 149 (4th floor), Lane: 1, Baridhara DOHS, Dhaka.\n' \
-                             'Thanks & Regards,\n' \
-                             'HR Department\n' \
-                             'TechForing Limited.\n' \
-                             'www.techforing.com'
-
-                data = {'email_body': email_body, 'to_email': applicationData.userId.email,
-                        'email_subject': 'Status of the Screening Test'}
-                Util.send_email(data)
-
-            else:
-                if applicationData.jobProgressStatus.status.lower() == 'new'.lower():
-                    applicationData.jobProgressStatus = jobStatus.get(status='F2F Interview')
-                    applicationData.save()
-                    # email sending
+        # email sending function
+        def send_email_office(status, format):
+            if status == 'virtual':
+                if format == 'new':
                     email_body = 'Hi ' + applicationData.userId.full_name + \
-                                 f'Congratulations! You have been selected for a verbal interview. ' \
+                                 f' Congratulations! You have passed all tests  and qualified for a verbal interview. ' \
+                                 f'You are requested to join for and virtual meeting. Interview schedule and meeting link is given below-\n' \
+                                 f'Interview Schedule: \n' \
+                                 f'Interview Link: {serializer.data["interviewLocation"]}\n' \
+                                 f'Date: {serializer.data["interviewDate"]} \n' \
+                                 f'Time: {serializer.data["interviewTime"]}\n\n' \
+                                 'Thanks & Regards,\n' \
+                                 'HR Department\n' \
+                                 'TechForing Limited.\n' \
+                                 'www.techforing.com' \
+                                 f'Office Address: House: 149 (4th floor), Lane: 1, Baridhara DOHS, Dhaka.\n'
+
+                    data = {'email_body': email_body, 'to_email': applicationData.userId.email,
+                            'email_subject': 'Interview Schedule'}
+                    Util.send_email(data)
+
+                else:
+                    email_body = 'Hi ' + applicationData.userId.full_name + \
+                                 f', New meeting schedule has been updated.' \
+                                 f'You are requested to join for and virtual meeting. Interview schedule and meeting link is given below\n' \
+                                 f'Interview Schedule: \n' \
+                                 f'Interview Link: {serializer.data["interviewLocation"]}\n' \
+                                 f'Date: {serializer.data["interviewDate"]} \n' \
+                                 f'Time: {serializer.data["interviewTime"]}\n\n' \
+                                 'Thanks & Regards,\n' \
+                                 'HR Department\n' \
+                                 'TechForing Limited.\n' \
+                                 'www.techforing.com' \
+                                 f'Office Address: House: 149 (4th floor), Lane: 1, Baridhara DOHS, Dhaka.\n'
+                    data = {'email_body': email_body, 'to_email': applicationData.userId.email,
+                            'email_subject': 'Interview Schedule'}
+                    Util.send_email(data)
+            else:
+                if format == 'new':
+                    email_body = 'Hi ' + applicationData.userId.full_name + \
+                                 f', Congratulations! You have passed all tests  and qualified for a verbal interview. ' \
                                  f'You are requested to come to our office. Interview schedule and office location is given below-\n' \
                                  f'Interview Schedule: \n' \
                                  f'Interview location: {serializer.data["interviewLocation"]}\n' \
@@ -558,13 +575,56 @@ class InterviewTimeScheduleView(generics.ListCreateAPIView):
                             'email_subject': 'Interview Schedule'}
                     Util.send_email(data)
 
-        except:
-            pass
+                else:
+                    email_body = 'Hi ' + applicationData.userId.full_name + \
+                                 f', New meeting schedule has been updated.' \
+                                 f'You are requested to come to our office. Interview schedule and office location is given below-\n' \
+                                 f'Interview Schedule: \n' \
+                                 f'Interview location: {serializer.data["interviewLocation"]}\n' \
+                                 f'Date: {serializer.data["interviewDate"]} \n' \
+                                 f'Time: {serializer.data["interviewTime"]}\n' \
+                                 f'Office Address: House: 149 (4th floor), Lane: 1, Baridhara DOHS, Dhaka.\n' \
+                                 'Thanks & Regards,\n' \
+                                 'HR Department\n' \
+                                 'TechForing Limited.\n' \
+                                 'www.techforing.com'
+
+                    data = {'email_body': email_body, 'to_email': applicationData.userId.email,
+                            'email_subject': 'Interview Schedule'}
+                    Util.send_email(data)
+
+        applicantStatus = applicationData.jobProgressStatus.status
+        if applicantStatus == 'Practical Test' or applicantStatus == 'Online Test':
+            applicationData.jobProgressStatus = jobStatus.get(status='F2F Interview')
+            applicationData.save()
+
+            interviewSchedule = applicationData.application_id_applied_job.all().count()
+            # mail sending using function
+            location = serializer.data.get('interviewLocationType')
+            if interviewSchedule > 1:
+                send_email_office(location, 'old')
+            else:
+                send_email_office(location, 'new')
+
+
+        else:
+            if applicationData.jobProgressStatus.status == 'new':
+                applicationData.jobProgressStatus = jobStatus.get(status='F2F Interview')
+                applicationData.save()
+                location = serializer.data.get('interviewLocationType')
+                interviewSchedule = applicationData.application_id_applied_job.all().count()
+                if interviewSchedule > 1:
+                    send_email_office(location, 'old')
+                else:
+                    send_email_office(location, 'new')
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class InterviewTimeUpdateView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Interview schedule update
+    """
     permission_classes = [customPermission.Authenticated]
     serializer_class = serializer.InterviewTimeScheduleSerializer
     lookup_field = 'applicationId_id'
