@@ -11,6 +11,12 @@ project_status = (
     ('finished', 'Finished'),
 )
 
+employee_shift = (
+    ('day', 'Day'),
+    ('night', 'Night'),
+    ('roster', 'Roster'),
+)
+
 
 class EmployeeInformationModel(models.Model):
     """
@@ -22,18 +28,20 @@ class EmployeeInformationModel(models.Model):
                                        related_name='employee_department')
     designation = models.ForeignKey(userModel.UserDesignationModel, on_delete=models.CASCADE, blank=True,
                                     related_name='employee_designation')
+    shift = models.CharField(max_length=200, choices=employee_shift)
     joining_date = models.DateField(blank=True)
+    employee_is_permanent = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.user.full_name}, {self.emp_department.department} - {self.designation.designation}'
+        return f'{self.id} - {self.user.full_name}, {self.emp_department.department} - {self.designation.designation}'
 
 
 class EmployeeSalaryModel(models.Model):
     """
     employee salary will store here
     """
-    employee = models.ForeignKey(EmployeeInformationModel, on_delete=models.CASCADE,
-                                 related_name='employee_salary_employee')
+    employee = models.OneToOneField(EmployeeInformationModel, on_delete=models.CASCADE,
+                                    related_name='employee_salary_employee')
     salary = models.CharField(max_length=20, blank=True)
 
     def __str__(self):
@@ -65,7 +73,7 @@ class EmployeeEmergencyContactModel(models.Model):
     phoneNo = models.CharField(max_length=20, blank=True)
 
     def __str__(self):
-        return f'{self.employee.user.full_name}, {self.relation}'
+        return f'{self.id} - {self.employee.user.full_name}, {self.relation}'
 
 
 class EmployeeBankInfoModel(models.Model):
@@ -76,7 +84,7 @@ class EmployeeBankInfoModel(models.Model):
     bank_name = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
-        return f'{self.employee.user.full_name}, {self.account_no}'
+        return f'{self.id} - {self.employee.user.full_name}, {self.account_no}'
 
 
 class ModulePermissionModel(models.Model):
@@ -96,13 +104,15 @@ class ModulePermissionModel(models.Model):
 
 
 class TrainingModel(models.Model):
+    department = models.ForeignKey(userModel.UserDepartmentModel, on_delete=models.CASCADE,
+                                   related_name='employee_training_department', blank=True, null=True)
+    passing_mark = models.PositiveIntegerField()
     training_name = models.CharField(max_length=255)
-    training_link = models.URLField()
-    training_department = models.ForeignKey(userModel.UserDepartmentModel, on_delete=models.CASCADE,
-                                            related_name='training_department')
+    training_link = models.URLField(blank=True)
+    assign_date = models.DateField(auto_now_add=True, blank=True)
 
     def __str__(self):
-        return f'{self.training_name}'
+        return f'{self.id} - {self.training_name}'
 
 
 @receiver(post_save, sender=EmployeeInformationModel)
@@ -117,10 +127,9 @@ def create_employee_module_permission(sender, instance, created, **kwargs):
         data = ModulePermissionModel.objects.create(employee=instance)
         return data
 
-
-@receiver(pre_delete, sender=EmployeeInformationModel)
-def employee_deleted(sender, instance, using, **kwargs):
-    instance.user.is_employee = False
-    instance.user.is_hr = False
-    instance.user.is_active = False
-    instance.user.save()
+# @receiver(pre_delete, sender=EmployeeInformationModel)
+# def employee_deleted(sender, instance, using, **kwargs):
+#     instance.user.is_employee = False
+#     instance.user.is_hr = False
+#     instance.user.is_active = False
+#     instance.user.save()

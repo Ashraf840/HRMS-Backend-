@@ -15,7 +15,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
 from . import models
 from . import serializer
-from .permissions import EditPermission, IsAuthor, IsCandidateUser, Authenticated
+from .permissions import EditPermission, IsAuthor, IsCandidateUser, Authenticated, CandidateAdminAuthenticated
 from .utils import Util
 
 
@@ -122,24 +122,28 @@ class VerifyEmailView(views.APIView):
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-
 class EmployeeEmailVerifyView(views.APIView):
     serializer_class = serializer.EmailVerificationSerializer
-
     token_param_config = openapi.Parameter(
         'token', in_=openapi.IN_QUERY, description='Description', type=openapi.TYPE_STRING)
 
     @swagger_auto_schema(manual_parameters=[token_param_config])
     def get(self, request):
         token = request.GET.get('token')
+        # print(token)
         try:
+            # print('token1')
             payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=['HS256'])
+            # print('token2')
+            print(payload)
             user = models.User.objects.get(id=payload['user_id'])
+            # print(email=payload['email'])
             redirect_url = 'https://hrms.techforing.com/login'
             if user.is_active:
                 if not user.email_validated:
                     user.email_validated = True
                     user.save()
+                    # return Response({'email': 'Successfully activated'}, status=status.HTTP_200_OK)
                     return HttpResponseRedirect(redirect_to=redirect_url)
                 else:
                     return HttpResponseRedirect(redirect_to=redirect_url)
@@ -150,7 +154,6 @@ class EmployeeEmailVerifyView(views.APIView):
             return Response({'error': 'Activation Expired'}, status=status.HTTP_400_BAD_REQUEST)
         except jwt.exceptions.DecodeError as identifier:
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 class UserProfileCompletionPercentageView(generics.ListAPIView):
@@ -197,7 +200,7 @@ class UserProfileCompletionPercentageView(generics.ListAPIView):
 
 
 class DesignationView(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [CandidateAdminAuthenticated]
     serializer_class = serializer.DesignationSerializer
     queryset = models.UserDesignationModel.objects.all()
 
@@ -231,13 +234,13 @@ class UserInfoListView(generics.ListCreateAPIView):
 # if user is authenticate user can Retrieve data
 # not needed
 class DepartmentView(generics.ListCreateAPIView):
-    permission_classes = [Authenticated]
+    permission_classes = [CandidateAdminAuthenticated]
     serializer_class = serializer.UserDepartmentSerializer
     queryset = models.UserDepartmentModel.objects.all()
 
 
 class EducationLevelView(generics.ListAPIView):
-    permission_classes = [Authenticated]
+    permission_classes = [CandidateAdminAuthenticated]
     serializer_class = serializer.EducationLevelSerializer
     queryset = models.EducationLevelModel.objects.all()
 
@@ -246,7 +249,7 @@ class DegreeTitleView(generics.ListAPIView):
     """
     return data using the filter queries based on education level
     """
-    permission_classes = [Authenticated]
+    permission_classes = [CandidateAdminAuthenticated]
     serializer_class = serializer.DegreeTitleSerializer
 
     def get_queryset(self):
@@ -641,5 +644,3 @@ class ChangePasswordView(generics.UpdateAPIView):
             return Response(response)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-

@@ -1,41 +1,76 @@
+import datetime
+from django.db.models import Q
 from rest_framework.response import Response
-from django.shortcuts import render
-from rest_framework import generics
+from rest_framework import generics, status
 from HRM_Admin import models as hrm_admin_model, serializer as hrm_admin_serializer
 from UserApp import models as user_model, permissions as custom_permission, utils
 from AdminOperationApp import models as admin_operation_model
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
+
+# email formatting library file
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.core.mail import EmailMultiAlternatives
 
 
 # Create your views here.
-# class OnboardAnEmployeeView(generics.ListCreateAPIView):
-#     permission_classes = [custom_permission.EmployeeAuthenticated]
-#     serializer_class = hrm_admin_serializer.EmployeeInformationSerializer
-#     queryset = hrm_admin_model.EmployeeInformationModel.objects.all()
-#
-#     def create(self, request, *args, **kwargs):
-#         checkDesignation = user_model.UserDesignationModel.objects.get(id=request.data['designation'])
-#         serializer = self.get_serializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         userInfo = user_model.User.objects.get(id=request.data['user'])
-#         if checkDesignation.designation != 'CEO':
-#             self.perform_create(serializer)
-#             if checkDesignation.designation == 'HR':
-#                 userInfo.is_hr = True
-#         else:
-#             if userInfo.is_superuser:
-#                 self.perform_create(serializer)
-#             else:
-#                 return Response({'message': 'You are not superuser'})
-#         userInfo.is_candidate = False
-#         userInfo.is_employee = True
-#         userInfo.save()
-#         return Response(serializer.data)
+class OnboardAnEmployeeView(generics.ListCreateAPIView):
+    permission_classes = [custom_permission.EmployeeAuthenticated]
+    serializer_class = hrm_admin_serializer.OnboardNewEmployeeSerializer
+    queryset = hrm_admin_model.EmployeeSalaryModel.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        checkDesignation = user_model.UserDesignationModel.objects.get(id=request.data['employee'].get('user'))
+        userInfo = user_model.User.objects.get(id=request.data['employee'].get('user'))
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        if checkDesignation.designation != 'CEO':
+            self.perform_create(serializer)
+            if checkDesignation.designation == 'HR':
+                userInfo.is_hr = True
+        else:
+            if userInfo.is_superuser:
+                # finalSalary = admin_operation_model.FinalSalaryNegotiationModel.objects.get(
+                #     jobApplication__userId__id=userInfo.id)
+                self.perform_create(serializer)
+            else:
+                return Response({'message': 'You are not superuser'})
+
+        userInfo.is_candidate = False
+        userInfo.is_employee = True
+        userInfo.email_validated = False
+        userInfo.email = request.data['employee'].get('email')
+        userInfo.save()
+
+        # Email activation email.
+        token = RefreshToken.for_user(userInfo).access_token
+        current_site = get_current_site(request).domain
+        relativeLink = reverse('tfhrm_api:employee-email-verify')
+        absurl = 'http://' + current_site + relativeLink + "?token=" + str(token)
+
+        email_body = f'Hi {userInfo.full_name},\n' \
+                     f'Congratulation you profile has been updated. Please verify email and login into hrm site.' \
+                     f'Verification link {absurl}'
+
+        # html_message = render_to_string('html.html', context={})
+        # plain_message = strip_tags(html_message)
+        # email = EmailMultiAlternatives(
+        #     'subject',
+        #     plain_message,
+        #     'pranto.techforing@gmail.com',
+        #     ['zulkar.techforing@gmail.com']
+        # )
+        # email.attach_alternative(html_message,'text/html')
+        # email.send()
+        # email_body = plain_message
+
+        data = {'email_body': email_body, 'to_email': userInfo.email,
+                'email_subject': 'Verification Email'}
+
+        utils.Util.send_email(data)
+        return Response({'message': 'Employee added successfully'})
 
 
 class AddEmployeeInfoView(generics.CreateAPIView):
@@ -56,11 +91,11 @@ class AddEmployeeInfoView(generics.CreateAPIView):
         user = user_model.User.objects.get(email=employee['user'].get('email'))
         token = RefreshToken.for_user(user).access_token
         current_site = get_current_site(request).domain
-        relativeLink = reverse('tfhrm_api:email-verify')
+        relativeLink = reverse('tfhrm_api:employee-email-verify')
         absurl = 'http://' + current_site + relativeLink + "?token=" + str(token)
 
         email_body = f'Hi {user.full_name},\n' \
-                     f'Congratulation You are officially appointed.To login please verify your account'\
+                     f'Congratulation You are officially appointed.To login please verify your account' \
                      f'Verification link {absurl}'
 
         data = {'email_body': email_body, 'to_email': user.email,
@@ -129,23 +164,65 @@ class EmployeeInformationListView(generics.ListAPIView):
     """
     permission_classes = [custom_permission.EmployeeAuthenticated]
     serializer_class = hrm_admin_serializer.EmployeeInformationListSerializer
-    queryset = hrm_admin_model.EmployeeInformationModel.objects.all()
+
+    def get_queryset(self):
+        try:
+            search = self.request.query_params.get('search')
+            queryset = hrm_admin_model.EmployeeInformationModel.objects.all()
+            return queryset.filter(Q(user__full_name__icontains=search) |
+                                   Q(emp_department__department__icontains=search) |
+                                   Q(designation__designation__icontains=search) |
+                                   Q(user__email__icontains=search))
+        except:
+            return hrm_admin_model.EmployeeInformationModel.objects.all()
 
     def list(self, request, *args, **kwargs):
         serializer = self.get_serializer(self.get_queryset(), many=True)
+        # print(serializer.data)
         serializerData = serializer.data
-        allUser = user_model.User.objects.filter(is_employee=True)
-        maleEmployee = allUser.filter(gender='Male').count()
-        femaleEmployee = allUser.filter(gender='Female').count()
+        allUser = hrm_admin_model.EmployeeInformationModel.objects.filter()
+        totalEmployee = allUser.count()
+        maleEmployee = allUser.filter(user__gender='Male').count()
+        femaleEmployee = allUser.filter(user__gender='Female').count()
+        today = datetime.date.today()
+        prvDay = today - datetime.timedelta(days=30)
+        newEmployee = hrm_admin_model.EmployeeInformationModel.objects.filter(
+            joining_date__range=[prvDay, today]).count()
+
         responseData = {
             'employeeInfo': serializerData,
             'gender': {
-                'total': allUser.count(),
+                'total': totalEmployee,
                 'male': maleEmployee,
-                'female': femaleEmployee
+                'female': femaleEmployee,
+                'new_employee': newEmployee
             }
         }
         return Response(responseData)
+
+
+class EmployeeInformationUpdateView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [custom_permission.EmployeeAdminAuthenticated]
+    serializer_class = hrm_admin_serializer.EmployeeUpdateDeleteSerializer
+    queryset = hrm_admin_model.EmployeeInformationModel.objects.all()
+    lookup_field = 'user_id'
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if type(request.data) == type({}):
+            req_email = request.data['user'].get('email')
+        else:
+            print(type(request.data))
+            req_email = request.data.get('user.email')
+        if instance.user.email != req_email:
+            email_validator = user_model.User.objects.filter(email=req_email)
+            if len(email_validator) > 0:
+                return Response({'message': 'Email already exists'}, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
 
 
 class EmployeeInformationView(generics.ListAPIView):
@@ -156,18 +233,40 @@ class EmployeeInformationView(generics.ListAPIView):
     serializer_class = hrm_admin_serializer.EmployeeInformationSerializer
 
     def get_queryset(self):
-        queryset = user_model.User.objects.filter(id=self.kwargs['user_id'])
+        if self.request.user.is_hr or self.request.user.is_superuser:
+            queryset = user_model.User.objects.filter(id=self.kwargs['user_id'], is_employee=True)
+        else:
+            queryset = user_model.User.objects.filter(id=self.request.user.id)
         return queryset
 
 
 class ManagePermissionAccessView(generics.RetrieveUpdateAPIView):
+    """
+    Custom permission added for all user
+    """
     permission_classes = [custom_permission.EmployeeAuthenticated, custom_permission.IsSuperUser]
     serializer_class = hrm_admin_serializer.ManagePermissionAccessSerializer
     queryset = hrm_admin_model.ModulePermissionModel.objects.all()
     lookup_field = 'employee__user_id'
 
 
+class EmployeeTrainingView(generics.ListCreateAPIView):
+    """employee training information add List"""
+    permission_classes = [custom_permission.EmployeeAdminAuthenticated]
+    serializer_class = hrm_admin_serializer.EmployeeTrainingSerializer
+
+    def get_queryset(self):
+        try:
+            search = self.request.query_params.get('search')
+            return hrm_admin_model.TrainingModel.objects.filter(Q(department__department__icontains=search) |
+                                                                Q(training_name__icontains=search))
+        except:
+            return hrm_admin_model.TrainingModel.objects.all()
 
 
-
-
+class EmployeeTrainingUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    """employee training information add List"""
+    permission_classes = [custom_permission.EmployeeAdminAuthenticated]
+    serializer_class = hrm_admin_serializer.EmployeeTrainingSerializer
+    queryset = hrm_admin_model.TrainingModel.objects.all()
+    lookup_field = 'id'

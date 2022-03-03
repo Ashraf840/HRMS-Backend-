@@ -1,13 +1,24 @@
-from django.urls import path, include
+from django.urls import path
+
+from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView, OnlineTestLinkView, \
+    RecruitmentAdminApplicantListView, AdminInterviewerListView, SendPracticalTestView, RecruitmentAdminGraphView, \
+    MarkingDuringInterviewView, FilterQuestionResponseListView, PracticalTestMarkUpdateView, \
+    RecruitmentPracticalTestResponseView, \
+    InterviewTimeScheduleView, AdminDocumentVerificationView, AppointmentLetterInformationView, \
+    RecruitmentNewApplicantView, TestAdminAppliedCandidateOnlineResView, \
+    SelectedForDocumentView, InterviewTimeUpdateView, FinalSalaryView, RejectCandidateStatusView, \
+    DocumentVerifiedView, CommentsOnDocumentsView, SelectedForOnboardView, OfficialDocStoreView, OfficialDocumentsView, \
+    ReferenceVerificationView
 # importing Views from RecruitmentManagementApp views
-from RecruitmentManagementApp.views import AllUserDetailView, JobPostView, AppliedForJobView, JobDescriptionView, \
-    JobDescriptionUpdateDeleteView, JobListView, FilterQuestionResponseListView, FilterQuestionResponseView, \
+from RecruitmentManagementApp.views import AllUserDetailView, AppliedForJobView, JobDescriptionView, \
+    JobDescriptionUpdateDeleteView, JobListView, FilterQuestionResponseView, \
     JobDataFilterView, \
-    PracticalTestView, JobCreateView, OnlineTestResponseView, PracticalTestResponseView, \
+    JobCreateView, OnlineTestResponseView, PracticalTestResponseView, \
     UpdateCandidateStatusView, MyJobListView, JobStatusView, PracticalTestForApplicantView, \
-    OnlineTestResponseListView, DocumentSubmissionView, \
+    OnlineTestResponseListView, DocumentSubmissionView,WithdrawApplicationView, \
     DocumentSubmissionUpdateDeleteView, ReferenceInformationView, ReferenceInformationUpdateDeleteView, \
-    FilterQuestionView, FilterQuestionUpdateDeleteView, FilterQuestionListView, CandidateFilterQuestionListView
+    FilterQuestionView, FilterQuestionUpdateDeleteView, FilterQuestionListView, CandidateFilterQuestionListView,SignedAppointmentLetterSubmissionView
+from SupportApp import views as supportView
 # importing Views from UserApp views
 from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
     CustomTokenObtainPairView, UpdateAcademicInfoView, AddAcademicInfoView, \
@@ -16,18 +27,6 @@ from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
     AcademicInfoListView, WorkInfoListView, CertificationInfoListView, TrainingInfoListView, AddUserSkillsView, \
     HRMCustomTokenObtainPairView, DegreeTitleView, UserProfileCompletionPercentageView, EducationLevelView, \
     DepartmentView, UpdateUserSkillsView, DesignationView, ChangePasswordView, EmployeeEmailVerifyView
-
-from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView, OnlineTestLinkView, \
-    RecruitmentAdminApplicantListView, AdminInterviewerListView, AdminAppliedCandidateOnlineResView, \
-    SendPracticalTestView, RecruitmentAdminGraphView, MarkingDuringInterviewView, AddEmployeeInfoDuringOnboardView, \
-    FilterQuestionResponseListView, PracticalTestMarkUpdateView, RecruitmentPracticalTestResponseView, \
-    InterviewTimeScheduleView, AdminDocumentVerificationView, GenerateAppointmentLetterView, \
-    AppointmentLetterInformationView, RecruitmentNewApplicantView, TestAdminAppliedCandidateOnlineResView, \
-    SelectedForDocumentView, InterviewTimeUpdateView, FinalSalaryView, RejectCandidateStatusView, \
-    DocumentVerifiedView, CommentsOnDocumentsView, SelectedForOnboardView, OfficialDocStoreView, OfficialDocumentsView, \
-    ReferenceVerificationView
-
-from SupportApp import views as supportView
 from pdfGenerator import views as pdfGen
 
 app_name = 'tfhrm_api'
@@ -35,7 +34,7 @@ app_name = 'tfhrm_api'
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),  # new user registration
     path('email-verify/', VerifyEmailView.as_view(), name="email-verify"),
-    path('employee_email-verify/', EmployeeEmailVerifyView.as_view(), name="employee-email-verify"),
+    path('employee-email-verify/', EmployeeEmailVerifyView.as_view(), name="employee-email-verify"),
     # email verification while creating new account
     path('users/', UserInfoListView.as_view(), name='users_list'),  # add new user from admin
     # Login url
@@ -82,9 +81,8 @@ urlpatterns = [
     path('my_jobs/', MyJobListView.as_view(), name='my_jobs'),
 
     path('applied_job/', AppliedForJobView.as_view(), name='applied_for_jobs'),
-    # path('qus_ans/', QuestionAnswerSetView.as_view(), name='question_ans'),
-    # path('submit_ans/', SubmittedAnswerView.as_view(), name='submit_ans'),
-    # path('submitted_ans_list/', SubmittedAnswerListView.as_view(), name='submitted_ans_list'),
+    path('applied_job/<jobPostId_id>/', AppliedForJobView.as_view(), name='check_applied_for_jobs'),
+
 
     # Filter question list
     path('filter_question/', FilterQuestionView.as_view(), name='filter_questions'),
@@ -107,10 +105,9 @@ urlpatterns = [
     path('online_test_res_list/<applied_job>/', OnlineTestResponseListView.as_view(), name='online_test_link'),
 
     path('online_test_res/<applied_job>/', OnlineTestResponseView.as_view(), name='online_test_response'),
-    # path('online_test_res/', OnlineTestResponseView, name='online_test_response'),
-    # path('practical_test/', PracticalTestView.as_view(), name='practical_test'),
+
     path('practical_test/<jobInfo>/', PracticalTestForApplicantView.as_view(), name='practical_test_for_a_job'),
-    path('practical_test_res/<job_id>/', PracticalTestResponseView.as_view(), name='practical_test_response'),
+    path('practical_test_res/<application_id>/', PracticalTestResponseView.as_view(), name='practical_test_response'),
     # Document submission by user
     path('documents_submit/<job_id>/', DocumentSubmissionView.as_view(), name='document_submission_add'),
     path('documents/<applied_job>/', DocumentSubmissionUpdateDeleteView.as_view(),
@@ -118,6 +115,7 @@ urlpatterns = [
     path('references_submit/<job_id>/', ReferenceInformationView.as_view(), name='references_information_add'),
     path('references/<applied_job>/', ReferenceInformationUpdateDeleteView.as_view(),
          name='references_information_update_delete'),
+    path('withdraw_application/<id>/', WithdrawApplicationView.as_view(), name='withdraw_application'),
 
     #     Admin section URL
     path('reject_candidate/<id>/', RejectCandidateStatusView.as_view(), name='reject_candidate'),
@@ -137,12 +135,11 @@ urlpatterns = [
     path('filter_qus_res_list/<user_id>/<job_id>/', FilterQuestionResponseListView.as_view(),
          name='filter_qus_res_list_admin'),
     path('applicant_list_details/', AppliedUserDetailsView.as_view(), name='admin_applied_user_list'),
-    # applicant_list_details/?search=&department=&shift=&job_type=
+
 
     path('admin_online_test_res_list/<job_id>/', TestAdminAppliedCandidateOnlineResView.as_view(),
          name='admin_online_test_response_list'),
-    # path('admin_online_test_res_list/<job_id>/', AdminAppliedCandidateOnlineResView.as_view(),
-    #      name='admin_online_test_response_list'),
+
     path('applicant_interview/<job_id>/', AdminInterviewerListView.as_view(), name='applicant_interviewer_list'),
     path('interview_schedule/', InterviewTimeScheduleView.as_view(), name='interview_time_schedule'),
     path('interview_schedule_update/<applicationId_id>/', InterviewTimeUpdateView.as_view(),
@@ -153,7 +150,7 @@ urlpatterns = [
     # Document verification
     path('recruitment_user_documents_list/<job_id>/', SelectedForDocumentView.as_view(),
          name='document_stage_recruitment'),
-    # path('documents_request/<id>/', DocumentRequestView.as_view(), name='document_request'),
+
     path('recruitment_documents_verification/<applied_job>/', AdminDocumentVerificationView.as_view(),
          name='document_verification_recruitment'),
 
@@ -163,24 +160,22 @@ urlpatterns = [
     path('recruitment_user_onboard_list/<job_id>/', SelectedForOnboardView.as_view(),
          name='recruitment_user_onboard_list'),
 
-    # path('generate_appointment_letter/', GenerateAppointmentLetterView.as_view(),
-    #      name='generate_appointment_letter_during_onboarding'),
+
     path('appointment_letter_details/<applied_job>/', AppointmentLetterInformationView.as_view(),
          name='appointment_letter_details_for_pdf'),
     path('appointment_letter_save/<applicationId>/', OfficialDocumentsView.as_view(), name='appointment_letter_save'),
-    # Update official email during onboard
-    path('add_employee_info/<id>/', AddEmployeeInfoDuringOnboardView.as_view(),
-         name='add_employee_info_during_onboard'),
 
-    # Onboard Pdf generator api
-    path('pdf_gen/<applicationId>/', pdfGen.GeneratePDF.as_view()),
     path('appointment_letter_view/<applicationId>/', pdfGen.ViewAppointMentLetterView.as_view()),
 
     # store doc file
     path('stored_docs/', OfficialDocStoreView.as_view(), name='store_onboard_document_nda_nca'),
+    path('stored_docs/<application_id>/', OfficialDocStoreView.as_view(), name='store_onboard_document_nda_nca_user'),
 
     # path('appointment_letter_info/<applicationId>/', AppointmentLetterInfoView.as_view(),
     # name='appointment_letter_info'),
+
+    # signed Appointment submission
+    path('signed_appointment_letter_submission/<applicationId>/', SignedAppointmentLetterSubmissionView.as_view(), name='signed_appointment'),
 
     # support system
     path('ticket_reason/', supportView.TicketReasonView.as_view(), name='support_ticket_reason'),

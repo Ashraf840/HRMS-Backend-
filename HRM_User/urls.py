@@ -2,5 +2,8 @@ from django.urls import path
 from HRM_User import views, models
 
 urlpatterns = [
+    path('training_response/', views.EmployeeTrainingResponseResultView.as_view(), name='employee_training_response'),
+    path('leave_request/', views.EmployeeLeaveRequestView.as_view(), name='employee_leave_request'),
+    path('leave_request/<id>/', views.EmployeeLeaveRequestView.as_view(), name='employee_leave_request'),
 
 ]

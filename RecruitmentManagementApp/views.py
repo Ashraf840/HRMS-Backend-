@@ -1,15 +1,15 @@
 import datetime
-from django.http import Http404
+from _testcapi import raise_exception
 from django.db.models import Q
-from rest_framework import generics, permissions, status
+from django.http import Http404
+from rest_framework import generics, status,permissions
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
-from UserApp.models import User
 from UserApp import utils
-from . import serializer
-from UserApp.permissions import IsHrUser, EditPermission, IsAuthor, IsEmployee, IsCandidateUser, IsAdminUser,Authenticated
+from UserApp.models import User
+from UserApp.permissions import IsHrUser, EditPermission, IsAuthor, IsEmployee, IsCandidateUser, Authenticated
 from . import models
-from SupportApp import sms
+from . import serializer
 
 
 # For Admin to view all Users Information
@@ -50,36 +50,159 @@ class JobDescriptionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
 
 
 # if User is Authenticated and IsCandidate then User can only apply
-class AppliedForJobView(generics.CreateAPIView):
+class AppliedForJobView(generics.CreateAPIView, generics.RetrieveAPIView):
     permission_classes = [Authenticated]
     serializer_class = serializer.AppliedForJobSerializer
-    queryset = models.UserJobAppliedModel.objects.all()
+
+    def get_queryset(self):
+        if self.request.user.is_superuser or self.request.user.is_hr:
+            queryset = models.UserJobAppliedModel.objects.all()
+        else:
+            queryset = models.UserJobAppliedModel.objects.filter(userId=self.request.user)
+        return queryset
+
+    lookup_field = 'jobPostId_id'
+
+    def get(self, request, *args, **kwargs):
+        try:
+            checkApplication = models.UserJobAppliedModel.objects.filter(jobPostId=self.kwargs['jobPostId_id'],
+                                                                         userId=self.request.user)
+            if checkApplication.count() > 0:
+                for application in checkApplication:
+                    if application.jobProgressStatus.status != 'Withdrawn':
+                        return Response({'detail': 'Already apply for this Position.'},
+                                        status=status.HTTP_400_BAD_REQUEST)
+                    else:
+                        dayCount = application.appliedDate + datetime.timedelta(days=30)
+                        today = datetime.datetime.now().replace(tzinfo=datetime.timezone(offset=datetime.timedelta()))
+                        if today < dayCount:
+                            return Response(
+                                {'detail': 'You have withdraw your application, you can apply again after 30 days.'},
+                                status=status.HTTP_400_BAD_REQUEST)
+                        else:
+                            return Response('Apply')
+
+            return Response('Apply')
+        except:
+            data = self.get_serializer(self.get_queryset(), many=True)
+            responseData = data.data
+            return Response(responseData)
 
     def perform_create(self, serializer):
         jobId = serializer.validated_data['jobPostId']
         applicationData = models.UserJobAppliedModel.objects.filter(jobPostId=jobId, userId=self.request.user)
-        if applicationData:
-            return Response({'detail': 'Already Applied for this position.'})
-        else:
-            serializer.save(userId=self.request.user, jobProgressStatus=models.JobStatusModel.objects.get(status='new'))
-            jobId = serializer.data['jobPostId']
-            checkFilterQuestions = models.JobApplyFilterQuestionModel.objects.filter(jobId=jobId)
-            if len(checkFilterQuestions) < 1:
-                jobInfo = models.JobPostModel.objects.get(id=jobId).jobProgressStatus.all()
+
+        serializer.save(userId=self.request.user,
+                        jobProgressStatus=models.JobStatusModel.objects.get(status='new'))
+        jobId = serializer.data['jobPostId']
+        checkFilterQuestions = models.JobApplyFilterQuestionModel.objects.filter(jobId=jobId)
+        if len(checkFilterQuestions) < 1:
+            jobInfo = models.JobPostModel.objects.get(id=jobId).jobProgressStatus.all()
+            if applicationData.count() > 1:
+                for application in applicationData:
+                    if application.jobProgressStatus.status.lower() == 'new':
+                        jobApplication = applicationData.get()
+                        break
+            else:
                 jobApplication = applicationData.get()
 
-                for state in jobInfo:
-                    if state.status != 'new':
-                        jobApplication.jobProgressStatus = state
-                        jobApplication.save()
-                        email_body = 'Hi ' + self.request.user.full_name + \
-                                     f' Congratulations you have been selected for the {state.status} stage.' \
-                                     'All the best in your job search!'
+            for state in jobInfo:
+                if state.status != 'new':
+                    jobApplication.jobProgressStatus = state
+                    jobApplication.save()
+                    email_body = 'Hi ' + self.request.user.full_name + \
+                                 f' Congratulations you have been selected for the {state.status} stage.' \
+                                 'All the best in your job search!'
 
-                        data = {'email_body': email_body, 'to_email': self.request.user.email,
-                                'email_subject': 'Status of the Screening Test'}
-                        utils.Util.send_email(data)
-                        break
+                    data = {'email_body': email_body, 'to_email': self.request.user.email,
+                            'email_subject': 'Status of the Screening Test'}
+                    utils.Util.send_email(data)
+                    break
+
+        # jobId = serializer.validated_data['jobPostId']
+        # applicationData = models.UserJobAppliedModel.objects.filter(jobPostId=jobId, userId=self.request.user)
+        # # If application withdraw then they can apply again after 30 days.
+        # if applicationData.count() >= 1:
+        #     for application in applicationData:
+        #         if application.jobProgressStatus.status == 'Withdraw':
+        #             dayCount = application.appliedDate + datetime.timedelta(days=1)
+        #             today = datetime.datetime.now().replace(tzinfo=datetime.timezone(offset=datetime.timedelta()))
+        #             if today > dayCount:
+        #                 serializer.save(userId=self.request.user,
+        #                                 jobProgressStatus=models.JobStatusModel.objects.get(status='new'))
+        #                 jobId = serializer.data['jobPostId']
+        #                 checkFilterQuestions = models.JobApplyFilterQuestionModel.objects.filter(jobId=jobId)
+        #                 if len(checkFilterQuestions) < 1:
+        #                     jobInfo = models.JobPostModel.objects.get(id=jobId).jobProgressStatus.all()
+        #                     jobApplication = applicationData.get()
+        #
+        #                     for state in jobInfo:
+        #                         if state.status != 'new':
+        #                             jobApplication.jobProgressStatus = state
+        #                             jobApplication.save()
+        #                             email_body = 'Hi ' + self.request.user.full_name + \
+        #                                          f' Congratulations you have been selected for the {state.status} stage.' \
+        #                                          'All the best in your job search!'
+        #
+        #                             data = {'email_body': email_body, 'to_email': self.request.user.email,
+        #                                     'email_subject': 'Status of the Screening Test'}
+        #                             utils.Util.send_email(data)
+        #                             break
+        #             else:
+        #                 return Response(
+        #                     {'detail': 'You have withdraw your application, you can apply again after 30 days.'},
+        #                     status=status.HTTP_400_BAD_REQUEST)
+        #
+        #     return Response({'detail': 'Already Applied for this position.'}, status=status.HTTP_400_BAD_REQUEST)
+        # else:
+        #     serializer.save(userId=self.request.user, jobProgressStatus=models.JobStatusModel.objects.get(status='new'))
+        #     jobId = serializer.data['jobPostId']
+        #     checkFilterQuestions = models.JobApplyFilterQuestionModel.objects.filter(jobId=jobId)
+        #     if len(checkFilterQuestions) < 1:
+        #         jobInfo = models.JobPostModel.objects.get(id=jobId).jobProgressStatus.all()
+        #         jobApplication = applicationData.get()
+        #
+        #         for state in jobInfo:
+        #             if state.status != 'new':
+        #                 jobApplication.jobProgressStatus = state
+        #                 jobApplication.save()
+        #                 email_body = 'Hi ' + self.request.user.full_name + \
+        #                              f' Congratulations you have been selected for the {state.status} stage.' \
+        #                              'All the best in your job search!'
+        #
+        #                 data = {'email_body': email_body, 'to_email': self.request.user.email,
+        #                         'email_subject': 'Status of the Screening Test'}
+        #                 utils.Util.send_email(data)
+        #                 break
+
+    def create(self, request, *args, **kwargs):
+        jobId = request.data['jobPostId']
+        applicationData = models.UserJobAppliedModel.objects.filter(jobPostId=jobId, userId=self.request.user)
+        # If application withdraw then they can apply again after 30 days.
+        if applicationData.count() >= 1:
+            for index, application in enumerate(applicationData):
+                if applicationData.count() - 1 == index:
+                    if application.jobProgressStatus.status == 'Withdrawn':
+                        dayCount = application.appliedDate + datetime.timedelta(days=30)
+                        today = datetime.datetime.now().replace(tzinfo=datetime.timezone(offset=datetime.timedelta()))
+                        if today > dayCount:
+                            serializer = self.get_serializer(data=request.data)
+                            serializer.is_valid(raise_exception=True)
+                            self.perform_create(serializer)
+                            return Response(serializer.data, status=status.HTTP_201_CREATED)
+                        else:
+                            return Response(
+                                {'detail': 'You have withdraw your application, you can apply again after 30 days.'},
+                                status=status.HTTP_400_BAD_REQUEST)
+
+                return Response({'detail': 'Already Applied for this position.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        else:
+            serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 # GET data from Database
@@ -161,16 +284,19 @@ class FilterQuestionListView(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = models.JobApplyFilterQuestionModel.objects.all()
-        search = self.request.query_params.get('search')
+        try:
+            search = self.request.query_params.get('search')
 
-        return queryset.filter(Q(jobId__jobTitle__icontains=search) |
-                               Q(question__icontains=search) |
-                               Q(fieldType__fieldType__icontains=search))
+            return queryset.filter(Q(jobId__jobTitle__icontains=search) |
+                                   Q(question__icontains=search) |
+                                   Q(fieldType__icontains=search))
+        except:
+            return queryset
 
 
 class CandidateFilterQuestionListView(generics.ListAPIView):
     permission_classes = [Authenticated, IsCandidateUser]
-    serializer_class = serializer.FilterQuestionSerializer
+    serializer_class = serializer.CandidateFilterQuestionListSerializer
 
     def get_queryset(self):
         jobId = self.kwargs['jobId']
@@ -276,7 +402,6 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
                                 score += 1
                         except:
                             pass
-
 
                 if totalQuestion - 1 <= score:
                     jobProgress = jobFilterQuestion.jobPostId.jobProgressStatus.all()
@@ -496,19 +621,38 @@ class OnlineTestResponseView(generics.CreateAPIView):
                                     status=update.status)
                                 jobApplication.save()
                                 # email sending option
-                                email_body = 'Hi ' + self.request.user.full_name + \
-                                             f'Congratulations! We are happy to inform you that you have passed the {sta.status} and have been selected for the second round of interview which consists of a {update.status}.' \
-                                             f' Please read carefully and submit the task within the given deadline. We expect you to carry out the task with full honesty. Follow the deadline and instructions easily.' \
-                                             f'Deadline: {datetime.date.today() + datetime.timedelta(hours=72)}\n\n' \
-                                             f'Go to our recruitment portal and follow the instruction\n' \
-                                             f'Thanks & Regards,\n' \
-                                             f'HR Department\n' \
-                                             f'TechForing Limited.\n' \
-                                             f'www.techforing.com'
+                                if update.status == 'F2F Interview':
+                                    email_body = 'Hi ' + self.request.user.full_name + \
+                                                 f'Congratulations! We are happy to inform you that you have passed the ' \
+                                                 f'{sta.status} and have been selected for the second round of interview ' \
+                                                 f'Go to our recruitment portal and follow the instruction\n' \
+                                                 f'Thanks & Regards,\n' \
+                                                 f'HR Department\n' \
+                                                 f'TechForing Limited.\n' \
+                                                 f'www.techforing.com'
 
-                                data = {'email_body': email_body, 'to_email': self.request.user.email,
-                                        'email_subject': f'Status of the {statusList[i]} Screening Test'}
-                                utils.Util.send_email(data)
+                                    data = {'email_body': email_body, 'to_email': self.request.user.email,
+                                            'email_subject': f'Status of the {statusList[i]} Screening Test'}
+                                    utils.Util.send_email(data)
+                                else:
+
+                                    email_body = 'Hi ' + self.request.user.full_name + \
+                                                 f'Congratulations! We are happy to inform you that you have passed ' \
+                                                 f'the {sta.status} and have been selected for the second round of' \
+                                                 f' interview which consists of a {update.status}.' \
+                                                 f' Please read carefully and submit the task within the given' \
+                                                 f' deadline. We expect you to carry out the task with full honesty. ' \
+                                                 f'Follow the deadline and instructions easily.' \
+                                                 f'Deadline: {datetime.date.today() + datetime.timedelta(hours=72)}\n\n' \
+                                                 f'Go to our recruitment portal and follow the instruction\n' \
+                                                 f'Thanks & Regards,\n' \
+                                                 f'HR Department\n' \
+                                                 f'TechForing Limited.\n' \
+                                                 f'www.techforing.com'
+
+                                    data = {'email_body': email_body, 'to_email': self.request.user.email,
+                                            'email_subject': f'Status of the {statusList[i]} Screening Test'}
+                                    utils.Util.send_email(data)
                                 break
                         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
                     return Response({'testName': serializer.data['testName'], 'testMark': serializer.data['testMark']})
@@ -523,42 +667,49 @@ class OnlineTestResponseView(generics.CreateAPIView):
                             status=status.HTTP_400_BAD_REQUEST)
 
 
-class PracticalTestResponseView(generics.CreateAPIView):
+class PracticalTestResponseView(generics.ListCreateAPIView):
     permission_classes = [Authenticated]
     serializer_class = serializer.PracticalTestResponseSerializer
     queryset = models.PracticalTestResponseModel.objects.all()
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user,
-                        appliedJob=models.UserJobAppliedModel.objects.get(id=self.kwargs['job_id']))
+                        appliedJob=models.UserJobAppliedModel.objects.get(id=self.kwargs['application_id']))
+
+    def get(self, request, *args, **kwargs):
+        check_redundancy = models.PracticalTestResponseModel.objects.filter(user=self.request.user,
+                                                                            appliedJob=self.kwargs['application_id'])
+        if len(check_redundancy) >= 1:
+            return Response({'detail': 'You have already taken the test. Wait for review'})
+        else:
+            return Response([])
 
     def create(self, request, *args, **kwargs):
-        applied_job = self.kwargs['job_id']
+        applied_job = self.kwargs['application_id']
+        # try:
+        #
+        # except:
+        #     return Response({'detail': 'No Data found'}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
         try:
-            try:
-                check_redundancy = models.PracticalTestResponseModel.objects.get(user=self.request.user,
-                                                                                 appliedJob=applied_job)
-                print(check_redundancy)
-                if check_redundancy is not None:
-                    return Response({'detail': 'You have already taken the test.'}, status=status.HTTP_400_BAD_REQUEST)
-            except:
-                data = models.UserJobAppliedModel.objects.get(id=applied_job)
-
-                if data.jobProgressStatus.status == 'Practical Test':
-                    serializer = self.get_serializer(data=request.data)
-                    if serializer.is_valid():
-                        self.perform_create(serializer)
-                        return Response(serializer.data, status=status.HTTP_201_CREATED)
-                else:
-                    return Response({'detail': 'You can not attend this test.'}, status=status.HTTP_400_BAD_REQUEST)
+            check_redundancy = models.PracticalTestResponseModel.objects.get(user=self.request.user,
+                                                                             appliedJob=applied_job)
+            # print(check_redundancy)
+            if check_redundancy is not None:
+                return Response({'detail': 'You have already taken the test.'}, status=status.HTTP_400_BAD_REQUEST)
         except:
-            return Response({'detail': 'No Data found'}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+            data = models.UserJobAppliedModel.objects.get(id=applied_job)
+            if data.jobProgressStatus.status == 'Practical Test':
+                serializer = self.get_serializer(data=request.data)
+                serializer.is_valid(raise_exception=True)
+                self.perform_create(serializer)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response({'detail': 'You can not attend this test.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 """
 Document submission section during -> DocumentSubmissionView
 User will upload during recruitment process -> ReferenceInformationView
-
 """
 
 
@@ -642,3 +793,88 @@ class ReferenceInformationUpdateDeleteView(generics.ListAPIView):
     def get_queryset(self):
         applied_job = self.kwargs['applied_job']
         return models.ReferenceInformationModel.objects.filter(applied_job=applied_job, user_id=self.request.user.id)
+
+
+# Signed appointment letter submission
+class SignedAppointmentLetterSubmissionView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [Authenticated]
+    serializer_class = serializer.SignedAppointmentLetterSerializer
+    lookup_field = 'applicationId'
+
+    def get_queryset(self):
+        if self.request.user.is_hr or self.request.user.is_superuser:
+            queryset = models.SignedAppointmentLetterModel.objects.all()
+        else:
+            queryset = models.SignedAppointmentLetterModel.objects.filter(user=self.request.user)
+        return queryset
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user,
+                        applicationId=models.UserJobAppliedModel.objects.get(id=self.kwargs['applicationId']))
+
+    def get(self, request, *args, **kwargs):
+        data = self.get_serializer(self.get_object())
+        responseData = data.data
+        if not responseData:
+            return Response({'message': 'No Documents Found'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response(responseData)
+
+    def create(self, request, *args, **kwargs):
+        applicationId = self.kwargs['applicationId']
+        checkStatus = models.UserJobAppliedModel.objects.get(id=applicationId)
+        if checkStatus.jobProgressStatus.status == 'On Boarding':
+            try:
+                checkDocuments = models.DocumentSubmissionModel.objects.get(Q(applied_job=applicationId),
+                                                                            user=self.request.user)
+
+                if checkDocuments.is_verified:
+                    checkRef = models.ReferenceInformationModel.objects.filter(Q(applied_job=applicationId),
+                                                                               user=self.request.user)
+                    for ref in checkRef:
+                        if not ref.is_verified:
+                            return Response({'message': 'Your References is not verified yet.'},
+                                            status=status.HTTP_400_BAD_REQUEST)
+
+                    checkAppointment = models.OfficialDocumentsModel.objects.filter(applicationId=applicationId)
+                    if checkAppointment.count() > 0:
+                        checkSubmitted = models.SignedAppointmentLetterModel.objects.filter(
+                            Q(applicationId=applicationId),
+                            user=self.request.user)
+                        if checkSubmitted.count() < 1:
+                            ser = self.get_serializer(data=request.data)
+                            ser.is_valid(raise_exception=True)
+                            self.perform_create(ser)
+                            return Response(ser.data, status=status.HTTP_201_CREATED)
+                        else:
+                            return Response({'message': 'Already submitted.'}, status=status.HTTP_400_BAD_REQUEST)
+                    else:
+                        return Response({'message': 'Your Appointment letter is not ready yet.'},
+                                        status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    return Response({'message': 'Your Documents is not verified yet.'},
+                                    status=status.HTTP_400_BAD_REQUEST)
+            except:
+                return Response({'message': 'No Documents Found'}, status=status.HTTP_400_BAD_REQUEST)
+
+        else:
+            return Response({'message': 'You are not allowed to submit this documents.'},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+
+# Withdraw job application
+class WithdrawApplicationView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializer.CandidateStatusChangeSerializer
+    queryset = models.UserJobAppliedModel.objects.all()
+    lookup_field = 'id'
+
+    def update(self, request, *args, **kwargs):
+        applicationData = models.UserJobAppliedModel.objects.get(id=self.kwargs['id'], userId=self.request.user)
+        status = models.JobStatusModel.objects.all()
+        applicationData.jobProgressStatus = status.get(status='Withdrawn')
+        applicationData.save()
+        """
+        need to add Withdraw mail validation
+        """
+        return Response({'detail': 'Withdrawn'})

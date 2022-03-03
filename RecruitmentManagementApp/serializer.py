@@ -55,23 +55,6 @@ class JobCreateSerializer(serializers.ModelSerializer):
             'user': {'read_only': True}
         }
 
-    # Multiple model data save at a time
-    # def create(self, validated_data):
-    #     # print(validated_data)
-    #     jobData = validated_data.pop('jobInfo')
-    #     # # onlineTestData = validated_data.pop('onlineTest')
-    #     # question = validated_data.pop('filterQus')
-    #     # progress = validated_data.pop('progressStatus')
-    #     # print(question)
-    #
-    #     jobInfo = models.JobPostModel.objects.create(user_id=self.context['request'].user.id,
-    #                                                  **jobData)
-    #     # jobInfo.filterQuestions.add(*question)
-    #     # jobInfo.jobProgressStatus.add(*progress)
-    #     # print(jobInfo.filterQuestions.set(filterQus))
-    #     onlineTest = models.OnlineTestModel.objects.create(jobInfo_id=jobInfo.id, **validated_data)
-    #     return onlineTest
-
 
 class JobStatusSerializer(serializers.ModelSerializer):
     class Meta:
@@ -110,12 +93,6 @@ class DepartmentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class FieldTypeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.FieldTypeModels
-        fields = '__all__'
-
-
 class FilterQuestionAnsSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.FilterQuestionAnswerModel
@@ -132,7 +109,6 @@ class JobDetailsForFilterQusSer(serializers.ModelSerializer):
 
 class FilterQuestionListSerializer(serializers.ModelSerializer):
     jobId = JobDetailsForFilterQusSer()
-    fieldType = FieldTypeSerializer()
     answer = FilterQuestionAnsSerializer(source='job_apply_filter_question_answer')
 
     class Meta:
@@ -140,17 +116,33 @@ class FilterQuestionListSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class JobFilterQuestionRadioButtonOptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.JobFilterQuestionRadioButtonOptionModel
+        fields = '__all__'
+
+
 class FilterQuestionAnswerSerializer(serializers.ModelSerializer):
     question = FilterQuestionSerializer()
+    filterQusOption = JobFilterQuestionRadioButtonOptionSerializer(source='question.filter_question_option_job',
+                                                                   many=True, required=False)
 
     class Meta:
         model = models.FilterQuestionAnswerModel
-        fields = '__all__'
+        fields = ['id', 'question', 'answer', 'filterQusOption']
+        # extra_fields = ['filterQusOption']
 
     def create(self, validated_data):
         question = validated_data.pop('question')
-        filterQus = models.JobApplyFilterQuestionModel.objects.create(**question)
-        qusAns = models.FilterQuestionAnswerModel.objects.create(question=filterQus, **validated_data)
+        if 'filter_question_option_job' in question:
+            filterQusOption = question.pop('filter_question_option_job')
+            filterQus = models.JobApplyFilterQuestionModel.objects.create(**question)
+            for qus in filterQusOption:
+                qusOption = models.JobFilterQuestionRadioButtonOptionModel.objects.create(question=filterQus, **qus)
+            qusAns = models.FilterQuestionAnswerModel.objects.create(question=filterQus, **validated_data)
+        else:
+            filterQus = models.JobApplyFilterQuestionModel.objects.create(**question)
+            qusAns = models.FilterQuestionAnswerModel.objects.create(question=filterQus, **validated_data)
         return qusAns
 
     def update(self, instance, validated_data):
@@ -166,7 +158,20 @@ class FilterQuestionAnswerSerializer(serializers.ModelSerializer):
         return instance
 
 
+class CandidateFilterQuestionListSerializer(serializers.ModelSerializer):
+    filterQusOption = JobFilterQuestionRadioButtonOptionSerializer(source='filter_question_option_job', many=True)
+
+    class Meta:
+        model = models.JobApplyFilterQuestionModel
+        fields = '__all__'
+        extra_fields = ['filterQusOption']
+
+
 class FilterQuestionResponseSerializer(serializers.ModelSerializer):
+    """
+    Candidate filter questions response serializer
+    """
+
     class Meta:
         model = models.FilterQuestionsResponseModelHR
         fields = '__all__'
@@ -277,4 +282,15 @@ class ReferenceInformationSerializer(serializers.ModelSerializer):
             'user': {'read_only': True},
             'applied_job': {'read_only': True},
             'refVerified': {'read_only': True}
+        }
+
+
+# signed appointment letter section
+class SignedAppointmentLetterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.SignedAppointmentLetterModel
+        fields = '__all__'
+        extra_kwargs = {
+            'user': {'read_only': True},
+            'applicationId': {'read_only': True},
         }
