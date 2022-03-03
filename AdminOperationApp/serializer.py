@@ -323,26 +323,11 @@ class AdminInterviewerListSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserJobAppliedModel
         fields = '__all__'
-        # depth = 1
 
-    # def to_representation(self, instance):
-    #     data = super(AdminInterviewerListSerializer, self).to_representation(instance)
-    #     # serializer.get('userId').pop('password')
-    #     user = data.get('userId')
-    #     user.pop('password')
-    #     user.pop('is_staff')
-    #     user.pop('is_active')
-    #     user.pop('email_validated')
-    #     user.pop('is_superuser')
-    #     user.pop('is_employee')
-    #     user.pop('is_hr')
-    #     user.pop('is_candidate')
-    #     user.pop('groups')
-    #     user.pop('user_permissions')
-    #     user.pop('date_joined')
-    #
-    #     data.get('jobPostId').pop('filterQuestions')
-    #     return data
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response["interviewSchedule"] = sorted(response["interviewSchedule"], key=lambda x: -x["id"])
+        return response
 
 
 class AddEmployeeInfoDuringOnboardSerializer(serializers.ModelSerializer):

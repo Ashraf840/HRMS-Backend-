@@ -405,22 +405,20 @@ class AdminInterviewerListView(generics.ListAPIView):
     """
     selected for interview stage
     """
-    permission_classes = [customPermission.Authenticated]
+    permission_classes = [customPermission.EmployeeAdminAuthenticated]
     serializer_class = serializer.AdminInterviewerListSerializer
 
     def get_queryset(self):
         jobId = self.kwargs['job_id']
-        search = self.request.query_params.get('search')
         queryset = UserJobAppliedModel.objects.filter(jobProgressStatus__status='F2F Interview', jobPostId_id=jobId)
-        return queryset.filter(Q(userId__full_name__icontains=search) |
-                               Q(userId__email__icontains=search))
+        try:
+            search = self.request.query_params.get('search')
+            return queryset.filter(Q(userId__full_name__icontains=search) |
+                                   Q(userId__email__icontains=search))
+        except:
+            return queryset
 
-    # def list(self, request, *args, **kwargs):
 
-    # def get(self, request, *args, **kwargs):
-    #     data = self.get_serializer(self.get_queryset(), many=True)
-    #     print(data)
-    #     return Response(data)
 
 
 class MarkingDuringInterviewView(generics.ListCreateAPIView):
