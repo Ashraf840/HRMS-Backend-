@@ -20,9 +20,6 @@ def doc_file_name(instance, filename):
     return '/'.join(['OfficialDocumentsStore', filename])
 
 
-
-
-
 class OfficialDocStore(models.Model):
     """
     official documents store here for reuse
@@ -125,6 +122,12 @@ class MarkingDuringInterviewModel(models.Model):
         return f'user: {self.candidate.full_name}'
 
 
+locationType = (
+    ('office', 'Office'),
+    ('online', 'Online'),
+)
+
+
 class InterviewTimeScheduleModel(models.Model):
     """
     Time scheduling for interview
@@ -133,13 +136,14 @@ class InterviewTimeScheduleModel(models.Model):
                                       related_name='application_id_applied_job', null=True)
     interviewer = models.ForeignKey(UserDesignationModel, on_delete=models.SET_NULL,
                                     related_name='interviewer_designation', null=True)
-    candidate = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='candidate_interview_user', null=True,
-                                  blank=True)
+    # candidate = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='candidate_interview_user', null=True,
+    #                               blank=True)
     scheduleBy = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='meeting_scheduled_user',
                                    null=True)
     interviewDate = models.DateField()
     interviewTime = models.TimeField()
-    interviewLocation = models.TextField()
+    interviewLocationType = models.CharField(blank=True, max_length=50, choices=locationType)
+    interviewLocation = models.TextField(blank=True, null=True)
     scheduleAssignDate = models.DateField(auto_now_add=True)
 
     def __str__(self):
@@ -174,6 +178,3 @@ class CommentsOnDocumentsModel(models.Model):
 
     def __str__(self):
         return f'{self.applicationId} {self.comments}'
-
-
-
