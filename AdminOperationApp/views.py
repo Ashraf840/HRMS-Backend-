@@ -616,7 +616,7 @@ class InterviewTimeScheduleView(generics.ListCreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class InterviewTimeUpdateView(generics.RetrieveUpdateDestroyAPIView):
+class InterviewTimeUpdateView(generics.ListAPIView):
     """
     Interview schedule update
     """
@@ -625,20 +625,22 @@ class InterviewTimeUpdateView(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'applicationId_id'
 
     def get_queryset(self):
-        queryset = models.InterviewTimeScheduleModel.objects.filter(applicationId_id=self.kwargs['applicationId_id'])
+        queryset = models.InterviewTimeScheduleModel.objects.filter(applicationId_id=self.kwargs['applicationId_id']).order_by('-id')[:1]
         return queryset
 
-    def perform_update(self, serializer):
-        serializer.save(scheduleBy=self.request.user)
-        applicationData = models.InterviewTimeScheduleModel.objects.get(
-            applicationId_id=self.kwargs['applicationId_id'])
-        email_body = 'Hi ' + applicationData.applicationId.userId.full_name + \
-                     f'New schedule updated check portal' \
-                     'Prepare yourself.'
-
-        data = {'email_body': email_body, 'to_email': applicationData.applicationId.userId.email,
-                'email_subject': 'Status of the Screening Test'}
-        Util.send_email(data)
+    # def perform_update(self, serializer):
+    #     serializer.save(scheduleBy=self.request.user)
+    #
+    #     applicationData = models.InterviewTimeScheduleModel.objects.filter(
+    #         applicationId_id=self.kwargs['applicationId_id']).order_by('-id')[:1]
+    #
+    #     email_body = 'Hi ' + applicationData.applicationId.userId.full_name + \
+    #                  f'New schedule updated check portal' \
+    #                  'Prepare yourself.'
+    #
+    #     data = {'email_body': email_body, 'to_email': applicationData.applicationId.userId.email,
+    #             'email_subject': 'Status of the Screening Test'}
+    #     Util.send_email(data)
 
 
 """
