@@ -13,8 +13,7 @@ class SupportTicketSerializer(serializers.ModelSerializer):
     Ticketing for support
     """
     messages_count = serializers.SerializerMethodField('_checked')
-    unread_message = serializers.IntegerField(source='unread_messages', read_only=True)
-
+    unread_message = serializers.BooleanField(source='unread_messages', read_only=True)
 
     def _checked(self, filters):
         total = getattr(filters, 'total_message')

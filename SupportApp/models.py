@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models import Q
+
 from UserApp.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -34,13 +36,14 @@ class TicketingForSupportModel(models.Model):
 
     @property
     def unread_messages(self):
-        messages = self.message_support_ticket.filter(ticket_id=self.id, user=self.user)
-        unread = 0
+        messages = self.message_support_ticket.filter(ticket_id=self.id)
+
+        unread = False
         for msg in messages:
             if not msg.is_read:
-                unread += 1
+                unread = True
+                break
         return unread
-
 
     def __str__(self):
         return f'{self.ticketReason.reason}'
@@ -71,5 +74,3 @@ def create_user_profile(sender, instance, created, **kwargs):
     if created:
         update = TicketingForSupportModel.objects.get(id=instance.ticket.id)
         update.save()
-
-
