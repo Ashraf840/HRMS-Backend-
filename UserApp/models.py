@@ -237,7 +237,8 @@ class UserCertificationsModel(models.Model):
     examName = models.CharField(max_length=255)
     score = models.CharField(max_length=255)
     certificationId = models.CharField(max_length=255)
-    dateOfAchievement = models.DateField(null=True)
+    dateOfAchievement = models.DateField(null=True, blank=True)
+    dateOfExpiry = models.DateField(null=True, blank=True)
     certificateImage = models.FileField(upload_to=certificate_file_name, blank=True)
 
     class Meta:
