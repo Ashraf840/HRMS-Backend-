@@ -11,7 +11,7 @@ from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, O
     FilterQuestionsResponseModelHR, PracticalTestResponseModel, DocumentSubmissionModel, ReferenceInformationModel, \
     JobStatusModel, OfficialDocumentsModel
 from UserApp import permissions as customPermission
-from UserApp.models import User, UserDepartmentModel, EmployeeInfoModel
+from UserApp.models import User, UserDepartmentModel
 from . import models
 from . import serializer
 from .utils import Util
@@ -467,31 +467,31 @@ class MarkingDuringInterviewView(generics.ListCreateAPIView):
 #
 #         # print(officialEmail)
 
-class AddEmployeeInfoDuringOnboardView(generics.CreateAPIView):
-    permission_classes = [customPermission.Authenticated]
-    serializer_class = serializer.AddEmployeeInfoDuringOnboardSerializer
-    queryset = EmployeeInfoModel.objects.all()
-
-    def perform_create(self, serializer):
-        queryset = EmployeeInfoModel.objects.filter(user=User.objects.get(id=self.kwargs['id']))
-        if queryset.exists():
-            raise ValidationError({'detail': 'Employee information already Created'})
-        serializer.save(user=User.objects.get(id=self.kwargs['id']))
-
-    def create(self, request, *args, **kwargs):
-        id = self.kwargs['id']
-        serializer = self.get_serializer(data=request.data)
-        personalInfo = User.objects.get(id=id)
-        setEmail = personalInfo.email
-        personalInfo.email = request.data['email']
-        personalInfo.save()
-        request.data._mutable = True
-        request.data['email'] = setEmail
-        request.data._mutable = False
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+# class AddEmployeeInfoDuringOnboardView(generics.CreateAPIView):
+#     permission_classes = [customPermission.Authenticated]
+#     serializer_class = serializer.AddEmployeeInfoDuringOnboardSerializer
+#     queryset = EmployeeInfoModel.objects.all()
+#
+#     def perform_create(self, serializer):
+#         queryset = EmployeeInfoModel.objects.filter(user=User.objects.get(id=self.kwargs['id']))
+#         if queryset.exists():
+#             raise ValidationError({'detail': 'Employee information already Created'})
+#         serializer.save(user=User.objects.get(id=self.kwargs['id']))
+#
+#     def create(self, request, *args, **kwargs):
+#         id = self.kwargs['id']
+#         serializer = self.get_serializer(data=request.data)
+#         personalInfo = User.objects.get(id=id)
+#         setEmail = personalInfo.email
+#         personalInfo.email = request.data['email']
+#         personalInfo.save()
+#         request.data._mutable = True
+#         request.data['email'] = setEmail
+#         request.data._mutable = False
+#         serializer.is_valid(raise_exception=True)
+#         self.perform_create(serializer)
+#
+#         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class InterviewTimeScheduleView(generics.ListCreateAPIView):

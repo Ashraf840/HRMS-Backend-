@@ -1,7 +1,7 @@
 from rest_framework import generics, status, permissions
 from SupportApp import serializer, models
 from rest_framework.response import Response
-from UserApp.permissions import IsAdminUser, IsEmployee, IsCandidateUser, IsAuthor, Authenticated
+from UserApp.permissions import IsEmployee, IsCandidateUser, IsAuthor, Authenticated
 from UserApp.models import User
 from django.conf import settings
 from django.http import HttpResponse
@@ -83,6 +83,3 @@ class CloseTicketView(generics.RetrieveUpdateAPIView):
 
     def get_queryset(self):
         return models.TicketingForSupportModel.objects.filter(id=self.kwargs['id'])
-
-
-

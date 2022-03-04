@@ -12,7 +12,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions, generics, status, views
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import RefreshToken, BlacklistedToken
 from . import models
 from . import serializer
 from .permissions import EditPermission, IsAuthor, IsCandidateUser, Authenticated, CandidateAdminAuthenticated
@@ -34,6 +34,29 @@ class HRMCustomTokenObtainPairView(TokenObtainPairView):
 
 
 # JWT logout
+class LogoutAPIView(generics.GenericAPIView):
+    serializer_class = serializer.LogoutSerializer
+
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request):
+        try:
+            refresh_token = request.data["refresh_token"]
+            print(refresh_token)
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+
+            return Response(status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        #
+        # serializer = self.serializer_class(data=request.data)
+        # serializer.is_valid(raise_exception=True)
+        # serializer.save()
+        #
+        # return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 # class LogoutView(generics.DestroyAPIView):
 #     permission_classes = (permissions.IsAuthenticated,)
 #     print('upper')
@@ -170,6 +193,7 @@ class UserProfileCompletionPercentageView(generics.ListAPIView):
         responseData = response.data
         user_id = self.request.user.id
         percentage = 20
+        careerObjective = models.CareerObjectiveModel.objects.filter(user_id=user_id).count()
         academicInfo = models.UserAcademicInfoModel.objects.filter(user_id=user_id).count()
         workInfo = models.UserWorkingExperienceModel.objects.filter(user_id=user_id).count()
         trainingInfo = models.UserTrainingExperienceModel.objects.filter(user_id=user_id).count()
@@ -177,9 +201,11 @@ class UserProfileCompletionPercentageView(generics.ListAPIView):
         skillsInfo = models.UserSkillsModel.objects.filter(user_id=user_id).count()
         if academicInfo > 0:
             if academicInfo > 2:
-                percentage += 40
+                percentage += 30
             else:
-                percentage += academicInfo * 20
+                percentage += academicInfo * 15
+        if careerObjective > 0:
+            percentage += 10
 
         if workInfo > 0:
             percentage += 10
@@ -222,12 +248,12 @@ class UpdateUserInfoView(generics.RetrieveUpdateDestroyAPIView):
 
 # User info View
 # Retrieving data from User model data
-class UserInfoListView(generics.ListCreateAPIView):
-    permission_classes = [Authenticated]
-    serializer_class = serializer.UserSerializer
-
-    def get_queryset(self):
-        return models.EmployeeInfoModel.objects.all()
+# class UserInfoListView(generics.ListCreateAPIView):
+#     permission_classes = [Authenticated]
+#     serializer_class = serializer.UserSerializer
+#
+#     def get_queryset(self):
+#         return models.EmployeeInfoModel.objects.all()
 
 
 # User academic information View
@@ -280,6 +306,30 @@ class UserAcademicInfoRetrieveView(generics.RetrieveUpdateDestroyAPIView):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+
+class CareerObjectiveView(generics.CreateAPIView):
+    permission_classes = [Authenticated, EditPermission]
+    serializer_class = serializer.CareerObjectiveSerializer
+
+    def get_queryset(self):
+        if self.request.user.is_hr or self.request.user.is_superuser:
+            queryset = models.CareerObjectiveModel.objects.all()
+        else:
+            queryset = models.CareerObjectiveModel.objects.filter(user=self.request.user)
+        return queryset
+
+    # lookup_field = 'id'
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class CareerObjectiveUpdateView(generics.RetrieveUpdateAPIView):
+    permission_classes = [Authenticated, EditPermission]
+    serializer_class = serializer.CareerObjectiveSerializer
+    lookup_field = 'user_id'
+    queryset = models.CareerObjectiveModel.objects.all()
 
 
 # specific User information retrieve

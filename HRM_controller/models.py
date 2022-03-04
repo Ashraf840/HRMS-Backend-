@@ -146,6 +146,7 @@ class AttendanceEmployeeShiftRelModel(models.Model):
 class EmployeeAttendanceLogModel(models.Model):
     employee = models.ForeignKey(hrm_models.EmployeeInformationModel, on_delete=models.CASCADE,
                                  related_name='employee_attendance_log')
+    reg_id = models.CharField(max_length=15, unique=True)
     in_date = models.DateField()
     in_time = models.TimeField()
     out_date = models.DateField(blank=True)

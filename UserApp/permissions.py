@@ -87,19 +87,19 @@ class IsHrUser(permissions.BasePermission):
         return bool(request.user and request.user.is_hr)
 
 
-class IsAdminUser(permissions.BasePermission):
-    """
-    Allows access only to Admin users.
-    like CEO, GM , HR,
-    """
-    message = 'You are not authorised to view this page.'
-
-    def has_permission(self, request, view):
-        permission = False
-        designation = UserApp.models.EmployeeInfoModel.objects.get(user_id=request.user).designation.designation
-        if designation == 'CEO' or designation == 'GM' or designation == 'HR' or designation == 'PM':
-            permission = True
-        return bool((request.user and request.user.is_hr) or permission)
+# class IsAdminUser(permissions.BasePermission):
+#     """
+#     Allows access only to Admin users.
+#     like CEO, GM , HR,
+#     """
+#     message = 'You are not authorised to view this page.'
+#
+#     def has_permission(self, request, view):
+#         permission = False
+#         designation = UserApp.models.EmployeeInfoModel.objects.get(user_id=request.user).designation.designation
+#         if designation == 'CEO' or designation == 'GM' or designation == 'HR' or designation == 'PM':
+#             permission = True
+#         return bool((request.user and request.user.is_hr) or permission)
 
 
 class IsSuperUser(permissions.BasePermission):

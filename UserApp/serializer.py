@@ -2,6 +2,8 @@ from django.contrib.auth.password_validation import validate_password
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
+from rest_framework_simplejwt.tokens import RefreshToken, TokenError
+
 from . import models
 from django.contrib.sites.shortcuts import get_current_site
 
@@ -289,15 +291,24 @@ class UserInfoSerializer(serializers.ModelSerializer):
         }
 
 
-# User Information serializer
-class UserSerializer(serializers.ModelSerializer):
-    user = UserInfoSerializer()
-
-    # userAcademicInfo = UserAcademicInfoSerializer()
-
+class CareerObjectiveSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.EmployeeInfoModel
+        model = models.CareerObjectiveModel
         fields = '__all__'
+        extra_kwargs = {
+            'user': {'read_only': True}
+        }
+
+
+# User Information serializer
+# class UserSerializer(serializers.ModelSerializer):
+#     user = UserInfoSerializer()
+#
+#     # userAcademicInfo = UserAcademicInfoSerializer()
+#
+#     class Meta:
+#         model = models.EmployeeInfoModel
+#         fields = '__all__'
 
 
 #         depth = 1
@@ -352,14 +363,14 @@ class UserSkillsSerializer(serializers.ModelSerializer):
     #     return instance
 
 
-class UserInformationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.EmployeeInfoModel
-        fields = '__all__'
-
-        extra_kwargs = {
-            'user': {'read_only': True}
-        }
+# class UserInformationSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = models.EmployeeInfoModel
+#         fields = '__all__'
+#
+#         extra_kwargs = {
+#             'user': {'read_only': True}
+#         }
 
 
 class UserAcademicSerializer(serializers.ModelSerializer):
@@ -443,7 +454,7 @@ Training Information -> UserTrainingModel
 
 
 class UserDetailsSerializer(serializers.ModelSerializer):
-    userInfo = UserInformationSerializer(source='user_info_user')
+    # userInfo = UserInformationSerializer(source='user_info_user')
     academicInfo = UserAcademicDetailsSerializer(source='academic_info_user', many=True)
     certificationInfo = UserCertificationsSerializer(source='certification_info_user', many=True)
     trainingInfo = UserTrainingExperienceSerializer(source='training_info_user', many=True)
@@ -472,6 +483,7 @@ class UpdateAcademicInformationSerializer(serializers.ModelSerializer):
 
 """
 Password change and reset section
+Logout
 """
 
 
@@ -482,3 +494,23 @@ class ChangePasswordSerializer(serializers.Serializer):
     """
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
+
+
+class LogoutSerializer(serializers.Serializer):
+    refresh = serializers.CharField()
+
+    default_error_message = {
+        'bad_token': ('Token is expired or invalid')
+    }
+
+    def validate(self, attrs):
+        self.token = attrs['refresh']
+        return attrs
+
+    def save(self, **kwargs):
+
+        try:
+            RefreshToken(self.token).blacklist()
+
+        except TokenError:
+            self.fail('bad_token')

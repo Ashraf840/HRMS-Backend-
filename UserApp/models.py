@@ -145,22 +145,30 @@ shift_options = (
 )
 
 
-class EmployeeInfoModel(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_info_user')
-    # phone_number = models.IntegerField(null=True)
-    salary = models.IntegerField(null=True, blank=True)
-    designation = models.ForeignKey(UserDesignationModel, on_delete=models.CASCADE, related_name='designation_user',
-                                    null=True)
-    department = models.ForeignKey(UserDepartmentModel, on_delete=models.CASCADE, related_name='department_user',
-                                   null=True)
-    shift = models.CharField(choices=shift_options, verbose_name='Choose Shift', max_length=20)
-    email = models.EmailField(blank=True)
+# class EmployeeInfoModel(models.Model):
+#     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_info_user')
+#     # phone_number = models.IntegerField(null=True)
+#     salary = models.IntegerField(null=True, blank=True)
+#     designation = models.ForeignKey(UserDesignationModel, on_delete=models.CASCADE, related_name='designation_user',
+#                                     null=True)
+#     department = models.ForeignKey(UserDepartmentModel, on_delete=models.CASCADE, related_name='department_user',
+#                                    null=True)
+#     shift = models.CharField(choices=shift_options, verbose_name='Choose Shift', max_length=20)
+#     email = models.EmailField(blank=True)
+#
+#     class Meta:
+#         verbose_name_plural = 'User_Info'
+#
+#     def __str__(self):
+#         return f'{self.user}, Department: {self.department} Designation: {self.designation}'
 
-    class Meta:
-        verbose_name_plural = 'User_Info'
+# Career objective for candidate/user
+class CareerObjectiveModel(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='career_objective_user')
+    objective = models.TextField()
 
     def __str__(self):
-        return f'{self.user}, Department: {self.department} Designation: {self.designation}'
+        return f'{self.user.full_name}'
 
 
 # user all academic information model

@@ -20,13 +20,13 @@ from RecruitmentManagementApp.views import AllUserDetailView, AppliedForJobView,
     FilterQuestionView, FilterQuestionUpdateDeleteView, FilterQuestionListView, CandidateFilterQuestionListView,SignedAppointmentLetterSubmissionView
 from SupportApp import views as supportView
 # importing Views from UserApp views
-from UserApp.views import RegisterView, UserInfoListView, UserDetailView, \
-    CustomTokenObtainPairView, UpdateAcademicInfoView, AddAcademicInfoView, \
+from UserApp.views import RegisterView, UserDetailView, CareerObjectiveView,\
+    CustomTokenObtainPairView, UpdateAcademicInfoView, AddAcademicInfoView, CareerObjectiveUpdateView,\
     AddWorkExperienceView, UpdateWorkExpInfoView, AddCertificationsView, UpdateCertificationsView, \
     AddTrainingExperienceView, UpdateUserInfoView, UpdateTrainingExperienceView, VerifyEmailView, SkillsView, \
     AcademicInfoListView, WorkInfoListView, CertificationInfoListView, TrainingInfoListView, AddUserSkillsView, \
     HRMCustomTokenObtainPairView, DegreeTitleView, UserProfileCompletionPercentageView, EducationLevelView, \
-    DepartmentView, UpdateUserSkillsView, DesignationView, ChangePasswordView, EmployeeEmailVerifyView
+    DepartmentView, UpdateUserSkillsView, DesignationView, ChangePasswordView, EmployeeEmailVerifyView, LogoutAPIView
 from pdfGenerator import views as pdfGen
 
 app_name = 'tfhrm_api'
@@ -36,9 +36,10 @@ urlpatterns = [
     path('email-verify/', VerifyEmailView.as_view(), name="email-verify"),
     path('employee-email-verify/', EmployeeEmailVerifyView.as_view(), name="employee-email-verify"),
     # email verification while creating new account
-    path('users/', UserInfoListView.as_view(), name='users_list'),  # add new user from admin
+    # path('users/', UserInfoListView.as_view(), name='users_list'),  # add new user from admin
     # Login url
     path('login/', CustomTokenObtainPairView.as_view(), name='login'),  # Login url for user
+    path('logout/', LogoutAPIView.as_view(), name='logout'),  # Login url for user
     path('hrm_login/', HRMCustomTokenObtainPairView.as_view(), name='hrm-login_employee'),  # Login url for employee
     path('profile_completion_percentage/', UserProfileCompletionPercentageView.as_view(),
          name='profile_completion_percentage'),
@@ -49,6 +50,9 @@ urlpatterns = [
     path('update_profile/<pk>/', UpdateUserInfoView.as_view(), name='update_profile'),
     path('all_users/', AllUserDetailView.as_view(), name='all_users'),
     path('departments/', DepartmentView.as_view(), name='departments'),
+    # Career objective
+    path('career_objective/', CareerObjectiveView.as_view(), name='career_objective'),
+    path('up_career_objective/<user_id>/', CareerObjectiveUpdateView.as_view(), name='career_objective_update_delete'),
     path('add_ac/', AddAcademicInfoView.as_view(), name='add_academics'),
     path('edu_level/', EducationLevelView.as_view(), name='education_level'),
     path('degree_titles/<educationLevel>/', DegreeTitleView.as_view(), name='degree_title_using_education_level'),

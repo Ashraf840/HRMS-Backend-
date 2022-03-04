@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
-from UserApp.models import User, UserDepartmentModel, EmployeeInfoModel, UserDesignationModel
+from UserApp.models import User, UserDepartmentModel, UserDesignationModel
 from . import models
 from django.db.models import Q
 from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel, OnlineTestResponseModel, \
@@ -330,16 +330,16 @@ class AdminInterviewerListSerializer(serializers.ModelSerializer):
         return response
 
 
-class AddEmployeeInfoDuringOnboardSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(required=True, validators=[UniqueValidator(queryset=User.objects.all())])
-
-    class Meta:
-        model = EmployeeInfoModel
-        fields = ['id', 'user', 'salary', 'designation', 'department', 'shift', 'email']
-        # fields = '__all__'
-        extra_kwargs = {
-            'user': {'read_only': True}
-        }
+# class AddEmployeeInfoDuringOnboardSerializer(serializers.ModelSerializer):
+#     email = serializers.EmailField(required=True, validators=[UniqueValidator(queryset=User.objects.all())])
+#
+#     class Meta:
+#         model = EmployeeInfoModel
+#         fields = ['id', 'user', 'salary', 'designation', 'department', 'shift', 'email']
+#         # fields = '__all__'
+#         extra_kwargs = {
+#             'user': {'read_only': True}
+#         }
 
 
 """
