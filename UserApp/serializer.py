@@ -408,12 +408,22 @@ class UserAcademicDetailsSerializer(serializers.ModelSerializer):
 
 
 class UserCertificationsSerializer(serializers.ModelSerializer):
+    expiry_date = serializers.CharField(source='certification_expiry_date', read_only=True)
+
     class Meta:
         model = models.UserCertificationsModel
         fields = '__all__'
         extra_kwargs = {
             'user': {'read_only': True}
         }
+
+    def to_representation(self, instance):
+        data = super(UserCertificationsSerializer, self).to_representation(instance)
+        expDate = data.get('expiry_date')
+        if not expDate:
+            data.pop('expiry_date')
+
+        return data
 
 
 class UserWorkExperienceSerializer(serializers.ModelSerializer):

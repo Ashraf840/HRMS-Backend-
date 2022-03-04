@@ -244,6 +244,11 @@ class UserCertificationsModel(models.Model):
     class Meta:
         verbose_name_plural = 'Certification Information'
 
+    @property
+    def certification_expiry_date(self):
+        if not self.dateOfExpiry:
+            return 'No expiry date.'
+
     def __str__(self):
         return f'{self.user},{self.examName}'
 

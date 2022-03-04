@@ -278,7 +278,7 @@ class AttendanceShiftView(generics.ListCreateAPIView, generics.RetrieveUpdateAPI
     """
     serializer_class = hrm_serializers.AttendanceShiftSerializer
     permission_classes = [user_permissions.IsHrOrReadOnly]
-    queryset = models.AttendanceEmployeeShiftModel.objects.all()
+    queryset = models.AttendanceShiftTimeModel.objects.all()
     lookup_field = 'id'
 
 

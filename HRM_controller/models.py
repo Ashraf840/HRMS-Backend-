@@ -105,7 +105,7 @@ class ComplainModel(models.Model):
         return f'Complained at - {self.complain_at}'
 
 
-# ==================Attendance Section==================
+# ==================Holiday Section==================
 class HolidayModel(models.Model):
     holiday_name = models.CharField(max_length=255)
     holiday_date = models.DateField()
@@ -115,7 +115,10 @@ class HolidayModel(models.Model):
         return f'{self.holiday_name} - {self.holiday_date} - {self.is_active}'
 
 
-class AttendanceEmployeeShiftModel(models.Model):
+# ==================Attendance Section ==================
+# Attendance Shift, relation model
+
+class AttendanceShiftTimeModel(models.Model):
     shift_name = models.CharField(max_length=255)
     start_time = models.TimeField()
     end_time = models.TimeField()
@@ -136,7 +139,7 @@ class AttendanceEmployeeRelModel(models.Model):
 class AttendanceEmployeeShiftRelModel(models.Model):
     employee_relation = models.ForeignKey(AttendanceEmployeeRelModel, on_delete=models.CASCADE,
                                           related_name='attendance_employee_relation')
-    shift = models.ForeignKey(AttendanceEmployeeShiftModel, on_delete=models.CASCADE,
+    shift = models.ForeignKey(AttendanceShiftTimeModel, on_delete=models.CASCADE,
                               related_name='attendance_employee_shift')
 
     def __str__(self):
@@ -146,7 +149,6 @@ class AttendanceEmployeeShiftRelModel(models.Model):
 class EmployeeAttendanceLogModel(models.Model):
     employee = models.ForeignKey(hrm_models.EmployeeInformationModel, on_delete=models.CASCADE,
                                  related_name='employee_attendance_log')
-    reg_id = models.CharField(max_length=15, unique=True)
     in_date = models.DateField()
     in_time = models.TimeField()
     out_date = models.DateField(blank=True)
@@ -162,7 +164,5 @@ def post_save(sender, instance, created, **kwargs):
     in_time = datetime.datetime.combine(instance.in_date, instance.in_time)
     out_time = datetime.datetime.combine(instance.out_date, instance.out_time)
     total_hour = out_time - in_time
-
-    print(total_hour)
     instance.total_hour = str(total_hour)
     instance.save()

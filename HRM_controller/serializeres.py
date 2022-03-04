@@ -134,7 +134,7 @@ class CreateHolidaySerializer(serializers.ModelSerializer):
 
 class AttendanceShiftSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.AttendanceEmployeeShiftModel
+        model = models.AttendanceShiftTimeModel
         fields = '__all__'
 
 
