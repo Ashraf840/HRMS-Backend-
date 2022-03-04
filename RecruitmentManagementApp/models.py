@@ -33,6 +33,7 @@ class JobPostModel(models.Model):
         ('part_time', 'Part Time'),
         ('full_time', 'Full Time'),
         ('internship', 'Internship'),
+        ('freelancing', 'Freelancing'),
     )
     user = models.ForeignKey(User, verbose_name='user', on_delete=models.CASCADE, related_name='job_post_model')
     jobTitle = models.CharField(verbose_name='Job Title', max_length=100)
@@ -267,6 +268,10 @@ class SignedAppointmentLetterModel(models.Model):
 
     def __str__(self):
         return f'{self.applicationId.userId.full_name}'
+
+
+#============ Reference conformation data ============
+# class ReferenceConfirmationModel(models.Model):
 
 
 # Removing filter questions response garbage values

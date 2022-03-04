@@ -49,7 +49,8 @@ class SupportMessageModel(models.Model):
     @receiver(post_save, sender=TicketingForSupportModel)
     def create_support_message(sender, instance, created, **kwargs):
         if created:
-            SupportMessageModel.objects.create(ticket=instance, user=instance.user, message=instance.query, userName=instance.user)
+            SupportMessageModel.objects.create(ticket=instance, user=instance.user, message=instance.query,
+                                               userName=instance.user)
 
     def __str__(self):
         return f'{self.message}'
@@ -60,3 +61,13 @@ def create_user_profile(sender, instance, created, **kwargs):
     if created:
         update = TicketingForSupportModel.objects.get(id=instance.ticket.id)
         update.save()
+
+
+@receiver(post_save, sender=SupportMessageModel)
+def new_messages_support(sender, instance, created, **kwargs):
+    messages = SupportMessageModel.objects.filter(user=instance.user)
+    unread = False
+    for msg in messages:
+        if not msg.is_read:
+            unread = True
+            return unread
