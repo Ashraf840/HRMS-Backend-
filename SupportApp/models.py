@@ -32,6 +32,16 @@ class TicketingForSupportModel(models.Model):
     def total_message(self):
         return self.message_support_ticket.filter(ticket_id=self.id).count()
 
+    @property
+    def unread_messages(self):
+        messages = self.message_support_ticket.filter(ticket_id=self.id, user=self.user)
+        unread = 0
+        for msg in messages:
+            if not msg.is_read:
+                unread += 1
+        return unread
+
+
     def __str__(self):
         return f'{self.ticketReason.reason}'
 
@@ -63,11 +73,3 @@ def create_user_profile(sender, instance, created, **kwargs):
         update.save()
 
 
-@receiver(post_save, sender=SupportMessageModel)
-def new_messages_support(sender, instance, created, **kwargs):
-    messages = SupportMessageModel.objects.filter(user=instance.user)
-    unread = False
-    for msg in messages:
-        if not msg.is_read:
-            unread = True
-            return unread
