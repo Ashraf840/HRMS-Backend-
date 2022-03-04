@@ -539,7 +539,7 @@ class OnlineTestResponseListView(generics.ListAPIView):
         id = self.kwargs['applied_job']
         return models.OnlineTestResponseModel.objects.filter(user=self.request.user,
                                                              appliedJob=models.UserJobAppliedModel.objects.get(
-                                                                 id=id))
+                                                                 id=id)).order_by('-id')
 
     def list(self, request, *args, **kwargs):
         serializer = self.get_serializer(self.get_queryset(), many=True)
@@ -554,8 +554,8 @@ class OnlineTestResponseListView(generics.ListAPIView):
             #                                                      appliedJob=models.UserJobAppliedModel.objects.get(id=id))
             return Response(responseData)
         else:
-            return Response({'detail': 'No Test link found.'},
-                            status=status.HTTP_204_NO_CONTENT)
+            return Response({'detail': 'No data found.'},
+                            status=status.HTTP_404_NOT_FOUND)
 
 
 class OnlineTestResponseView(generics.CreateAPIView):
