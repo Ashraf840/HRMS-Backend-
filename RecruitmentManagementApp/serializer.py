@@ -8,9 +8,11 @@ from . import models
 # Viewing all user information from admin panel
 class AllUserDetailsSerializer(serializers.ModelSerializer):
     academicInfo = serializer.UserAcademicSerializer(source='academic_info_user', many=True)
+    careerObjective = serializer.CareerObjectiveSerializer(source='career_objective_user')
     certificationInfo = serializer.UserCertificationsSerializer(source='certification_info_user', many=True)
     trainingInfo = serializer.UserTrainingExperienceSerializer(source='training_info_user', many=True)
-    jobPreference = serializer.UserJobPreferenceSerializer(source='job_preference_user', many=True)
+    workExperience = serializer.UserWorkExperienceSerializer(source='working_experience_user', many=True)
+    # jobPreference = serializer.UserJobPreferenceSerializer(source='job_preference_user', many=True)
     userSkills = serializer.UserSkillsSerializer(source='skills_user')
 
     class Meta:

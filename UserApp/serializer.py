@@ -454,7 +454,7 @@ Training Information -> UserTrainingModel
 
 
 class UserDetailsSerializer(serializers.ModelSerializer):
-    # userInfo = UserInformationSerializer(source='user_info_user')
+    careerObjective = CareerObjectiveSerializer(source='career_objective_user')
     academicInfo = UserAcademicDetailsSerializer(source='academic_info_user', many=True)
     certificationInfo = UserCertificationsSerializer(source='certification_info_user', many=True)
     trainingInfo = UserTrainingExperienceSerializer(source='training_info_user', many=True)

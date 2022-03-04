@@ -172,6 +172,7 @@ class EmployeeInformationSerializer(serializers.ModelSerializer):
     Employee details Information's
     """
     academicInfo = user_serializer.UserAcademicDetailsSerializer(source='academic_info_user', many=True)
+    careerObjective = user_serializer.CareerObjectiveSerializer(source='career_objective_user')
     certificationInfo = user_serializer.UserCertificationsSerializer(source='certification_info_user', many=True)
     trainingInfo = user_serializer.UserTrainingExperienceSerializer(source='training_info_user', many=True)
     jobPreference = user_serializer.UserJobPreferenceSerializer(source='job_preference_user', many=True)
