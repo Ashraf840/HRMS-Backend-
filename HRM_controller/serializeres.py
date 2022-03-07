@@ -125,7 +125,7 @@ class ComplainResolvedSerializer(serializers.ModelSerializer):
         }
 
 
-# Attendance Section
+# ============ Attendance Section ============
 class CreateHolidaySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.HolidayModel

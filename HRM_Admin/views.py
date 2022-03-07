@@ -22,8 +22,15 @@ class OnboardAnEmployeeView(generics.ListCreateAPIView):
     queryset = hrm_admin_model.EmployeeSalaryModel.objects.all()
 
     def create(self, request, *args, **kwargs):
-        checkDesignation = user_model.UserDesignationModel.objects.get(id=request.data['employee'].get('user'))
-        userInfo = user_model.User.objects.get(id=request.data['employee'].get('user'))
+        try:
+            user_id = request.data.get('employee.user')
+            designation_id = request.data.get('employee.designation')
+        except:
+            user_id = request.data['employee'].get('user')
+            designation_id = request.data['employee'].get('designation')
+        print(request.data)
+        checkDesignation = user_model.UserDesignationModel.objects.get(id=designation_id)
+        userInfo = user_model.User.objects.get(id=user_id)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         if checkDesignation.designation != 'CEO':
@@ -41,7 +48,10 @@ class OnboardAnEmployeeView(generics.ListCreateAPIView):
         userInfo.is_candidate = False
         userInfo.is_employee = True
         userInfo.email_validated = False
-        userInfo.email = request.data['employee'].get('email')
+        try:
+            userInfo.email = request.data['employee'].get('email')
+        except:
+            userInfo.email = request.data.get('employee.email')
         userInfo.save()
 
         # Email activation email.

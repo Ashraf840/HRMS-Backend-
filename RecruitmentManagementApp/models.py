@@ -3,7 +3,7 @@ from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from UserApp.models import UserDepartmentModel, User
 from UserApp.models import UserDepartmentModel
-from django.core.validators import FileExtensionValidator, MinLengthValidator, MaxLengthValidator
+from django.core.validators import FileExtensionValidator, MinLengthValidator, MaxLengthValidator, EmailValidator
 
 # Create your models here.
 """
