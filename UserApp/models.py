@@ -322,6 +322,19 @@ Change and Reset Password section model
 """
 
 
+@receiver(post_save, sender=UserTrainingExperienceModel)
+def post_save(sender, instance, created, **kwargs):
+    if created:
+        start_date = instance.startDate
+        end_date = instance.completeDate
+        duration = end_date - start_date
+        instance.courseDuration = str(duration)
+        instance.save()
+
+
+
+
+
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
     # email_plaintext_message = f'{"https://career.techforing.com/set-new-password"}'

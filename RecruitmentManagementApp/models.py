@@ -3,7 +3,7 @@ from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from UserApp.models import UserDepartmentModel, User
 from UserApp.models import UserDepartmentModel
-from django.core.validators import FileExtensionValidator,MinLengthValidator,MaxLengthValidator
+from django.core.validators import FileExtensionValidator, MinLengthValidator, MaxLengthValidator
 
 # Create your models here.
 """
@@ -221,6 +221,14 @@ class DocumentSubmissionModel(models.Model):
         return f'pk:{self.id} id:{self.user.id},name: {self.user.full_name} Documents'
 
 
+# class EmailField(models.EmailField):
+#     def __init__(self, *args, **kwargs):
+#         super(EmailField, self).__init__(*args, **kwargs)
+#
+#     def get_prep_value(self, value):
+#         return str(value).lower()
+
+
 class ReferenceInformationModel(models.Model):
     """
     candidate references information model
@@ -229,9 +237,10 @@ class ReferenceInformationModel(models.Model):
     applied_job = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE,
                                     related_name='references_submission_applied_job')
     name = models.CharField(max_length=100)
-    phoneNumber = models.PositiveIntegerField(default=10, validators=[MinLengthValidator(9), MaxLengthValidator(15)])
+    # phoneNumber = models.PositiveIntegerField(validators=[MinLengthValidator(9), MaxLengthValidator(15)], blank=True)
+    phoneNumber = models.IntegerField(max_length=15)
     relationWithReferer = models.CharField(max_length=100)
-    email = models.EmailField(max_length=100)
+    email = models.EmailField()
     attachedFile = models.FileField(upload_to=content_file_name, blank=True, null=True)
     callRecord = models.FileField(upload_to=content_file_name, blank=True, null=True)
     is_sent = models.BooleanField(default=False)
@@ -270,7 +279,7 @@ class SignedAppointmentLetterModel(models.Model):
         return f'{self.applicationId.userId.full_name}'
 
 
-#============ Reference conformation data ============
+# ============ Reference conformation data ============
 # class ReferenceConfirmationModel(models.Model):
 
 
