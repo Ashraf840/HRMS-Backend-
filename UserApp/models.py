@@ -109,7 +109,7 @@ class UserDesignationModel(models.Model):
         verbose_name_plural = 'Designation'
 
     def __str__(self):
-        return self.designation
+        return f'{self.id} {self.designation}'
 
 
 # Department Model
