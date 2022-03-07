@@ -22,13 +22,14 @@ class OnboardAnEmployeeView(generics.ListCreateAPIView):
     queryset = hrm_admin_model.EmployeeSalaryModel.objects.all()
 
     def create(self, request, *args, **kwargs):
-        try:
-            user_id = request.data.get('employee.user')
-            designation_id = request.data.get('employee.designation')
-        except:
+
+        if type(request.data) == (type({})):
             user_id = request.data['employee'].get('user')
             designation_id = request.data['employee'].get('designation')
-        print(request.data)
+        else:
+            user_id = request.data.get('employee.user')
+            designation_id = request.data.get('employee.designation')
+
         checkDesignation = user_model.UserDesignationModel.objects.get(id=designation_id)
         userInfo = user_model.User.objects.get(id=user_id)
         serializer = self.get_serializer(data=request.data)
