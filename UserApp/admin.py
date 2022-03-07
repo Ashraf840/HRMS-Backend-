@@ -46,6 +46,7 @@ admin.site.register(models.UserSkillsModel)
 admin.site.register(models.EducationLevelModel)
 admin.site.register(models.DegreeTitleModel)
 admin.site.register(models.GroupOrSubjectModel)
+admin.site.register(models.CareerObjectiveModel)
 # admin.site.register(models.DocumentSubmissionModel)
 # admin.site.register(models.ReferenceInformationModel)
 
