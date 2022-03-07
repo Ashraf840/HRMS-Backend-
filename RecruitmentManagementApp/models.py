@@ -238,7 +238,7 @@ class ReferenceInformationModel(models.Model):
                                     related_name='references_submission_applied_job')
     name = models.CharField(max_length=100)
     # phoneNumber = models.PositiveIntegerField(validators=[MinLengthValidator(9), MaxLengthValidator(15)], blank=True)
-    phoneNumber = models.IntegerField(max_length=15)
+    phoneNumber = models.PositiveBigIntegerField()
     relationWithReferer = models.CharField(max_length=100)
     email = models.EmailField()
     attachedFile = models.FileField(upload_to=content_file_name, blank=True, null=True)
