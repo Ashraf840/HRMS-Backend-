@@ -229,7 +229,7 @@ class ReferenceInformationModel(models.Model):
     applied_job = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE,
                                     related_name='references_submission_applied_job')
     name = models.CharField(max_length=100)
-    phoneNumber = models.PositiveIntegerField(default=10, validators=[MinValueValidator(10), MaxValueValidator(15)])
+    phoneNumber = models.CharField(max_length=15, validators=[MinValueValidator(10), MaxValueValidator(15)])
     relationWithReferer = models.CharField(max_length=100)
     email = models.EmailField(max_length=100)
     attachedFile = models.FileField(upload_to=content_file_name, blank=True, null=True)

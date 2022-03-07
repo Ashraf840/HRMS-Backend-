@@ -50,22 +50,19 @@ class BlacklistTokenUpdateView():
 
 
 class LogoutAPIView(views.APIView):
-
     serializer_class = serializer.LogoutSerializer
 
     permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request):
-        print(request.data)
         try:
-            refresh_token = request.data["refresh"]
-            print(refresh_token)
+            refresh_token = request.data.get('refresh')
             token = RefreshToken(refresh_token)
             token.blacklist()
 
             return Response(status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': 'Token expired'}, status=status.HTTP_400_BAD_REQUEST)
         #
         # serializer = self.serializer_class(data=request.data)
         # serializer.is_valid(raise_exception=True)
