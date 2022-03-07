@@ -116,7 +116,7 @@ urlpatterns = [
     path('documents_submit/<job_id>/', DocumentSubmissionView.as_view(), name='document_submission_add'),
     path('documents/<applied_job>/', DocumentSubmissionUpdateDeleteView.as_view(),
          name='document_submission_update_delete'),
-    path('references_submit/<job_id>/', ReferenceInformationView.as_view(), name='references_information_add'),
+    path('references_submit/<application_id>/', ReferenceInformationView.as_view(), name='references_information_add'),
     path('references/<applied_job>/', ReferenceInformationUpdateDeleteView.as_view(),
          name='references_information_update_delete'),
     path('withdraw_application/<id>/', WithdrawApplicationView.as_view(), name='withdraw_application'),

@@ -2,7 +2,7 @@ import datetime
 from _testcapi import raise_exception
 from django.db.models import Q
 from django.http import Http404
-from rest_framework import generics, status,permissions
+from rest_framework import generics, status, permissions
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from UserApp import utils
@@ -764,24 +764,29 @@ class ReferenceInformationView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user,
-                        applied_job=models.UserJobAppliedModel.objects.get(id=self.kwargs['job_id']))
+                        applied_job=models.UserJobAppliedModel.objects.get(id=self.kwargs['application_id']))
 
     def create(self, request, *args, **kwargs):
-        job_id = self.kwargs['job_id']
-        documents = models.DocumentSubmissionModel.objects.get(user=self.request.user,
-                                                               applied_job_id=job_id)
+        job_id = self.kwargs['application_id']
+        documents = models.DocumentSubmissionModel.objects.filter(user=self.request.user,
+                                                                  applied_job_id=job_id)
 
-        if documents.is_verified:
-            serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))
-            # print(serializer)
-            serializer.is_valid(raise_exception=True)
-            self.perform_create(serializer)
+        if documents.exists():
+            doc = documents.first()
+            if doc.applied_job.jobProgressStatus.status == 'Document Submission':
+                serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))
+                serializer.is_valid(raise_exception=True)
+                self.perform_create(serializer)
+                headers = self.get_success_headers(serializer.data)
+            else:
+                return Response({'detail': 'You are not selected for Document verifications'},
+                                status=status.HTTP_400_BAD_REQUEST)
 
-            headers = self.get_success_headers(serializer.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
         else:
-            return Response({'detail': 'Document not Verified Yet'},
-                            status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+            return Response({'detail': 'Document not Submitted Yet'},
+                            status=status.HTTP_400_BAD_REQUEST)
 
 
 class ReferenceInformationUpdateDeleteView(generics.ListAPIView):
