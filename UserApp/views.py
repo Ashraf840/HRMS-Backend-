@@ -34,14 +34,31 @@ class HRMCustomTokenObtainPairView(TokenObtainPairView):
 
 
 # JWT logout
-class LogoutAPIView(generics.GenericAPIView):
+class BlacklistTokenUpdateView():
+    permission_classes = [Authenticated]
+    authentication_classes = ()
+
+    def post(self, request):
+        print(request)
+        try:
+            refresh_token = request.data["refresh_token"]
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response(status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class LogoutAPIView(views.APIView):
+
     serializer_class = serializer.LogoutSerializer
 
     permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request):
+        print(request.data)
         try:
-            refresh_token = request.data["refresh_token"]
+            refresh_token = request.data["refresh"]
             print(refresh_token)
             token = RefreshToken(refresh_token)
             token.blacklist()

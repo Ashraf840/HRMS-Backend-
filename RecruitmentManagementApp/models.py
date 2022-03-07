@@ -3,7 +3,7 @@ from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from UserApp.models import UserDepartmentModel, User
 from UserApp.models import UserDepartmentModel
-from django.core.validators import FileExtensionValidator
+from django.core.validators import FileExtensionValidator, MinValueValidator, MaxValueValidator
 
 # Create your models here.
 """
@@ -229,7 +229,7 @@ class ReferenceInformationModel(models.Model):
     applied_job = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE,
                                     related_name='references_submission_applied_job')
     name = models.CharField(max_length=100)
-    phoneNumber = models.IntegerField()
+    phoneNumber = models.PositiveIntegerField(default=10, validators=[MinValueValidator(10), MaxValueValidator(15)])
     relationWithReferer = models.CharField(max_length=100)
     email = models.EmailField(max_length=100)
     attachedFile = models.FileField(upload_to=content_file_name, blank=True, null=True)
