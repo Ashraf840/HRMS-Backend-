@@ -35,12 +35,13 @@ class InterviewerSerializer(serializers.ModelSerializer):
     """
     Return Interviewer basic information and designation
     """
-
+    interviewer_designation = serializers.CharField(source='employee_user_info.designation.designation',
+                                                    read_only=True)
     # designation = serializers.CharField(source='user_info_user.designation')
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'full_name']
+        fields = ['id', 'email', 'full_name', 'interviewer_designation']
 
 
 class JobSerializer(serializers.ModelSerializer):

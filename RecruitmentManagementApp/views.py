@@ -354,7 +354,7 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
 
     def create(self, request, *args, **kwargs):
         reqData = request.data
-        if (type(reqData) == type([])):
+        if type(reqData) == type([]):
             for job_list in request.data:
                 jobId = job_list.get('jobPost')
                 break
