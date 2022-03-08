@@ -137,8 +137,8 @@ class AttendanceEmployeeRelModel(models.Model):
 
 
 class AttendanceEmployeeShiftRelModel(models.Model):
-    employee_relation = models.ForeignKey(AttendanceEmployeeRelModel, on_delete=models.CASCADE,
-                                          related_name='attendance_employee_relation')
+    employee_relation = models.OneToOneField(AttendanceEmployeeRelModel, on_delete=models.CASCADE,
+                                             related_name='attendance_employee_relation')
     shift = models.ForeignKey(AttendanceShiftTimeModel, on_delete=models.CASCADE,
                               related_name='attendance_employee_shift')
 
@@ -147,7 +147,7 @@ class AttendanceEmployeeShiftRelModel(models.Model):
 
 
 class EmployeeAttendanceLogModel(models.Model):
-    employee = models.ForeignKey(hrm_models.EmployeeInformationModel, on_delete=models.CASCADE,
+    employee = models.ForeignKey(AttendanceEmployeeRelModel, on_delete=models.CASCADE,
                                  related_name='employee_attendance_log')
     in_date = models.DateField()
     in_time = models.TimeField()
@@ -156,7 +156,7 @@ class EmployeeAttendanceLogModel(models.Model):
     total_hour = models.CharField(max_length=30, blank=True)
 
     def __str__(self):
-        return f'{self.employee.user.full_name} in {self.in_time}  out {self.out_time}'
+        return f'{self.id} {self.employee.registration_id} in {self.in_time}  out {self.out_time}'
 
 
 @receiver(post_save, sender=EmployeeAttendanceLogModel)

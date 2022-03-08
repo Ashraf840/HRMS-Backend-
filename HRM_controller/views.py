@@ -305,9 +305,11 @@ class AttendanceRegistrationView(generics.ListCreateAPIView, generics.RetrieveUp
         }
 
         posts = requests.post(url, json=data)
-
+        print(posts.content.decode("utf-8"))
         all_employees = [item[0] for item in ast.literal_eval(posts.content.decode("utf-8").replace("u'", "'")
                                                               .replace('((', '(').replace('))', ')'))]
+        print(all_employees)
+
         for employee in all_employees:
             models.AttendanceEmployeeRelModel.objects.get_or_create(registration_id=employee)
         employees = models.AttendanceEmployeeRelModel.objects.all()
@@ -406,17 +408,25 @@ class EmployeeAttendanceLogView(generics.ListCreateAPIView):
         auth_user = 'Techforing_Ltd'
         auth_code = "09345jljrksdfhhsr745h3j4w8dd9fs"
         url = 'https://rumytechnologies.com/rams/json_api'
+        start_date = datetime.today().strftime("%Y-%m-%d")
 
         data = {
             "operation": "fetch_log",
             "auth_user": auth_user,
             "auth_code": auth_code,
-            "start_date": "2022-03-4",
-            "end_date": "2022-03-4"
+            "start_date": start_date,
+            "end_date": start_date
         }
 
         posts = requests.post(url, json=data)
-        # log_data = [item[0] for item in ast.literal_eval(posts.content.decode("utf-8"))]
-        log_data = posts.content.decode("utf-8")
-        print(log_data)
-        return response.Response(responseData)
+        log_data = json.loads(posts.content.decode("utf-8"))
+        # employee_shift_rel = models.AttendanceEmployeeRelModel.objects.all()
+        # for employee in employee_shift_rel:
+        #     print(employee)
+        for log in log_data.get('log'):
+            employee_shift_rel = models.AttendanceEmployeeRelModel.objects.get(
+                registration_id=log.get('registration_id'))
+            employee_shift_rel.attendance_employee_relation.get()
+            print(employee_shift_rel.attendance_employee_relation.all())
+
+        return response.Response(log_data.get('log'))

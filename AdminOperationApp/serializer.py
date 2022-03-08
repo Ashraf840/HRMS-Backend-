@@ -35,6 +35,7 @@ class InterviewerSerializer(serializers.ModelSerializer):
     """
     Return Interviewer basic information and designation
     """
+
     # designation = serializers.CharField(source='user_info_user.designation')
 
     class Meta:
@@ -87,11 +88,12 @@ class MarkingDuringInterviewSerializer(serializers.ModelSerializer):
     Interviewer will mark Candidate During Interview based on few criteria.
     """
 
-    # interviewer = InterviewerSerializer()
+    interviewer_designation = serializers.CharField(source='interviewer.employee_user_info.designation.designation', read_only=True)
 
     class Meta:
         model = models.MarkingDuringInterviewModel
         fields = '__all__'
+        extra_fields = ['interviewer_designation']
 
         extra_kwargs = {
             'interviewer': {'read_only': True}
