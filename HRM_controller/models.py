@@ -128,7 +128,7 @@ class AttendanceShiftTimeModel(models.Model):
 
 
 class AttendanceEmployeeRelModel(models.Model):
-    employee = models.OneToOneField(hrm_models.EmployeeInformationModel, on_delete=models.CASCADE,
+    employee = models.OneToOneField(hrm_models.EmployeeInformationModel, on_delete=models.SET_NULL,
                                     related_name='attendance_employee_relation', blank=True, null=True)
     registration_id = models.CharField(max_length=50, unique=True)
 

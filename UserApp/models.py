@@ -323,16 +323,22 @@ Change and Reset Password section model
 
 
 @receiver(post_save, sender=UserTrainingExperienceModel)
-def post_save(sender, instance, created, **kwargs):
+def update_mark(sender, instance, created, **kwargs):
     if created:
         start_date = instance.startDate
         end_date = instance.completeDate
         duration = end_date - start_date
-        instance.courseDuration = str(duration)
+        days = int(str(duration).split(' ')[0])
+        # years = days // 365
+        months = (days % 365) // 30
+        # days = (days % 365) % 30
+        if months < 1:
+            months = 1
+        if months % 1 > .10:
+            months += 1
+
+        instance.courseDuration = str(f'{months} months')
         instance.save()
-
-
-
 
 
 @receiver(reset_password_token_created)

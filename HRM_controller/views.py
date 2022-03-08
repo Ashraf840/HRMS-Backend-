@@ -391,7 +391,32 @@ class CreateHolidaysView(generics.ListCreateAPIView, generics.RetrieveUpdateAPIV
 
 
 class EmployeeAttendanceLogView(generics.ListCreateAPIView):
+    """
+    Employee attendance log
+    in/out time
+    shift change hour count
+    """
     permission_classes = [user_permissions.EmployeeAuthenticated]
     serializer_class = hrm_serializers.EmployeeAttendanceLogSerializer
     queryset = models.EmployeeAttendanceLogModel.objects.all()
 
+    def get(self, request, *args, **kwargs):
+        data = self.get_serializer(self.get_queryset(), many=True)
+        responseData = data.data
+        auth_user = 'Techforing_Ltd'
+        auth_code = "09345jljrksdfhhsr745h3j4w8dd9fs"
+        url = 'https://rumytechnologies.com/rams/json_api'
+
+        data = {
+            "operation": "fetch_log",
+            "auth_user": auth_user,
+            "auth_code": auth_code,
+            "start_date": "2022-03-4",
+            "end_date": "2022-03-4"
+        }
+
+        posts = requests.post(url, json=data)
+        # log_data = [item[0] for item in ast.literal_eval(posts.content.decode("utf-8"))]
+        log_data = posts.content.decode("utf-8")
+        print(log_data)
+        return response.Response(responseData)
