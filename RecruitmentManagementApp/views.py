@@ -774,31 +774,60 @@ class ReferenceInformationView(generics.CreateAPIView):
         if documents.exists():
             doc = documents.first()
             if doc.applied_job.jobProgressStatus.status == 'Document Submission':
-                ref_email = request.data.get('email')
-                domain_list = ["gmail.com", "yahoo.com", "hotmail.com", ]
-                domain = ref_email.split('@')[1]
-                if domain in domain_list:
-                    check_ref = models.ReferenceInformationModel.objects.filter(user=self.request.user,
-                                                                                applied_job_id=job_id)
-                    official_email_count = 0
-                    for ref in check_ref:
-                        if ref.email.split('@')[1] not in domain_list:
+
+                if type(request.data) == type([]):
+                    for ref in request.data:
+                        ref_email = ref.get('email')
+                        domain_list = ["gmail.com", "yahoo.com", "hotmail.com", ]
+                        domain = ref_email.split('@')[1]
+                        official_email_count = 0
+                        if domain in domain_list:
+                            check_ref = models.ReferenceInformationModel.objects.filter(user=self.request.user,
+                                                                                        applied_job_id=job_id)
+
+                            for ref in check_ref:
+                                if ref.email.split('@')[1] not in domain_list:
+                                    official_email_count += 1
+                        else:
                             official_email_count += 1
                     if official_email_count >= 1:
                         serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))
                         serializer.is_valid(raise_exception=True)
                         self.perform_create(serializer)
                         headers = self.get_success_headers(serializer.data)
+                        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
                     else:
                         return Response({'detail': 'Please provide an official email address.'},
                                         status=status.HTTP_400_BAD_REQUEST)
 
+
                 else:
-                    serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))
-                    serializer.is_valid(raise_exception=True)
-                    self.perform_create(serializer)
-                    headers = self.get_success_headers(serializer.data)
-                return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+                    ref_email = request.data.get('email')
+                    domain_list = ["gmail.com", "yahoo.com", "hotmail.com", ]
+                    domain = ref_email.split('@')[1]
+                    if domain in domain_list:
+                        check_ref = models.ReferenceInformationModel.objects.filter(user=self.request.user,
+                                                                                    applied_job_id=job_id)
+                        official_email_count = 0
+                        for ref in check_ref:
+                            if ref.email.split('@')[1] not in domain_list:
+                                official_email_count += 1
+                        if official_email_count >= 1:
+                            serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))
+                            serializer.is_valid(raise_exception=True)
+                            self.perform_create(serializer)
+                            headers = self.get_success_headers(serializer.data)
+                            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+                        else:
+                            return Response({'detail': 'Please provide an official email address.'},
+                                            status=status.HTTP_400_BAD_REQUEST)
+
+                    else:
+                        serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))
+                        serializer.is_valid(raise_exception=True)
+                        self.perform_create(serializer)
+                        headers = self.get_success_headers(serializer.data)
+                        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
             else:

@@ -200,7 +200,6 @@ class RecruitmentAdminGraphView(generics.ListAPIView):
             applicantByMonth.append(applicant)
             months.append(calendar.month_name[month])
 
-
         barCart = {
             'months': months,
             'applicantByMonth': applicantByMonth
@@ -256,7 +255,8 @@ class AdminJobListView(generics.ListAPIView):
             shift = self.request.query_params.get('shift')
 
             return queryset.filter(
-                (Q(jobType__icontains=search) | Q(shift__icontains=search) | Q(department__department__icontains=search) |
+                (Q(jobType__icontains=search) | Q(shift__icontains=search) | Q(
+                    department__department__icontains=search) |
                  Q(jobTitle__icontains=search)),
                 Q(jobType__icontains=jobType), Q(shift__icontains=shift),
                 Q(department__department__icontains=department))
@@ -416,8 +416,6 @@ class AdminInterviewerListView(generics.ListAPIView):
             return queryset
 
 
-
-
 class MarkingDuringInterviewView(generics.ListCreateAPIView):
     permission_classes = [customPermission.Authenticated]
     serializer_class = serializer.MarkingDuringInterviewSerializer
@@ -514,17 +512,23 @@ class InterviewTimeScheduleView(generics.ListCreateAPIView):
         # print(applicationData)
         jobStatus = JobStatusModel.objects.all()
 
+        # time conversion
+        def time_convert(str1):
+            time = datetime.datetime.strptime(str1, "%H:%M:%S")
+            return time.strftime("%I:%M %p")
+
         # email sending function
-        def send_email_office(status, format):
-            if status == 'virtual':
+        def send_email_office(interview_type, format):
+            if interview_type == 'virtual':
                 if format == 'new':
                     email_body = 'Hi ' + applicationData.userId.full_name + \
                                  f' Congratulations! You have passed all tests  and qualified for a verbal interview. ' \
                                  f'You are requested to join for and virtual meeting. Interview schedule and meeting link is given below-\n' \
                                  f'Interview Schedule: \n' \
-                                 f'Interview Link: {serializer.data["interviewLocation"]}\n' \
+                                 f'Interview Type: {interview_type.capitalize()}\n' \
+                                 f'Meeting Link: {serializer.data["interviewLocation"]}\n' \
                                  f'Date: {serializer.data["interviewDate"]} \n' \
-                                 f'Time: {serializer.data["interviewTime"]}\n\n' \
+                                 f'Time: {time_convert(serializer.data["interviewTime"])}\n\n' \
                                  'Thanks & Regards,\n' \
                                  'HR Department\n' \
                                  'TechForing Limited.\n' \
@@ -540,9 +544,10 @@ class InterviewTimeScheduleView(generics.ListCreateAPIView):
                                  f', New meeting schedule has been updated.' \
                                  f'You are requested to join for and virtual meeting. Interview schedule and meeting link is given below\n' \
                                  f'Interview Schedule: \n' \
-                                 f'Interview Link: {serializer.data["interviewLocation"]}\n' \
+                                 f'Interview Type: {interview_type.capitalize()}\n' \
+                                 f'Meeting Link: {serializer.data["interviewLocation"]}\n' \
                                  f'Date: {serializer.data["interviewDate"]} \n' \
-                                 f'Time: {serializer.data["interviewTime"]}\n\n' \
+                                 f'Time: {time_convert(serializer.data["interviewTime"])}\n\n' \
                                  'Thanks & Regards,\n' \
                                  'HR Department\n' \
                                  'TechForing Limited.\n' \
@@ -557,9 +562,9 @@ class InterviewTimeScheduleView(generics.ListCreateAPIView):
                                  f', Congratulations! You have passed all tests  and qualified for a verbal interview. ' \
                                  f'You are requested to come to our office. Interview schedule and office location is given below-\n' \
                                  f'Interview Schedule: \n' \
-                                 f'Interview location: {serializer.data["interviewLocation"]}\n' \
+                                 f'Interview location: {interview_type.capitalize()}\n' \
                                  f'Date: {serializer.data["interviewDate"]} \n' \
-                                 f'Time: {serializer.data["interviewTime"]}\n' \
+                                 f'Time: {time_convert(serializer.data["interviewTime"])}\n' \
                                  f'Office Address: House: 149 (4th floor), Lane: 1, Baridhara DOHS, Dhaka.\n' \
                                  'Thanks & Regards,\n' \
                                  'HR Department\n' \
@@ -575,9 +580,9 @@ class InterviewTimeScheduleView(generics.ListCreateAPIView):
                                  f', New meeting schedule has been updated.' \
                                  f'You are requested to come to our office. Interview schedule and office location is given below-\n' \
                                  f'Interview Schedule: \n' \
-                                 f'Interview location: {serializer.data["interviewLocation"]}\n' \
+                                 f'Interview location: {interview_type.capitalize()}\n' \
                                  f'Date: {serializer.data["interviewDate"]} \n' \
-                                 f'Time: {serializer.data["interviewTime"]}\n' \
+                                 f'Time: {time_convert(serializer.data["interviewTime"])}\n' \
                                  f'Office Address: House: 149 (4th floor), Lane: 1, Baridhara DOHS, Dhaka.\n' \
                                  'Thanks & Regards,\n' \
                                  'HR Department\n' \
@@ -589,9 +594,10 @@ class InterviewTimeScheduleView(generics.ListCreateAPIView):
                     Util.send_email(data)
 
         applicantStatus = applicationData.jobProgressStatus.status
-        if applicantStatus == 'Practical Test' or applicantStatus == 'Online Test':
-            applicationData.jobProgressStatus = jobStatus.get(status='F2F Interview')
-            applicationData.save()
+        if applicantStatus == 'Practical Test' or applicantStatus == 'Online Test' or applicantStatus == 'F2F Interview':
+            if not applicantStatus == 'F2F Interview':
+                applicationData.jobProgressStatus = jobStatus.get(status='F2F Interview')
+                applicationData.save()
 
             interviewSchedule = applicationData.application_id_applied_job.all().count()
             # mail sending using function
@@ -625,22 +631,23 @@ class InterviewTimeUpdateView(generics.ListAPIView):
     lookup_field = 'applicationId_id'
 
     def get_queryset(self):
-        queryset = models.InterviewTimeScheduleModel.objects.filter(applicationId_id=self.kwargs['applicationId_id']).order_by('-id')[:1]
+        queryset = models.InterviewTimeScheduleModel.objects.filter(
+            applicationId_id=self.kwargs['applicationId_id']).order_by('-id')[:1]
         return queryset
 
-    # def perform_update(self, serializer):
-    #     serializer.save(scheduleBy=self.request.user)
-    #
-    #     applicationData = models.InterviewTimeScheduleModel.objects.filter(
-    #         applicationId_id=self.kwargs['applicationId_id']).order_by('-id')[:1]
-    #
-    #     email_body = 'Hi ' + applicationData.applicationId.userId.full_name + \
-    #                  f'New schedule updated check portal' \
-    #                  'Prepare yourself.'
-    #
-    #     data = {'email_body': email_body, 'to_email': applicationData.applicationId.userId.email,
-    #             'email_subject': 'Status of the Screening Test'}
-    #     Util.send_email(data)
+    def perform_update(self, serializer):
+        serializer.save(scheduleBy=self.request.user)
+
+        applicationData = models.InterviewTimeScheduleModel.objects.filter(
+            applicationId_id=self.kwargs['applicationId_id']).order_by('-id')[:1]
+
+        email_body = 'Hi ' + applicationData.applicationId.userId.full_name + \
+                     f'New schedule updated check portal' \
+                     'Prepare yourself.'
+
+        data = {'email_body': email_body, 'to_email': applicationData.applicationId.userId.email,
+                'email_subject': 'Status of the Screening Test'}
+        Util.send_email(data)
 
 
 """
@@ -809,15 +816,7 @@ class ReferenceVerificationView(generics.RetrieveUpdateAPIView):
                      f' He add you as reference. Please fill the form below.'
         data = {'email_body': email_body, 'to_email': refInfo.email,
                 'email_subject': 'Reference checking.'}
-
-        # async def mail_send():
-        #     task = asyncio.gather(send_mail2(data))
-        #     await task
-        #
-        # # loop = asyncio.get_event_loop()
-        # asyncio.run(mail_send())
-
-        # Util.send_email(data)
+        Util.send_email(data)
         refInfo.is_sent = True
         refInfo.save()
         return Response(response)
