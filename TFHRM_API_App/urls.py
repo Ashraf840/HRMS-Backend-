@@ -15,13 +15,14 @@ from RecruitmentManagementApp.views import AllUserDetailView, AppliedForJobView,
     JobDataFilterView, \
     JobCreateView, OnlineTestResponseView, PracticalTestResponseView, \
     UpdateCandidateStatusView, MyJobListView, JobStatusView, PracticalTestForApplicantView, \
-    OnlineTestResponseListView, DocumentSubmissionView,WithdrawApplicationView, \
+    OnlineTestResponseListView, DocumentSubmissionView, WithdrawApplicationView, \
     DocumentSubmissionUpdateDeleteView, ReferenceInformationView, ReferenceInformationUpdateDeleteView, \
-    FilterQuestionView, FilterQuestionUpdateDeleteView, FilterQuestionListView, CandidateFilterQuestionListView,SignedAppointmentLetterSubmissionView
+    FilterQuestionView, FilterQuestionUpdateDeleteView, FilterQuestionListView, CandidateFilterQuestionListView, \
+    SignedAppointmentLetterSubmissionView, CandidateJoiningFeedbackView
 from SupportApp import views as supportView
 # importing Views from UserApp views
-from UserApp.views import RegisterView, UserDetailView, CareerObjectiveView,\
-    CustomTokenObtainPairView, UpdateAcademicInfoView, AddAcademicInfoView, CareerObjectiveUpdateView,\
+from UserApp.views import RegisterView, UserDetailView, CareerObjectiveView, \
+    CustomTokenObtainPairView, UpdateAcademicInfoView, AddAcademicInfoView, CareerObjectiveUpdateView, \
     AddWorkExperienceView, UpdateWorkExpInfoView, AddCertificationsView, UpdateCertificationsView, \
     AddTrainingExperienceView, UpdateUserInfoView, UpdateTrainingExperienceView, VerifyEmailView, SkillsView, \
     AcademicInfoListView, WorkInfoListView, CertificationInfoListView, TrainingInfoListView, AddUserSkillsView, \
@@ -87,7 +88,6 @@ urlpatterns = [
     path('applied_job/', AppliedForJobView.as_view(), name='applied_for_jobs'),
     path('applied_job/<jobPostId_id>/', AppliedForJobView.as_view(), name='check_applied_for_jobs'),
 
-
     # Filter question list
     path('filter_question/', FilterQuestionView.as_view(), name='filter_questions'),
     path('filter_question_update/<question_id>/', FilterQuestionUpdateDeleteView.as_view(),
@@ -140,7 +140,6 @@ urlpatterns = [
          name='filter_qus_res_list_admin'),
     path('applicant_list_details/', AppliedUserDetailsView.as_view(), name='admin_applied_user_list'),
 
-
     path('admin_online_test_res_list/<job_id>/', TestAdminAppliedCandidateOnlineResView.as_view(),
          name='admin_online_test_response_list'),
 
@@ -164,7 +163,6 @@ urlpatterns = [
     path('recruitment_user_onboard_list/<job_id>/', SelectedForOnboardView.as_view(),
          name='recruitment_user_onboard_list'),
 
-
     path('appointment_letter_details/<applied_job>/', AppointmentLetterInformationView.as_view(),
          name='appointment_letter_details_for_pdf'),
     path('appointment_letter_save/<applicationId>/', OfficialDocumentsView.as_view(), name='appointment_letter_save'),
@@ -175,11 +173,12 @@ urlpatterns = [
     path('stored_docs/', OfficialDocStoreView.as_view(), name='store_onboard_document_nda_nca'),
     path('stored_docs/<application_id>/', OfficialDocStoreView.as_view(), name='store_onboard_document_nda_nca_user'),
 
-    # path('appointment_letter_info/<applicationId>/', AppointmentLetterInfoView.as_view(),
-    # name='appointment_letter_info'),
 
+    # candidate Feedback
+    path('candidate_feedback/<application_id>/', CandidateJoiningFeedbackView.as_view(), name='candidate_feedback_joining'),
     # signed Appointment submission
-    path('signed_appointment_letter_submission/<applicationId>/', SignedAppointmentLetterSubmissionView.as_view(), name='signed_appointment'),
+    path('signed_appointment_letter_submission/<applicationId>/', SignedAppointmentLetterSubmissionView.as_view(),
+         name='signed_appointment'),
 
     # support system
     path('ticket_reason/', supportView.TicketReasonView.as_view(), name='support_ticket_reason'),

@@ -296,3 +296,13 @@ class SignedAppointmentLetterSerializer(serializers.ModelSerializer):
             'user': {'read_only': True},
             'applicationId': {'read_only': True},
         }
+
+
+# Candidate feedback if candidate agreed to All policies.
+class CandidateJoiningFeedbackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CandidateJoiningFeedbackModel
+        fields = '__all__'
+        extra_kwargs = {
+            'applicationId': {'read_only': True},
+        }

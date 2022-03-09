@@ -15,3 +15,12 @@ def sendsms_response(smsData):
         dst=smsData['dest_num'],
         text=smsData['msg'])
     return Response({'detail': 'Message Sent.'})
+
+
+# Sample Sending option
+
+"""============SMS sending functionality============"""
+# msg = 'Hi ' + self.request.user.full_name + \
+#      f' Congratulations you have been selected for the {jobProgress[i + 1].status} stage.'
+#      smsData = {'dest_num': self.request.user.phone_number, 'msg': msg}
+#      sms.sendsms_response(smsData)

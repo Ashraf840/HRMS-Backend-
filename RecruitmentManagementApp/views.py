@@ -5,6 +5,8 @@ from django.http import Http404
 from rest_framework import generics, status, permissions
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
+
+from SupportApp import sms
 from UserApp import utils
 from UserApp.models import User
 from UserApp.permissions import IsHrUser, EditPermission, IsAuthor, IsEmployee, IsCandidateUser, Authenticated
@@ -434,10 +436,10 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
                             utils.Util.send_email(data)
 
                             """============SMS sending functionality============"""
-                            # msg = 'Hi ' + self.request.user.full_name + \
-                            #       f' Congratulations you have been selected for the {jobProgress[i + 1].status} stage.'
-                            # smsData = {'dest_num': self.request.user.phone_number, 'msg': msg}
-                            # sms.sendsms_response(smsData)
+                            msg = 'Hi ' + self.request.user.full_name + \
+                                  f' Congratulations you have been selected for the {jobProgress[i + 1].status} stage.'
+                            smsData = {'dest_num': self.request.user.phone_number, 'msg': msg}
+                            sms.sendsms_response(smsData)
 
                             break
                 else:
@@ -797,8 +799,9 @@ class ReferenceInformationView(generics.CreateAPIView):
                         headers = self.get_success_headers(serializer.data)
                         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
                     else:
-                        return Response({'detail': 'Please provide an official email address.'},
-                                        status=status.HTTP_400_BAD_REQUEST)
+                        return Response({
+                            'detail': "Please provide Official Email address like 'abc@techforing.com' of the referrer"},
+                            status=status.HTTP_400_BAD_REQUEST)
 
 
                 else:
@@ -819,8 +822,9 @@ class ReferenceInformationView(generics.CreateAPIView):
                             headers = self.get_success_headers(serializer.data)
                             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
                         else:
-                            return Response({'detail': 'Please provide an official email address.'},
-                                            status=status.HTTP_400_BAD_REQUEST)
+                            return Response({
+                                'detail': "Please provide Official Email address like 'abc@techforing.com' of the referrer"},
+                                status=status.HTTP_400_BAD_REQUEST)
 
                     else:
                         serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))
@@ -935,3 +939,42 @@ class WithdrawApplicationView(generics.RetrieveUpdateDestroyAPIView):
         need to add Withdraw mail validation
         """
         return Response({'detail': 'Withdrawn'})
+
+
+# Candidate Feedback about Hr policies
+class CandidateJoiningFeedbackView(generics.ListCreateAPIView):
+    permission_classes = [Authenticated]
+    serializer_class = serializer.CandidateJoiningFeedbackSerializer
+
+    def get_queryset(self):
+
+        if self.request.user.is_superuser or self.request.user.is_hr:
+            queryset = models.CandidateJoiningFeedbackModel.objects.all()
+        else:
+            queryset = models.CandidateJoiningFeedbackModel.objects.filter(applicationId__userId=self.request.user)
+        return queryset
+
+    def perform_create(self, serializer):
+        application_id = self.kwargs['application_id']
+        serializer.save(applicationId=models.UserJobAppliedModel.objects.get(id=application_id))
+
+    def get(self, request, *args, **kwargs):
+        data = self.get_serializer(self.get_queryset(), many=True)
+        responseData = data.data
+        return Response(responseData)
+
+    def create(self, request, *args, **kwargs):
+        application_info = models.UserJobAppliedModel.objects.get(id=self.kwargs['application_id'])
+        if application_info.jobProgressStatus.status == 'On Boarding':
+            check_feedback = models.CandidateJoiningFeedbackModel.objects.filter(applicationId=application_info)
+
+            if check_feedback.count() < 1:
+                ser = self.get_serializer(data=request.data)
+                ser.is_valid(raise_exception=True)
+                self.perform_create(ser)
+                return Response(ser.data, status=status.HTTP_201_CREATED)
+            return Response({'detail': 'Already provide feedback, for further inquiries please contact on support.'},
+                            status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({'detail': 'You dont have permission to access this page'},
+                            status=status.HTTP_400_BAD_REQUEST)

@@ -279,6 +279,16 @@ class SignedAppointmentLetterModel(models.Model):
         return f'{self.applicationId.userId.full_name}'
 
 
+class CandidateJoiningFeedbackModel(models.Model):
+    applicationId = models.OneToOneField(UserJobAppliedModel, on_delete=models.CASCADE,
+                                         related_name='candidate_joining_feedback_application_id')
+    is_agree = models.BooleanField(blank=True, null=True)
+    feedback = models.TextField(blank=True)
+
+    def __str__(self):
+        return f'{self.applicationId.userId.full_name}, {self.is_agree}'
+
+
 # ============ Reference conformation data ============
 # class ReferenceConfirmationModel(models.Model):
 

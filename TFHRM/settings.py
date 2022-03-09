@@ -42,10 +42,13 @@ ALLOWED_HOSTS = [
     'careeradmin.techforing.com',
     'career.techforing.com',
     'hrms.techforing.com',
+    'techforing.com',
     '127.0.0.1',
     '127.0.0.1:8000',
     'localhost:3001',
     'localhost:3000',
+    'www.careeradmin.techforing.com',
+    'www.career.techforing.com',
 ]
 
 # Initialise environment variables

@@ -32,3 +32,5 @@ admin.site.register(models.JobApplyFilterQuestionModel)
 admin.site.register(models.FilterQuestionAnswerModel)
 admin.site.register(models.FilterQuestionsResponseModelHR)
 admin.site.register(models.JobFilterQuestionRadioButtonOptionModel)
+# Candidate Feedback during joining
+admin.site.register(models.CandidateJoiningFeedbackModel)
