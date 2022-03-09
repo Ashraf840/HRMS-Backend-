@@ -916,33 +916,51 @@ class OfficialDocumentsView(generics.CreateAPIView, generics.RetrieveUpdateDestr
     def create(self, request, *args, **kwargs):
         applicationId = self.kwargs['applicationId']
         alreadyCreated = OfficialDocumentsModel.objects.filter(applicationId=applicationId)
-        terms_condition = CandidateJoiningFeedbackModel.objects.filter(applicationId=applicationId).first()
-        # print(terms_condition)
-        if terms_condition is not None:
-            if terms_condition.allowed:
-                if alreadyCreated.count() < 1:
-                    serializer = self.get_serializer(data=request.data)
-                    serializer.is_valid(raise_exception=True)
-                    self.perform_create(serializer)
 
-                    email_body = f'Hi  {alreadyCreated.first().applicationId.userId.full_name},\n Congratulations, Your appointment letter is Updated to your portal.' \
-                                 f'please check you portal for further process.\n\n' \
-                                 'Thanks & Regards,\n' \
-                                 'HR Department\n' \
-                                 'TechForing Limited.\n' \
-                                 'www.techforing.com'
-                    # f'Office Address: House: 149 (4th floor), Lane: 1, Baridhara DOHS, Dhaka.\n' \
+        if alreadyCreated.count() < 1:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            email_body = f'Hi  {alreadyCreated.first().applicationId.userId.full_name},\n Congratulations, Your appointment letter is Updated to your portal.' \
+                         f'please check you portal for further process.\n\n' \
+                         'Thanks & Regards,\n' \
+                         'HR Department\n' \
+                         'TechForing Limited.\n' \
+                         'www.techforing.com'
+            # f'Office Address: House: 149 (4th floor), Lane: 1, Baridhara DOHS, Dhaka.\n' \
 
-                    data = {'email_body': email_body, 'to_email': alreadyCreated.first().applicationId.userId.email,
-                            'email_subject': 'Update'}
-                    Util.send_email(data)
-                    return Response(serializer.data, status=status.HTTP_201_CREATED)
-                return Response({'detail': 'Already created Appointment letter for this candidate.'},
-                                status=status.HTTP_208_ALREADY_REPORTED)
-
-            return Response({'detail': 'This candidate is not agreed with our terms and conditions. Please talk with him and allow him to go further.'},
-                            status=status.HTTP_403_FORBIDDEN)
-
-        else:
-            return Response({'detail': 'This candidate didn\'t provide feedback.'},
-                            status=status.HTTP_400_BAD_REQUEST)
+            data = {'email_body': email_body, 'to_email': alreadyCreated.first().applicationId.userId.email,
+                    'email_subject': 'Update'}
+            Util.send_email(data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response({'detail': 'Already created Appointment letter for this candidate.'},
+                        status=status.HTTP_208_ALREADY_REPORTED)
+        # terms_condition = CandidateJoiningFeedbackModel.objects.filter(applicationId=applicationId).first()
+        # if terms_condition is not None:
+        #     if terms_condition.allowed:
+        #         if alreadyCreated.count() < 1:
+        #             serializer = self.get_serializer(data=request.data)
+        #             serializer.is_valid(raise_exception=True)
+        #             self.perform_create(serializer)
+        #
+        #             email_body = f'Hi  {alreadyCreated.first().applicationId.userId.full_name},\n Congratulations, Your appointment letter is Updated to your portal.' \
+        #                          f'please check you portal for further process.\n\n' \
+        #                          'Thanks & Regards,\n' \
+        #                          'HR Department\n' \
+        #                          'TechForing Limited.\n' \
+        #                          'www.techforing.com'
+        #             # f'Office Address: House: 149 (4th floor), Lane: 1, Baridhara DOHS, Dhaka.\n' \
+        #
+        #             data = {'email_body': email_body, 'to_email': alreadyCreated.first().applicationId.userId.email,
+        #                     'email_subject': 'Update'}
+        #             Util.send_email(data)
+        #             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        #         return Response({'detail': 'Already created Appointment letter for this candidate.'},
+        #                         status=status.HTTP_208_ALREADY_REPORTED)
+        #
+        #     return Response({'detail': 'This candidate is not agreed with our terms and conditions. Please talk with him and allow him to go further.'},
+        #                     status=status.HTTP_403_FORBIDDEN)
+        #
+        # else:
+        #     return Response({'detail': 'This candidate didn\'t provide feedback.'},
+        #                     status=status.HTTP_400_BAD_REQUEST)
