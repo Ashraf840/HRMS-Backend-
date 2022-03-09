@@ -974,9 +974,14 @@ class CandidateJoiningFeedbackView(generics.ListCreateAPIView):
                     ser.is_valid(raise_exception=True)
                     self.perform_create(ser)
                     check_value = models.CandidateJoiningFeedbackModel.objects.get(id=ser.data['id'])
-                    # if check_value.is_agree:
-                    #
-                    return Response(ser.data, status=status.HTTP_201_CREATED)
+                    if check_value.is_agree:
+                        check_value.allowed = True
+                        check_value.save()
+                    else:
+                        check_value.allowed = False
+                        check_value.save()
+                    responseData = ser.data
+                    return Response(responseData, status=status.HTTP_201_CREATED)
                 return Response(
                     {'detail': 'Already provide feedback, for further inquiries please contact on support.'},
                     status=status.HTTP_400_BAD_REQUEST)

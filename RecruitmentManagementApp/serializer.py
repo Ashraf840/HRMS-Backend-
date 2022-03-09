@@ -305,4 +305,5 @@ class CandidateJoiningFeedbackSerializer(serializers.ModelSerializer):
         fields = '__all__'
         extra_kwargs = {
             'applicationId': {'read_only': True},
+            'allowed': {'read_only': True},
         }
