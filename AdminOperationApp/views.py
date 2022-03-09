@@ -1,16 +1,14 @@
 import calendar
 import datetime
-
 from django.db.models import Q
 from rest_framework import generics, permissions, status, pagination
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-
 import HRM_Admin.models
 from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel, OnlineTestResponseModel, \
     FilterQuestionsResponseModelHR, PracticalTestResponseModel, DocumentSubmissionModel, ReferenceInformationModel, \
-    JobStatusModel, OfficialDocumentsModel
+    JobStatusModel, OfficialDocumentsModel, CandidateJoiningFeedbackModel
 from UserApp import permissions as customPermission
 from UserApp.models import User, UserDepartmentModel
 from . import models
@@ -916,26 +914,27 @@ class OfficialDocumentsView(generics.CreateAPIView, generics.RetrieveUpdateDestr
             raise
 
     def create(self, request, *args, **kwargs):
+        applicationId = self.kwargs['applicationId']
         alreadyCreated = OfficialDocumentsModel.objects.filter(
-            applicationId=request.data['applicationId'])
+            applicationId=applicationId)
+        # terms_condition = CandidateJoiningFeedbackModel.objects.get(applicationId=applicationId)
+        # # if terms_condition.is_agree
         if alreadyCreated.count() < 1:
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
 
-            # email_body = f'Hi  {alreadyCreated.first().applicationId.userId.full_name},\n Congratulations, Your appointment letter is Updated to your portal.' \
-            #              f'please check you portal for further process.\n\n' \
-            #              'Thanks & Regards,\n' \
-            #              'HR Department\n' \
-            #              'TechForing Limited.\n' \
-            #              'www.techforing.com'
-            # # f'Office Address: House: 149 (4th floor), Lane: 1, Baridhara DOHS, Dhaka.\n' \
-            #
-            # data = {'email_body': email_body, 'to_email': alreadyCreated.first().applicationId.userId.email,
-            #         'email_subject': 'Update'}
-            # Util.send_email(data)
+            email_body = f'Hi  {alreadyCreated.first().applicationId.userId.full_name},\n Congratulations, Your appointment letter is Updated to your portal.' \
+                         f'please check you portal for further process.\n\n' \
+                         'Thanks & Regards,\n' \
+                         'HR Department\n' \
+                         'TechForing Limited.\n' \
+                         'www.techforing.com'
+            # f'Office Address: House: 149 (4th floor), Lane: 1, Baridhara DOHS, Dhaka.\n' \
+
+            data = {'email_body': email_body, 'to_email': alreadyCreated.first().applicationId.userId.email,
+                    'email_subject': 'Update'}
+            Util.send_email(data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response({'detail': 'Already created Appointment letter for this candidate.'},
                         status=status.HTTP_208_ALREADY_REPORTED)
-
-

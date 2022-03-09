@@ -284,6 +284,7 @@ class CandidateJoiningFeedbackModel(models.Model):
                                          related_name='candidate_joining_feedback_application_id')
     is_agree = models.BooleanField(blank=True, null=True)
     feedback = models.TextField(blank=True)
+    allowed = models.BooleanField(blank=True, null=True)
 
     def __str__(self):
         return f'{self.applicationId.userId.full_name}, {self.is_agree}'
