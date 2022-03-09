@@ -892,7 +892,7 @@ class AppointmentLetterInformationView(generics.ListCreateAPIView):
             'location': userInformation.userId.location,
             'nid': userInformation.userId.nid,
             'jobTitle': userInformation.jobPostId.jobTitle,
-
+            'jobType': userInformation.jobPostId.jobType,
         })
 
         return Response(responseData)
