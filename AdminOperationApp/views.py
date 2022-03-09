@@ -916,12 +916,14 @@ class OfficialDocumentsView(generics.CreateAPIView, generics.RetrieveUpdateDestr
     def create(self, request, *args, **kwargs):
         applicationId = self.kwargs['applicationId']
         alreadyCreated = OfficialDocumentsModel.objects.filter(applicationId=applicationId)
-
+        # terms_condition = CandidateJoiningFeedbackModel.objects.filter(applicationId=applicationId).first()
         if alreadyCreated.count() < 1:
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
-            email_body = f'Hi  {alreadyCreated.first().applicationId.userId.full_name},\n Congratulations, Your appointment letter is Updated to your portal.' \
+
+            email_body = f'Hi  {alreadyCreated.first().applicationId.userId.full_name},\n ' \
+                         f'Congratulations, Your appointment letter is Updated to your portal.' \
                          f'please check you portal for further process.\n\n' \
                          'Thanks & Regards,\n' \
                          'HR Department\n' \
@@ -935,7 +937,7 @@ class OfficialDocumentsView(generics.CreateAPIView, generics.RetrieveUpdateDestr
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response({'detail': 'Already created Appointment letter for this candidate.'},
                         status=status.HTTP_208_ALREADY_REPORTED)
-        # terms_condition = CandidateJoiningFeedbackModel.objects.filter(applicationId=applicationId).first()
+
         # if terms_condition is not None:
         #     if terms_condition.allowed:
         #         if alreadyCreated.count() < 1:
