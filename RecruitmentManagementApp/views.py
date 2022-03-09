@@ -947,9 +947,8 @@ class CandidateJoiningFeedbackView(generics.ListCreateAPIView):
     serializer_class = serializer.CandidateJoiningFeedbackSerializer
 
     def get_queryset(self):
-
         if self.request.user.is_superuser or self.request.user.is_hr:
-            queryset = models.CandidateJoiningFeedbackModel.objects.all()
+            queryset = models.CandidateJoiningFeedbackModel.objects.filter(applicationId=self.kwargs['application_id'])
         else:
             queryset = models.CandidateJoiningFeedbackModel.objects.filter(applicationId__userId=self.request.user)
         return queryset
@@ -967,14 +966,17 @@ class CandidateJoiningFeedbackView(generics.ListCreateAPIView):
         application_info = models.UserJobAppliedModel.objects.get(id=self.kwargs['application_id'])
         if application_info.jobProgressStatus.status == 'On Boarding':
             check_feedback = models.CandidateJoiningFeedbackModel.objects.filter(applicationId=application_info)
-
-            if check_feedback.count() < 1:
-                ser = self.get_serializer(data=request.data)
-                ser.is_valid(raise_exception=True)
-                self.perform_create(ser)
-                return Response(ser.data, status=status.HTTP_201_CREATED)
-            return Response({'detail': 'Already provide feedback, for further inquiries please contact on support.'},
-                            status=status.HTTP_400_BAD_REQUEST)
+            if application_info.userId == self.request.user:
+                if check_feedback.count() < 1:
+                    ser = self.get_serializer(data=request.data)
+                    ser.is_valid(raise_exception=True)
+                    self.perform_create(ser)
+                    return Response(ser.data, status=status.HTTP_201_CREATED)
+                return Response(
+                    {'detail': 'Already provide feedback, for further inquiries please contact on support.'},
+                    status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': 'You dont have permission.'},
+                            status=status.HTTP_401_UNAUTHORIZED)
         else:
             return Response({'detail': 'You dont have permission to access this page'},
                             status=status.HTTP_400_BAD_REQUEST)
