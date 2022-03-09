@@ -290,7 +290,18 @@ class CandidateJoiningFeedbackModel(models.Model):
 
 
 # ============ Reference conformation data ============
-# class ReferenceConfirmationModel(models.Model):
+class RefereeInformationModel(models.Model):
+    application_id = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE,
+                                       related_name='referrer_confirmation_email')
+    # Reference Information
+    name = models.CharField(max_length=255)
+    job_title = models.CharField(max_length=255)
+    name_of_company = models.CharField(max_length=255)
+    address_of_company = models.CharField(max_length=255)
+    relation = models.CharField(max_length=255)
+    contact_number = models.CharField(max_length=255)
+    email = models.EmailField()
+
 
 
 # Removing filter questions response garbage values

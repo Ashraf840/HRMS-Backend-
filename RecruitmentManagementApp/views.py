@@ -416,7 +416,7 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
                             selectStatus = jobProgress[i + 1].status
                             # ========Email send functionality========
 
-                            email_body = f'Dear {self.request.user.full_name}\n, ' \
+                            email_body = f'Dear {self.request.user.full_name},\n ' \
                                          f'Thank you for your application and interest in joining TechForing. You have been shortlisted for the {questionAnswer.question.jobId.jobTitle} position.\n' \
                                          f'At TechForing, we have a straightforward recruitment procedure and these {selectStatus} are one of them. We take these tests to understand your values, analytical ability, and expertise related to the position. This is a crucial and mandatory step to qualify for the position.\n' \
                                          f'You are requested to log into the recruitment portal and participate in the test. Link: https://career.techforing.com/\n' \
@@ -446,7 +446,7 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
                     jobFilterQuestion.jobProgressStatus = models.JobStatusModel.objects.get(status='Rejected')
                     jobFilterQuestion.save()
 
-                    email_body = f'Hi {self.request.user.full_name},\n' \
+                    email_body = f'Hi {self.request.user.full_name},\n ' \
                                  'We regret to inform you that we have decided to move forward with other candidates at ' \
                                  'this time. We will definitely keep you in mind for future opportunities that may be a ' \
                                  'good fit.' \
@@ -638,7 +638,7 @@ class OnlineTestResponseView(generics.CreateAPIView):
                                     utils.Util.send_email(data)
                                 else:
 
-                                    email_body = 'Hi ' + self.request.user.full_name + \
+                                    email_body = f'Hi {self.request.user.full_name},\n' \
                                                  f'Congratulations! We are happy to inform you that you have passed ' \
                                                  f'the {sta.status} and have been selected for the second round of' \
                                                  f' interview which consists of a {update.status}.' \
@@ -960,6 +960,8 @@ class CandidateJoiningFeedbackView(generics.ListCreateAPIView):
     def get(self, request, *args, **kwargs):
         data = self.get_serializer(self.get_queryset(), many=True)
         responseData = data.data
+        if not responseData:
+            return Response({'detail': 'no content'}, status=status.HTTP_404_NOT_FOUND)
         return Response(responseData)
 
     def create(self, request, *args, **kwargs):

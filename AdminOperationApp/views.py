@@ -747,23 +747,12 @@ class AdminDocumentVerificationView(generics.ListAPIView):
 
         return Response(responseData)
 
-    # def retrieve(self, request, *args, **kwargs):
-    #     applicationId = self.kwargs['applied_job']
-    #
-    #     serializer = self.get_serializer(self.get_object())
-    #     print(serializer.data)
-    #     return Response()
-
 
 class DocumentVerifiedView(generics.RetrieveUpdateAPIView):
     permission_classes = [customPermission.Authenticated]
     serializer_class = serializer.AdminDocumentVerifySerializer
     queryset = DocumentSubmissionModel.objects.all()
     lookup_field = 'applied_job'
-
-    # def get_queryset(self):
-    #     queryset = DocumentSubmissionModel.objects.filter(applied_job_id=self.kwargs['applied_job'])
-    #     return queryset
 
 
 class CommentsOnDocumentsView(generics.CreateAPIView):
@@ -780,32 +769,6 @@ class ReferenceVerificationView(generics.RetrieveUpdateAPIView):
     serializer_class = serializer.ReferenceVerificationSerializer
     queryset = ReferenceInformationModel.objects.all()
     lookup_field = 'id'
-
-    # def perform_update(self, serializer):
-    # refId = self.kwargs['id']
-    # documents = DocumentSubmissionModel.objects.get(applied_job__references_submission_applied_job=refId)
-    # if documents.is_verified:
-    #     instance = serializer.save()
-    #     refInfo = ReferenceInformationModel.objects.get(id=refId)
-    #     refCheck = ReferenceInformationModel.objects.filter(applied_job=refInfo.applied_job)
-    #
-    #     count = 0
-    #     for ref in refCheck:
-    #         if ref.is_verified:
-    #             count += 1
-    #
-    #         if len(refCheck) == count:
-    #             refInfo.applied_job.jobProgressStatus = JobStatusModel.objects.get(status='On Boarding')
-    #             refInfo.applied_job.save()
-    #
-    #             email_body = f'Hi  {refInfo.applied_job.userId.full_name} Your Verification is completed please join ' \
-    #                          f'office ASAP '
-    #             data = {'email_body': email_body, 'to_email': refInfo.applied_job.userId.email,
-    #                     'email_subject': 'Update'}
-    #             Util.send_email(data)
-    # else:
-    #     return Response({'message': 'Documents is not verified yet.'}, status=status.HTTP_400_BAD_REQUEST)
-    # raise ValueError
 
     def get(self, request, *args, **kwargs):
         ser = self.get_serializer(self.get_queryset())
@@ -842,8 +805,15 @@ class ReferenceVerificationView(generics.RetrieveUpdateAPIView):
                     refInfo.applied_job.jobProgressStatus = JobStatusModel.objects.get(status='On Boarding')
                     refInfo.applied_job.save()
 
-                    email_body = f'Hi  {refInfo.applied_job.userId.full_name} Your Verification is completed please join ' \
-                                 f'office ASAP '
+                    email_body = f'Hi  {refInfo.applied_job.userId.full_name},\n We have verified your documents and ' \
+                                 f'references. As you documents and references verification is completed, You are requested to ' \
+                                 f'read our terms & conditions, if you are agree please submit you valuable feedback.\n\n' \
+                                 'Thanks & Regards,\n' \
+                                 'HR Department\n' \
+                                 'TechForing Limited.\n' \
+                                 'www.techforing.com'
+                    # f'Office Address: House: 149 (4th floor), Lane: 1, Baridhara DOHS, Dhaka.\n' \
+
                     data = {'email_body': email_body, 'to_email': refInfo.applied_job.userId.email,
                             'email_subject': 'Update'}
                     Util.send_email(data)
@@ -878,10 +848,6 @@ class GenerateAppointmentLetterView(generics.CreateAPIView):
     permission_classes = [customPermission.Authenticated]
     serializer_class = serializer.GenerateAppointmentLetterSerializer
     queryset = models.GenerateAppointmentLetterModel.objects.all()
-
-    # def perform_create(self, serializer):
-    #     serializer
-    #     serializer.save(applicationId=)
 
     def create(self, request, *args, **kwargs):
         alreadyApplied = models.GenerateAppointmentLetterModel.objects.filter(
@@ -948,3 +914,28 @@ class OfficialDocumentsView(generics.CreateAPIView, generics.RetrieveUpdateDestr
                 serializer.save(applicationId=UserJobAppliedModel.objects.get(id=self.kwargs['applicationId']))
         except AssertionError as ae:
             raise
+
+    def create(self, request, *args, **kwargs):
+        alreadyCreated = OfficialDocumentsModel.objects.filter(
+            applicationId=request.data['applicationId'])
+        if alreadyCreated.count() < 1:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+
+            # email_body = f'Hi  {alreadyCreated.first().applicationId.userId.full_name},\n Congratulations, Your appointment letter is Updated to your portal.' \
+            #              f'please check you portal for further process.\n\n' \
+            #              'Thanks & Regards,\n' \
+            #              'HR Department\n' \
+            #              'TechForing Limited.\n' \
+            #              'www.techforing.com'
+            # # f'Office Address: House: 149 (4th floor), Lane: 1, Baridhara DOHS, Dhaka.\n' \
+            #
+            # data = {'email_body': email_body, 'to_email': alreadyCreated.first().applicationId.userId.email,
+            #         'email_subject': 'Update'}
+            # Util.send_email(data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response({'detail': 'Already created Appointment letter for this candidate.'},
+                        status=status.HTTP_208_ALREADY_REPORTED)
+
+
