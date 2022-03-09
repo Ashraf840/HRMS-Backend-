@@ -905,18 +905,17 @@ class OfficialDocumentsView(generics.CreateAPIView, generics.RetrieveUpdateDestr
     lookup_field = 'applicationId'
 
     def perform_create(self, serializer):
-
-        try:
-            redundant = OfficialDocumentsModel.objects.filter(applicationId=self.kwargs['applicationId'])
-            if not redundant:
-                serializer.save(applicationId=UserJobAppliedModel.objects.get(id=self.kwargs['applicationId']))
-        except AssertionError as ae:
-            raise
+        serializer.save(applicationId=UserJobAppliedModel.objects.get(id=self.kwargs['applicationId']))
+        # try:
+        #     redundant = OfficialDocumentsModel.objects.filter(applicationId=self.kwargs['applicationId'])
+        #     if not redundant:
+        #         serializer.save(applicationId=UserJobAppliedModel.objects.get(id=self.kwargs['applicationId']))
+        # except AssertionError as ae:
+        #     raise
 
     def create(self, request, *args, **kwargs):
         applicationId = self.kwargs['applicationId']
-        alreadyCreated = OfficialDocumentsModel.objects.filter(
-            applicationId=applicationId)
+        alreadyCreated = OfficialDocumentsModel.objects.filter(applicationId=applicationId)
         terms_condition = CandidateJoiningFeedbackModel.objects.filter(applicationId=applicationId).first()
         # print(terms_condition)
         if terms_condition is not None:
