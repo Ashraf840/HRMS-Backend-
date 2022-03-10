@@ -1004,6 +1004,23 @@ class ReferenceQuestionsView(generics.ListCreateAPIView, generics.RetrieveUpdate
     queryset = models.ReferenceQuestionsModel.objects.all()
     lookup_field = 'id'
 
+    def list(self, request, *args, **kwargs):
+        slug = self.request.query_params.get('slug')
+        ser = self.get_serializer(self.get_queryset(), many=True)
+        responseData = ser.data
+
+        candidate_info = models.ReferenceInformationModel.objects.filter(slug_field=slug).first().applied_job
+        candidate = {
+            'candidate_name': candidate_info.userId.full_name,
+            'candidate_job_title': candidate_info.jobPostId.jobTitle,
+        }
+        response = {
+            'questions': responseData,
+            'candidate': candidate
+
+        }
+        return Response(response)
+
 
 class ReferenceInformationResponseView(generics.ListCreateAPIView):
     serializer_class = serializer.RefereeInformationSerializer
@@ -1011,9 +1028,11 @@ class ReferenceInformationResponseView(generics.ListCreateAPIView):
     queryset = models.ReferenceResponseInformationView.objects.all()
 
     def list(self, request, *args, **kwargs):
-        check = models.ReferenceResponseInformationView.objects.filter(reference_id__slug_field=self.request.query_params.get('slug'))
+        check = models.ReferenceResponseInformationView.objects.filter(
+            reference_id__slug_field=self.request.query_params.get('slug'))
         if check.count() > 0:
-            return Response({'detail': 'You have already provide your feedback. Thank You'}, status=status.HTTP_403_FORBIDDEN)
+            return Response({'detail': 'You have already provide your feedback. Thank You'},
+                            status=status.HTTP_403_FORBIDDEN)
         return Response(status=status.HTTP_200_OK)
 
 
@@ -1031,3 +1050,12 @@ class ReferenceInformationResponseListView(generics.ListAPIView):
         except:
             queryset = models.ReferenceResponseInformationView.objects.all()
         return queryset
+
+    # def list(self, request, *args, **kwargs):
+    #     ser = self.get_serializer(self.get_queryset(), many=True)
+    #     responseData = ser.data
+    #     ref_data = models.ReferenceResponseInformationView.objects.filter(reference_id=self.kwargs['ref_id']).first().reference_id.applied_job
+    #     candidate_info = {
+    #         'candidate_name': ref_data.userId.full_name,
+    #         'candidate_name': ref_data.userId.full_name,
+    #     }

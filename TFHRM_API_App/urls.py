@@ -184,8 +184,7 @@ urlpatterns = [
     # Reference checking section
     path('ref_questions/', ReferenceQuestionsView.as_view(), name='reference_questions'),
     path('ref_questions/<id>/', ReferenceQuestionsView.as_view(), name='reference_questions_update'),
-    path('reference_verification_response/', ReferenceInformationResponseListView.as_view(), name='reference_verification_response_for_single'),
-
+    path('reference_verification_response/<ref_id>/', ReferenceInformationResponseListView.as_view(), name='reference_verification_response_for_single'),
 
 
     # support system
