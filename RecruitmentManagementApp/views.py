@@ -11,7 +11,7 @@ from SupportApp import sms
 from UserApp import utils
 from UserApp.models import User
 from UserApp.permissions import IsHrUser, EditPermission, IsAuthor, IsEmployee, IsCandidateUser, Authenticated, \
-    EmployeeAdminAuthenticated
+    EmployeeAdminAuthenticated, IsHrOrReadOnly, IsHrOrAllowReadOnly
 from . import models
 from . import serializer
 
@@ -996,16 +996,13 @@ class CandidateJoiningFeedbackView(generics.ListCreateAPIView):
 
 # Reference checking referee response functionality
 class ReferenceQuestionsView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+    """
+    questions CURD operations
+    """
+    permission_classes = [IsHrOrAllowReadOnly]
     serializer_class = serializer.ReferenceQuestionsSerializer
-    permission_classes = [EmployeeAdminAuthenticated]
     queryset = models.ReferenceQuestionsModel.objects.all()
     lookup_field = 'id'
-
-
-class ReferenceQuestionsRefView(generics.ListAPIView):
-    serializer_class = serializer.ReferenceQuestionsSerializer
-    permission_classes = [permissions.AllowAny]
-    queryset = models.ReferenceQuestionsModel.objects.all()
 
 
 class ReferenceInformationResponseView(generics.ListCreateAPIView):
@@ -1013,3 +1010,24 @@ class ReferenceInformationResponseView(generics.ListCreateAPIView):
     permission_classes = [permissions.AllowAny]
     queryset = models.ReferenceResponseInformationView.objects.all()
 
+    def list(self, request, *args, **kwargs):
+        check = models.ReferenceResponseInformationView.objects.filter(reference_id__slug_field=self.request.query_params.get('slug'))
+        if check.count() > 0:
+            return Response({'detail': 'You have already provide your feedback. Thank You'}, status=status.HTTP_403_FORBIDDEN)
+        return Response(status=status.HTTP_200_OK)
+
+
+class ReferenceInformationResponseListView(generics.ListAPIView):
+    """
+    reference response answer view
+    """
+    serializer_class = serializer.RefereeInformationSerializer
+    permission_classes = [EmployeeAdminAuthenticated]
+
+    def get_queryset(self):
+        try:
+            ref_id = self.kwargs['ref_id']
+            queryset = models.ReferenceResponseInformationView.objects.filter(reference_id=ref_id)
+        except:
+            queryset = models.ReferenceResponseInformationView.objects.all()
+        return queryset

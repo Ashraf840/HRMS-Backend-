@@ -61,6 +61,19 @@ class IsHrOrReadOnly(permissions.BasePermission):
                     )
 
 
+class IsHrOrAllowReadOnly(permissions.BasePermission):
+    """
+    Allows access only to authenticated users.
+    """
+
+    def has_permission(self, request, view):
+        return bool(request.user.is_superuser or
+                    request.user.is_authenticated and request.user.email_validated
+                    and request.user.is_hr or request.user.is_authenticated and request.user.is_employee
+                    and request.user.email_validated or request.method in SAFE_METHODS
+                    )
+
+
 class EditPermission(permissions.BasePermission):
     message = 'You are not authorize to edit this page'
 

@@ -18,7 +18,8 @@ from RecruitmentManagementApp.views import AllUserDetailView, AppliedForJobView,
     OnlineTestResponseListView, DocumentSubmissionView, WithdrawApplicationView, \
     DocumentSubmissionUpdateDeleteView, ReferenceInformationView, ReferenceInformationUpdateDeleteView, \
     FilterQuestionView, FilterQuestionUpdateDeleteView, FilterQuestionListView, CandidateFilterQuestionListView, \
-    SignedAppointmentLetterSubmissionView, CandidateJoiningFeedbackView, ReferenceQuestionsView
+    SignedAppointmentLetterSubmissionView, CandidateJoiningFeedbackView, ReferenceQuestionsView, \
+    ReferenceInformationResponseListView
 from SupportApp import views as supportView
 # importing Views from UserApp views
 from UserApp.views import RegisterView, UserDetailView, CareerObjectiveView, \
@@ -183,6 +184,8 @@ urlpatterns = [
     # Reference checking section
     path('ref_questions/', ReferenceQuestionsView.as_view(), name='reference_questions'),
     path('ref_questions/<id>/', ReferenceQuestionsView.as_view(), name='reference_questions_update'),
+    path('reference_verification_response/', ReferenceInformationResponseListView.as_view(), name='reference_verification_response_for_single'),
+
 
 
     # support system

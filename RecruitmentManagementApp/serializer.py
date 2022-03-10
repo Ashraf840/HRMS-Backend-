@@ -317,7 +317,6 @@ class ReferenceQuestionsSerializer(serializers.ModelSerializer):
 
 
 class ReferencesQuestionResponseSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = models.ReferencesQuestionResponseModel
         fields = '__all__'
