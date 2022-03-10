@@ -783,9 +783,9 @@ class ReferenceVerificationView(generics.RetrieveUpdateAPIView):
                      f'Kindly, fill up the form attached with the mail as for written documents.' \
                      f'We would really appreciate it if you kindly fill up the form given below,' \
                      f'Form Link: {email_plaintext_message}{refInfo.slug_field} \n'\
-                     f'Thanks and Regards!' \
-                     f'HR Admin Dept.' \
-                     f'Techforing Limited' \
+                     f'Thanks and Regards! \n' \
+                     f'HR Admin Dept. \n' \
+                     f'Techforing Limited \n' \
                      f'House-149, Lane-1, DOHS, Baridhara, Dhaka'\
 
 

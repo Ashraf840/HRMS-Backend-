@@ -1057,5 +1057,6 @@ class ReferenceInformationResponseListView(generics.ListAPIView):
     #     ref_data = models.ReferenceResponseInformationView.objects.filter(reference_id=self.kwargs['ref_id']).first().reference_id.applied_job
     #     candidate_info = {
     #         'candidate_name': ref_data.userId.full_name,
-    #         'candidate_name': ref_data.userId.full_name,
+    #         'candidate_job_name': ref_data.jobPostId.jobTitle,
+    #
     #     }
