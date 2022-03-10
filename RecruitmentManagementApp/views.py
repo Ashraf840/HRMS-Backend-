@@ -1002,6 +1002,12 @@ class ReferenceQuestionsView(generics.ListCreateAPIView, generics.RetrieveUpdate
     lookup_field = 'id'
 
 
+class ReferenceQuestionsRefView(generics.ListAPIView):
+    serializer_class = serializer.ReferenceQuestionsSerializer
+    permission_classes = [permissions.AllowAny]
+    queryset = models.ReferenceQuestionsModel.objects.all()
+
+
 class ReferenceInformationResponseView(generics.ListCreateAPIView):
     serializer_class = serializer.RefereeInformationSerializer
     permission_classes = [permissions.AllowAny]
