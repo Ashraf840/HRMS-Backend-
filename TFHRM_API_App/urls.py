@@ -18,7 +18,7 @@ from RecruitmentManagementApp.views import AllUserDetailView, AppliedForJobView,
     OnlineTestResponseListView, DocumentSubmissionView, WithdrawApplicationView, \
     DocumentSubmissionUpdateDeleteView, ReferenceInformationView, ReferenceInformationUpdateDeleteView, \
     FilterQuestionView, FilterQuestionUpdateDeleteView, FilterQuestionListView, CandidateFilterQuestionListView, \
-    SignedAppointmentLetterSubmissionView, CandidateJoiningFeedbackView
+    SignedAppointmentLetterSubmissionView, CandidateJoiningFeedbackView, ReferenceQuestionsView
 from SupportApp import views as supportView
 # importing Views from UserApp views
 from UserApp.views import RegisterView, UserDetailView, CareerObjectiveView, \
@@ -179,6 +179,11 @@ urlpatterns = [
     # signed Appointment submission
     path('signed_appointment_letter_submission/<applicationId>/', SignedAppointmentLetterSubmissionView.as_view(),
          name='signed_appointment'),
+
+    # Reference checking section
+    path('ref_questions/', ReferenceQuestionsView.as_view(), name='reference_questions'),
+    path('ref_questions/<id>/', ReferenceQuestionsView.as_view(), name='reference_questions_update'),
+
 
     # support system
     path('ticket_reason/', supportView.TicketReasonView.as_view(), name='support_ticket_reason'),

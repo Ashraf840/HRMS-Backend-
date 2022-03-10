@@ -4,17 +4,37 @@ from . import models
 
 # Register your models here.
 class StatusModel(admin.ModelAdmin):
-    fields = ('status', 'statusOrder',)  # Add other fields here
-    list_display = ('status', 'statusOrder',)
+    # fields = ('status', 'statusOrder',)  # Add other fields here
+    list_display = ('id', 'status', 'statusOrder',)
 
-    # list_editable = ('status',)
+    list_editable = ('status',)
 
     class Meta:
         order = ['status']
 
 
-admin.site.register(models.JobPostModel)  # job post model
-admin.site.register(models.UserJobAppliedModel)  # job application model
+class JobModel(admin.ModelAdmin):
+    # fields = ('status', 'statusOrder',)  # Add other fields here
+    list_display = ('id', 'user', 'jobTitle', 'jobType', 'department',)
+
+    # list_editable = ('jobTitle',)
+
+    class Meta:
+        order = ['status']
+
+
+class UserApplicationModel(admin.ModelAdmin):
+    # fields = ('status', 'statusOrder',)  # Add other fields here
+    list_display = ('id', 'userId', 'jobPostId', 'jobProgressStatus', 'appliedDate')
+
+    # list_editable = ('jobTitle',)
+
+    class Meta:
+        order = ['id']
+
+
+admin.site.register(models.JobPostModel, JobModel)  # job post model
+admin.site.register(models.UserJobAppliedModel, UserApplicationModel)  # job application model
 # online, practical test section
 admin.site.register(models.OnlineTestModel)
 admin.site.register(models.PracticalTestModel)
@@ -34,3 +54,7 @@ admin.site.register(models.FilterQuestionsResponseModelHR)
 admin.site.register(models.JobFilterQuestionRadioButtonOptionModel)
 # Candidate Feedback during joining
 admin.site.register(models.CandidateJoiningFeedbackModel)
+# References application
+admin.site.register(models.ReferenceQuestionsModel)
+admin.site.register(models.ReferenceResponseInformationView)
+admin.site.register(models.ReferencesQuestionResponseModel)

@@ -307,3 +307,46 @@ class CandidateJoiningFeedbackSerializer(serializers.ModelSerializer):
             'applicationId': {'read_only': True},
             'allowed': {'read_only': True},
         }
+
+
+# Referee information and questions response section
+class ReferenceQuestionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ReferenceQuestionsModel
+        fields = '__all__'
+
+
+class ReferencesQuestionResponseSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.ReferencesQuestionResponseModel
+        fields = '__all__'
+        extra_kwargs = {
+            'referee': {'read_only': True},
+        }
+
+
+class RefereeInformationSerializer(serializers.ModelSerializer):
+    questions = ReferencesQuestionResponseSerializer(source='questions_referee_information', many=True)
+
+    class Meta:
+        model = models.ReferenceResponseInformationView
+        fields = '__all__'
+        extra_fields = ['questions']
+        extra_kwargs = {
+            'application_id': {'read_only': True},
+            'reference_id': {'read_only': True},
+        }
+
+    def create(self, validated_data):
+        # print(validated_data.get('questions_referee_information'))
+        questions = validated_data.pop('questions_referee_information')
+        slug = self.context.get('request').query_params.get('slug', None)
+        ref = models.ReferenceInformationModel.objects.get(slug_field=slug)
+        referee_info = models.ReferenceResponseInformationView.objects.create(reference_id=ref, **validated_data)
+
+        for qus in questions:
+            models.ReferencesQuestionResponseModel.objects.create(referee=referee_info, **qus)
+
+        return referee_info
+

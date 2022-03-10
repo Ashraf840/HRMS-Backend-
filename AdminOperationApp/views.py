@@ -774,11 +774,25 @@ class ReferenceVerificationView(generics.RetrieveUpdateAPIView):
         refId = self.kwargs['id']
         refInfo = ReferenceInformationModel.objects.get(id=refId)
 
-        email_body = f'Hi  {refInfo.name}, {refInfo.applied_job.userId.full_name} applied for the position {refInfo.applied_job.jobPostId.jobTitle}' \
-                     f' He add you as reference. Please fill the form below.'
+        email_plaintext_message = 'https://career.techforing.com/add_reference_form/'
+
+        email_body = 'Dear Sir,\n' \
+                     'Salam and Greetings.\n' \
+                     f'{refInfo.applied_job.userId.full_name} applied to our organization and include you as reference.' \
+                     f'We would like to obtain your confirmation regarding the reference.' \
+                     f'Kindly, fill up the form attached with the mail as for written documents.' \
+                     f'We would really appreciate it if you kindly fill up the form given below,' \
+                     f'Form Link: {email_plaintext_message}{refInfo.slug_field} \n'\
+                     f'Thanks and Regards!' \
+                     f'HR Admin Dept.' \
+                     f'Techforing Limited' \
+                     f'House-149, Lane-1, DOHS, Baridhara, Dhaka'\
+
+
         data = {'email_body': email_body, 'to_email': refInfo.email,
-                'email_subject': 'Reference checking.'}
+                'email_subject': 'Reference Verification.'}
         Util.send_email(data)
+
         refInfo.is_sent = True
         refInfo.save()
         return Response(response)

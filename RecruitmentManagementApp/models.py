@@ -1,6 +1,10 @@
+import base64
+
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
+from social_core.utils import slugify
+
 from UserApp.models import UserDepartmentModel, User
 from UserApp.models import UserDepartmentModel
 from django.core.validators import FileExtensionValidator, MinLengthValidator, MaxLengthValidator, EmailValidator
@@ -243,8 +247,14 @@ class ReferenceInformationModel(models.Model):
     email = models.EmailField()
     attachedFile = models.FileField(upload_to=content_file_name, blank=True, null=True)
     callRecord = models.FileField(upload_to=content_file_name, blank=True, null=True)
+    slug_field = models.SlugField(max_length=255, blank=True)
     is_sent = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.slug_field = slugify(base64.b64encode(str(self.name+self.email).encode('utf-8')))
+        super(ReferenceInformationModel, self).save(*args, **kwargs)
 
     def __str__(self):
         return f'pk: {self.pk} reference: {self.name}'
@@ -291,18 +301,33 @@ class CandidateJoiningFeedbackModel(models.Model):
 
 
 # ============ Reference conformation data ============
-class RefereeInformationModel(models.Model):
-    application_id = models.ForeignKey(UserJobAppliedModel, on_delete=models.CASCADE,
-                                       related_name='referrer_confirmation_email')
+class ReferenceQuestionsModel(models.Model):
+    question = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f'{self.question}'
+
+
+class ReferenceResponseInformationView(models.Model):
+    reference_id = models.ForeignKey(ReferenceInformationModel, on_delete=models.CASCADE, related_name='reference_information_reference')
     # Reference Information
     name = models.CharField(max_length=255)
-    job_title = models.CharField(max_length=255)
-    name_of_company = models.CharField(max_length=255)
-    address_of_company = models.CharField(max_length=255)
+    job_title = models.CharField(max_length=255, blank=True)
+    name_of_company = models.CharField(max_length=255, blank=True)
+    address_of_company = models.CharField(max_length=255, blank=True)
     relation = models.CharField(max_length=255)
     contact_number = models.CharField(max_length=255)
-    email = models.EmailField()
+    email = models.EmailField(blank=True, null=True)
 
+    def __str__(self):
+        return f'{self.name}'
+
+
+class ReferencesQuestionResponseModel(models.Model):
+    referee = models.ForeignKey(ReferenceResponseInformationView, on_delete=models.CASCADE, related_name='questions_referee_information')
+    question = models.ForeignKey(ReferenceQuestionsModel, on_delete=models.CASCADE,
+                                 related_name='reference_response_qus')
+    response = models.TextField()
 
 
 # Removing filter questions response garbage values
