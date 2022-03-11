@@ -317,11 +317,12 @@ class ReferenceQuestionsSerializer(serializers.ModelSerializer):
 
 
 class ReferencesQuestionResponseSerializer(serializers.ModelSerializer):
-    question = serializers.CharField(read_only=True)
+    question_view = serializers.CharField(source='reference_response_qus', read_only=True)
 
     class Meta:
         model = models.ReferencesQuestionResponseModel
         fields = '__all__'
+        extra_fields = ['reference_info']
         extra_kwargs = {
             'referee': {'read_only': True},
         }
