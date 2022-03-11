@@ -444,10 +444,10 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
                             utils.Util.send_email(data)
 
                             """============SMS sending functionality============"""
-                            msg = 'Hi ' + self.request.user.full_name + \
-                                  f' Congratulations you have been selected for the {jobProgress[i + 1].status} stage.'
-                            smsData = {'dest_num': self.request.user.phone_number, 'msg': msg}
-                            sms.sendsms_response(smsData)
+                            # msg = 'Hi ' + self.request.user.full_name + \
+                            #       f' Congratulations you have been selected for the {jobProgress[i + 1].status} stage.'
+                            # smsData = {'dest_num': self.request.user.phone_number, 'msg': msg}
+                            # sms.sendsms_response(smsData)
 
                             break
                 else:
