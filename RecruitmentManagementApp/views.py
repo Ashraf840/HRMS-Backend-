@@ -389,12 +389,18 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
             totalResponse = filterQusResponse.count()
 
             score = 0
+            level_scale = ['basic', 'intermediate', 'advanced']
             if totalResponse == totalQuestion:
                 for res in filterQusResponse:
                     questionAnswer = models.FilterQuestionAnswerModel.objects.get(question=res.questions)
-
-                    if questionAnswer.answer.lower() == res.response.lower():
+                    qus_ans = questionAnswer.answer.lower()
+                    if qus_ans == res.response.lower():
                         score += 1
+                    elif qus_ans in level_scale:
+                        ans_index = level_scale.index(qus_ans)
+                        res_index = level_scale.index(res.response.lower())
+                        if res_index >= ans_index:
+                            score += 1
 
                     if not questionAnswer.answer == res.response:
                         try:
@@ -1061,7 +1067,8 @@ class ReferenceInformationResponseListView(generics.ListAPIView):
         try:
             ser = self.get_serializer(self.get_queryset(), many=True)
             responseData = ser.data
-            ref_data = models.ReferenceResponseInformationView.objects.filter(reference_id=self.kwargs['ref_id']).first().reference_id.applied_job
+            ref_data = models.ReferenceResponseInformationView.objects.filter(
+                reference_id=self.kwargs['ref_id']).first().reference_id.applied_job
             candidate_info = {
                 'candidate_name': ref_data.userId.full_name,
                 'candidate_job_title': ref_data.jobPostId.jobTitle,
