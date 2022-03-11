@@ -33,20 +33,22 @@ class OfficialDocStoreView(generics.ListCreateAPIView):
     def list(self, request, *args, **kwargs):
         ser = self.get_serializer(self.get_queryset(), many=True)
         responseData = ser.data
-        if self.request.user.is_candidate:
+        # if self.request.user.is_candidate:
+        #
+        # else:
+        #     return Response(responseData)
+        try:
+            id = self.kwargs['application_id']
             try:
-                id = self.kwargs['application_id']
-                try:
-                    appointmentLetter = OfficialDocumentsModel.objects.get(applicationId=id)
-                    responseData.append(
-                        {'permission': 'Permission', 'allow_candidate_access': appointmentLetter.allow_applicant_access})
-                except:
-                    responseData.append({'docName': 'Appointment Letter', 'docFile': ''})
-
-                return Response(responseData)
+                appointmentLetter = OfficialDocumentsModel.objects.get(applicationId=id)
+                print(appointmentLetter)
+                responseData.append(
+                    {'allow_candidate_access': appointmentLetter.allow_applicant_access})
             except:
-                return Response(responseData)
-        else:
+                responseData.append({'docName': 'Appointment Letter', 'docFile': ''})
+
+            return Response(responseData)
+        except:
             return Response(responseData)
 
 
