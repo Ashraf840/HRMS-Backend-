@@ -1052,17 +1052,20 @@ class ReferenceInformationResponseListView(generics.ListAPIView):
         return queryset
 
     def list(self, request, *args, **kwargs):
-        ser = self.get_serializer(self.get_queryset(), many=True)
-        responseData = ser.data
-        ref_data = models.ReferenceResponseInformationView.objects.filter(reference_id=self.kwargs['ref_id']).first().reference_id.applied_job
-        candidate_info = {
-            'candidate_name': ref_data.userId.full_name,
-            'candidate_job_title': ref_data.jobPostId.jobTitle,
-            'candidate_job_dept': ref_data.jobPostId.department.department,
+        try:
+            ser = self.get_serializer(self.get_queryset(), many=True)
+            responseData = ser.data
+            ref_data = models.ReferenceResponseInformationView.objects.filter(reference_id=self.kwargs['ref_id']).first().reference_id.applied_job
+            candidate_info = {
+                'candidate_name': ref_data.userId.full_name,
+                'candidate_job_title': ref_data.jobPostId.jobTitle,
+                'candidate_job_dept': ref_data.jobPostId.department.department,
 
-        }
-        response = {
-            'ref_res_info': responseData,
-            'candidate_info': candidate_info
-        }
-        return Response(response)
+            }
+            response = {
+                'ref_res_info': responseData,
+                'candidate_info': candidate_info
+            }
+            return Response(response)
+        except:
+            return Response({'detail': 'No response found.'}, status=status.HTTP_404_NOT_FOUND)

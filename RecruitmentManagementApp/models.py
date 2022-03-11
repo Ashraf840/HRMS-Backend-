@@ -73,6 +73,7 @@ field_type = (
     (1, 'Text'),
     (2, 'Radio'),
     (3, 'Custom'),
+    (4, 'Level Radio'),
 )
 
 
