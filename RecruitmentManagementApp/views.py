@@ -1009,15 +1009,21 @@ class ReferenceQuestionsView(generics.ListCreateAPIView, generics.RetrieveUpdate
         ser = self.get_serializer(self.get_queryset(), many=True)
         responseData = ser.data
 
-        candidate_info = models.ReferenceInformationModel.objects.filter(slug_field=slug).first().applied_job
+        candidate_info = models.ReferenceInformationModel.objects.filter(slug_field=slug).first()
         candidate = {
-            'candidate_name': candidate_info.userId.full_name,
-            'candidate_job_title': candidate_info.jobPostId.jobTitle,
+            'candidate_name': candidate_info.applied_job.userId.full_name,
+            'candidate_job_title': candidate_info.applied_job.jobPostId.jobTitle,
+        }
+        reference_info = {
+            'ref_name': candidate_info.name,
+            'ref_email': candidate_info.email,
+            'ref_phone': candidate_info.phoneNumber,
+            'ref_relation': candidate_info.relationWithReferer,
         }
         response = {
             'questions': responseData,
-            'candidate': candidate
-
+            'candidate': candidate,
+            'reference_info': reference_info
         }
         return Response(response)
 
