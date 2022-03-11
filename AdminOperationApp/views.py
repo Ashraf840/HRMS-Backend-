@@ -39,7 +39,8 @@ class OfficialDocStoreView(generics.ListCreateAPIView):
                 try:
                     appointmentLetter = OfficialDocumentsModel.objects.get(applicationId=id)
                     responseData.append(
-                        {'docName': 'Appointment Letter', 'docFile': appointmentLetter.appointmentLetter})
+                        {'docName': 'Appointment Letter', 'docFile': appointmentLetter.appointmentLetter,
+                         'permission': 'Permission', 'allow_candidate_access': appointmentLetter.allow_applicant_access})
                 except:
                     responseData.append({'docName': 'Appointment Letter', 'docFile': ''})
 
