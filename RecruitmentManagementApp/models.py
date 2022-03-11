@@ -1,7 +1,7 @@
 import base64
 
 from django.db import models
-from django.db.models.signals import pre_delete
+from django.db.models.signals import pre_delete, post_save
 from django.dispatch import receiver
 from social_core.utils import slugify
 
@@ -341,10 +341,9 @@ def log_deleted_question(sender, instance, **kwargs):
     filterQus = FilterQuestionsResponseModelHR.objects.filter(user=instance.userId, jobPost=instance.jobPostId).delete()
 
 
-@receiver(pre_delete, sender=ReferenceResponseInformationView)
+@receiver(post_save, sender=ReferenceResponseInformationView)
 def ref_info_response(sender, instance, **kwargs):
     ref = instance.reference_id
     ref.ref_response = True
     ref.save()
-
     print(ref.ref_response)
