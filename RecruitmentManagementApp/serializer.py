@@ -317,6 +317,8 @@ class ReferenceQuestionsSerializer(serializers.ModelSerializer):
 
 
 class ReferencesQuestionResponseSerializer(serializers.ModelSerializer):
+    question = serializers.CharField(read_only=True)
+
     class Meta:
         model = models.ReferencesQuestionResponseModel
         fields = '__all__'
@@ -348,4 +350,3 @@ class RefereeInformationSerializer(serializers.ModelSerializer):
             models.ReferencesQuestionResponseModel.objects.create(referee=referee_info, **qus)
 
         return referee_info
-
