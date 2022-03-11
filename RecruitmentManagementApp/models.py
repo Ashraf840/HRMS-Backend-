@@ -274,10 +274,11 @@ def signed_appointment_letter_name(instance, filename):
 class OfficialDocumentsModel(models.Model):
     applicationId = models.ForeignKey(UserJobAppliedModel, on_delete=models.SET_NULL, related_name='application',
                                       null=True)
-    appointmentLetter = models.TextField()
+    appointmentLetter = models.TextField(blank=True)
+    is_generated = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.id}'
+        return f'{self.id}, {self.is_generated}'
 
 
 class SignedAppointmentLetterModel(models.Model):
