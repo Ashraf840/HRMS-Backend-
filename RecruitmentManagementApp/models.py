@@ -251,10 +251,11 @@ class ReferenceInformationModel(models.Model):
     slug_field = models.SlugField(max_length=255, blank=True)
     is_sent = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
+    ref_response = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if not self.id:
-            self.slug_field = slugify(base64.b64encode(str(self.name+self.email).encode('utf-8')))
+            self.slug_field = slugify(base64.b64encode(str(self.name + self.email).encode('utf-8')))
         super(ReferenceInformationModel, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -310,7 +311,8 @@ class ReferenceQuestionsModel(models.Model):
 
 
 class ReferenceResponseInformationView(models.Model):
-    reference_id = models.ForeignKey(ReferenceInformationModel, on_delete=models.CASCADE, related_name='reference_information_reference')
+    reference_id = models.ForeignKey(ReferenceInformationModel, on_delete=models.CASCADE,
+                                     related_name='reference_information_reference')
     # Reference Information
     name = models.CharField(max_length=255)
     job_title = models.CharField(max_length=255, blank=True)
@@ -326,7 +328,8 @@ class ReferenceResponseInformationView(models.Model):
 
 
 class ReferencesQuestionResponseModel(models.Model):
-    referee = models.ForeignKey(ReferenceResponseInformationView, on_delete=models.CASCADE, related_name='questions_referee_information')
+    referee = models.ForeignKey(ReferenceResponseInformationView, on_delete=models.CASCADE,
+                                related_name='questions_referee_information')
     question = models.ForeignKey(ReferenceQuestionsModel, on_delete=models.CASCADE,
                                  related_name='reference_response_qus')
     response = models.TextField()
@@ -336,3 +339,12 @@ class ReferencesQuestionResponseModel(models.Model):
 @receiver(pre_delete, sender=UserJobAppliedModel)
 def log_deleted_question(sender, instance, **kwargs):
     filterQus = FilterQuestionsResponseModelHR.objects.filter(user=instance.userId, jobPost=instance.jobPostId).delete()
+
+
+@receiver(pre_delete, sender=ReferenceResponseInformationView)
+def ref_info_response(sender, instance, **kwargs):
+    ref = instance.reference_id
+    ref.ref_response = True
+    ref.save()
+
+    print(ref.ref_response)
