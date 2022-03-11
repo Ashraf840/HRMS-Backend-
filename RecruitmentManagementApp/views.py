@@ -423,51 +423,55 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
                             jobFilterQuestion.save()
                             selectStatus = jobProgress[i + 1].status
                             # ========Email send functionality========
+                            try:
+                                email_body = f'Dear {self.request.user.full_name},\n ' \
+                                             f'Thank you for your application and interest in joining TechForing. You have been shortlisted for the {questionAnswer.question.jobId.jobTitle} position.\n' \
+                                             f'At TechForing, we have a straightforward recruitment procedure and these {selectStatus} are one of them. We take these tests to understand your values, analytical ability, and expertise related to the position. This is a crucial and mandatory step to qualify for the position.\n' \
+                                             f'You are requested to log into the recruitment portal and participate in the test. Link: https://career.techforing.com/\n' \
+                                             f'NB: Follow the deadline and instructions strictly.\n' \
+                                             f'Deadline: {datetime.date.today() + datetime.timedelta(hours=72)}\n\n\n' \
+                                             f'Instructions:\n' \
+                                             f'1. Use login credentials that you created when you applied.\n' \
+                                             f'2. After completing the test, don’t forget to take the screenshot of your score.\n' \
+                                             f'3. Upload your score and screenshots of your score as instructed.\n\n\n' \
+                                             f'Thanks & Regards,\n' \
+                                             f'HR Department\n' \
+                                             f'TechForing Limited.\n' \
+                                             f'www.techforing.com'
 
-                            email_body = f'Dear {self.request.user.full_name},\n ' \
-                                         f'Thank you for your application and interest in joining TechForing. You have been shortlisted for the {questionAnswer.question.jobId.jobTitle} position.\n' \
-                                         f'At TechForing, we have a straightforward recruitment procedure and these {selectStatus} are one of them. We take these tests to understand your values, analytical ability, and expertise related to the position. This is a crucial and mandatory step to qualify for the position.\n' \
-                                         f'You are requested to log into the recruitment portal and participate in the test. Link: https://career.techforing.com/\n' \
-                                         f'NB: Follow the deadline and instructions strictly.\n' \
-                                         f'Deadline: {datetime.date.today() + datetime.timedelta(hours=72)}\n\n\n' \
-                                         f'Instructions:\n' \
-                                         f'1. Use login credentials that you created when you applied.\n' \
-                                         f'2. After completing the test, don’t forget to take the screenshot of your score.\n' \
-                                         f'3. Upload your score and screenshots of your score as instructed.\n\n\n' \
-                                         f'Thanks & Regards,\n' \
-                                         f'HR Department\n' \
-                                         f'TechForing Limited.\n' \
-                                         f'www.techforing.com'
+                                data = {'email_body': email_body, 'to_email': self.request.user.email,
+                                        'email_subject': 'Screening Test result.'}
+                                utils.Util.send_email(data)
 
-                            data = {'email_body': email_body, 'to_email': self.request.user.email,
-                                    'email_subject': 'Screening Test result.'}
-                            utils.Util.send_email(data)
-
-                            """============SMS sending functionality============"""
-                            # msg = 'Hi ' + self.request.user.full_name + \
-                            #       f' Congratulations you have been selected for the {jobProgress[i + 1].status} stage.'
-                            # smsData = {'dest_num': self.request.user.phone_number, 'msg': msg}
-                            # sms.sendsms_response(smsData)
+                                """============SMS sending functionality============"""
+                                # msg = 'Hi ' + self.request.user.full_name + \
+                                #       f' Congratulations you have been selected for the {jobProgress[i + 1].status} stage.'
+                                # smsData = {'dest_num': self.request.user.phone_number, 'msg': msg}
+                                # sms.sendsms_response(smsData)
+                            except:
+                                pass
 
                             break
                 else:
                     jobFilterQuestion.jobProgressStatus = models.JobStatusModel.objects.get(status='Rejected')
                     jobFilterQuestion.save()
+                    try:
+                        email_body = f'Hi {self.request.user.full_name},\n ' \
+                                     'We regret to inform you that we have decided to move forward with other candidates at ' \
+                                     'this time. We will definitely keep you in mind for future opportunities that may be a ' \
+                                     'good fit.' \
+                                     'All the best in your job search!\n\n' \
+                                     'Thanks & Regards,\n' \
+                                     'HR Department\n' \
+                                     'TechForing Limited.\n' \
+                                     'www.techforing.com'
 
-                    email_body = f'Hi {self.request.user.full_name},\n ' \
-                                 'We regret to inform you that we have decided to move forward with other candidates at ' \
-                                 'this time. We will definitely keep you in mind for future opportunities that may be a ' \
-                                 'good fit.' \
-                                 'All the best in your job search!\n\n' \
-                                 'Thanks & Regards,\n' \
-                                 'HR Department\n' \
-                                 'TechForing Limited.\n' \
-                                 'www.techforing.com'
+                        data = {'email_body': email_body, 'to_email': self.request.user.email,
+                                'email_subject': 'Status of the Screening Test'}
 
-                    data = {'email_body': email_body, 'to_email': self.request.user.email,
-                            'email_subject': 'Status of the Screening Test'}
-
-                    utils.Util.send_email(data)
+                        utils.Util.send_email(data)
+                    except:
+                        pass
 
                 return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
             return Response({'detail': 'new response added'})
