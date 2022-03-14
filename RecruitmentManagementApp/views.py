@@ -420,7 +420,8 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
                     jobProgress = candiate_job_application.jobPostId.jobProgressStatus.all()
                     for i, progress in enumerate(jobProgress):
 
-                        if candiate_job_application.jobProgressStatus.status == progress.status:
+                        if candiate_job_application.jobProgressStatus.status == progress.status or \
+                                candiate_job_application.jobProgressStatus.status.lower() == 'new':
                             candiate_job_application.jobProgressStatus = models.JobStatusModel.objects.get(
                                 status=jobProgress[i + 1].status)
                             candiate_job_application.save()
