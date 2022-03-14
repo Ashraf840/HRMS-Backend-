@@ -894,13 +894,17 @@ class AppointmentLetterInformationView(generics.ListCreateAPIView):
             'medicalAllowance': int(medicalAllowance),
             'transportAllowance': int(transportAllowance)
         })
-
+        # candidate and job information
         responseData.append({
             'applicantName': userInformation.userId.full_name,
             'location': userInformation.userId.location,
             'nid': userInformation.userId.nid,
+            'phone': userInformation.userId.phone_number,
+            'exp_joining_data': userInformation.applied_job_user_applied_model.all().last().expectedJoiningData,
+            # job info
             'jobTitle': userInformation.jobPostId.jobTitle,
             'jobType': userInformation.jobPostId.jobType,
+            'job_responsibilities': userInformation.jobPostId.jobResponsibilities,
         })
 
         return Response(responseData)

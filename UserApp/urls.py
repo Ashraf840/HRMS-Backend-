@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 from django.urls import include
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -8,6 +8,7 @@ from . import views
 
 urlpatterns = [
 
+    # re_path(r'^auth/', include('drf_social_oauth2.urls', namespace='drf'))
     # path('register/', views.RegisterView.as_view()),
     # path('user_info/', views.UserInfoListView.as_view()),
     # # path('user/<id>/', views.UserInfoApiView.as_view()),
