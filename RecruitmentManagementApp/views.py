@@ -422,8 +422,12 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
 
                         if candiate_job_application.jobProgressStatus.status == progress.status or \
                                 candiate_job_application.jobProgressStatus.status.lower() == 'new':
-                            candiate_job_application.jobProgressStatus = models.JobStatusModel.objects.get(
-                                status=jobProgress[i + 1].status)
+                            if candiate_job_application.jobProgressStatus.status.lower() == 'new':
+                                candiate_job_application.jobProgressStatus = models.JobStatusModel.objects.get(
+                                    status=jobProgress[i].status)
+                            else:
+                                candiate_job_application.jobProgressStatus = models.JobStatusModel.objects.get(
+                                    status=jobProgress[i + 1].status)
                             candiate_job_application.save()
                             selectStatus = jobProgress[i + 1].status
                             # ========Email send functionality========
