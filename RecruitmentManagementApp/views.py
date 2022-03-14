@@ -382,7 +382,8 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
             filterQusResponse = models.FilterQuestionsResponseModelHR.objects.filter(user=self.request.user,
                                                                                      jobPost_id=jobPostId)
 
-            jobFilterQuestion = models.UserJobAppliedModel.objects.get(jobPostId=jobPostId, userId=self.request.user)
+            candiate_job_application = models.UserJobAppliedModel.objects.get(jobPostId=jobPostId,
+                                                                              userId=self.request.user)
             noOfQus = models.JobApplyFilterQuestionModel.objects.filter(jobId=jobPostId)
 
             totalQuestion = noOfQus.count()
@@ -413,14 +414,16 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
                         except:
                             pass
 
-                if totalQuestion - 1 <= score:
-                    jobProgress = jobFilterQuestion.jobPostId.jobProgressStatus.all()
+                qus_percent = int(totalQuestion * .50)
+
+                if qus_percent <= score:
+                    jobProgress = candiate_job_application.jobPostId.jobProgressStatus.all()
                     for i, progress in enumerate(jobProgress):
 
-                        if jobFilterQuestion.jobProgressStatus.status == progress.status:
-                            jobFilterQuestion.jobProgressStatus = models.JobStatusModel.objects.get(
+                        if candiate_job_application.jobProgressStatus.status == progress.status:
+                            candiate_job_application.jobProgressStatus = models.JobStatusModel.objects.get(
                                 status=jobProgress[i + 1].status)
-                            jobFilterQuestion.save()
+                            candiate_job_application.save()
                             selectStatus = jobProgress[i + 1].status
                             # ========Email send functionality========
                             try:
@@ -450,11 +453,20 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
                                 # sms.sendsms_response(smsData)
                             except:
                                 pass
-
                             break
+
+                    # if candidate progress status doesn't changed
+                    if candiate_job_application.jobProgressStatus.status.lower() == 'new':
+                        candiate_job_application.delete()
+                        try:
+                            filterQusResponse.delete()
+                        except:
+                            pass
+                        return Response({'detail': 'something went wrong please try again.'})
+
                 else:
-                    jobFilterQuestion.jobProgressStatus = models.JobStatusModel.objects.get(status='Rejected')
-                    jobFilterQuestion.save()
+                    candiate_job_application.jobProgressStatus = models.JobStatusModel.objects.get(status='Rejected')
+                    candiate_job_application.save()
                     try:
                         email_body = f'Hi {self.request.user.full_name},\n ' \
                                      'We regret to inform you that we have decided to move forward with other candidates at ' \
@@ -474,6 +486,7 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
                         pass
 
                 return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
             return Response({'detail': 'new response added'})
         else:
             return Response({'detail': 'No application found'})
