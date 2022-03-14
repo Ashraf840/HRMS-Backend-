@@ -74,7 +74,7 @@ class AppliedForJobView(generics.CreateAPIView, generics.RetrieveAPIView):
             if checkApplication.count() > 0:
                 for application in checkApplication:
                     if application.jobProgressStatus.status != 'Withdrawn':
-                        return Response({'detail': 'Already apply for this Position.'},
+                        return Response({'detail': 'Already applied for this Position.'},
                                         status=status.HTTP_400_BAD_REQUEST)
                     else:
                         dayCount = application.appliedDate + datetime.timedelta(days=30)
