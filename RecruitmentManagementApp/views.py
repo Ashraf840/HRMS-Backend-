@@ -419,15 +419,16 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
                 if qus_percent <= score:
                     jobProgress = candiate_job_application.jobPostId.jobProgressStatus.all()
                     new_state = False
+                    temp = False
                     for jp in jobProgress:
                         if jp.status == 'new':
                             new_state = True
                             break
+                    temp = True
 
                     for i, progress in enumerate(jobProgress):
 
-                        if candiate_job_application.jobProgressStatus.status == progress.status or \
-                                candiate_job_application.jobProgressStatus.status.lower() == 'new':
+                        if candiate_job_application.jobProgressStatus.status == progress.status or temp:
                             if not new_state:
                                 candiate_job_application.jobProgressStatus = models.JobStatusModel.objects.get(
                                     status=jobProgress[i].status)
