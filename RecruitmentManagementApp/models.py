@@ -275,7 +275,7 @@ def signed_appointment_letter_name(instance, filename):
 
 
 class OfficialDocumentsModel(models.Model):
-    applicationId = models.ForeignKey(UserJobAppliedModel, on_delete=models.SET_NULL, related_name='application',
+    applicationId = models.ForeignKey(UserJobAppliedModel, on_delete=models.SET_NULL, related_name='official_documents_application_id',
                                       null=True)
     appointmentLetter = models.TextField(blank=True)
     allow_applicant_access = models.BooleanField(default=False)
