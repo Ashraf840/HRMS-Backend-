@@ -900,6 +900,7 @@ class AppointmentLetterInformationView(generics.ListCreateAPIView):
             'location': userInformation.userId.location,
             'nid': userInformation.userId.nid,
             'phone': userInformation.userId.phone_number,
+            'candidate_email': userInformation.userId.email,
             'exp_joining_data': userInformation.applied_job_user_applied_model.all().last().expectedJoiningData,
             # job info
             'jobTitle': userInformation.jobPostId.jobTitle,
