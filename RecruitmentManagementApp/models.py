@@ -279,6 +279,7 @@ class OfficialDocumentsModel(models.Model):
                                       null=True)
     appointmentLetter = models.TextField(blank=True)
     allow_applicant_access = models.BooleanField(default=False)
+    issued_date = models.DateField(auto_now_add=True)
 
     def __str__(self):
         return f'{self.id}, {self.allow_applicant_access}'
