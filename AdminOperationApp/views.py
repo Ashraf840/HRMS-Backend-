@@ -738,7 +738,7 @@ class AdminDocumentVerificationView(generics.ListAPIView):
 
             return Response(responseData)
         else:
-            return Response({'detail':'No data found'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'detail': 'No documents found.'}, status=status.HTTP_404_NOT_FOUND)
 
 
 class DocumentVerifiedView(generics.RetrieveUpdateAPIView):
@@ -777,12 +777,11 @@ class ReferenceVerificationView(generics.RetrieveUpdateAPIView):
                      f'We would like to obtain your confirmation regarding the reference.' \
                      f'Kindly, fill up the form attached with the mail as for written documents.' \
                      f'We would really appreciate it if you kindly fill up the form given below,' \
-                     f'Form Link: {email_plaintext_message}{refInfo.slug_field} \n'\
+                     f'Form Link: {email_plaintext_message}{refInfo.slug_field} \n' \
                      f'Thanks and Regards! \n' \
                      f'HR Admin Dept. \n' \
                      f'Techforing Limited \n' \
-                     f'House-149, Lane-1, DOHS, Baridhara, Dhaka'\
-
+                     f'House-149, Lane-1, DOHS, Baridhara, Dhaka'
 
         data = {'email_body': email_body, 'to_email': refInfo.email,
                 'email_subject': 'Reference Verification.'}
