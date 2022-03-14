@@ -51,6 +51,7 @@ class JobPostModel(models.Model):
                                    null=True)
     vacancies = models.IntegerField()
     jobType = models.CharField(verbose_name="job type", max_length=50, choices=jobType)
+    # jobDescription = models.TextField(null=True)
     jobOverview = models.TextField(null=True)
     jobResponsibilities = models.TextField(null=True)
     jobRequirements = models.TextField(null=True)

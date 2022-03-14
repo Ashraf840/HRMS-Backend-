@@ -720,22 +720,25 @@ class AdminDocumentVerificationView(generics.ListAPIView):
         serializer = self.get_serializer(self.get_queryset(), many=True)
         # print(serializer)
         responseData = serializer.data
-        # references = ReferenceInformationModel.objects.filter(applied_job=applicationId)
-        jobApplication = UserJobAppliedModel.objects.get(id=applicationId)
-        jobDetails = JobPostModel.objects.get(id=jobApplication.jobPostId.id)
-        jobName = jobDetails.jobTitle
-        progressStatus = jobApplication.jobProgressStatus.status
-        # responseData.append({'references': references})
-        responseData.append(
-            {
-                'jobTitle': jobName,
-                'department': jobDetails.department.department,
-                'progressStatus': progressStatus,
+        if len(responseData) > 0:
+            # references = ReferenceInformationModel.objects.filter(applied_job=applicationId)
+            jobApplication = UserJobAppliedModel.objects.get(id=applicationId)
+            jobDetails = JobPostModel.objects.get(id=jobApplication.jobPostId.id)
+            jobName = jobDetails.jobTitle
+            progressStatus = jobApplication.jobProgressStatus.status
+            # responseData.append({'references': references})
+            responseData.append(
+                {
+                    'jobTitle': jobName,
+                    'department': jobDetails.department.department,
+                    'progressStatus': progressStatus,
 
-            }
-        )
+                }
+            )
 
-        return Response(responseData)
+            return Response(responseData)
+        else:
+            return Response({'detail':'No data found'}, status=status.HTTP_404_NOT_FOUND)
 
 
 class DocumentVerifiedView(generics.RetrieveUpdateAPIView):
