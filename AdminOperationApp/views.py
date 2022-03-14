@@ -906,6 +906,8 @@ class AppointmentLetterInformationView(generics.ListCreateAPIView):
             'jobTitle': userInformation.jobPostId.jobTitle,
             'jobType': userInformation.jobPostId.jobType,
             'job_responsibilities': userInformation.jobPostId.jobResponsibilities,
+            # issued date
+            'issued_date': userInformation.official_documents_application_id.get().issued_date
         })
 
         return Response(responseData)
