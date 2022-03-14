@@ -51,7 +51,9 @@ class JobPostModel(models.Model):
                                    null=True)
     vacancies = models.IntegerField()
     jobType = models.CharField(verbose_name="job type", max_length=50, choices=jobType)
-    jobDescription = models.TextField(null=True)
+    jobOverview = models.TextField(null=True)
+    jobResponsibilities = models.TextField(null=True)
+    jobRequirements = models.TextField(null=True)
     jobProgressStatus = models.ManyToManyField(JobStatusModel, related_name='job_progress_statusM2M')
     is_active = models.BooleanField(default=True)
 
