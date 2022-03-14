@@ -86,7 +86,6 @@ INSTALLED_APPS = [
     'UserApp',
     'RecruitmentManagementApp',
     'TFHRM_API_App',
-    'QuizApp',
     'AdminOperationApp',
     'SupportApp',
     'pdfGenerator',

@@ -107,8 +107,6 @@ class SendPracticalTestView(generics.ListCreateAPIView):
             self.perform_create(serializer)
             duration = int(request.data.get('duration'))
             user = User.objects.get(id=request.data.get('user'))
-            # print(request.data.get('practicalTestInfo'))
-            # print(models.PracticalTestUserModel.objects.get(id=request.data.get('practicalTestInfo')))
             # task = PracticalTestModel.objects.get(id=models.PracticalTestUserModel.objects.get(id=request.data.get('practicalTestInfo')))
             # print(task)
             email_body = f'Hi  {user.full_name} submit the task before {datetime.date.today() + datetime.timedelta(duration)}'
@@ -124,7 +122,6 @@ class PracticalTestMarkUpdateView(generics.RetrieveUpdateDestroyAPIView):
     """
     permission_classes = [customPermission.Authenticated]
     serializer_class = serializer.PracticalTestMarkInputSerializer
-    # queryset = models.PracticalTestMarkInputModel.objects.filter(jobApplication_id='jobApplication')
     lookup_field = 'jobApplication'
 
     def get_queryset(self):
@@ -165,10 +162,7 @@ class RecruitmentAdminGraphView(generics.ListAPIView):
     queryset = UserJobAppliedModel.objects.all().order_by('-id')[:5]
 
     def list(self, request, *args, **kwargs):
-        # serializer = self.get_serializer(self.get_queryset(), many=True)
-        # response = serializer.data
         responseData = []
-        # department graph data calculation
         departments = UserDepartmentModel.objects.filter()
         department_list = []
         department_percent = []
@@ -369,10 +363,6 @@ class AdminAppliedCandidateOnlineResView(generics.ListAPIView):
         job_id = self.kwargs['job_id']
         queryset = OnlineTestResponseModel.objects.filter(appliedJob__jobPostId_id=job_id)
         return queryset
-
-    # def list(self, request, *args, **kwargs):
-    #     serializer = self.get_serializer(self.get_queryset(), many=True)
-    #
 
 
 class TestAdminAppliedCandidateOnlineResView(generics.ListAPIView):

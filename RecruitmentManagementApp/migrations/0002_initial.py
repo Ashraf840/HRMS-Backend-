@@ -10,7 +10,6 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('QuizApp', '0002_initial'),
         ('UserApp', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('RecruitmentManagementApp', '0001_initial'),
