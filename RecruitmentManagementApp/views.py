@@ -550,6 +550,13 @@ class PracticalTestForApplicantView(generics.ListCreateAPIView, generics.Retriev
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
+class PracticalTestUpdateDeleteView(generics.ListCreateAPIView):
+    permission_classes = [EmployeeAdminAuthenticated]
+    serializer_class = serializer.PracticalTestSerializer
+    queryset = models.PracticalTestModel.objects.all()
+    lookup_field = 'id'
+
+
 class JobCreateView(generics.ListCreateAPIView):
     permission_classes = [Authenticated]
     serializer_class = serializer.JobCreateSerializer
