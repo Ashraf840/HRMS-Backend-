@@ -424,9 +424,10 @@ class EmployeeAttendanceLogView(generics.ListCreateAPIView):
         # for employee in employee_shift_rel:
         #     print(employee)
         for log in log_data.get('log'):
-            employee_shift_rel = models.AttendanceEmployeeRelModel.objects.get(
+            # print(log.get('registration_id'))
+            employee_shift_rel = models.AttendanceEmployeeRelModel.objects.get_or_create(
                 registration_id=log.get('registration_id'))
-            employee_shift_rel.attendance_employee_relation.get()
-            print(employee_shift_rel.attendance_employee_relation.all())
+        #     employee_shift_rel.attendance_employee_relation.get()
+        #     print(employee_shift_rel.attendance_employee_relation.all())
 
         return response.Response(log_data.get('log'))
