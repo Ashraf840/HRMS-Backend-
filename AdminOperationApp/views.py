@@ -79,6 +79,7 @@ class OnlineTestUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = OnlineTestModel.objects.all()
     lookup_field = 'id'
 
+
 class RejectCandidateStatusView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [customPermission.EmployeeAdminAuthenticated]
     serializer_class = serializer.JobStatusRejectSerializer

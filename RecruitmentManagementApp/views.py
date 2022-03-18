@@ -561,6 +561,9 @@ class PracticalTestForApplicantView(generics.ListCreateAPIView, generics.Retriev
 
 
 class PracticalTestUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    """
+        Update Practical test
+    """
     permission_classes = [EmployeeAdminAuthenticated]
     serializer_class = serializer.PracticalTestSerializer
     queryset = models.PracticalTestModel.objects.all()
