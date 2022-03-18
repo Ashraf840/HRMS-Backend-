@@ -52,6 +52,16 @@ class JobDescriptionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
         id = self.kwargs['id']
         return models.JobPostModel.objects.filter(id=id)
 
+    def perform_update(self, serializer):
+        update = serializer.save()
+        if update.lastDateOfApply >= datetime.date.today():
+            update.is_active = True
+            update.save()
+        else:
+            update.is_active = False
+            update.save()
+        return update
+
 
 # if User is Authenticated and IsCandidate then User can only apply
 class AppliedForJobView(generics.CreateAPIView, generics.RetrieveAPIView):
