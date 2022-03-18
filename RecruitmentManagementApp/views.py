@@ -50,8 +50,11 @@ class JobDescriptionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
 
     def perform_update(self, serializer):
         update = serializer.save()
-        if update.lastDateOfApply > datetime.date.today():
+        if update.lastDateOfApply >= datetime.date.today():
             update.is_active = True
+            update.save()
+        else:
+            update.is_active = False
             update.save()
         return update
 
