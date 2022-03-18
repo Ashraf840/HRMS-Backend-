@@ -70,6 +70,15 @@ class OnlineTestLinkView(generics.ListCreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
+class OnlineTestUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Update online test
+    """
+    permission_classes = [customPermission.EmployeeAdminAuthenticated]
+    serializer_class = serializer.AdminOnlineTestLinkSerializer
+    queryset = OnlineTestModel.objects.all()
+    lookup_field = 'id'
+
 class RejectCandidateStatusView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [customPermission.EmployeeAdminAuthenticated]
     serializer_class = serializer.JobStatusRejectSerializer

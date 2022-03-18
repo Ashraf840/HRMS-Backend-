@@ -8,7 +8,7 @@ from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView, On
     RecruitmentNewApplicantView, TestAdminAppliedCandidateOnlineResView, \
     SelectedForDocumentView, InterviewTimeUpdateView, FinalSalaryView, RejectCandidateStatusView, \
     DocumentVerifiedView, CommentsOnDocumentsView, SelectedForOnboardView, OfficialDocStoreView, OfficialDocumentsView, \
-    ReferenceVerificationView
+    ReferenceVerificationView, OnlineTestUpdateDeleteView
 # importing Views from RecruitmentManagementApp views
 from RecruitmentManagementApp.views import AllUserDetailView, AppliedForJobView, JobDescriptionView, \
     JobDescriptionUpdateDeleteView, JobListView, FilterQuestionResponseView, \
@@ -19,7 +19,7 @@ from RecruitmentManagementApp.views import AllUserDetailView, AppliedForJobView,
     DocumentSubmissionUpdateDeleteView, ReferenceInformationView, ReferenceInformationUpdateDeleteView, \
     FilterQuestionView, FilterQuestionUpdateDeleteView, FilterQuestionListView, CandidateFilterQuestionListView, \
     SignedAppointmentLetterSubmissionView, CandidateJoiningFeedbackView, ReferenceQuestionsView, \
-    ReferenceInformationResponseListView
+    ReferenceInformationResponseListView, PracticalTestUpdateDeleteView
 from SupportApp import views as supportView
 # importing Views from UserApp views
 from UserApp.views import RegisterView, UserDetailView, CareerObjectiveView, \
@@ -107,11 +107,13 @@ urlpatterns = [
 
     # change user current status
     path('online_test_link/<jobInfo>/', OnlineTestLinkView.as_view(), name='online_test_link'),
+    path('online_test_update/<id>/', OnlineTestUpdateDeleteView.as_view(), name='online_test_update'),
     path('online_test_res_list/<applied_job>/', OnlineTestResponseListView.as_view(), name='online_test_link'),
 
     path('online_test_res/<applied_job>/', OnlineTestResponseView.as_view(), name='online_test_response'),
 
     path('practical_test/<jobInfo>/', PracticalTestForApplicantView.as_view(), name='practical_test_for_a_job'),
+    path('practical_test_update/<id>/', PracticalTestUpdateDeleteView.as_view(), name='practical_test_update'),
     path('practical_test_res/<application_id>/', PracticalTestResponseView.as_view(), name='practical_test_response'),
     # Document submission by user
     path('documents_submit/<job_id>/', DocumentSubmissionView.as_view(), name='document_submission_add'),
