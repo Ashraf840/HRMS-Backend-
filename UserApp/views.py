@@ -347,6 +347,20 @@ class CareerObjectiveUpdateView(generics.RetrieveUpdateAPIView):
 
 
 # specific User information retrieve
+class UserLoginDetailView(generics.ListAPIView):
+    permission_classes = [Authenticated]
+    serializer_class = serializer.UserLoginDetailsSerializer
+
+    def get_queryset(self):
+        queryset = models.User.objects.filter(id=self.request.user.id)
+        return queryset
+
+    def get(self, request, *args, **kwargs):
+        ser = self.get_serializer(self.get_queryset(), many=True)
+        user = ser.data[0]
+        return Response(user)
+
+
 class UserDetailView(generics.RetrieveAPIView):
     permission_classes = [Authenticated]
     serializer_class = serializer.UserDetailsSerializer

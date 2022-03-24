@@ -141,7 +141,7 @@ class PracticalTestMarkUpdateView(generics.RetrieveUpdateDestroyAPIView):
 
     def perform_update(self, serializer):
         instance = self.get_object()  # instance before update
-        print(instance)
+        # print(instance)
         self.request.data.get("jobApplication", None)  # read data from request
         if self.request.user.is_authenticated:
             updated_instance = serializer.save(markAssignBy=self.request.user)

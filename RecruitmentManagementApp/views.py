@@ -48,6 +48,16 @@ class JobDescriptionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializer.JobCreateSerializer
     lookup_field = 'id'
 
+    def perform_update(self, serializer):
+        update = serializer.save()
+        if update.lastDateOfApply >= datetime.date.today():
+            update.is_active = True
+            update.save()
+        else:
+            update.is_active = False
+            update.save()
+        return update
+
     def get_queryset(self):
         id = self.kwargs['id']
         return models.JobPostModel.objects.filter(id=id)

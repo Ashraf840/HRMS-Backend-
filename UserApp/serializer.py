@@ -300,29 +300,7 @@ class CareerObjectiveSerializer(serializers.ModelSerializer):
         }
 
 
-# User Information serializer
-# class UserSerializer(serializers.ModelSerializer):
-#     user = UserInfoSerializer()
-#
-#     # userAcademicInfo = UserAcademicInfoSerializer()
-#
-#     class Meta:
-#         model = models.EmployeeInfoModel
-#         fields = '__all__'
 
-
-#         depth = 1
-# extra_kwargs = {
-#     'password': {'write_only': True}
-# }
-
-# def create(self, validated_data):
-#     password = validated_data.pop('password', None)
-#     instance = self.Meta.model(**validated_data)
-#     if password is not None:
-#         instance.set_password(password)
-#     instance.save()
-#     return instance
 
 
 # User Details serializer
@@ -461,6 +439,12 @@ Academic Information -> UserAcademicInfoModel
 Certification Information -> UserCertificationsModel
 Training Information -> UserTrainingModel
 """
+
+
+class UserLoginDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.User
+        fields = ['id', 'email', 'full_name', 'phone_number', 'is_candidate', 'is_employee', 'is_superuser', 'is_hr', 'email_validated', 'profile_pic']
 
 
 class UserDetailsSerializer(serializers.ModelSerializer):

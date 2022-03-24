@@ -133,7 +133,7 @@ class AttendanceEmployeeRelModel(models.Model):
     registration_id = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
-        return f'{self.employee}, {self.registration_id}'
+        return f'{self.registration_id}, {self.employee}'
 
 
 class AttendanceEmployeeShiftRelModel(models.Model):

@@ -28,7 +28,8 @@ from UserApp.views import RegisterView, UserDetailView, CareerObjectiveView, \
     AddTrainingExperienceView, UpdateUserInfoView, UpdateTrainingExperienceView, VerifyEmailView, SkillsView, \
     AcademicInfoListView, WorkInfoListView, CertificationInfoListView, TrainingInfoListView, AddUserSkillsView, \
     HRMCustomTokenObtainPairView, DegreeTitleView, UserProfileCompletionPercentageView, EducationLevelView, \
-    DepartmentView, UpdateUserSkillsView, DesignationView, ChangePasswordView, EmployeeEmailVerifyView, LogoutAPIView
+    DepartmentView, UpdateUserSkillsView, DesignationView, ChangePasswordView, EmployeeEmailVerifyView, LogoutAPIView,\
+    UserLoginDetailView
 from pdfGenerator import views as pdfGen
 
 app_name = 'tfhrm_api'
@@ -48,6 +49,7 @@ urlpatterns = [
     path('change_password/', ChangePasswordView.as_view(), name='change-password'),
 
     # employee
+    path('user/', UserLoginDetailView.as_view(), name='user_login_details'),  # user details
     path('users/<id>/', UserDetailView.as_view(), name='users'),  # user details
     path('update_profile/<pk>/', UpdateUserInfoView.as_view(), name='update_profile'),
     path('all_users/', AllUserDetailView.as_view(), name='all_users'),
@@ -77,7 +79,7 @@ urlpatterns = [
     path('skills/', SkillsView.as_view(), name="add_new_skills_list"),
 
     # for Candidate to Apply for Jobs
-    path('job_post/', JobCreateView.as_view(), name='job_post_with_online_test_link'),
+    path('job_post/', JobCreateView.as_view(), name='job_post'),
     # path('job_post/', JobPostView.as_view(), name='job_post_create'),
     path('job_status/', JobStatusView.as_view(), name='job_status'),
     path('job_list/<id>/', JobDescriptionView.as_view(), name='job_description'),

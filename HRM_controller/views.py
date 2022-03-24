@@ -420,13 +420,19 @@ class EmployeeAttendanceLogView(generics.ListCreateAPIView):
 
         posts = requests.post(url, json=data)
         log_data = json.loads(posts.content.decode("utf-8"))
-        # employee_shift_rel = models.AttendanceEmployeeRelModel.objects.all()
-        # for employee in employee_shift_rel:
-        #     print(employee)
         for log in log_data.get('log'):
-            employee_shift_rel = models.AttendanceEmployeeRelModel.objects.get(
-                registration_id=log.get('registration_id'))
-            employee_shift_rel.attendance_employee_relation.get()
-            print(employee_shift_rel.attendance_employee_relation.all())
+            employee_shift_rel = models.AttendanceEmployeeRelModel.objects.get_or_create(
+                registration_id=log.get('registration_id'))[0]
+            try:
+                shift_start_time = employee_shift_rel.attendance_employee_relation.shift.start_time
+                if str(shift_start_time) > "16:00:00":
+                    print('ok')
+
+
+
+            except:
+                pass
+
+
 
         return response.Response(log_data.get('log'))

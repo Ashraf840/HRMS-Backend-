@@ -1,11 +1,7 @@
-import datetime
-
-from _testcapi import raise_exception
-from django.shortcuts import render
-from HRM_User import models, serializers
-from HRM_Admin import models as hrm_admin_model, serializer as hrm_admin_serializer
-from UserApp import permissions as custom_permission
 from rest_framework import generics, response
+from HRM_Admin import models as hrm_admin_model
+from HRM_User import models, serializers
+from UserApp import permissions as custom_permission
 
 
 # Create your views here.
