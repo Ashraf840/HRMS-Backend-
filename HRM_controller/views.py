@@ -4,7 +4,7 @@ from django.shortcuts import render
 from rest_framework import generics, mixins, response, serializers, status
 from HRM_controller import serializeres as hrm_serializers, models
 from UserApp import permissions as user_permissions, models as user_models
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from django.core.serializers import serialize
 import json
 from HRM_Admin import models as hrm_models
@@ -408,14 +408,14 @@ class EmployeeAttendanceLogView(generics.ListCreateAPIView):
         auth_user = 'Techforing_Ltd'
         auth_code = "09345jljrksdfhhsr745h3j4w8dd9fs"
         url = 'https://rumytechnologies.com/rams/json_api'
-        start_date = datetime.today().strftime("%Y-%m-%d")
-
+        start_date = (datetime.today() - timedelta(days=1)).strftime("%Y-%m-%d")
+        end_date = start_date
         data = {
             "operation": "fetch_log",
             "auth_user": auth_user,
             "auth_code": auth_code,
             "start_date": start_date,
-            "end_date": start_date
+            "end_date": end_date
         }
 
         posts = requests.post(url, json=data)
@@ -423,16 +423,25 @@ class EmployeeAttendanceLogView(generics.ListCreateAPIView):
         for log in log_data.get('log'):
             employee_shift_rel = models.AttendanceEmployeeRelModel.objects.get_or_create(
                 registration_id=log.get('registration_id'))[0]
+            # employee_log =
             try:
+                # print(log['registration_id'])
                 shift_start_time = employee_shift_rel.attendance_employee_relation.shift.start_time
                 if str(shift_start_time) > "16:00:00":
-                    print('ok')
+                    logs = log_data.get('log')
+                    in_out_log = list(filter(lambda l: l['registration_id'] == log['registration_id'], logs))
+                    # print(
+                    #     f"Out time - {in_out_log[0]['registration_id']}, {in_out_log[0]['access_date']}-{in_out_log[0]['access_time']}")
+                    # print(
+                    #     f"in time-  {in_out_log[-1]['registration_id']}, {in_out_log[-1]['access_date']}-{in_out_log[-1]['access_time']}")
+                    # print()
+
+
+
 
 
 
             except:
                 pass
-
-
 
         return response.Response(log_data.get('log'))

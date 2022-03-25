@@ -39,16 +39,19 @@ DEBUG = True
 ALLOWED_HOSTS = [
     '0.0.0.0',
     '44.242.38.198',
-    'careeradmin.techforing.com',
-    'career.techforing.com',
-    'hrms.techforing.com',
     'techforing.com',
     '127.0.0.1',
     '127.0.0.1:8000',
     'localhost:3001',
     'localhost:3000',
-    'www.careeradmin.techforing.com',
-    'www.career.techforing.com',
+    # ===production===
+    # 'careeradmin.techforing.com',
+    # 'career.techforing.com',
+    # 'hrms.techforing.com',
+    # ===Dev===
+    'devcareeradmin.techforing.com',
+    'devcareer.techforing.com',
+    'devhrms.techforing.com',
 ]
 
 # Initialise environment variables
@@ -271,14 +274,19 @@ CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOWED_ORIGINS = [
     'http://0.0.0.0',
     'https://44.242.38.198',
-    'https://careeradmin.techforing.com',
-    'https://career.techforing.com',
-    'https://hrms.techforing.com',
     'http://127.0.0.1',
     'http://127.0.0.1:8000',
     'http://localhost:3001',
     'http://localhost:3000',
     'http://localhost:8000',
+    # ===production===
+    # 'https://careeradmin.techforing.com',
+    # 'https://career.techforing.com',
+    # 'https://hrms.techforing.com',
+    # ===dev===
+    'https://devcareeradmin.techforing.com',
+    'https://devcareer.techforing.com',
+    'https://devhrms.techforing.com',
 ]
 
 import os

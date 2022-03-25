@@ -117,14 +117,21 @@ class HolidayModel(models.Model):
 
 # ==================Attendance Section ==================
 # Attendance Shift, relation model
-
-class AttendanceShiftTimeModel(models.Model):
-    shift_name = models.CharField(max_length=255)
+class ShiftTimeModel(models.Model):
+    time_slot = models.CharField(max_length=255)
     start_time = models.TimeField()
     end_time = models.TimeField()
 
     def __str__(self):
-        return f'{self.shift_name} - ({self.start_time}-{self.end_time})'
+        return f'{self.time_slot} - ({self.start_time}-{self.end_time})'
+
+
+class AttendanceShiftTimeModel(models.Model):
+    shift_name = models.CharField(max_length=255)
+    shift_time = models.ForeignKey(ShiftTimeModel, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return f'{self.shift_name}'
 
 
 class AttendanceEmployeeRelModel(models.Model):
