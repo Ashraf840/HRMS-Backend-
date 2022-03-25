@@ -158,9 +158,9 @@ class EmployeeAttendanceLogModel(models.Model):
                                  related_name='employee_attendance_log')
     in_date = models.DateField()
     in_time = models.TimeField()
-    out_date = models.DateField(blank=True)
-    out_time = models.TimeField(blank=True)
-    total_hour = models.CharField(max_length=30, blank=True)
+    out_date = models.DateField(blank=True, null=True)
+    out_time = models.TimeField(blank=True, null=True)
+    total_hour = models.CharField(max_length=30, blank=True, null=True)
 
     def __str__(self):
         return f'{self.id} {self.employee.registration_id} in {self.in_time}  out {self.out_time}'
@@ -168,8 +168,11 @@ class EmployeeAttendanceLogModel(models.Model):
 
 @receiver(post_save, sender=EmployeeAttendanceLogModel)
 def post_save(sender, instance, created, **kwargs):
-    in_time = datetime.datetime.combine(instance.in_date, instance.in_time)
-    out_time = datetime.datetime.combine(instance.out_date, instance.out_time)
-    total_hour = out_time - in_time
-    instance.total_hour = str(total_hour)
-    instance.save()
+    try:
+        in_time = datetime.datetime.combine(instance.in_date, instance.in_time)
+        out_time = datetime.datetime.combine(instance.out_date, instance.out_time)
+        total_hour = out_time - in_time
+        instance.total_hour = str(total_hour)
+        instance.save()
+    except:
+        pass

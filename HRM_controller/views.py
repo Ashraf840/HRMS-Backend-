@@ -402,6 +402,12 @@ class EmployeeAttendanceLogView(generics.ListCreateAPIView):
     serializer_class = hrm_serializers.EmployeeAttendanceLogSerializer
     queryset = models.EmployeeAttendanceLogModel.objects.all()
 
+    def data_convert(self, date_str):
+        return datetime.strptime(date_str, '%Y-%m-%d').date()
+
+    def time_convert(self, time):
+        return datetime.strptime(time, '%H:%M:%S').time()
+
     def get(self, request, *args, **kwargs):
         data = self.get_serializer(self.get_queryset(), many=True)
         responseData = data.data
@@ -410,6 +416,7 @@ class EmployeeAttendanceLogView(generics.ListCreateAPIView):
         url = 'https://rumytechnologies.com/rams/json_api'
         start_date = (datetime.today() - timedelta(days=1)).strftime("%Y-%m-%d")
         end_date = start_date
+
         data = {
             "operation": "fetch_log",
             "auth_user": auth_user,
@@ -423,25 +430,58 @@ class EmployeeAttendanceLogView(generics.ListCreateAPIView):
         for log in log_data.get('log'):
             employee_shift_rel = models.AttendanceEmployeeRelModel.objects.get_or_create(
                 registration_id=log.get('registration_id'))[0]
-            # employee_log =
+
+            logs = log_data.get('log')
             try:
                 # print(log['registration_id'])
-                shift_start_time = employee_shift_rel.attendance_employee_relation.shift.start_time
+                shift_start_time = employee_shift_rel.attendance_employee_relation.shift.shift_time.start_time
                 if str(shift_start_time) > "16:00:00":
-                    logs = log_data.get('log')
-                    in_out_log = list(filter(lambda l: l['registration_id'] == log['registration_id'], logs))
-                    # print(
-                    #     f"Out time - {in_out_log[0]['registration_id']}, {in_out_log[0]['access_date']}-{in_out_log[0]['access_time']}")
-                    # print(
-                    #     f"in time-  {in_out_log[-1]['registration_id']}, {in_out_log[-1]['access_date']}-{in_out_log[-1]['access_time']}")
-                    # print()
 
+                    in_out_log = list(filter(
+                        lambda l: l['registration_id'] == log['registration_id'], logs))
+                    in_time = self.time_convert(in_out_log[-1]['access_time'])
+                    in_date = self.data_convert(in_out_log[-1]['access_date'])
+                    out_time = self.time_convert(in_out_log[0]['access_time'])
+                    out_date = self.data_convert(in_out_log[0]['access_date'])
 
-
-
-
+                    src = in_date - timedelta(days=1)
+                    employee_log = models.EmployeeAttendanceLogModel.objects.get_or_create(employee=employee_shift_rel,
+                                                                                           in_date=in_date,
+                                                                                           in_time=in_time)
+                    # try:
+                    #     prv_day_log = models.EmployeeAttendanceLogModel.objects.get(employee=employee_shift_rel,
+                    #                                                                 in_date=src)
+                    #     # print(prv_day_log)
+                    #     prv_day_log.out_time = out_time
+                    #     prv_day_log.out_date = out_date
+                    #     prv_day_log.save()
+                    # except:
+                    #     pass
+                else:
+                    in_out_log = list(filter(
+                        lambda l: l['registration_id'] == log['registration_id'], logs))
+                    print('else')
+                    in_time = self.time_convert(in_out_log[0]['access_time'])
+                    in_date = self.data_convert(in_out_log[0]['access_date'])
+                    out_time = self.time_convert(in_out_log[-1]['access_time'])
+                    out_date = self.data_convert(in_out_log[-1]['access_date'])
+                    employee_log = models.EmployeeAttendanceLogModel.objects.get_or_create(employee=employee_shift_rel,
+                                                                                           in_date=in_date,
+                                                                                           in_time=in_time,
+                                                                                           out_date=out_date,
+                                                                                           out_time=out_time)
+                    print(employee_log)
 
             except:
-                pass
-
+                in_out_log = list(filter(
+                    lambda l: l['registration_id'] == log['registration_id'], logs))
+                in_time = self.time_convert(in_out_log[-1]['access_time'])
+                in_date = self.data_convert(in_out_log[-1]['access_date'])
+                out_time = self.time_convert(in_out_log[0]['access_time'])
+                out_date = self.data_convert(in_out_log[0]['access_date'])
+                employee_log = models.EmployeeAttendanceLogModel.objects.get_or_create(employee=employee_shift_rel,
+                                                                                       in_date=in_date,
+                                                                                       in_time=in_time,
+                                                                                       out_date=out_date,
+                                                                                       out_time=out_time)
         return response.Response(log_data.get('log'))
