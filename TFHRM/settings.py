@@ -183,22 +183,10 @@ Dev server DB
 """
 
 # ============== mysql Db Production ==============
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'hrm_techforing',
-#         'USER': 'root',
-#         'PASSWORD': 'ghFGH56$%&',
-#         'OPTIONS': {
-#             'sql_mode': 'traditional',
-#         }
-#     }
-# }
-# ============== mysql Db Development==============
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'dev_hrm_tf',
+        'NAME': 'hrm_techforing',
         'USER': 'root',
         'PASSWORD': 'ghFGH56$%&',
         'OPTIONS': {
@@ -206,6 +194,18 @@ DATABASES = {
         }
     }
 }
+# ============== mysql Db Development==============
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'dev_hrm_tf',
+#         'USER': 'root',
+#         'PASSWORD': 'ghFGH56$%&',
+#         'OPTIONS': {
+#             'sql_mode': 'traditional',
+#         }
+#     }
+# }
 
 # ============== securing proxy for hosting ==============
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
