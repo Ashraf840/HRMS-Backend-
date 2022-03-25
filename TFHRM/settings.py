@@ -183,6 +183,19 @@ Dev server DB
 """
 
 # ============== mysql Db Production ==============
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'hrm_techforing',
+#         'USER': 'root',
+#         'PASSWORD': 'ghFGH56$%&',
+#         'OPTIONS': {
+#             'sql_mode': 'traditional',
+#         }
+#     }
+# }
+# ============== mysql Db Development==============
+# 'NAME': 'dev_hrm_tf',
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -194,22 +207,10 @@ DATABASES = {
         }
     }
 }
-# ============== mysql Db Development==============
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'dev_hrm_tf',
-#         'USER': 'root',
-#         'PASSWORD': 'ghFGH56$%&',
-#         'OPTIONS': {
-#             'sql_mode': 'traditional',
-#         }
-#     }
-# }
 
 # ============== securing proxy for hosting ==============
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT = True
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# SECURE_SSL_REDIRECT = True
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

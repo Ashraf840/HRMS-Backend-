@@ -1,6 +1,6 @@
 .idea/
 requirement.txt
-#TFHRM/settings.py
+TFHRM/settings.py
 desktop.ini
 venv/
 Academy/__pycache__
