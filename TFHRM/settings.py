@@ -195,7 +195,7 @@ Dev server DB
 #     }
 # }
 # ============== mysql Db Development==============
-# 'NAME': 'dev_hrm_tf',
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
