@@ -45,13 +45,13 @@ ALLOWED_HOSTS = [
     'localhost:3001',
     'localhost:3000',
     # ===production===
-    # 'careeradmin.techforing.com',
-    # 'career.techforing.com',
-    # 'hrms.techforing.com',
+    'careeradmin.techforing.com',
+    'career.techforing.com',
+    'hrms.techforing.com',
     # ===Dev===
-    'devcareeradmin.techforing.com',
-    'devcareer.techforing.com',
-    'devhrms.techforing.com',
+    # 'devcareeradmin.techforing.com',
+    # 'devcareer.techforing.com',
+    # 'devhrms.techforing.com',
 ]
 
 # Initialise environment variables
@@ -183,23 +183,10 @@ Dev server DB
 """
 
 # ============== mysql Db Production ==============
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'hrm_techforing',
-#         'USER': 'root',
-#         'PASSWORD': 'ghFGH56$%&',
-#         'OPTIONS': {
-#             'sql_mode': 'traditional',
-#         }
-#     }
-# }
-# ============== mysql Db Development==============
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'dev_hrm_tf',
+        'NAME': 'hrm_techforing',
         'USER': 'root',
         'PASSWORD': 'ghFGH56$%&',
         'OPTIONS': {
@@ -207,6 +194,19 @@ DATABASES = {
         }
     }
 }
+# ============== mysql Db Development==============
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'dev_hrm_tf',
+#         'USER': 'root',
+#         'PASSWORD': 'ghFGH56$%&',
+#         'OPTIONS': {
+#             'sql_mode': 'traditional',
+#         }
+#     }
+# }
 
 # ============== securing proxy for hosting ==============
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -293,13 +293,13 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://localhost:8000',
     # ===production===
-    # 'https://careeradmin.techforing.com',
-    # 'https://career.techforing.com',
-    # 'https://hrms.techforing.com',
+    'https://careeradmin.techforing.com',
+    'https://career.techforing.com',
+    'https://hrms.techforing.com',
     # ===dev===
-    'https://devcareeradmin.techforing.com',
-    'https://devcareer.techforing.com',
-    'https://devhrms.techforing.com',
+    # 'https://devcareeradmin.techforing.com',
+    # 'https://devcareer.techforing.com',
+    # 'https://devhrms.techforing.com',
 ]
 
 import os
