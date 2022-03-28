@@ -73,6 +73,11 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='jobpostmodel',
+            name='filterQuestions',
+            field=models.ManyToManyField(related_name='filter_question_list', to='RecruitmentManagementApp.JobApplyFilterQuestionModel'),
+        ),
+        migrations.AddField(
+            model_name='jobpostmodel',
             name='jobProgressStatus',
             field=models.ManyToManyField(related_name='job_progress_statusM2M', to='RecruitmentManagementApp.JobStatusModel'),
         ),
