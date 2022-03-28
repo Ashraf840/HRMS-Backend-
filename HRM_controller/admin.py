@@ -20,5 +20,4 @@ admin.site.register(models.AttendanceShiftTimeModel)
 admin.site.register(models.AttendanceEmployeeRelModel)
 admin.site.register(models.AttendanceEmployeeShiftRelModel)
 admin.site.register(models.EmployeeAttendanceLogModel)
-# test
-admin.site.register(models.TestModel)
+

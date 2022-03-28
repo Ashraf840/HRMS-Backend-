@@ -166,9 +166,6 @@ class EmployeeAttendanceLogModel(models.Model):
         return f'{self.id} {self.employee.registration_id} in {self.in_time}  out {self.out_time}'
 
 
-class TestModel(models.Model):
-    test = models.BooleanField(default=True)
-
 
 @receiver(post_save, sender=EmployeeAttendanceLogModel)
 def post_save(sender, instance, created, **kwargs):
