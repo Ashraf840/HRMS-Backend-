@@ -42,9 +42,9 @@ class Migration(migrations.Migration):
                 ('question', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='job_apply_filter_question_answer', to='RecruitmentManagementApp.jobapplyfilterquestionmodel')),
             ],
         ),
-        migrations.AlterField(
-            model_name='filterquestionsresponsemodelhr',
-            name='questions',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='filter_questions', to='RecruitmentManagementApp.jobapplyfilterquestionmodel'),
-        ),
+        # migrations.AlterField(
+        #     model_name='filterquestionsresponsemodelhr',
+        #     name='questions',
+        #     field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='filter_questions', to='RecruitmentManagementApp.jobapplyfilterquestionmodel'),
+        # ),
     ]

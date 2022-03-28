@@ -9,9 +9,9 @@ class Migration(migrations.Migration):
         ('RecruitmentManagementApp', '0011_referenceinformationmodel_is_sent'),
     ]
 
-    operations = [
-        migrations.RemoveField(
-            model_name='jobpostmodel',
-            name='filterQuestions',
-        ),
-    ]
+    # operations = [
+    #     migrations.RemoveField(
+    #         model_name='jobpostmodel',
+    #         name='filterQuestions',
+    #     ),
+    # ]
