@@ -71,6 +71,11 @@ class Migration(migrations.Migration):
             name='department',
             field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='department_jobPost', to='UserApp.userdepartmentmodel'),
         ),
+        # migrations.AddField(
+        #     model_name='jobpostmodel',
+        #     name='filterQuestions',
+        #     field=models.ManyToManyField(related_name='filter_question_list', to='QuizApp.JobApplyFilterQuestionModel'),
+        # ),
         migrations.AddField(
             model_name='jobpostmodel',
             name='jobProgressStatus',
@@ -85,6 +90,11 @@ class Migration(migrations.Migration):
             model_name='filterquestionsresponsemodelhr',
             name='jobPost',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='job_info', to='RecruitmentManagementApp.jobpostmodel'),
+        ),
+        migrations.AddField(
+            model_name='filterquestionsresponsemodelhr',
+            name='questions',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='filter_questions', to='QuizApp.jobapplyfilterquestionmodel'),
         ),
         migrations.AddField(
             model_name='filterquestionsresponsemodelhr',
