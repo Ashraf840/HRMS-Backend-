@@ -815,7 +815,11 @@ class ReferenceVerificationView(generics.RetrieveUpdateAPIView):
         refId = self.kwargs['id']
         refInfo = ReferenceInformationModel.objects.get(id=refId)
         current_site = get_current_site(request).domain
-        email_plaintext_message = f'{current_site}/add_reference_form/'
+        if current_site == 'careeradmin.techforing.com':
+            site_link = 'career.techforing.com'
+        else:
+            site_link = 'devcareer.techforing.com'
+        email_plaintext_message = f'{site_link}/add_reference_form/'
 
         email_body = 'Dear Sir,\n' \
                      'Salam and Greetings.\n' \
