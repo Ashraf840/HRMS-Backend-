@@ -115,11 +115,11 @@ class RegisterView(generics.GenericAPIView):
         absurl = 'http://' + current_site + relativeLink + "?token=" + str(token)
 
         email_body = f'Hi {user.full_name},\n' \
-                     f'Were happy you signed up for Techforing Career. To start exploring the Techforing Career Please confirm your email address. ' \
-                     f'Verification link {absurl}'
+                     f'Were happy you signed up for Techforing Career. To start exploring the TechForing Career Please confirm your email address. \n' \
+                     f'Verification link: {absurl}'
 
         data = {'email_body': email_body, 'to_email': user.email,
-                'email_subject': 'Verification Email'}
+                'email_subject': 'Email Verification|TechForing'}
 
         Util.send_email(data)
         return Response(user_data, status=status.HTTP_201_CREATED)
@@ -134,14 +134,12 @@ class VerifyEmailView(views.APIView):
     @swagger_auto_schema(manual_parameters=[token_param_config])
     def get(self, request):
         token = request.GET.get('token')
-        # print(token)
         try:
-            # print('token1')
             payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=['HS256'])
-            # print('token2')
             user = models.User.objects.get(id=payload['user_id'])
-            # print(email=payload['email'])
             redirect_url = f'https://career.techforing.com/auth/{token}'
+            # redirect_url_error = f'https://career.techforing.com/auth/'
+
             if user.is_active:
                 if not user.email_validated:
                     user.email_validated = True
@@ -149,7 +147,7 @@ class VerifyEmailView(views.APIView):
                     # return Response({'email': 'Successfully activated'}, status=status.HTTP_200_OK)
                     return HttpResponseRedirect(redirect_to=redirect_url)
                 else:
-                    return HttpResponseRedirect(redirect_to=redirect_url)
+                    return HttpResponseRedirect(redirect_to=redirect_url, content='Token expired or broken.')
 
             else:
                 return Response({'email': 'Activation failed'}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
@@ -167,20 +165,14 @@ class EmployeeEmailVerifyView(views.APIView):
     @swagger_auto_schema(manual_parameters=[token_param_config])
     def get(self, request):
         token = request.GET.get('token')
-        # print(token)
         try:
-            # print('token1')
             payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=['HS256'])
-            # print('token2')
-            print(payload)
             user = models.User.objects.get(id=payload['user_id'])
-            # print(email=payload['email'])
             redirect_url = 'https://hrms.techforing.com/login'
             if user.is_active:
                 if not user.email_validated:
                     user.email_validated = True
                     user.save()
-                    # return Response({'email': 'Successfully activated'}, status=status.HTTP_200_OK)
                     return HttpResponseRedirect(redirect_to=redirect_url)
                 else:
                     return HttpResponseRedirect(redirect_to=redirect_url)
@@ -198,7 +190,6 @@ class UserProfileCompletionPercentageView(generics.ListAPIView):
     serializer_class = serializer.UserProfileCompletionPercentageSerializer
 
     def get_queryset(self):
-        # print(self.request.user.id)
         query = models.User.objects.filter(id=self.request.user.id)
         return query
 
@@ -250,7 +241,6 @@ class UpdateUserInfoView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializer.ProfileUpdateSerializer
     queryset = models.User.objects.all()
 
-    # parser_classes = [parsers.MultiPartParser]
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -259,15 +249,6 @@ class UpdateUserInfoView(generics.RetrieveUpdateDestroyAPIView):
         self.perform_update(serializer)
         return Response(serializer.data)
 
-
-# User info View
-# Retrieving data from User model data
-# class UserInfoListView(generics.ListCreateAPIView):
-#     permission_classes = [Authenticated]
-#     serializer_class = serializer.UserSerializer
-#
-#     def get_queryset(self):
-#         return models.EmployeeInfoModel.objects.all()
 
 
 # User academic information View
@@ -301,7 +282,6 @@ class UserAcademicInfoListView(generics.ListCreateAPIView):
     permission_classes = [Authenticated]
     serializer_class = serializer.UserAcademicSerializer
 
-    # queryset = models.UserAcademicInfoModel.objects.all()
     def get_queryset(self):
         u_id = self.kwargs['id']
         return models.UserAcademicInfoModel.objects.filter(user_id=u_id)
@@ -310,7 +290,6 @@ class UserAcademicInfoListView(generics.ListCreateAPIView):
 class UserAcademicInfoRetrieveView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [Authenticated, IsCandidateUser]
     serializer_class = serializer.UserAcademicSerializer
-    # queryset = models.UserAcademicInfoModel.objects.all()
     lookup_field = 'id'
 
     def get_queryset(self):
@@ -333,7 +312,6 @@ class CareerObjectiveView(generics.CreateAPIView):
             queryset = models.CareerObjectiveModel.objects.filter(user=self.request.user)
         return queryset
 
-    # lookup_field = 'id'
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -427,7 +405,6 @@ class WorkInfoListView(generics.ListAPIView):
     permission_classes = [Authenticated, IsCandidateUser]
     serializer_class = serializer.UserAcademicSerializer
 
-    # queryset = models.UserAcademicInfoModel.objects.all()
     def get_queryset(self):
         id = self.kwargs['id']
         return models.UserAcademicInfoModel.objects.filter(user__id=id)
@@ -460,7 +437,6 @@ class CertificationInfoListView(generics.ListAPIView):
     permission_classes = [Authenticated, IsCandidateUser]
     serializer_class = serializer.UserCertificationsSerializer
 
-    # queryset = models.UserCertificationsModel.objects.all()
     def get_queryset(self):
         id = self.kwargs['id']
         return models.UserCertificationsModel.objects.filter(user__id=id)
@@ -469,7 +445,6 @@ class CertificationInfoListView(generics.ListAPIView):
 class UpdateCertificationsView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [Authenticated]
     serializer_class = serializer.UserCertificationsSerializer
-    # queryset = models.UserAcademicInfoModel.objects.all()
     lookup_field = 'id'
 
     def get_queryset(self):
@@ -500,7 +475,6 @@ class TrainingInfoListView(generics.ListAPIView):
     permission_classes = [Authenticated, IsCandidateUser]
     serializer_class = serializer.UserTrainingExperienceSerializer
 
-    # queryset = models.UserAcademicInfoModel.objects.all()
     def get_queryset(self):
         id = self.kwargs['id']
         return models.UserTrainingExperienceModel.objects.filter(user__id=id)
@@ -509,7 +483,6 @@ class TrainingInfoListView(generics.ListAPIView):
 class UpdateTrainingExperienceView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [Authenticated]
     serializer_class = serializer.UserTrainingExperienceSerializer
-    # queryset = models.UserAcademicInfoModel.objects.all()
     lookup_field = 'id'
 
     def get_queryset(self):
@@ -550,8 +523,6 @@ class UpdateUserSkillsView(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.UserSkillsModel.objects.all()
     lookup_field = 'user_id'
 
-    # def perform_update(self, serializer):
-    #     serializer.save()
 
     def update(self, request, *args, **kwargs):
         try:
