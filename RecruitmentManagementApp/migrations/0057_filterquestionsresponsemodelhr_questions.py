@@ -10,11 +10,11 @@ class Migration(migrations.Migration):
         ('RecruitmentManagementApp', '0056_alter_officialdocumentsmodel_applicationid'),
     ]
 
-    # operations = [
-    #     migrations.AddField(
-    #         model_name='filterquestionsresponsemodelhr',
-    #         name='questions',
-    #         field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, related_name='filter_questions', to='RecruitmentManagementApp.jobapplyfilterquestionmodel'),
-    #         preserve_default=False,
-    #     ),
-    # ]
+    operations = [
+        migrations.AddField(
+            model_name='filterquestionsresponsemodelhr',
+            name='questions',
+            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, related_name='filter_questions', to='RecruitmentManagementApp.jobapplyfilterquestionmodel'),
+            preserve_default=False,
+        ),
+    ]

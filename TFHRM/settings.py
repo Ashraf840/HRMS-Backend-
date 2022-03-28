@@ -186,7 +186,7 @@ Dev server DB
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'hrm_techforing',
+        'NAME': 'tf_hrms',
         'USER': 'root',
         'PASSWORD': 'ghFGH56$%&',
         'OPTIONS': {
