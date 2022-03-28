@@ -460,9 +460,9 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
                             # ========Email send functionality========
                             try:
                                 email_body = f'Dear {self.request.user.full_name},\n ' \
-                                             f'Thank you for your application and interest in joining TechForing. You have been shortlisted for the {questionAnswer.question.jobId.jobTitle} position.\n' \
+                                             f'Thank you for your application and interest in joining TechForing. You have been shortlisted for the {candiate_job_application.jobPostId.jobTitle} position.\n' \
                                              f'At TechForing, we have a straightforward recruitment procedure and these {selectStatus} are one of them. We take these tests to understand your values, analytical ability, and expertise related to the position. This is a crucial and mandatory step to qualify for the position.\n' \
-                                             f'You are requested to log into the recruitment portal and participate in the test. Link: https://career.techforing.com/\n' \
+                                             f'You are requested to log into the recruitment portal and participate in the test. Link: https://career.techforing.com/my_jobs/{candiate_job_application.id}\n' \
                                              f'NB: Follow the deadline and instructions strictly.\n' \
                                              f'Deadline: {datetime.date.today() + datetime.timedelta(hours=72)}\n\n\n' \
                                              f'Instructions:\n' \

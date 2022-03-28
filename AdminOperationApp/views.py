@@ -92,8 +92,24 @@ class RejectCandidateStatusView(generics.RetrieveUpdateDestroyAPIView):
         applicationData.jobProgressStatus = status.get(status='Rejected')
         applicationData.save()
         """
-        need to add rejection mail validation
+        Email functionality
         """
+        email_body = f'Dear {applicationData.userId.full_name.capitalize()} \n\n' \
+                     f'Thank you for your interest in the {applicationData.jobPostId.jobTitle.upper()} position. ' \
+                     f'We’ve reviewed your background and experience and unfortunately, ' \
+                     f'we have decided to move ahead with other candidates. ' \
+                     f'We appreciate the time you took to apply and encourage you not to let this be the end of your ' \
+                     f'exploration of Careers at TechForing! We’re growing and adding new roles on a regular basis. ' \
+                     f'So we invite you to explore careers for another great opportunity to pursue.\n\n' \
+                     'Thanks & Regards,\n' \
+                     'HR Department\n' \
+                     'TechForing Limited.\n\n' \
+                     'www.techforing.com'
+
+        data = {'email_body': email_body, 'to_email': applicationData.userId.email,
+                'email_subject': f'{applicationData.jobPostId.jobTitle.upper()}|Status of the Screening Test.'}
+        Util.send_email(data)
+
         return Response({'detail': 'rejected'})
 
 
@@ -675,7 +691,26 @@ class FinalSalaryView(generics.CreateAPIView):
         jobApplicaion.jobProgressStatus = jobStatus.filter(status='Document Submission').get()
         jobApplicaion.save()
 
-        return Response(serializer.data)
+        # Email sending functionality
+        try:
+            email_body = f'Congratulations {jobApplicaion.userId.full_name}\n' \
+                         f'You have been selected for the position {jobApplicaion.jobPostId.jobTitle}.' \
+                         f' You are requested to submit your documents in the portal.\n' \
+                         f'Portal Link: https://career.techforing.com/my_jobs/{jobApplicaion.id}\n' \
+                         'Thanks & Regards,\n' \
+                         'HR Department\n' \
+                         'TechForing Limited.\n' \
+                         'www.techforing.com\n'\
+                         f'Office Address: House: 149 (4th floor), Lane: 1, Baridhara DOHS, Dhaka.' \
+
+            data = {'email_body': email_body, 'to_email': jobApplicaion.userId.email,
+                    'email_subject': 'Please Submit Your documents.'}
+            Util.send_email(data)
+            return Response({'detail': 'Email Sent.'})
+        except:
+            return Response({'detail': 'Email Sending failed.'})
+
+        # return Response(serializer.data)
 
 
 """
