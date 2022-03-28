@@ -91,11 +91,11 @@ class Migration(migrations.Migration):
             name='jobPost',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='job_info', to='RecruitmentManagementApp.jobpostmodel'),
         ),
-        migrations.AddField(
-            model_name='filterquestionsresponsemodelhr',
-            name='questions',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='filter_questions', to='QuizApp.jobapplyfilterquestionmodel'),
-        ),
+        # migrations.AddField(
+        #     model_name='filterquestionsresponsemodelhr',
+        #     name='questions',
+        #     field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='filter_questions', to='QuizApp.jobapplyfilterquestionmodel'),
+        # ),
         migrations.AddField(
             model_name='filterquestionsresponsemodelhr',
             name='user',
