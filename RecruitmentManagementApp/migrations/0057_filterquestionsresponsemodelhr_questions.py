@@ -4,17 +4,17 @@ from django.db import migrations, models
 import django.db.models.deletion
 
 
-class Migration(migrations.Migration):
-
-    dependencies = [
-        ('RecruitmentManagementApp', '0056_alter_officialdocumentsmodel_applicationid'),
-    ]
-
-    operations = [
-        migrations.AddField(
-            model_name='filterquestionsresponsemodelhr',
-            name='questions',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, related_name='filter_questions', to='RecruitmentManagementApp.jobapplyfilterquestionmodel'),
-            preserve_default=False,
-        ),
-    ]
+# class Migration(migrations.Migration):
+#
+#     dependencies = [
+#         ('RecruitmentManagementApp', '0056_alter_officialdocumentsmodel_applicationid'),
+#     ]
+#
+#     operations = [
+#         migrations.AddField(
+#             model_name='filterquestionsresponsemodelhr',
+#             name='questions',
+#             field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, related_name='filter_questions', to='RecruitmentManagementApp.jobapplyfilterquestionmodel'),
+#             preserve_default=False,
+#         ),
+#     ]
