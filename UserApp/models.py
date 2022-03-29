@@ -3,7 +3,7 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, Permis
 from django.db.models.signals import post_save
 from django_resized import ResizedImageField
 from django.dispatch import receiver
-from phonenumber_field.modelfields import PhoneNumberField
+# from phonenumber_field.modelfields import PhoneNumberField
 from django.urls import reverse
 from django.template.loader import render_to_string
 from django_rest_passwordreset.signals import reset_password_token_created
@@ -64,7 +64,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     profile_pic = ResizedImageField(upload_to='users/', blank=True, help_text='Size Recommended: 512x512',
                                     size=[512, 512], quality=100, force_format='JPEG', default='default.jpg')
     # phone_number = models.CharField(max_length=30, blank=True)
-    phone_number = PhoneNumberField(blank=False, null=False)
+    phone_number = models.CharField(blank=False, null=False, max_length=15)
     nid = models.CharField(max_length=30, null=True)
     nationality = models.CharField(max_length=50, null=True, blank=True)
     location = models.CharField(max_length=255, blank=True)
