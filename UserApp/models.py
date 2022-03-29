@@ -103,17 +103,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         return f'{self.full_name}'
 
 
-# Designation Model
-class UserDesignationModel(models.Model):
-    designation = models.CharField(max_length=50, null=False)
-
-    class Meta:
-        verbose_name_plural = 'Designation'
-
-    def __str__(self):
-        return f'{self.id} {self.designation}'
-
-
 # Department Model
 class UserDepartmentModel(models.Model):
     department = models.CharField(max_length=50, null=False)
@@ -125,6 +114,18 @@ class UserDepartmentModel(models.Model):
 
     def __str__(self):
         return f'{self.department}'
+
+
+# Designation Model
+class UserDesignationModel(models.Model):
+    department = models.ForeignKey(UserDepartmentModel, on_delete=models.CASCADE, related_name='designation_department', blank=True, null=True)
+    designation = models.CharField(max_length=50, null=False)
+
+    class Meta:
+        verbose_name_plural = 'Designation'
+
+    def __str__(self):
+        return f'{self.id} {self.designation}'
 
 
 # User skills Model
