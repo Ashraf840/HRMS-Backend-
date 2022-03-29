@@ -20,7 +20,7 @@ employee_shift = (
 
 class EmployeeInformationModel(models.Model):
     """
-    Employee information model, emp salary, personal email, dpet, ect
+    Employee information model, emp salary, personal email, dept, ect
     """
     user = models.OneToOneField(userModel.User, on_delete=models.CASCADE, related_name='employee_user_info')
     # official_email = models.EmailField(unique=True, blank=True)

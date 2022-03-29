@@ -1,8 +1,33 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
-from RecruitmentManagementApp import serializer as recruitment_serializer
+from RecruitmentManagementApp import serializer as recruitment_serializer, models as recruitment_model
 from HRM_Admin import models as hrm_admin
 from UserApp import models as user_model, serializer as user_serializer
+
+
+class EmployeeDocumentsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = recruitment_model.DocumentSubmissionModel
+        fields = '__all__'
+        extra_kwargs = {
+            'user': {'read_only': True},
+            'applied_job': {'read_only': True}
+        }
+
+    def to_representation(self, instance):
+        data = super(EmployeeDocumentsSerializer, self).to_representation(instance)
+        obj = {
+            'certificates': [
+                {'doc_name': 'SSC ',
+                 'doc_url': data.get('sscCertificate')
+                 },
+                {'doc_name': 'HSC ',
+                 'doc_url': data.get('hscCertificate')
+                 }
+            ]
+
+        }
+        return obj
 
 
 class EmployeeUserSerializer(serializers.ModelSerializer):
@@ -105,7 +130,7 @@ class SalaryInfoSerializer(serializers.ModelSerializer):
 class EmployeeSalarySerializer(serializers.ModelSerializer):
     class Meta:
         model = hrm_admin.EmployeeSalaryModel
-        fields = ['salary',]
+        fields = ['salary', ]
 
 
 # Employee update section
@@ -115,8 +140,10 @@ class EmployeeUpdateDeleteSerializer(serializers.ModelSerializer):
     """
     user = EmployeeUserUpdateDeleteSerializer()
     salary = EmployeeSalarySerializer(source='employee_salary_employee')
-    emp_department = serializers.SlugRelatedField(queryset=user_model.UserDepartmentModel.objects.all(), slug_field='department')
-    designation = serializers.SlugRelatedField(queryset=user_model.UserDesignationModel.objects.all(), slug_field='designation')
+    emp_department = serializers.SlugRelatedField(queryset=user_model.UserDepartmentModel.objects.all(),
+                                                  slug_field='department')
+    designation = serializers.SlugRelatedField(queryset=user_model.UserDesignationModel.objects.all(),
+                                               slug_field='designation')
 
     class Meta:
         model = hrm_admin.EmployeeInformationModel

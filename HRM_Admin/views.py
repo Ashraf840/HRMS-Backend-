@@ -3,6 +3,7 @@ from django.db.models import Q
 from rest_framework.response import Response
 from rest_framework import generics, status
 from HRM_Admin import models as hrm_admin_model, serializer as hrm_admin_serializer
+from RecruitmentManagementApp import models as recruitment_model
 from UserApp import models as user_model, permissions as custom_permission, utils
 from AdminOperationApp import models as admin_operation_model
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -32,6 +33,8 @@ class OnboardAnEmployeeView(generics.ListCreateAPIView):
 
         checkDesignation = user_model.UserDesignationModel.objects.get(id=designation_id)
         userInfo = user_model.User.objects.get(id=user_id)
+        # personal email will be stored here.
+        # user_email = userInfo.email
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         if checkDesignation.designation != 'CEO':
@@ -281,3 +284,12 @@ class EmployeeTrainingUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = hrm_admin_serializer.EmployeeTrainingSerializer
     queryset = hrm_admin_model.TrainingModel.objects.all()
     lookup_field = 'id'
+
+
+class TestView(generics.ListAPIView):
+    serializer_class = hrm_admin_serializer.EmployeeDocumentsSerializer
+    queryset = recruitment_model.DocumentSubmissionModel.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        ser = self.get_serializer(self.get_queryset(), many=True)
+        return Response(ser.data[0])
