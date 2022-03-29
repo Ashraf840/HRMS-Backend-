@@ -276,6 +276,8 @@ class DocumentationSubmissionSerializer(serializers.ModelSerializer):
 
 
 class ReferenceInformationSerializer(serializers.ModelSerializer):
+    phoneNumber = serializers.CharField(max_length=15, min_length=9, required=True, style={'input_type': 'text'})
+
     class Meta:
         model = models.ReferenceInformationModel
         # fields = '__all__'

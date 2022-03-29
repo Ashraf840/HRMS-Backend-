@@ -1,4 +1,7 @@
+from importlib._common import _
+
 from django.contrib.auth.password_validation import validate_password
+from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
@@ -147,8 +150,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password], \
                                      style={'input_type': 'password'})
-
-    # password2 = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
+    phone_number = serializers.CharField(max_length=15, min_length=9, required=True, style={'input_type': 'text'})
 
     class Meta:
         model = models.User
@@ -161,7 +163,6 @@ class RegisterSerializer(serializers.ModelSerializer):
             'phone_number': {'write_only': True},
 
         }
-
 
     def create(self, validated_data):
         user = models.User.objects.create(
@@ -176,6 +177,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
+
 
 class EmailVerificationSerializer(serializers.ModelSerializer):
     token = serializers.CharField(max_length=555)
@@ -319,7 +321,6 @@ class UserSkillsSerializer(serializers.ModelSerializer):
         userSkills = models.UserSkillsModel.objects.create(**validated_data)
         userSkills.skills.add(*skills)
         return userSkills
-
 
 
 class UserAcademicSerializer(serializers.ModelSerializer):

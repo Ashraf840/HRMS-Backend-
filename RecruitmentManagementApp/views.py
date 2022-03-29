@@ -847,7 +847,7 @@ class ReferenceInformationView(generics.CreateAPIView):
                 if type(request.data) == type([]):
                     for ref in request.data:
                         ref_email = ref.get('email')
-                        domain_list = ["gmail.com", "yahoo.com", "hotmail.com", ]
+                        domain_list = ["gmail.com", "yahoo.com", "hotmail.com", "hotmail"]
                         domain = ref_email.split('@')[1]
                         official_email_count = 0
                         if domain in domain_list:
