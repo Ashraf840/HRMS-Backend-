@@ -223,6 +223,7 @@ class EmployeeInformationUpdateView(generics.RetrieveUpdateDestroyAPIView):
         if type(request.data) == type({}):
             req_email = request.data['user'].get('email')
         else:
+            print(type(request.data))
             req_email = request.data.get('user.email')
         if instance.user.email != req_email:
             email_validator = user_model.User.objects.filter(email=req_email)
