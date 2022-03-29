@@ -75,6 +75,7 @@ INSTALLED_APPS = [
     'django_rest_passwordreset',
     'rest_framework_simplejwt.token_blacklist',
     'django_cleanup',
+    'phonenumber_field',
 
     # Corsheaders
     'corsheaders',
@@ -169,14 +170,13 @@ ROOT_URLCONF = 'TFHRM.urls'
 """
 Local server DB
 """
-#
+
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
-
 
 """
 Dev server DB

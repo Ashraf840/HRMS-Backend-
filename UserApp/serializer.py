@@ -93,9 +93,7 @@ class HRMCustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     }
 
     def validate(self, attrs):
-        # print(attrs)
         data = super(HRMCustomTokenObtainPairSerializer, self).validate(attrs)
-        # print(data)
         if self.user.is_employee:
             if self.user.is_active:
                 if self.user.email_validated:
@@ -159,24 +157,17 @@ class RegisterSerializer(serializers.ModelSerializer):
             'email': {'required': True},
             'full_name': {'required': True},
             'birthDate': {'required': True},
-            # 'nationality': {'required': True},
             'password': {'write_only': True},
             'phone_number': {'write_only': True},
 
         }
 
-    # def validate(self, attrs):
-    #     if attrs['password'] != attrs['password2']:
-    #         raise serializers.ValidationError({"password": "Password fields didn't match."})
-    #
-    #     return attrs
 
     def create(self, validated_data):
         user = models.User.objects.create(
             full_name=validated_data['full_name'],
             email=validated_data['email'],
             birthDate=validated_data['birthDate'],
-            # nationality=validated_data['nationality'],
             gender=validated_data['gender'],
             phone_number=validated_data['phone_number'],
 
@@ -185,8 +176,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
-        # return models.User.objects.create_user(**validated_data)
-
 
 class EmailVerificationSerializer(serializers.ModelSerializer):
     token = serializers.CharField(max_length=555)
@@ -300,9 +289,6 @@ class CareerObjectiveSerializer(serializers.ModelSerializer):
         }
 
 
-
-
-
 # User Details serializer
 class UserDepartmentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -334,27 +320,9 @@ class UserSkillsSerializer(serializers.ModelSerializer):
         userSkills.skills.add(*skills)
         return userSkills
 
-    # def update(self, instance, validated_data):
-    #     instance.skills = validated_data.get('skills', instance.skills)
-    #     print(instance)
-    #     instance.save()
-    #     return instance
-
-
-# class UserInformationSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = models.EmployeeInfoModel
-#         fields = '__all__'
-#
-#         extra_kwargs = {
-#             'user': {'read_only': True}
-#         }
 
 
 class UserAcademicSerializer(serializers.ModelSerializer):
-    # educationLevel = EducationLevelSerializer()
-    # degreeTitle = DegreeTitleSerializer()
-
     class Meta:
         model = models.UserAcademicInfoModel
         fields = '__all__'
@@ -362,14 +330,6 @@ class UserAcademicSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'user': {'read_only': True}
         }
-        # depth = 1
-
-    # def create(self, validated_data):
-    #     educationLevel = validated_data.pop('educationLevel')
-    #     degreeTitle = validated_data.pop('degreeTitle')
-    #
-    #     return models.UserAcademicInfoModel.objects.create(educationLevel=educationLevel, degreeTitle=degreeTitle,
-    #                                                        **validated_data)
 
 
 class UserAcademicDetailsSerializer(serializers.ModelSerializer):
@@ -444,7 +404,8 @@ Training Information -> UserTrainingModel
 class UserLoginDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
-        fields = ['id', 'email', 'full_name', 'phone_number', 'is_candidate', 'is_employee', 'is_superuser', 'is_hr', 'email_validated', 'profile_pic']
+        fields = ['id', 'email', 'full_name', 'phone_number', 'is_candidate', 'is_employee', 'is_superuser', 'is_hr',
+                  'email_validated', 'profile_pic']
 
 
 class UserDetailsSerializer(serializers.ModelSerializer):

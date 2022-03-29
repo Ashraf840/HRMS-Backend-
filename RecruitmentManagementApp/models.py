@@ -3,6 +3,7 @@ import base64
 from django.db import models
 from django.db.models.signals import pre_delete, post_save
 from django.dispatch import receiver
+from phonenumber_field.modelfields import PhoneNumberField
 from social_core.utils import slugify
 
 from UserApp.models import UserDepartmentModel, User
@@ -246,7 +247,8 @@ class ReferenceInformationModel(models.Model):
                                     related_name='references_submission_applied_job')
     name = models.CharField(max_length=100)
     # phoneNumber = models.PositiveIntegerField(validators=[MinLengthValidator(9), MaxLengthValidator(15)], blank=True)
-    phoneNumber = models.PositiveBigIntegerField()
+    # phoneNumber = models.PositiveBigIntegerField()
+    phoneNumber = PhoneNumberField(blank=False, null=False)
     relationWithReferer = models.CharField(max_length=100)
     email = models.EmailField()
     attachedFile = models.FileField(upload_to=content_file_name, blank=True, null=True)
