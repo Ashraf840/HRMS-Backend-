@@ -43,7 +43,10 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             if self.user.is_active:
                 if self.user.email_validated:
                     request = self.context.get('request')
-                    # print(request)
+                    if 'default.jpg' in request.build_absolute_uri(str(self.user.profile_pic.url)):
+                        p_pic = 'default.jpg'
+                    else:
+                        p_pic = request.build_absolute_uri(str(self.user.profile_pic.url))
                     try:
                         obj = {
                             'id': self.user.id,
@@ -54,7 +57,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
                             'is_hr': self.user.is_hr,
                             'is_employee': self.user.is_employee,
                             'email_validated': self.user.email_validated,
-                            'profile_pic': request.build_absolute_uri(str(self.user.profile_pic.url)),
+                            'profile_pic': p_pic,
                         }
                     except:
                         obj = {
@@ -99,6 +102,10 @@ class HRMCustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             if self.user.is_active:
                 if self.user.email_validated:
                     request = self.context.get('request')
+                    if 'default.jpg' in request.build_absolute_uri(str(self.user.profile_pic.url)):
+                        p_pic = 'default.jpg'
+                    else:
+                        p_pic = request.build_absolute_uri(str(self.user.profile_pic.url))
                     try:
                         obj = {
                             'id': self.user.id,
@@ -110,7 +117,7 @@ class HRMCustomTokenObtainPairSerializer(TokenObtainPairSerializer):
                             'is_employee': self.user.is_employee,
                             'is_superuser': self.user.is_superuser,
                             'email_validated': self.user.email_validated,
-                            'profile_pic': request.build_absolute_uri(str(self.user.profile_pic.url)),
+                            'profile_pic': p_pic,
                         }
                     except:
                         obj = {
