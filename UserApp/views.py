@@ -336,6 +336,8 @@ class UserLoginDetailView(generics.ListAPIView):
     def get(self, request, *args, **kwargs):
         ser = self.get_serializer(self.get_queryset(), many=True)
         user = ser.data[0]
+        if 'default.jpg' in user['profile_pic']:
+            user['profile_pic'] = 'default.jpg'
         return Response(user)
 
 
