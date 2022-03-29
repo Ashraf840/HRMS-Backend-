@@ -160,7 +160,7 @@ class EmployeeInfoSerializer(serializers.ModelSerializer):
     employeeBankInfo = EmployeeBankInformationSerializer(source='employee_bank_info')
     employeeSalaryInfo = EmployeeSalarySerializer(source='employee_salary_employee')
     designation = serializers.StringRelatedField()
-    emp_department = serializers.StringRelatedField(source='employee_designation')
+    emp_department = serializers.SlugRelatedField()
 
     class Meta:
         model = hrm_admin.EmployeeInformationModel
