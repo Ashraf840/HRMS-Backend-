@@ -106,8 +106,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 # Department Model
 class UserDepartmentModel(models.Model):
     department = models.CharField(max_length=50, null=False)
-
-    # departmentHead = models.ForeignKey(User, on_delete=models.)
+    departmentHead = models.ForeignKey(User, on_delete=models.CASCADE, related_name='department_head_user', blank=True, null=True)
 
     class Meta:
         verbose_name_plural = 'Department'

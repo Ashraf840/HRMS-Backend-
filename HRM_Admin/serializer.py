@@ -321,3 +321,16 @@ class EmployeeTrainingSerializer(serializers.ModelSerializer):
     class Meta:
         model = hrm_admin.TrainingModel
         fields = '__all__'
+
+
+# Department and Designation
+class DepartmentsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = user_model.UserDepartmentModel
+        fields = '__all__'
+
+
+class DesignationsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = user_model.UserDesignationModel
+        fields = '__all__'

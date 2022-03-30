@@ -224,6 +224,7 @@ class DocumentSubmissionModel(models.Model):
     passportSizePhoto = models.ImageField(upload_to=image_file_name)
     digitalSignature = models.ImageField(upload_to=image_file_name)
     is_verified = models.BooleanField(default=False)
+    update_time = models.TimeField(auto_now=True)
 
     def __str__(self):
         return f'pk:{self.id} id:{self.user.id},name: {self.user.full_name} Documents'

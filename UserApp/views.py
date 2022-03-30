@@ -230,7 +230,7 @@ class UserProfileCompletionPercentageView(generics.ListAPIView):
         return Response(percentage)
 
 
-class DesignationView(generics.ListCreateAPIView):
+class DesignationView(generics.ListAPIView):
     permission_classes = [CandidateAdminAuthenticated]
     serializer_class = serializer.DesignationSerializer
     queryset = models.UserDesignationModel.objects.all()
@@ -241,7 +241,6 @@ class UpdateUserInfoView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializer.ProfileUpdateSerializer
     queryset = models.User.objects.all()
 
-
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=True)
@@ -250,11 +249,10 @@ class UpdateUserInfoView(generics.RetrieveUpdateDestroyAPIView):
         return Response(serializer.data)
 
 
-
 # User academic information View
 # if user is authenticate user can Retrieve data
 # not needed
-class DepartmentView(generics.ListCreateAPIView):
+class DepartmentView(generics.ListAPIView):
     permission_classes = [CandidateAdminAuthenticated]
     serializer_class = serializer.UserDepartmentSerializer
     queryset = models.UserDepartmentModel.objects.all()
@@ -311,7 +309,6 @@ class CareerObjectiveView(generics.CreateAPIView):
         else:
             queryset = models.CareerObjectiveModel.objects.filter(user=self.request.user)
         return queryset
-
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -524,7 +521,6 @@ class UpdateUserSkillsView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializer.UserSkillsSerializer
     queryset = models.UserSkillsModel.objects.all()
     lookup_field = 'user_id'
-
 
     def update(self, request, *args, **kwargs):
         try:
