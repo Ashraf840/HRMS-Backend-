@@ -273,10 +273,14 @@ class EmployeeBankInformationUpdateView(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
 
 
-class EmployeeDocumentsListView(generics.ListAPIView):
+class EmployeeDocumentsListView(generics.RetrieveAPIView):
+    """
+    Employee all documents
+    """
     permission_classes = [custom_permission.CandidateAdminAuthenticated]
     serializer_class = hrm_admin_serializer.EmployeeDocumentsSerializer
     queryset = recruitment_model.DocumentSubmissionModel.objects.all()
+    lookup_field = 'user'
 
     def list(self, request, *args, **kwargs):
         ser = self.get_serializer(self.get_queryset(), many=True)

@@ -6,7 +6,25 @@ from UserApp import models as user_model, serializer as user_serializer
 import re
 
 
+class EmployeeOfficialDocsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = recruitment_model.SignedAppointmentLetterModel
+        fields = '__all__'
+
+    def to_representation(self, instance):
+        data = super(EmployeeOfficialDocsSerializer, self).to_representation(instance)
+        doc_info = data.get('appointmentLetter')
+
+        doc_store = [{'doc_name': 'Signed AppointmentLetter',
+                      'doc_url': doc_info,
+                      'doc_ext': f"appointment_letter.{doc_info.split('.')[-1]}"
+                      }]
+        return doc_store
+
+
 class EmployeeDocumentsSerializer(serializers.ModelSerializer):
+    employee_official_doc = EmployeeOfficialDocsSerializer(source='user.signed_appointment_letter_user')
+
     class Meta:
         model = recruitment_model.DocumentSubmissionModel
         fields = '__all__'
@@ -17,6 +35,8 @@ class EmployeeDocumentsSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super(EmployeeDocumentsSerializer, self).to_representation(instance)
+        employee_official_doc = data.pop('employee_official_doc')
+
         certificate = []
         personal_doc = []
         for doc in data:
@@ -31,6 +51,7 @@ class EmployeeDocumentsSerializer(serializers.ModelSerializer):
                                      'doc_ext': f"ssc.{doc_info.split('.')[-1]}"
                                      }
                         certificate.append(doc_store)
+
                     else:
                         doc_store = {'doc_name': (' '.join(doc_name_arr)).capitalize(),
                                      'doc_url': doc_info,
@@ -39,8 +60,9 @@ class EmployeeDocumentsSerializer(serializers.ModelSerializer):
                         personal_doc.append(doc_store)
 
         obj = {
-            'certificate': certificate,
-            'personal_doc': personal_doc,
+            'academic_documents': certificate,
+            'personal_documents': personal_doc,
+            'official_documents': employee_official_doc,
         }
         # obj = {
         #     'certificates': [
