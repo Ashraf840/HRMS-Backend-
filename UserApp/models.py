@@ -106,10 +106,23 @@ class User(AbstractBaseUser, PermissionsMixin):
 # Department Model
 class UserDepartmentModel(models.Model):
     department = models.CharField(max_length=50, null=False)
-    departmentHead = models.ForeignKey(User, on_delete=models.CASCADE, related_name='department_head_user', blank=True, null=True)
+    departmentHead = models.ForeignKey(User, on_delete=models.CASCADE, related_name='department_head_user', blank=True,
+                                       null=True)
 
     class Meta:
         verbose_name_plural = 'Department'
+
+    @property
+    def total_designation(self):
+        return self.designation_department.all().count()
+
+    @property
+    def total_employee_under_dep(self):
+        return self.employee_department.all().count()
+
+    @property
+    def department_head(self):
+        return self.departmentHead.full_name
 
     def __str__(self):
         return f'{self.department}'
@@ -117,7 +130,8 @@ class UserDepartmentModel(models.Model):
 
 # Designation Model
 class UserDesignationModel(models.Model):
-    department = models.ForeignKey(UserDepartmentModel, on_delete=models.CASCADE, related_name='designation_department', blank=True, null=True)
+    department = models.ForeignKey(UserDepartmentModel, on_delete=models.CASCADE, related_name='designation_department',
+                                   blank=True, null=True)
     designation = models.CharField(max_length=50, null=False)
 
     class Meta:

@@ -325,9 +325,14 @@ class EmployeeTrainingSerializer(serializers.ModelSerializer):
 
 # Department and Designation
 class DepartmentsSerializer(serializers.ModelSerializer):
+    designation_count = serializers.CharField(source='total_designation', read_only=True)
+    employee_count_dep = serializers.CharField(source='total_employee_under_dep', read_only=True)
+    dept_head = serializers.CharField(source='department_head', read_only=True)
+
     class Meta:
         model = user_model.UserDepartmentModel
         fields = '__all__'
+        extra_fields = ['dept_head']
 
 
 class DesignationsSerializer(serializers.ModelSerializer):

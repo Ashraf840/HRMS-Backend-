@@ -321,26 +321,26 @@ class EmployeeTrainingUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
 
 # Employee department and designation
 class DepartmentsView(generics.ListCreateAPIView):
-    permission_classes = custom_permission.EmployeeAdminAuthenticated
+    permission_classes = [custom_permission.EmployeeAdminAuthenticated]
     serializer_class = hrm_admin_serializer.DepartmentsSerializer
     queryset = user_model.UserDepartmentModel.objects.all()
 
 
 class DepartmentUpdateView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = custom_permission.EmployeeAdminAuthenticated
+    permission_classes = [custom_permission.EmployeeAdminAuthenticated]
     serializer_class = hrm_admin_serializer.DepartmentsSerializer
     queryset = user_model.UserDepartmentModel.objects.all()
     lookup_field = 'id'
 
 
 class DesignationsView(generics.ListCreateAPIView):
-    permission_classes = custom_permission.EmployeeAdminAuthenticated
+    permission_classes = [custom_permission.EmployeeAdminAuthenticated]
     serializer_class = hrm_admin_serializer.DesignationsSerializer
     queryset = user_model.UserDesignationModel.objects.all()
 
 
 class DesignationUpdateView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = custom_permission.EmployeeAdminAuthenticated
+    permission_classes = [custom_permission.EmployeeAdminAuthenticated]
     serializer_class = hrm_admin_serializer.DesignationsSerializer
     queryset = user_model.UserDesignationModel.objects.all()
     lookup_field = 'id'
