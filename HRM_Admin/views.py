@@ -254,6 +254,19 @@ class EmployeeInformationView(generics.ListAPIView):
         return queryset
 
 
+class EmployeeBankInformationView(generics.CreateAPIView):
+    permission_classes = [custom_permission.EmployeeAdminAuthenticated]
+    serializer_class = hrm_admin_serializer.EmployeeBankInformationSerializer
+    queryset = hrm_admin_model.EmployeeBankInfoModel.objects.all()
+
+
+class EmployeeBankInformationUpdateView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [custom_permission.EmployeeAdminAuthenticated]
+    serializer_class = hrm_admin_serializer.EmployeeBankInformationSerializer
+    queryset = hrm_admin_model.EmployeeBankInfoModel.objects.all()
+    lookup_field = 'id'
+
+
 class ManagePermissionAccessView(generics.RetrieveUpdateAPIView):
     """
     Custom permission added for all user

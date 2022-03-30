@@ -7,6 +7,9 @@ urlpatterns = [
     path('employee_list/', hrm_admin_view.EmployeeInformationListView.as_view(), name='employee_list_search'),
     path('employee_info/<user_id>/', hrm_admin_view.EmployeeInformationView.as_view(), name='employee_information'),
     path('employee_info_update/<user_id>/', hrm_admin_view.EmployeeInformationUpdateView.as_view(), name='employee_information_update'),
+    path('employee_bank_info/', hrm_admin_view.EmployeeBankInformationView.as_view(), name='employee_bank_info_add'),
+    path('employee_bank_info/<id>/', hrm_admin_view.EmployeeBankInformationUpdateView.as_view(), name='employee_bank_info_update_delete'),
+
     # set employee permission access section
     path('module_permission_access/<employee__user_id>/', hrm_admin_view.ManagePermissionAccessView.as_view(), name='module_permission_access'),
     # Employee training section

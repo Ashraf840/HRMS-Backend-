@@ -3,6 +3,7 @@ from rest_framework.validators import UniqueValidator
 from RecruitmentManagementApp import serializer as recruitment_serializer, models as recruitment_model
 from HRM_Admin import models as hrm_admin
 from UserApp import models as user_model, serializer as user_serializer
+import re
 
 
 class EmployeeDocumentsSerializer(serializers.ModelSerializer):
@@ -16,17 +17,72 @@ class EmployeeDocumentsSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super(EmployeeDocumentsSerializer, self).to_representation(instance)
-        obj = {
-            'certificates': [
-                {'doc_name': 'SSC ',
-                 'doc_url': data.get('sscCertificate')
-                 },
-                {'doc_name': 'HSC ',
-                 'doc_url': data.get('hscCertificate')
-                 }
-            ]
+        certificate = []
+        personal_doc = []
+        for doc in data:
 
+            if doc is not None and doc not in ('id', 'is_verified', 'user', 'applied_job'):
+                doc_info = data.get(doc)
+                if doc_info is not None:
+                    doc_name_arr = re.findall('.[^A-Z]*', doc)
+                    if doc_name_arr[-1].lower() == 'certificate':
+                        doc_store = {'doc_name': (' '.join(doc_name_arr)).capitalize(),
+                                     'doc_url': doc_info,
+                                     'doc_ext': f"ssc.{doc_info.split('.')[-1]}"
+                                     }
+                        certificate.append(doc_store)
+                    else:
+                        doc_store = {'doc_name': (' '.join(doc_name_arr)).capitalize(),
+                                     'doc_url': doc_info,
+                                     'doc_ext': f"ssc.{doc_info.split('.')[-1]}"
+                                     }
+                        personal_doc.append(doc_store)
+
+        obj = {
+            'certificate': certificate,
+            'personal_doc': personal_doc,
         }
+        # obj = {
+        #     'certificates': [
+        #         {'doc_name': 'SSC Certificate',
+        #          'doc_url': data.get('sscCertificate'),
+        #          'doc_ext': f"ssc.{data.get('sscCertificate').split('.')[-1]}"
+        #          },
+        #         {'doc_name': 'HSC Certificate',
+        #          'doc_url': data.get('hscCertificate'),
+        #          'doc_ext': f"hsc.{data.get('hscCertificate').split('.')[-1]}"
+        #
+        #          },
+        #         {'doc_name': 'Graduation Certificate',
+        #          'doc_url': data.get('graduationCertificate'),
+        #          'doc_ext': f"graduation.{data.get('graduationCertificate').split('.')[-1]}"
+        #          },
+        #         {'doc_name': 'Post Graduation Certificate',
+        #          'doc_url': data.get('postGraduationCertificate'),
+        #          'doc_ext': f"post_graduation.{data.get('postGraduationCertificate').split('.')[-1]}"
+        #          },
+        #     ],
+        #     'personal_docs': [
+        #         {'doc_name': 'Nid Card',
+        #          'doc_url': data.get('nidCard'),
+        #          'doc_ext': f"nid.{data.get('nidCard').split('.')[-1]}"
+        #          },
+        #         {'doc_name': 'Employee picture',
+        #          'doc_url': data.get('passportSizePhoto'),
+        #          'doc_ext': f"dp.{data.get('passportSizePhoto').split('.')[-1]}"
+        #          },
+        #         {'doc_name': 'Employee Passport',
+        #          'doc_url': data.get('userPassportImage'),
+        #          'doc_ext': f"passport.{data.get('userPassportImage').split('.')[-1]}"
+        #          },
+        #         {'doc_name': 'Employee Signature',
+        #          'doc_url': data.get('digitalSignature'),
+        #          'doc_ext': f"signature.{data.get('digitalSignature').split('.')[-1]}"
+        #          },
+        #
+        #     ]
+        #
+        # }
         return obj
 
 
