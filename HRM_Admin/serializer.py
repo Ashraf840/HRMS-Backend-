@@ -6,6 +6,15 @@ from UserApp import models as user_model, serializer as user_serializer
 import re
 
 
+class EmployeeForDeptHeadSerializer(serializers.ModelSerializer):
+    department = serializers.CharField(source='employee_user_info.emp_department', read_only=True)
+    designation = serializers.CharField(source='employee_user_info.designation', read_only=True)
+
+    class Meta:
+        model = user_model.User
+        fields = ['id', 'full_name', 'department', 'designation']
+
+
 class EmployeeOfficialDocsSerializer(serializers.ModelSerializer):
     class Meta:
         model = recruitment_model.SignedAppointmentLetterModel

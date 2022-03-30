@@ -17,6 +17,15 @@ from django.core.mail import EmailMultiAlternatives
 
 
 # Create your views here.
+class EmployeeForDeptHeadView(generics.ListAPIView):
+    permission_classes = [custom_permission.EmployeeAuthenticated]
+    serializer_class = hrm_admin_serializer.EmployeeForDeptHeadSerializer
+
+    def get_queryset(self):
+        queryset = user_model.User.objects.filter(is_employee=True)
+        return queryset
+
+
 class OnboardAnEmployeeView(generics.ListCreateAPIView):
     permission_classes = [custom_permission.EmployeeAuthenticated]
     serializer_class = hrm_admin_serializer.OnboardNewEmployeeSerializer
@@ -321,6 +330,9 @@ class EmployeeTrainingUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
 
 # Employee department and designation
 class DepartmentsView(generics.ListCreateAPIView):
+    """
+    add new departments view
+    """
     permission_classes = [custom_permission.EmployeeAdminAuthenticated]
     serializer_class = hrm_admin_serializer.DepartmentsSerializer
 
@@ -335,6 +347,9 @@ class DepartmentsView(generics.ListCreateAPIView):
 
 
 class DepartmentUpdateView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Update delete existing departments view
+    """
     permission_classes = [custom_permission.EmployeeAdminAuthenticated]
     serializer_class = hrm_admin_serializer.DepartmentsSerializer
     queryset = user_model.UserDepartmentModel.objects.all()
@@ -342,6 +357,9 @@ class DepartmentUpdateView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class DesignationsView(generics.ListCreateAPIView):
+    """
+    add new departments view
+    """
     permission_classes = [custom_permission.EmployeeAdminAuthenticated]
     serializer_class = hrm_admin_serializer.DesignationsSerializer
     queryset = user_model.UserDesignationModel.objects.all()
@@ -357,6 +375,9 @@ class DesignationsView(generics.ListCreateAPIView):
 
 
 class DesignationUpdateView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Update delete existing departments view
+    """
     permission_classes = [custom_permission.EmployeeAdminAuthenticated]
     serializer_class = hrm_admin_serializer.DesignationsSerializer
     queryset = user_model.UserDesignationModel.objects.all()

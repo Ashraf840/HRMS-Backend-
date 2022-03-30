@@ -22,6 +22,7 @@ urlpatterns = [
     path('employee_training/<id>/', hrm_admin_view.EmployeeTrainingUpdateDeleteView.as_view(),
          name='employee_training_information_update_delete'),
     # Department and Designation
+    path('dept_head_list/', hrm_admin_view.EmployeeForDeptHeadView.as_view(), name='department_head_list'),
     path('depratments/', hrm_admin_view.DepartmentsView.as_view(), name='departments'),
     path('depratments/<id>/', hrm_admin_view.DepartmentUpdateView.as_view(), name='departments_update'),
     path('designations/', hrm_admin_view.DesignationsView.as_view(), name='designations'),
