@@ -333,6 +333,11 @@ class DepartmentsSerializer(serializers.ModelSerializer):
         model = user_model.UserDepartmentModel
         fields = '__all__'
         extra_fields = ['dept_head']
+        extra_kwargs = {
+            'departmentHead': {
+                'write_only': True
+            }
+        }
 
 
 class DesignationsSerializer(serializers.ModelSerializer):
