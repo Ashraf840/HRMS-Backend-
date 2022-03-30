@@ -254,32 +254,32 @@ class EmployeeInformationSerializer(serializers.ModelSerializer):
     """
     Employee details Information's
     """
-    academicInfo = user_serializer.UserAcademicDetailsSerializer(source='academic_info_user', many=True)
-    careerObjective = user_serializer.CareerObjectiveSerializer(source='career_objective_user')
-    certificationInfo = user_serializer.UserCertificationsSerializer(source='certification_info_user', many=True)
-    trainingInfo = user_serializer.UserTrainingExperienceSerializer(source='training_info_user', many=True)
-    jobPreference = user_serializer.UserJobPreferenceSerializer(source='job_preference_user', many=True)
-    workExperience = user_serializer.UserWorkExperienceSerializer(source='working_experience_user', many=True)
-    userSkills = user_serializer.UserSkillsSerializer(source='skills_user')
-    references = recruitment_serializer.ReferenceInformationSerializer(source='reference_information_user', many=True)
-    documents = recruitment_serializer.DocumentationSubmissionSerializer(source='document_submission_user', many=True)
-    employeeInfo = EmployeeInfoSerializer(source='employee_user_info')
+    academicInfo = user_serializer.UserAcademicDetailsSerializer(source='user.academic_info_user', many=True)
+    careerObjective = user_serializer.CareerObjectiveSerializer(source='user.career_objective_user')
+    certificationInfo = user_serializer.UserCertificationsSerializer(source='user.certification_info_user', many=True)
+    trainingInfo = user_serializer.UserTrainingExperienceSerializer(source='user.training_info_user', many=True)
+    jobPreference = user_serializer.UserJobPreferenceSerializer(source='user.job_preference_user', many=True)
+    workExperience = user_serializer.UserWorkExperienceSerializer(source='user.working_experience_user', many=True)
+    userSkills = user_serializer.UserSkillsSerializer(source='user.skills_user')
+    references = recruitment_serializer.ReferenceInformationSerializer(source='user.reference_information_user', many=True)
+    # documents = recruitment_serializer.DocumentationSubmissionSerializer(source='document_submission_user', many=True)
+    employeeInfo = EmployeeInfoSerializer(source='user.employee_user_info')
 
     class Meta:
-        model = user_model.User
+        model = hrm_admin.EmployeeInformationModel
         fields = '__all__'
-        extra_kwargs = {
-            'password': {'write_only': True}
-        }
+        # extra_kwargs = {
+        #     'password': {'write_only': True}
+        # }
 
-    def to_representation(self, instance):
-        data = super(EmployeeInformationSerializer, self).to_representation(instance)
-        data.pop('groups')
-        data.pop('last_login')
-        data.pop('user_permissions')
-        data.pop('email_validated')
-        data.pop('date_joined')
-        return data
+    # def to_representation(self, instance):
+    #     data = super(EmployeeInformationSerializer, self).to_representation(instance)
+    #     data.pop('groups')
+    #     data.pop('last_login')
+    #     data.pop('user_permissions')
+    #     data.pop('email_validated')
+    #     data.pop('date_joined')
+    #     return data
 
 
 # Employee permission
