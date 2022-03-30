@@ -847,7 +847,15 @@ class ReferenceInformationView(generics.CreateAPIView):
                 if type(request.data) == type([]):
                     for ref in request.data:
                         ref_email = ref.get('email')
-                        domain_list = ["gmail.com", "yahoo.com", "hotmail.com", ]
+
+                        ref_phone = ref.get('phoneNumber')
+                        if len(ref_phone) < 9:
+                            return Response({'detail': 'Ensure this field has at least 9 characters.'})
+                        elif len(ref_phone) > 15:
+                            return Response({'detail': 'Ensure this field has not more then 15 characters.'})
+
+                        domain_list = ['gmail', 'protonmail', 'hotmail', 'yahoo', 'zoho', 'aim', 'aol', 'gmx', 'icloud',
+                                       'yandex']
                         domain = ref_email.split('@')[1]
                         official_email_count = 0
                         if domain in domain_list:

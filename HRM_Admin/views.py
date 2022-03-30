@@ -3,6 +3,7 @@ from django.db.models import Q
 from rest_framework.response import Response
 from rest_framework import generics, status
 from HRM_Admin import models as hrm_admin_model, serializer as hrm_admin_serializer
+from RecruitmentManagementApp import models as recruitment_model
 from UserApp import models as user_model, permissions as custom_permission, utils
 from AdminOperationApp import models as admin_operation_model
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -16,6 +17,15 @@ from django.core.mail import EmailMultiAlternatives
 
 
 # Create your views here.
+class EmployeeForDeptHeadView(generics.ListAPIView):
+    permission_classes = [custom_permission.EmployeeAuthenticated]
+    serializer_class = hrm_admin_serializer.EmployeeForDeptHeadSerializer
+
+    def get_queryset(self):
+        queryset = user_model.User.objects.filter(is_employee=True)
+        return queryset
+
+
 class OnboardAnEmployeeView(generics.ListCreateAPIView):
     permission_classes = [custom_permission.EmployeeAuthenticated]
     serializer_class = hrm_admin_serializer.OnboardNewEmployeeSerializer
@@ -32,6 +42,8 @@ class OnboardAnEmployeeView(generics.ListCreateAPIView):
 
         checkDesignation = user_model.UserDesignationModel.objects.get(id=designation_id)
         userInfo = user_model.User.objects.get(id=user_id)
+        # personal email will be stored here.
+        # user_email = userInfo.email
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         if checkDesignation.designation != 'CEO':
@@ -251,6 +263,39 @@ class EmployeeInformationView(generics.ListAPIView):
         return queryset
 
 
+class EmployeeBankInformationView(generics.CreateAPIView):
+    """
+    Employee bank information add
+    """
+    permission_classes = [custom_permission.EmployeeAdminAuthenticated]
+    serializer_class = hrm_admin_serializer.EmployeeBankInformationSerializer
+    queryset = hrm_admin_model.EmployeeBankInfoModel.objects.all()
+
+
+class EmployeeBankInformationUpdateView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Employee bank information update delete
+    """
+    permission_classes = [custom_permission.EmployeeAdminAuthenticated]
+    serializer_class = hrm_admin_serializer.EmployeeBankInformationSerializer
+    queryset = hrm_admin_model.EmployeeBankInfoModel.objects.all()
+    lookup_field = 'id'
+
+
+class EmployeeDocumentsListView(generics.RetrieveAPIView):
+    """
+    Employee all documents
+    """
+    permission_classes = [custom_permission.CandidateAdminAuthenticated]
+    serializer_class = hrm_admin_serializer.EmployeeDocumentsSerializer
+    queryset = recruitment_model.DocumentSubmissionModel.objects.all()
+    lookup_field = 'user'
+
+    def list(self, request, *args, **kwargs):
+        ser = self.get_serializer(self.get_queryset(), many=True)
+        return Response(ser.data[0])
+
+
 class ManagePermissionAccessView(generics.RetrieveUpdateAPIView):
     """
     Custom permission added for all user
@@ -280,4 +325,60 @@ class EmployeeTrainingUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [custom_permission.EmployeeAdminAuthenticated]
     serializer_class = hrm_admin_serializer.EmployeeTrainingSerializer
     queryset = hrm_admin_model.TrainingModel.objects.all()
+    lookup_field = 'id'
+
+
+# Employee department and designation
+class DepartmentsView(generics.ListCreateAPIView):
+    """
+    add new departments view
+    """
+    permission_classes = [custom_permission.EmployeeAdminAuthenticated]
+    serializer_class = hrm_admin_serializer.DepartmentsSerializer
+
+    def get_queryset(self):
+        try:
+            search = self.request.query_params.get('search')
+            queryset = user_model.UserDepartmentModel.objects.filter(Q(departmentHead__full_name__icontains=search) |
+                                                                     Q(department__icontains=search))
+        except:
+            queryset = user_model.UserDepartmentModel.objects.all()
+        return queryset
+
+
+class DepartmentUpdateView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Update delete existing departments view
+    """
+    permission_classes = [custom_permission.EmployeeAdminAuthenticated]
+    serializer_class = hrm_admin_serializer.DepartmentsSerializer
+    queryset = user_model.UserDepartmentModel.objects.all()
+    lookup_field = 'id'
+
+
+class DesignationsView(generics.ListCreateAPIView):
+    """
+    add new departments view
+    """
+    permission_classes = [custom_permission.EmployeeAdminAuthenticated]
+    serializer_class = hrm_admin_serializer.DesignationsSerializer
+    queryset = user_model.UserDesignationModel.objects.all()
+
+    def get_queryset(self):
+        try:
+            search = self.request.query_params.get('search')
+            queryset = user_model.UserDesignationModel.objects.filter(Q(designation__icontains=search) |
+                                                                      Q(department__department__icontains=search))
+        except:
+            queryset = user_model.UserDesignationModel.objects.all()
+        return queryset
+
+
+class DesignationUpdateView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Update delete existing departments view
+    """
+    permission_classes = [custom_permission.EmployeeAdminAuthenticated]
+    serializer_class = hrm_admin_serializer.DesignationsSerializer
+    queryset = user_model.UserDesignationModel.objects.all()
     lookup_field = 'id'

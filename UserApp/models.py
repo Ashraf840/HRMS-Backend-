@@ -3,6 +3,7 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, Permis
 from django.db.models.signals import post_save
 from django_resized import ResizedImageField
 from django.dispatch import receiver
+# from phonenumber_field.modelfields import PhoneNumberField
 from django.urls import reverse
 from django.template.loader import render_to_string
 from django_rest_passwordreset.signals import reset_password_token_created
@@ -62,7 +63,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     # profile_pic = models.ImageField(upload_to='users/', default='users/default.png')
     profile_pic = ResizedImageField(upload_to='users/', blank=True, help_text='Size Recommended: 512x512',
                                     size=[512, 512], quality=100, force_format='JPEG', default='default.jpg')
-    phone_number = models.CharField(max_length=30, blank=True)
+    # phone_number = models.CharField(max_length=30, blank=True)
+    phone_number = models.CharField(blank=False, null=False, max_length=15)
     nid = models.CharField(max_length=30, null=True)
     nationality = models.CharField(max_length=50, null=True, blank=True)
     location = models.CharField(max_length=255, blank=True)
@@ -101,28 +103,49 @@ class User(AbstractBaseUser, PermissionsMixin):
         return f'{self.full_name}'
 
 
+# Department Model
+class UserDepartmentModel(models.Model):
+    department = models.CharField(max_length=50, null=False)
+    departmentHead = models.ForeignKey(User, on_delete=models.CASCADE, related_name='department_head_user', blank=True,
+                                       null=True)
+
+    class Meta:
+        verbose_name_plural = 'Department'
+
+    @property
+    def total_designation(self):
+        return self.designation_department.all().count()
+
+    @property
+    def total_employee_under_dep(self):
+        return self.employee_department.all().count()
+
+    @property
+    def department_head(self):
+        return self.departmentHead.full_name
+
+    def __str__(self):
+        return f'{self.department}'
+
+
 # Designation Model
 class UserDesignationModel(models.Model):
+    department = models.ForeignKey(UserDepartmentModel, on_delete=models.CASCADE, related_name='designation_department',
+                                   blank=True, null=True)
     designation = models.CharField(max_length=50, null=False)
 
     class Meta:
         verbose_name_plural = 'Designation'
 
+    @property
+    def employee_count_designation(self):
+        return self.employee_designation.all().count()
+
+    @property
+    def designation_dept(self):
+        return self.department.department
     def __str__(self):
-        return f'{self.id} {self.designation}'
-
-
-# Department Model
-class UserDepartmentModel(models.Model):
-    department = models.CharField(max_length=50, null=False)
-
-    # departmentHead = models.ForeignKey(User, on_delete=models.)
-
-    class Meta:
-        verbose_name_plural = 'Department'
-
-    def __str__(self):
-        return f'{self.department}'
+        return f'{self.designation}'
 
 
 # User skills Model
@@ -144,23 +167,6 @@ shift_options = (
 
 )
 
-
-# class EmployeeInfoModel(models.Model):
-#     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_info_user')
-#     # phone_number = models.IntegerField(null=True)
-#     salary = models.IntegerField(null=True, blank=True)
-#     designation = models.ForeignKey(UserDesignationModel, on_delete=models.CASCADE, related_name='designation_user',
-#                                     null=True)
-#     department = models.ForeignKey(UserDepartmentModel, on_delete=models.CASCADE, related_name='department_user',
-#                                    null=True)
-#     shift = models.CharField(choices=shift_options, verbose_name='Choose Shift', max_length=20)
-#     email = models.EmailField(blank=True)
-#
-#     class Meta:
-#         verbose_name_plural = 'User_Info'
-#
-#     def __str__(self):
-#         return f'{self.user}, Department: {self.department} Designation: {self.designation}'
 
 # Career objective for candidate/user
 class CareerObjectiveModel(models.Model):

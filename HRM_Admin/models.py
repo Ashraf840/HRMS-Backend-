@@ -20,7 +20,7 @@ employee_shift = (
 
 class EmployeeInformationModel(models.Model):
     """
-    Employee information model, emp salary, personal email, dpet, ect
+    Employee information model, emp salary, personal email, dept, ect
     """
     user = models.OneToOneField(userModel.User, on_delete=models.CASCADE, related_name='employee_user_info')
     # official_email = models.EmailField(unique=True, blank=True)
@@ -82,6 +82,7 @@ class EmployeeBankInfoModel(models.Model):
     account_no = models.CharField(max_length=100)
     account_name = models.CharField(max_length=255, blank=True)
     bank_name = models.CharField(max_length=255, blank=True)
+    bank_branch = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
         return f'{self.id} - {self.employee.user.full_name}, {self.account_no}'

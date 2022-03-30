@@ -224,6 +224,7 @@ class DocumentSubmissionModel(models.Model):
     passportSizePhoto = models.ImageField(upload_to=image_file_name)
     digitalSignature = models.ImageField(upload_to=image_file_name)
     is_verified = models.BooleanField(default=False)
+    update_time = models.TimeField(auto_now=True)
 
     def __str__(self):
         return f'pk:{self.id} id:{self.user.id},name: {self.user.full_name} Documents'
@@ -246,7 +247,8 @@ class ReferenceInformationModel(models.Model):
                                     related_name='references_submission_applied_job')
     name = models.CharField(max_length=100)
     # phoneNumber = models.PositiveIntegerField(validators=[MinLengthValidator(9), MaxLengthValidator(15)], blank=True)
-    phoneNumber = models.PositiveBigIntegerField()
+    # phoneNumber = models.PositiveBigIntegerField()
+    phoneNumber = models.CharField(blank=False, null=False, max_length=15)
     relationWithReferer = models.CharField(max_length=100)
     email = models.EmailField()
     attachedFile = models.FileField(upload_to=content_file_name, blank=True, null=True)

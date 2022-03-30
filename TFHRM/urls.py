@@ -22,7 +22,7 @@ urlpatterns = [
                   path('admin/', admin.site.urls),
                   path('', include('UserApp.urls')),
                   path('recruitment/', include('RecruitmentManagementApp.urls')),
-                  path('api/', include('TFHRM_API_App.urls')),
+                  path('api/', include('TFHRM_API_App.urls')),  # all recruitments api
                   path('api/hrm_admin/', include('HRM_Admin.urls')),
                   path('api/hrm_controller/', include('HRM_controller.urls')),
                   path('api/hrm_user/', include('HRM_User.urls')),

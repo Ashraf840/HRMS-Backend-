@@ -2,6 +2,7 @@ import calendar
 import datetime
 from django.db.models import Q
 from rest_framework import generics, permissions, status, pagination
+from django.contrib.sites.shortcuts import get_current_site
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -813,8 +814,12 @@ class ReferenceVerificationView(generics.RetrieveUpdateAPIView):
         response = ser.data
         refId = self.kwargs['id']
         refInfo = ReferenceInformationModel.objects.get(id=refId)
-
-        email_plaintext_message = 'https://career.techforing.com/add_reference_form/'
+        current_site = get_current_site(request).domain
+        if current_site == 'careeradmin.techforing.com':
+            site_link = 'career.techforing.com'
+        else:
+            site_link = 'devcareer.techforing.com'
+        email_plaintext_message = f'{site_link}/add_reference_form/'
 
         email_body = 'Dear Sir,\n' \
                      'Salam and Greetings.\n' \

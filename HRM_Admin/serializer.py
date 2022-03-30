@@ -1,8 +1,120 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
-from RecruitmentManagementApp import serializer as recruitment_serializer
+from RecruitmentManagementApp import serializer as recruitment_serializer, models as recruitment_model
 from HRM_Admin import models as hrm_admin
 from UserApp import models as user_model, serializer as user_serializer
+import re
+
+
+class EmployeeForDeptHeadSerializer(serializers.ModelSerializer):
+    department = serializers.CharField(source='employee_user_info.emp_department', read_only=True)
+    designation = serializers.CharField(source='employee_user_info.designation', read_only=True)
+
+    class Meta:
+        model = user_model.User
+        fields = ['id', 'full_name', 'department', 'designation']
+
+
+class EmployeeOfficialDocsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = recruitment_model.SignedAppointmentLetterModel
+        fields = '__all__'
+
+    def to_representation(self, instance):
+        data = super(EmployeeOfficialDocsSerializer, self).to_representation(instance)
+        doc_info = data.get('appointmentLetter')
+
+        doc_store = [{'doc_name': 'Signed AppointmentLetter',
+                      'doc_url': doc_info,
+                      'doc_ext': f"appointment_letter.{doc_info.split('.')[-1]}"
+                      }]
+        return doc_store
+
+
+class EmployeeDocumentsSerializer(serializers.ModelSerializer):
+    employee_official_doc = EmployeeOfficialDocsSerializer(source='user.signed_appointment_letter_user')
+
+    class Meta:
+        model = recruitment_model.DocumentSubmissionModel
+        fields = '__all__'
+        extra_kwargs = {
+            'user': {'read_only': True},
+            'applied_job': {'read_only': True}
+        }
+
+    def to_representation(self, instance):
+        data = super(EmployeeDocumentsSerializer, self).to_representation(instance)
+        employee_official_doc = data.pop('employee_official_doc')
+
+        certificate = []
+        personal_doc = []
+        for doc in data:
+
+            if doc is not None and doc not in ('id', 'is_verified', 'user', 'applied_job'):
+                doc_info = data.get(doc)
+                if doc_info is not None:
+                    doc_name_arr = re.findall('.[^A-Z]*', doc)
+                    if doc_name_arr[-1].lower() == 'certificate':
+                        doc_store = {'doc_name': (' '.join(doc_name_arr)).capitalize(),
+                                     'doc_url': doc_info,
+                                     'doc_ext': f"ssc.{doc_info.split('.')[-1]}"
+                                     }
+                        certificate.append(doc_store)
+
+                    else:
+                        doc_store = {'doc_name': (' '.join(doc_name_arr)).capitalize(),
+                                     'doc_url': doc_info,
+                                     'doc_ext': f"ssc.{doc_info.split('.')[-1]}"
+                                     }
+                        personal_doc.append(doc_store)
+
+        obj = {
+            'academic_documents': certificate,
+            'personal_documents': personal_doc,
+            'official_documents': employee_official_doc,
+        }
+        # obj = {
+        #     'certificates': [
+        #         {'doc_name': 'SSC Certificate',
+        #          'doc_url': data.get('sscCertificate'),
+        #          'doc_ext': f"ssc.{data.get('sscCertificate').split('.')[-1]}"
+        #          },
+        #         {'doc_name': 'HSC Certificate',
+        #          'doc_url': data.get('hscCertificate'),
+        #          'doc_ext': f"hsc.{data.get('hscCertificate').split('.')[-1]}"
+        #
+        #          },
+        #         {'doc_name': 'Graduation Certificate',
+        #          'doc_url': data.get('graduationCertificate'),
+        #          'doc_ext': f"graduation.{data.get('graduationCertificate').split('.')[-1]}"
+        #          },
+        #         {'doc_name': 'Post Graduation Certificate',
+        #          'doc_url': data.get('postGraduationCertificate'),
+        #          'doc_ext': f"post_graduation.{data.get('postGraduationCertificate').split('.')[-1]}"
+        #          },
+        #     ],
+        #     'personal_docs': [
+        #         {'doc_name': 'Nid Card',
+        #          'doc_url': data.get('nidCard'),
+        #          'doc_ext': f"nid.{data.get('nidCard').split('.')[-1]}"
+        #          },
+        #         {'doc_name': 'Employee picture',
+        #          'doc_url': data.get('passportSizePhoto'),
+        #          'doc_ext': f"dp.{data.get('passportSizePhoto').split('.')[-1]}"
+        #          },
+        #         {'doc_name': 'Employee Passport',
+        #          'doc_url': data.get('userPassportImage'),
+        #          'doc_ext': f"passport.{data.get('userPassportImage').split('.')[-1]}"
+        #          },
+        #         {'doc_name': 'Employee Signature',
+        #          'doc_url': data.get('digitalSignature'),
+        #          'doc_ext': f"signature.{data.get('digitalSignature').split('.')[-1]}"
+        #          },
+        #
+        #     ]
+        #
+        # }
+        return obj
 
 
 class EmployeeUserSerializer(serializers.ModelSerializer):
@@ -105,7 +217,7 @@ class SalaryInfoSerializer(serializers.ModelSerializer):
 class EmployeeSalarySerializer(serializers.ModelSerializer):
     class Meta:
         model = hrm_admin.EmployeeSalaryModel
-        fields = ['salary',]
+        fields = ['salary', ]
 
 
 # Employee update section
@@ -115,8 +227,10 @@ class EmployeeUpdateDeleteSerializer(serializers.ModelSerializer):
     """
     user = EmployeeUserUpdateDeleteSerializer()
     salary = EmployeeSalarySerializer(source='employee_salary_employee')
-    emp_department = serializers.SlugRelatedField(queryset=user_model.UserDepartmentModel.objects.all(), slug_field='department')
-    designation = serializers.SlugRelatedField(queryset=user_model.UserDesignationModel.objects.all(), slug_field='designation')
+    emp_department = serializers.SlugRelatedField(queryset=user_model.UserDepartmentModel.objects.all(),
+                                                  slug_field='department')
+    designation = serializers.SlugRelatedField(queryset=user_model.UserDesignationModel.objects.all(),
+                                               slug_field='designation')
 
     class Meta:
         model = hrm_admin.EmployeeInformationModel
@@ -179,7 +293,7 @@ class EmployeeInformationSerializer(serializers.ModelSerializer):
     workExperience = user_serializer.UserWorkExperienceSerializer(source='working_experience_user', many=True)
     userSkills = user_serializer.UserSkillsSerializer(source='skills_user')
     references = recruitment_serializer.ReferenceInformationSerializer(source='reference_information_user', many=True)
-    documents = recruitment_serializer.DocumentationSubmissionSerializer(source='document_submission_user', many=True)
+    # documents = recruitment_serializer.DocumentationSubmissionSerializer(source='document_submission_user', many=True)
     employeeInfo = EmployeeInfoSerializer(source='employee_user_info')
 
     class Meta:
@@ -216,3 +330,32 @@ class EmployeeTrainingSerializer(serializers.ModelSerializer):
     class Meta:
         model = hrm_admin.TrainingModel
         fields = '__all__'
+
+
+# Department and Designation
+class DepartmentsSerializer(serializers.ModelSerializer):
+    designation_count = serializers.CharField(source='total_designation', read_only=True)
+    employee_count_dep = serializers.CharField(source='total_employee_under_dep', read_only=True)
+    dept_head = serializers.CharField(source='department_head', read_only=True)
+
+    class Meta:
+        model = user_model.UserDepartmentModel
+        fields = '__all__'
+        extra_fields = ['dept_head']
+        # extra_kwargs = {
+        #     'departmentHead': {
+        #         'write_only': True
+        #     }
+        # }
+
+
+class DesignationsSerializer(serializers.ModelSerializer):
+    emp_count = serializers.CharField(source='employee_count_designation', read_only=True)
+    department_name = serializers.CharField(source='designation_dept', read_only=True)
+
+    class Meta:
+        model = user_model.UserDesignationModel
+        fields = '__all__'
+        extra_kwargs = {
+            'department': {'write_only': True}
+        }
