@@ -341,6 +341,9 @@ class DepartmentsSerializer(serializers.ModelSerializer):
 
 
 class DesignationsSerializer(serializers.ModelSerializer):
+    emp_count = serializers.CharField(source='employee_count_designation', read_only=True)
+    department = serializers.CharField(source='designation_dept', read_only=True)
+
     class Meta:
         model = user_model.UserDesignationModel
         fields = '__all__'

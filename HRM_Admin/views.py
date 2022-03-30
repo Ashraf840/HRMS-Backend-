@@ -323,7 +323,15 @@ class EmployeeTrainingUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
 class DepartmentsView(generics.ListCreateAPIView):
     permission_classes = [custom_permission.EmployeeAdminAuthenticated]
     serializer_class = hrm_admin_serializer.DepartmentsSerializer
-    queryset = user_model.UserDepartmentModel.objects.all()
+
+    def get_queryset(self):
+        try:
+            search = self.request.query_params.get('search')
+            queryset = user_model.UserDepartmentModel.objects.filter(Q(departmentHead__full_name__icontains=search) |
+                                                                     Q(department__icontains=search))
+        except:
+            queryset = user_model.UserDepartmentModel.objects.all()
+        return queryset
 
 
 class DepartmentUpdateView(generics.RetrieveUpdateDestroyAPIView):
@@ -337,6 +345,15 @@ class DesignationsView(generics.ListCreateAPIView):
     permission_classes = [custom_permission.EmployeeAdminAuthenticated]
     serializer_class = hrm_admin_serializer.DesignationsSerializer
     queryset = user_model.UserDesignationModel.objects.all()
+
+    def get_queryset(self):
+        try:
+            search = self.request.query_params.get('search')
+            queryset = user_model.UserDesignationModel.objects.filter(Q(designation__icontains=search) |
+                                                                      Q(department__department__icontains=search))
+        except:
+            queryset = user_model.UserDesignationModel.objects.all()
+        return queryset
 
 
 class DesignationUpdateView(generics.RetrieveUpdateDestroyAPIView):

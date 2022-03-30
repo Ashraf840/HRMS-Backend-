@@ -137,6 +137,13 @@ class UserDesignationModel(models.Model):
     class Meta:
         verbose_name_plural = 'Designation'
 
+    @property
+    def employee_count_designation(self):
+        return self.employee_designation.all().count()
+
+    @property
+    def designation_dept(self):
+        return self.department.department
     def __str__(self):
         return f'{self.designation}'
 
