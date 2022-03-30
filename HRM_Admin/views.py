@@ -239,21 +239,19 @@ class EmployeeInformationUpdateView(generics.RetrieveUpdateDestroyAPIView):
         return Response(serializer.data)
 
 
-class EmployeeInformationView(generics.RetrieveUpdateDestroyAPIView):
+class EmployeeInformationView(generics.ListAPIView):
     """
     Employee information detailed view
     """
     permission_classes = [custom_permission.Authenticated]
     serializer_class = hrm_admin_serializer.EmployeeInformationSerializer
-    queryset = hrm_admin_model.EmployeeInformationModel.objects.all()
-    lookup_field = 'id'
 
-    # def get_queryset(self):
-    #     if self.request.user.is_hr or self.request.user.is_superuser:
-    #         queryset = user_model.User.objects.filter(id=self.kwargs['user_id'], is_employee=True)
-    #     else:
-    #         queryset = user_model.User.objects.filter(id=self.request.user.id)
-    #     return queryset
+    def get_queryset(self):
+        if self.request.user.is_hr or self.request.user.is_superuser:
+            queryset = user_model.User.objects.filter(id=self.kwargs['user_id'], is_employee=True)
+        else:
+            queryset = user_model.User.objects.filter(id=self.request.user.id)
+        return queryset
 
 
 class EmployeeBankInformationView(generics.CreateAPIView):
