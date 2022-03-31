@@ -12,7 +12,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions, generics, status, views
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework_simplejwt.tokens import RefreshToken, BlacklistedToken
+from rest_framework_simplejwt.tokens import RefreshToken
 from . import models
 from . import serializer
 from .permissions import EditPermission, IsAuthor, IsCandidateUser, Authenticated, CandidateAdminAuthenticated
@@ -32,72 +32,6 @@ class HRMCustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = serializer.HRMCustomTokenObtainPairSerializer
     token_obtain_pair = TokenObtainPairView.as_view()
 
-
-# JWT logout
-class BlacklistTokenUpdateView():
-    permission_classes = [Authenticated]
-    authentication_classes = ()
-
-    def post(self, request):
-        print(request)
-        try:
-            refresh_token = request.data["refresh_token"]
-            token = RefreshToken(refresh_token)
-            token.blacklist()
-            return Response(status=status.HTTP_205_RESET_CONTENT)
-        except Exception as e:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
-
-class LogoutAPIView(views.APIView):
-    serializer_class = serializer.LogoutSerializer
-
-    permission_classes = (permissions.IsAuthenticated,)
-
-    def post(self, request):
-        try:
-            refresh_token = request.data.get('refresh')
-            token = RefreshToken(refresh_token)
-            token.blacklist()
-
-            return Response(status=status.HTTP_205_RESET_CONTENT)
-        except Exception as e:
-            return Response({'detail': 'Token expired'}, status=status.HTTP_400_BAD_REQUEST)
-        #
-        # serializer = self.serializer_class(data=request.data)
-        # serializer.is_valid(raise_exception=True)
-        # serializer.save()
-        #
-        # return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-# class LogoutView(generics.DestroyAPIView):
-#     permission_classes = (permissions.IsAuthenticated,)
-#     print('upper')
-#     def post(self, request):
-#         print('called')
-#         try:
-#             refresh_token = request.data["refresh_token"]
-#             print(refresh_token)
-#             token = RefreshToken(refresh_token)
-#             token.blacklist()
-#
-#             return response.Response(status=status.HTTP_205_RESET_CONTENT)
-#         except Exception as e:
-#             return response.Response(status=status.HTTP_400_BAD_REQUEST)
-
-
-# User Registration view inheriting APIView class
-# class RegisterView(generics.CreateAPIView):
-#     serializer_class = serializer.RegisterSerializer
-#     queryset = models.User.objects.all()
-# permission_classes = [permission.IsAuthenticated]
-
-# def post(self, request):
-#     serializers = serializer.UserInfoSerializer(data=request.data)
-#     serializers.is_valid(raise_exception=True)
-#     serializers.save()
-#     return response.Response(serializers.data)
 
 class RegisterView(generics.GenericAPIView):
     serializer_class = serializer.RegisterSerializer
