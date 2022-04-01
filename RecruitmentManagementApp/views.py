@@ -105,9 +105,9 @@ class AppliedForJobView(generics.CreateAPIView, generics.RetrieveAPIView):
                                 status=status.HTTP_400_BAD_REQUEST)
                         else:
                             return Response(
-                                {'detail': 'Application successful.'})
+                                {'eligible': True})
 
-            return Response('Apply')
+            return Response({'eligible': True})
         except:
             data = self.get_serializer(self.get_queryset(), many=True)
             responseData = data.data
@@ -124,6 +124,7 @@ class AppliedForJobView(generics.CreateAPIView, generics.RetrieveAPIView):
 
         if len(checkFilterQuestions) == 0:
             jobInfo = models.JobPostModel.objects.get(id=jobId).jobProgressStatus.all()
+
             if applicationData.count() > 1:
                 for application in applicationData:
                     if application.jobProgressStatus.status.lower() == 'new':
@@ -133,7 +134,7 @@ class AppliedForJobView(generics.CreateAPIView, generics.RetrieveAPIView):
                 jobApplication = applicationData.get()
 
             for state in jobInfo:
-                if state.status != 'new':
+                if state.status.lower() != 'new':
                     jobApplication.jobProgressStatus = state
                     jobApplication.save()
                     email_body = 'Hi ' + self.request.user.full_name + \
