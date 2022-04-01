@@ -114,13 +114,15 @@ class AppliedForJobView(generics.CreateAPIView, generics.RetrieveAPIView):
             return Response(responseData)
 
     def perform_create(self, serializer):
-        serializer.save(userId=self.request.user,
-                        jobProgressStatus=models.JobStatusModel.objects.get(status='new'))
         jobId = serializer.validated_data['jobPostId']
         applicationData = models.UserJobAppliedModel.objects.filter(jobPostId=jobId, userId=self.request.user)
+
+        serializer.save(userId=self.request.user,
+                        jobProgressStatus=models.JobStatusModel.objects.get(status='new'))
         jobId = serializer.data['jobPostId']
         checkFilterQuestions = models.JobApplyFilterQuestionModel.objects.filter(jobId=jobId)
-        if len(checkFilterQuestions) < 1:
+
+        if len(checkFilterQuestions) == 0:
             jobInfo = models.JobPostModel.objects.get(id=jobId).jobProgressStatus.all()
             if applicationData.count() > 1:
                 for application in applicationData:
