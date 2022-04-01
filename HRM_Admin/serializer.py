@@ -356,6 +356,6 @@ class DesignationsSerializer(serializers.ModelSerializer):
     class Meta:
         model = user_model.UserDesignationModel
         fields = '__all__'
-        extra_kwargs = {
-            'department': {'write_only': True}
-        }
+        # extra_kwargs = {
+        #     'department': {'write_only': True}
+        # }

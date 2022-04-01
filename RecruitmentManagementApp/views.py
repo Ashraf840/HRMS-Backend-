@@ -104,9 +104,10 @@ class AppliedForJobView(generics.CreateAPIView, generics.RetrieveAPIView):
                                 {'detail': 'You have withdraw your application, you can apply again after 30 days.'},
                                 status=status.HTTP_400_BAD_REQUEST)
                         else:
-                            return Response('Apply')
+                            return Response(
+                                {'eligible': True})
 
-            return Response('Apply')
+            return Response({'eligible': True})
         except:
             data = self.get_serializer(self.get_queryset(), many=True)
             responseData = data.data
@@ -120,8 +121,10 @@ class AppliedForJobView(generics.CreateAPIView, generics.RetrieveAPIView):
                         jobProgressStatus=models.JobStatusModel.objects.get(status='new'))
         jobId = serializer.data['jobPostId']
         checkFilterQuestions = models.JobApplyFilterQuestionModel.objects.filter(jobId=jobId)
-        if len(checkFilterQuestions) < 1:
+
+        if len(checkFilterQuestions) == 0:
             jobInfo = models.JobPostModel.objects.get(id=jobId).jobProgressStatus.all()
+
             if applicationData.count() > 1:
                 for application in applicationData:
                     if application.jobProgressStatus.status.lower() == 'new':
@@ -131,7 +134,7 @@ class AppliedForJobView(generics.CreateAPIView, generics.RetrieveAPIView):
                 jobApplication = applicationData.get()
 
             for state in jobInfo:
-                if state.status != 'new':
+                if state.status.lower() != 'new':
                     jobApplication.jobProgressStatus = state
                     jobApplication.save()
                     email_body = 'Hi ' + self.request.user.full_name + \
@@ -229,7 +232,7 @@ class AppliedForJobView(generics.CreateAPIView, generics.RetrieveAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-# GET data from Database
+# GET data from Database 
 # If user applied ,user will see his job placement
 
 

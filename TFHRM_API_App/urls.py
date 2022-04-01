@@ -28,7 +28,7 @@ from UserApp.views import RegisterView, UserDetailView, CareerObjectiveView, \
     AddTrainingExperienceView, UpdateUserInfoView, UpdateTrainingExperienceView, VerifyEmailView, SkillsView, \
     AcademicInfoListView, WorkInfoListView, CertificationInfoListView, TrainingInfoListView, AddUserSkillsView, \
     HRMCustomTokenObtainPairView, DegreeTitleView, UserProfileCompletionPercentageView, EducationLevelView, \
-    DepartmentView, UpdateUserSkillsView, DesignationView, ChangePasswordView, EmployeeEmailVerifyView, LogoutAPIView,\
+    DepartmentView, UpdateUserSkillsView, DesignationView, ChangePasswordView, EmployeeEmailVerifyView, \
     UserLoginDetailView
 from pdfGenerator import views as pdfGen
 
@@ -42,7 +42,7 @@ urlpatterns = [
     # path('users/', UserInfoListView.as_view(), name='users_list'),  # add new user from admin
     # Login url
     path('login/', CustomTokenObtainPairView.as_view(), name='login'),  # Login url for user
-    path('logout/', LogoutAPIView.as_view(), name='logout'),  # Login url for user
+    # path('logout/', LogoutAPIView.as_view(), name='logout'),  # Login url for user
     path('hrm_login/', HRMCustomTokenObtainPairView.as_view(), name='hrm-login_employee'),  # Login url for employee
     path('profile_completion_percentage/', UserProfileCompletionPercentageView.as_view(),
          name='profile_completion_percentage'),
