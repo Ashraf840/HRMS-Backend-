@@ -232,7 +232,7 @@ class AppliedForJobView(generics.CreateAPIView, generics.RetrieveAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-# GET data from Database
+# GET data from Database 
 # If user applied ,user will see his job placement
 
 

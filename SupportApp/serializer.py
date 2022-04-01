@@ -39,6 +39,8 @@ class SupportMessageSerializer(serializers.ModelSerializer):
 
     user = serializers.SlugRelatedField(read_only=True, slug_field='id')
     userName = serializers.SlugRelatedField(read_only=True, slug_field='full_name')
+    user_email = serializers.CharField(source='user.email', read_only=True)
+    user_phone = serializers.CharField(source='user.phone_number', read_only=True)
 
     class Meta:
         model = models.SupportMessageModel
