@@ -32,10 +32,6 @@ SECRET_KEY = 'django-insecure-^^fv-&)8of=nhg48zj7$u_=i$ju%br7@ioy39010nexw*k5+t=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# ALLOWED_HOSTS = ['0.0.0.0', '44.242.38.198', '127.0.0.1', 'tfhrm.herokuapp.com', 'careeradmin.techforing.com',
-#                  'www.careeradmin.techforing.com']
-# ALLOWED_HOSTS = ['*']
-
 ALLOWED_HOSTS = [
     '0.0.0.0',
     '44.242.38.198',
@@ -73,7 +69,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'django_rest_passwordreset',
-    # 'rest_framework_simplejwt.token_blacklist',
     'django_cleanup',
     'phonenumber_field',
 
@@ -118,7 +113,7 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': False,
-    'BLACKLIST_AFTER_ROTATION': True,
+    'BLACKLIST_AFTER_ROTATION': False,
     'UPDATE_LAST_LOGIN': True,
 
     'ALGORITHM': 'HS256',
@@ -246,13 +241,6 @@ REST_FRAMEWORK = {
     ]
 }
 
-# DJANGO_REST_PASSWORDRESET_TOKEN_CONFIG = {
-#     "CLASS": "django_rest_passwordreset.tokens.RandomNumberTokenGenerator",
-#     "OPTIONS": {
-#         "min_number": 1500,
-#         "max_number": 9999
-#     }
-# }
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/

@@ -32,7 +32,6 @@ class OnboardAnEmployeeView(generics.ListCreateAPIView):
     queryset = hrm_admin_model.EmployeeSalaryModel.objects.all()
 
     def create(self, request, *args, **kwargs):
-
         if type(request.data) == (type({})):
             user_id = request.data['employee'].get('user')
             designation_id = request.data['employee'].get('designation')
@@ -43,6 +42,7 @@ class OnboardAnEmployeeView(generics.ListCreateAPIView):
         checkDesignation = user_model.UserDesignationModel.objects.get(id=designation_id)
         userInfo = user_model.User.objects.get(id=user_id)
         # personal email will be stored here.
+        user_personal_email = userInfo.email
         # user_email = userInfo.email
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -67,6 +67,11 @@ class OnboardAnEmployeeView(generics.ListCreateAPIView):
             userInfo.email = request.data.get('employee.email')
         userInfo.save()
 
+        # update personal email
+        employee_info = hrm_admin_model.EmployeeInformationModel.objects.get(user=userInfo)
+        employee_info.personal_email = user_personal_email
+        employee_info.save()
+
         # Email activation email.
         token = RefreshToken.for_user(userInfo).access_token
         current_site = get_current_site(request).domain
@@ -74,25 +79,20 @@ class OnboardAnEmployeeView(generics.ListCreateAPIView):
         absurl = 'http://' + current_site + relativeLink + "?token=" + str(token)
 
         email_body = f'Hi {userInfo.full_name},\n' \
-                     f'Congratulation you profile has been updated. Please verify email and login into hrm site.' \
+                     f'Congratulation you profile has been updated. Now you can login as employee at "*hrms.techforing.com*" Please verify email and login into hrm site.\n' \
+                     f'Official Email: {userInfo.email}\n' \
+                     f'Password: Use you previous password, you have created during account creation.\n' \
+                     f'If you forgot your password please verify your account and reset your password. and login into- hrms.techforing.com' \
                      f'Verification link {absurl}'
 
-        # html_message = render_to_string('html.html', context={})
-        # plain_message = strip_tags(html_message)
-        # email = EmailMultiAlternatives(
-        #     'subject',
-        #     plain_message,
-        #     'pranto.techforing@gmail.com',
-        #     ['zulkar.techforing@gmail.com']
-        # )
-        # email.attach_alternative(html_message,'text/html')
-        # email.send()
-        # email_body = plain_message
+        # send mail on personal email
+        data = {'email_body': email_body, 'to_email': user_personal_email,
+                'email_subject': 'TechForing|Employee Verification Email'}
 
-        data = {'email_body': email_body, 'to_email': userInfo.email,
-                'email_subject': 'Verification Email'}
-
+        data2 = {'email_body': email_body, 'to_email': userInfo.email,
+                 'email_subject': 'TechForing|Employee Verification Email'}
         utils.Util.send_email(data)
+        utils.Util.send_email(data2)
         return Response({'message': 'Employee added successfully'})
 
 

@@ -23,13 +23,14 @@ class EmployeeInformationModel(models.Model):
     Employee information model, emp salary, personal email, dept, ect
     """
     user = models.OneToOneField(userModel.User, on_delete=models.CASCADE, related_name='employee_user_info')
-    # official_email = models.EmailField(unique=True, blank=True)
+    personal_email = models.EmailField(blank=True, null=True)
     emp_department = models.ForeignKey(userModel.UserDepartmentModel, on_delete=models.CASCADE, blank=True,
                                        related_name='employee_department')
     designation = models.ForeignKey(userModel.UserDesignationModel, on_delete=models.CASCADE, blank=True,
                                     related_name='employee_designation')
     shift = models.CharField(max_length=200, choices=employee_shift)
     joining_date = models.DateField(blank=True)
+
     employee_is_permanent = models.BooleanField(default=False)
 
     def __str__(self):
