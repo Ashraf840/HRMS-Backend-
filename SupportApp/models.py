@@ -62,7 +62,7 @@ class SupportMessageModel(models.Model):
     @receiver(post_save, sender=TicketingForSupportModel)
     def create_support_message(sender, instance, created, **kwargs):
         if created:
-            SupportMessageModel.objects.create(ticket=instance, user=instance.user, message=instance.query,
+            SupportMessageModel.objects.create(ticket=instance, user=instance.user, userImage=instance.user.profile_pic.url, message=instance.query,
                                                userName=instance.user)
 
     def __str__(self):
