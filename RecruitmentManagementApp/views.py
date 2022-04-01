@@ -12,6 +12,7 @@ from UserApp import utils
 from UserApp.models import User
 from UserApp.permissions import IsHrUser, EditPermission, IsAuthor, IsEmployee, IsCandidateUser, Authenticated, \
     EmployeeAdminAuthenticated, IsHrOrReadOnly, IsHrOrAllowReadOnly
+from AdminOperationApp import models as admin_op_model
 from . import models
 from . import serializer
 
@@ -1036,14 +1037,44 @@ class CandidateJoiningFeedbackView(generics.ListCreateAPIView):
         serializer.save(applicationId=models.UserJobAppliedModel.objects.get(id=application_id))
 
     def get(self, request, *args, **kwargs):
-        data = self.get_serializer(self.get_queryset(), many=True)
-        responseData = data.data
-        if not responseData:
-            return Response({'detail': 'no content'}, status=status.HTTP_404_NOT_FOUND)
-        return Response(responseData)
+        interview_feedback = admin_op_model.MarkingDuringInterviewModel.objects.filter(
+            appliedJob=self.kwargs['application_id'])
+        allow_doc_permission = False
+        for feedback in interview_feedback:
+            if feedback.docsPermission:
+                allow_doc_permission = True
+                break
+
+        if allow_doc_permission:
+            data = self.get_serializer(self.get_queryset(), many=True)
+            responseData = data.data
+            if not responseData:
+                return Response({'allow': True})
+            return Response(responseData)
+        else:
+            return Response({'detail': 'You are now allowed to provide any feedback.'}, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request, *args, **kwargs):
         application_info = models.UserJobAppliedModel.objects.get(id=self.kwargs['application_id'])
+        if application_info.jobProgressStatus.status == 'F2F Interview':
+            check_feedback = models.CandidateJoiningFeedbackModel.objects.filter(applicationId=application_info)
+            if check_feedback.count() < 1:
+                ser = self.get_serializer(data=request.data)
+                ser.is_valid(raise_exception=True)
+                self.perform_create(ser)
+                check_value = models.CandidateJoiningFeedbackModel.objects.get(id=ser.data['id'])
+                if check_value.is_agree:
+                    check_value.allowed = True
+                    check_value.save()
+                else:
+                    check_value.allowed = False
+                    check_value.save()
+                responseData = ser.data
+                return Response(responseData, status=status.HTTP_201_CREATED)
+            return Response(
+                {'detail': 'Already provide feedback, for further inquiries please contact on support.'},
+                status=status.HTTP_400_BAD_REQUEST)
+
         if application_info.jobProgressStatus.status == 'On Boarding':
             check_feedback = models.CandidateJoiningFeedbackModel.objects.filter(applicationId=application_info)
             if application_info.userId == self.request.user:

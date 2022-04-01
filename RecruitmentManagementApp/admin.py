@@ -7,7 +7,7 @@ class StatusModel(admin.ModelAdmin):
     # fields = ('status', 'statusOrder',)  # Add other fields here
     list_display = ('id', 'status', 'statusOrder',)
 
-    list_editable = ('status',)
+    # list_editable = ('status',)
 
     class Meta:
         order = ['status']

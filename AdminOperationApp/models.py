@@ -90,6 +90,7 @@ class MarkingDuringInterviewModel(models.Model):
     technicalKnowledge = models.CharField(max_length=10, choices=markingValue, blank=True, null=True)
     expSalary = models.CharField(max_length=255, blank=True, null=True)
     expectedJoiningData = models.DateField(blank=True)
+    docsPermission = models.BooleanField(null=True, blank=True)
     comment = models.TextField(blank=True)
 
     # def summary(self):
