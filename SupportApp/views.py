@@ -77,7 +77,7 @@ class SupportMessageView(generics.ListCreateAPIView):
 
 
 class CloseTicketView(generics.RetrieveUpdateAPIView):
-    permission_classes = [Authenticated, IsEmployee]
+    permission_classes = [Authenticated]
     serializer_class = serializer.SupportTicketCloseSerializer
     lookup_field = 'id'
 
