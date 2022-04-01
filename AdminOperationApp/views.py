@@ -449,6 +449,21 @@ class MarkingDuringInterviewView(generics.ListCreateAPIView):
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
+            # Email integrations
+            # HR policy and other documents agree
+            doc_permission = serializer.data['docsPermission']
+            if doc_permission:
+                email_body = 'Please chek your portal, if you are agree the plese send us ur feedback ASAP' \
+                             'Thanks & Regards,\n' \
+                             'HR Department\n' \
+                             'TechForing Limited.\n' \
+                             'www.techforing.com' \
+                             f'Office Address: House: 149 (4th floor), Lane: 1, Baridhara DOHS, Dhaka.\n'
+
+                data = {'email_body': email_body, 'to_email': checkStatus.userId.email,
+                        'email_subject': 'Techforing|Document check'}
+                Util.send_email(data)
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response({'detail': 'This candidate is not selected for F2F Interview'},
