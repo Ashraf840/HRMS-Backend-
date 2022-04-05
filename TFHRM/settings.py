@@ -273,12 +273,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ORIGIN_ALLOW_ALL = False
 # CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
     'http://0.0.0.0',
     'https://44.242.38.198',
     'http://127.0.0.1',
     'http://127.0.0.1:8000',
     'http://localhost:3001',
-    'http://localhost:3000',
     'http://localhost:8000',
     # ===production===
     # 'https://careeradmin.techforing.com',
