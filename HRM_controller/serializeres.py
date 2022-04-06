@@ -156,5 +156,7 @@ class EmployeePromotionSerializer(serializers.ModelSerializer):
         model = models.EmployeePromotionModel
         fields = '__all__'
 
-
-    
+class TerminationTitleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.TerminationTitleModel
+        fields = '__all__'

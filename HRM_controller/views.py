@@ -506,4 +506,21 @@ class EmployeePromotionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = hrm_serializers.EmployeePromotionSerializer
     queryset = models.EmployeePromotionModel.objects.all()
     lookup_field = 'id'
+
+class TerminationTitleView(generics.ListCreateAPIView):
+    """
+    Termination tile
+    """
+    permission_classes = [user_permissions.IsHrOrReadOnly]
+    serializer_class = hrm_serializers.TerminationTitleSerializer
+    queryset = models.TerminationTitleModel.objects.all()
+
+class TerminationTitleUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Termination tile update and delete
+    """
+    permission_classes = [user_permissions.IsHrOrReadOnly]
+    serializer_class = hrm_serializers.TerminationTitleSerializer
+    queryset = models.TerminationTitleModel.objects.all()
+    lookup_field = 'id'
         

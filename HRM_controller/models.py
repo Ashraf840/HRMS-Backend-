@@ -191,3 +191,13 @@ class EmployeePromotionModel(models.Model):
 
     def __str__(self):
         return f'{self.employee} - {self.promotion_to} - {self.promotion_date}'
+
+'''
+Termination Section
+'''
+#make a termination model for employee
+class TerminationTitleModel(models.Model):
+    termination_form= models.CharField(max_length=255)
+
+    def __str__(self):
+        return f'{self.termination_title}'
