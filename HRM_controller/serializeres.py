@@ -4,6 +4,7 @@ from UserApp import models as user_models
 from HRM_Admin import models as hrm_models
 
 
+
 # Survey Section
 class SurveyQuestionSerializer(serializers.ModelSerializer):
     answers = serializers.SlugRelatedField(queryset=models.SurveyAnswerSheetModel.objects.all(), many=True,
@@ -148,3 +149,12 @@ class EmployeeAttendanceLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.EmployeeAttendanceLogModel
         fields = '__all__'
+
+# ============ Promotion Section ============
+class EmployeePromotionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.EmployeePromotionModel
+        fields = '__all__'
+
+
+    

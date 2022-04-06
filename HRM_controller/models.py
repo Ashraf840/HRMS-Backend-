@@ -177,3 +177,17 @@ def post_save(sender, instance, created, **kwargs):
         instance.save()
     except:
         pass
+
+'''
+Promotion Section 
+'''
+#make a model for promotion employee from prvious designation to new designations
+class EmployeePromotionModel(models.Model):
+    employee = models.ForeignKey(hrm_models.EmployeeInformationModel, on_delete=models.CASCADE,
+                                 related_name='promotion_employee')
+    promotion_form= models.CharField(max_length=255)
+    promotion_to = models.ForeignKey(user_model.UserDesignationModel, on_delete=models.CASCADE, related_name='promotion_to')
+    promotion_date = models.DateField()
+
+    def __str__(self):
+        return f'{self.employee} - {self.promotion_to} - {self.promotion_date}'

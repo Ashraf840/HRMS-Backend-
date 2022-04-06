@@ -3,6 +3,7 @@ from django.db.models import Q
 from django.shortcuts import render
 from rest_framework import generics, mixins, response, serializers, status
 from HRM_controller import serializeres as hrm_serializers, models
+from HRM_Admin import models as hrm_models
 from UserApp import permissions as user_permissions, models as user_models
 from datetime import datetime, date, timedelta
 from django.core.serializers import serialize
@@ -485,3 +486,24 @@ class EmployeeAttendanceLogView(generics.ListCreateAPIView):
                                                                                        out_date=out_date,
                                                                                        out_time=out_time)
         return response.Response(log_data.get('log'))
+
+class EmployeePromotionView(generics.ListCreateAPIView):
+    """
+    Employee promotion
+    """
+    permission_classes = [user_permissions.IsHrOrReadOnly]
+    serializer_class = hrm_serializers.EmployeePromotionSerializer
+    queryset = models.EmployeePromotionModel.objects.all()
+    
+    # def get(self, request, *args, **kwargs):
+
+#employee promotion update and delete view
+class EmployeePromotionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Employee promotion update and delete
+    """
+    permission_classes = [user_permissions.IsHrOrReadOnly]
+    serializer_class = hrm_serializers.EmployeePromotionSerializer
+    queryset = models.EmployeePromotionModel.objects.all()
+    lookup_field = 'id'
+        

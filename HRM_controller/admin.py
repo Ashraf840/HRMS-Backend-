@@ -20,4 +20,4 @@ admin.site.register(models.AttendanceShiftTimeModel)
 admin.site.register(models.AttendanceEmployeeRelModel)
 admin.site.register(models.AttendanceEmployeeShiftRelModel)
 admin.site.register(models.EmployeeAttendanceLogModel)
-
+admin.site.register(models.EmployeePromotionModel)
