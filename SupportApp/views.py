@@ -116,13 +116,29 @@ class CloseTicketView(generics.RetrieveUpdateAPIView):
         return models.TicketingForSupportModel.objects.filter(id=self.kwargs['id'])
     
     def perform_update(self, serializer):
-        serializer.save()
         ticket=models.TicketingForSupportModel.objects.get(id=self.kwargs['id'])
-        user_email=ticket.user.email
+        ticket_condition=ticket.is_active
+        serializer.save()
         try:
-            email_body = f'Your ticket has been closed'
-            data = {'email_body': email_body, 'to_email': user_email,
-                    'email_subject': 'Ticket Closed.'}
+            if self.request.user.is_employee:
+                if ticket_condition==True:
+                    email_body = f'Your ticket has been closed by Admin'
+                    email_subject = 'Ticket closed.'
+                else:
+                    email_body=f'Your ticket has been reopened Admin'
+                    email_subject = 'Ticket reopened.'
+                to_email=ticket.user.email
+            else:
+                if self.request.user == ticket.user:
+                    if ticket_condition==True:
+                        email_body = f'Your ticket has been closed by {ticket.user}'
+                        email_subject = 'Ticket closed.'
+                    else:
+                        email_body=f'Your ticket has been reopened {ticket.user}'
+                        email_subject = 'Ticket reopened.'
+                    to_email='faruk.techforing@gmail.com'
+            data = {'email_body': email_body, 'to_email': to_email,
+                    'email_subject': email_subject}
             Util.send_email(data)
             return Response({'detail': 'Email Sent.'})
         except:
