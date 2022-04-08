@@ -7,7 +7,7 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import plivo
-
+from AdminOperationApp.utils import Util
 
 # Create your views here.
 class TicketReasonView(generics.ListAPIView):
@@ -30,6 +30,25 @@ class SupportTicketView(generics.ListCreateAPIView):
             queryset = models.TicketingForSupportModel.objects.filter(user=self.request.user)
 
         return queryset.order_by('-updateTime')
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        #get ticketreason from serializer
+        ticket_reason=request.data.get('ticketReason')
+        ticket_quary=request.data.get('query')
+        try:
+            email_body = f'{request.user} has opend a new ticket\n' \
+                         f'TicketReason is: {ticket_reason}\n' \
+                         f'TicketQuary is: {ticket_quary}'\
+                         
+
+            data = {'email_body': email_body, 'to_email': 'faruk.techforing@gmail.com',
+                    'email_subject': 'New ticket.'}
+            Util.send_email(data)
+            return Response({'detail': 'Email Sent.'})
+        except:
+            return Response({'detail': 'Email Sending failed.'})
 
 
 class SupportMessageView(generics.ListCreateAPIView):
@@ -56,6 +75,18 @@ class SupportMessageView(generics.ListCreateAPIView):
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
+            if self.request.user==ticket.user:
+                to_email='faruk.techforing@gmail.com'
+            else:
+                to_email= ticket.user.email
+            email_body=request.data.get('message')
+            try:
+                # email_body = f'Your ticket has been closed'
+                data = {'email_body': email_body, 'to_email': to_email,
+                        'email_subject': 'New message.'}
+                Util.send_email(data)
+            except:
+                pass
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response({'detail': 'You are not employee or author'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -83,3 +114,16 @@ class CloseTicketView(generics.RetrieveUpdateAPIView):
 
     def get_queryset(self):
         return models.TicketingForSupportModel.objects.filter(id=self.kwargs['id'])
+    
+    def perform_update(self, serializer):
+        serializer.save()
+        ticket=models.TicketingForSupportModel.objects.get(id=self.kwargs['id'])
+        user_email=ticket.user.email
+        try:
+            email_body = f'Your ticket has been closed'
+            data = {'email_body': email_body, 'to_email': user_email,
+                    'email_subject': 'Ticket Closed.'}
+            Util.send_email(data)
+            return Response({'detail': 'Email Sent.'})
+        except:
+            return Response({'detail': 'Email Sending failed.'})
