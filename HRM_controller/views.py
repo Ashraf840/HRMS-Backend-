@@ -8,7 +8,6 @@ from UserApp import permissions as user_permissions, models as user_models
 from datetime import datetime, date, timedelta
 from django.core.serializers import serialize
 import json
-from HRM_Admin import models as hrm_models
 import ast
 from bs4 import BeautifulSoup
 import requests
@@ -495,7 +494,13 @@ class EmployeePromotionView(generics.ListCreateAPIView):
     serializer_class = hrm_serializers.EmployeePromotionSerializer
     queryset = models.EmployeePromotionModel.objects.all()
     
-    # def get(self, request, *args, **kwargs):
+    #change the promote_to using the data from the serializer
+    def perform_create(self, serializer):
+        promote_to = serializer.validated_data.get('promotion_to')
+        employee = serializer.validated_data.get('employee')
+        employee.designation = promote_to
+        employee.save()
+        serializer.save()
 
 #employee promotion update and delete view
 class EmployeePromotionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
@@ -506,7 +511,6 @@ class EmployeePromotionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = hrm_serializers.EmployeePromotionSerializer
     queryset = models.EmployeePromotionModel.objects.all()
     lookup_field = 'id'
-
 class TerminationTitleView(generics.ListCreateAPIView):
     """
     Termination tile
@@ -523,4 +527,22 @@ class TerminationTitleUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = hrm_serializers.TerminationTitleSerializer
     queryset = models.TerminationTitleModel.objects.all()
     lookup_field = 'id'
-        
+
+
+class EmployeeTerminationView(generics.ListCreateAPIView):
+    """
+    Employee termination
+    """
+    permission_classes = [user_permissions.IsHrOrReadOnly]
+    serializer_class = hrm_serializers.EmployeeTerminationSerializer
+    queryset = models.EmployeeTerminationModel.objects.all()
+
+#employee termination update and delete view
+class EmployeeTerminationUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Employee termination update and delete
+    """
+    permission_classes = [user_permissions.IsHrOrReadOnly]
+    serializer_class = hrm_serializers.EmployeeTerminationSerializer
+    queryset = models.EmployeeTerminationModel.objects.all()
+    lookup_field = 'id'

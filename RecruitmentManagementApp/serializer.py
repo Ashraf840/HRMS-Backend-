@@ -285,7 +285,8 @@ class ReferenceInformationSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'user': {'read_only': True},
             'applied_job': {'read_only': True},
-            'refVerified': {'read_only': True}
+            'refVerified': {'read_only': True},
+            'is_rejected': {'read_only': True},
         }
 
 

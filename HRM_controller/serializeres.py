@@ -160,3 +160,10 @@ class TerminationTitleSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.TerminationTitleModel
         fields = '__all__'
+
+#Employee termination serializer
+class EmployeeTerminationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.EmployeeTerminationModel
+        fields = '__all__'
+        

@@ -28,4 +28,7 @@ urlpatterns = [
     #Temination Titel
     path('termination_title/', views.TerminationTitleView.as_view(), name='termination_title'),
     path('termination_title/<id>/', views.TerminationTitleUpdateDeleteView.as_view(), name='termination_title'),
+    #Employee Termination
+    path('employee_termination/', views.EmployeeTerminationView.as_view(), name='employee_termination'),
+    path('employee_termination/<id>/', views.EmployeeTerminationUpdateDeleteView.as_view(), name='employee_termination'),
 ]
