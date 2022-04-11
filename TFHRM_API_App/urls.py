@@ -19,7 +19,7 @@ from RecruitmentManagementApp.views import AllUserDetailView, AppliedForJobView,
     DocumentSubmissionUpdateDeleteView, ReferenceInformationView, ReferenceInformationUpdateDeleteView, \
     FilterQuestionView, FilterQuestionUpdateDeleteView, FilterQuestionListView, CandidateFilterQuestionListView, \
     SignedAppointmentLetterSubmissionView, CandidateJoiningFeedbackView, ReferenceQuestionsView, \
-    ReferenceInformationResponseListView, PracticalTestUpdateDeleteView
+    ReferenceInformationResponseListView, PracticalTestUpdateDeleteView,ReferenceInformationUpdateView
 from SupportApp import views as supportView
 # importing Views from UserApp views
 from UserApp.views import RegisterView, UserDetailView, CareerObjectiveView, \
@@ -124,6 +124,8 @@ urlpatterns = [
     path('references_submit/<application_id>/', ReferenceInformationView.as_view(), name='references_information_add'),
     path('references/<applied_job>/', ReferenceInformationUpdateDeleteView.as_view(),
          name='references_information_update_delete'),
+    path('references_update/<id>/', ReferenceInformationUpdateView.as_view(),
+         name='references_information_update'),
     path('withdraw_application/<id>/', WithdrawApplicationView.as_view(), name='withdraw_application'),
 
     #     Admin section URL

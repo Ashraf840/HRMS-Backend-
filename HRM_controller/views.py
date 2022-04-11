@@ -3,11 +3,11 @@ from django.db.models import Q
 from django.shortcuts import render
 from rest_framework import generics, mixins, response, serializers, status
 from HRM_controller import serializeres as hrm_serializers, models
+from HRM_Admin import models as hrm_models
 from UserApp import permissions as user_permissions, models as user_models
 from datetime import datetime, date, timedelta
 from django.core.serializers import serialize
 import json
-from HRM_Admin import models as hrm_models
 import ast
 from bs4 import BeautifulSoup
 import requests
@@ -485,3 +485,64 @@ class EmployeeAttendanceLogView(generics.ListCreateAPIView):
                                                                                        out_date=out_date,
                                                                                        out_time=out_time)
         return response.Response(log_data.get('log'))
+
+class EmployeePromotionView(generics.ListCreateAPIView):
+    """
+    Employee promotion
+    """
+    permission_classes = [user_permissions.IsHrOrReadOnly]
+    serializer_class = hrm_serializers.EmployeePromotionSerializer
+    queryset = models.EmployeePromotionModel.objects.all()
+    
+    #change the promote_to using the data from the serializer
+    def perform_create(self, serializer):
+        promote_to = serializer.validated_data.get('promotion_to')
+        employee = serializer.validated_data.get('employee')
+        employee.designation = promote_to
+        employee.save()
+        serializer.save()
+
+#employee promotion update and delete view
+class EmployeePromotionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Employee promotion update and delete
+    """
+    permission_classes = [user_permissions.IsHrOrReadOnly]
+    serializer_class = hrm_serializers.EmployeePromotionSerializer
+    queryset = models.EmployeePromotionModel.objects.all()
+    lookup_field = 'id'
+class TerminationTitleView(generics.ListCreateAPIView):
+    """
+    Termination tile
+    """
+    permission_classes = [user_permissions.IsHrOrReadOnly]
+    serializer_class = hrm_serializers.TerminationTitleSerializer
+    queryset = models.TerminationTitleModel.objects.all()
+
+class TerminationTitleUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Termination tile update and delete
+    """
+    permission_classes = [user_permissions.IsHrOrReadOnly]
+    serializer_class = hrm_serializers.TerminationTitleSerializer
+    queryset = models.TerminationTitleModel.objects.all()
+    lookup_field = 'id'
+
+
+class EmployeeTerminationView(generics.ListCreateAPIView):
+    """
+    Employee termination
+    """
+    permission_classes = [user_permissions.IsHrOrReadOnly]
+    serializer_class = hrm_serializers.EmployeeTerminationSerializer
+    queryset = models.EmployeeTerminationModel.objects.all()
+
+#employee termination update and delete view
+class EmployeeTerminationUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Employee termination update and delete
+    """
+    permission_classes = [user_permissions.IsHrOrReadOnly]
+    serializer_class = hrm_serializers.EmployeeTerminationSerializer
+    queryset = models.EmployeeTerminationModel.objects.all()
+    lookup_field = 'id'

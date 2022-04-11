@@ -1,5 +1,6 @@
 import base64
 import datetime
+import re
 from _testcapi import raise_exception
 from django.db.models import Q
 from django.http import Http404
@@ -928,13 +929,33 @@ class ReferenceInformationUpdateDeleteView(generics.ListAPIView):
     permission_classes = [Authenticated, IsAuthor]
     serializer_class = serializer.ReferenceInformationSerializer
 
-    # lookup_field = 'applied_job'
+    lookup_field = 'applied_job'
 
     def get_queryset(self):
         applied_job = self.kwargs['applied_job']
         return models.ReferenceInformationModel.objects.filter(applied_job=applied_job, user_id=self.request.user.id)
 
+class ReferenceInformationUpdateView(generics.RetrieveUpdateAPIView):
+    permission_classes = [Authenticated, IsAuthor]
+    serializer_class = serializer.ReferenceInformationSerializer
+    # queryset = models.ReferenceInformationModel.objects.all()
+    lookup_field = 'id'
+    
+    def get_queryset(self):
+        id = self.kwargs['id']
+        return models.ReferenceInformationModel.objects.filter(id=id, user_id=self.request.user.id)
 
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.is_rejected=False
+        serializer = self.get_serializer(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
+    def perform_update(self, serializer):
+        serializer.save(user=self.request.user)
+                        # id=models.ReferenceInformationModel.objects.get(id=self.kwargs['id']))
 # Signed appointment letter submission
 class SignedAppointmentLetterSubmissionView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [Authenticated]

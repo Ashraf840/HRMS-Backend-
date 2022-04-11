@@ -257,7 +257,7 @@ class ReferenceInformationModel(models.Model):
     is_sent = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
     ref_response = models.BooleanField(default=False)
-
+    is_rejected = models.BooleanField(default=False)
     def save(self, *args, **kwargs):
         if not self.id:
             self.slug_field = slugify(base64.b64encode(str(self.name + self.email).encode('utf-8')))

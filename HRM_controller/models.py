@@ -166,6 +166,7 @@ class EmployeeAttendanceLogModel(models.Model):
         return f'{self.id} {self.employee.registration_id} in {self.in_time}  out {self.out_time}'
 
 
+
 @receiver(post_save, sender=EmployeeAttendanceLogModel)
 def post_save(sender, instance, created, **kwargs):
     try:
@@ -176,3 +177,40 @@ def post_save(sender, instance, created, **kwargs):
         instance.save()
     except:
         pass
+
+'''
+Promotion Section 
+'''
+#make a model for promotion employee from prvious designation to new designations
+class EmployeePromotionModel(models.Model):
+    employee = models.OneToOneField(hrm_models.EmployeeInformationModel, on_delete=models.CASCADE,
+                                 related_name='promotion_employee')
+    promotion_form= models.CharField(max_length=255)
+    promotion_to = models.ForeignKey(user_model.UserDesignationModel, on_delete=models.CASCADE, related_name='promotion_to')
+    promotion_date = models.DateField()
+
+    def __str__(self):
+        return f'{self.employee} - {self.promotion_to} - {self.promotion_date}'
+
+'''
+Termination Section
+'''
+
+class TerminationTitleModel(models.Model):
+    termination_title= models.CharField(max_length=255)
+
+    def __str__(self):
+        return f'{self.termination_title}'
+    
+#make a termination model for employee
+class EmployeeTerminationModel(models.Model):
+    employee = models.ForeignKey(hrm_models.EmployeeInformationModel, on_delete=models.CASCADE,
+                                 related_name='termination_employee')
+    termination_title = models.ForeignKey(TerminationTitleModel, on_delete=models.CASCADE)
+    termination_date = models.DateField()
+    termination_reason = models.TextField()
+    notice_date= models.DateField()
+    exit_interview=models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.employee} - {self.termination_title} - {self.termination_date}'
