@@ -183,7 +183,7 @@ Dev server DB
 #         'ENGINE': 'django.db.backends.mysql',
 #         'NAME': 'hrm_techforing',
 #         'USER': 'root',
-#         'PASSWORD': 'ghFGH56$%&',
+#         'PASSWORD': 'smEPH23@z#&',
 #         'OPTIONS': {
 #             'sql_mode': 'traditional',
 #         }
@@ -196,7 +196,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'dev_hrm_tf',
         'USER': 'root',
-        'PASSWORD': 'ghFGH56$%&',
+        'PASSWORD': 'smEPH23@z#&',
         'OPTIONS': {
             'sql_mode': 'traditional',
         }
