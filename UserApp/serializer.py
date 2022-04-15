@@ -199,7 +199,7 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.User
-        fields = ('full_name', 'birthDate', 'nationality', 'phone_number', 'gender', 'location', 'nid', 'profile_pic')
+        fields = ('full_name', 'birthDate', 'nationality', 'phone_number', 'gender', 'location', 'nid', 'profile_pic','signature_pic')
         extra_kwargs = {
             'email': {'required': True},
             'full_name': {'required': True},
@@ -217,6 +217,7 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
         instance.location = validated_data.get('location', instance.location)
         instance.nid = validated_data.get('nid', instance.nid)
         instance.profile_pic = validated_data.get('profile_pic', instance.profile_pic)
+        instance.signature_pic = validated_data.get('signature_pic', instance.signature_pic)
         instance.save()
         return instance
 
