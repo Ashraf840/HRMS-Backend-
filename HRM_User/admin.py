@@ -6,3 +6,4 @@ admin.site.register(models.EmployeeTrainingResponseResultModel)
 
 # Attendance leave request
 admin.site.register(models.LeaveRequestModel)
+admin.site.register(models.ResignationModel)

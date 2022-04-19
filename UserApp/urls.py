@@ -22,5 +22,4 @@ urlpatterns = [
     # # path('update_ac/<id>/', views..as_view()),
 
 
-
 ]

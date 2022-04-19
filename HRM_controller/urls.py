@@ -31,4 +31,7 @@ urlpatterns = [
     #Employee Termination
     path('employee_termination/', views.EmployeeTerminationView.as_view(), name='employee_termination'),
     path('employee_termination/<id>/', views.EmployeeTerminationUpdateDeleteView.as_view(), name='employee_termination'),
+    #Employee Resignation
+    path('employee_resignation/', views.EmployeeResignationView.as_view(), name='employee_resignation'),
+    path('employee_resignation/<id>/', views.EmployeeResignationUpdateDeleteView.as_view(), name='employee_resignation'),
 ]

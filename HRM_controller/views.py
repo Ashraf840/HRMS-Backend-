@@ -4,6 +4,7 @@ from django.shortcuts import render
 from rest_framework import generics, mixins, response, serializers, status
 from HRM_controller import serializeres as hrm_serializers, models
 from HRM_Admin import models as hrm_models
+from HRM_User import models as hrm_user_models
 from UserApp import permissions as user_permissions, models as user_models
 from datetime import datetime, date, timedelta
 from django.core.serializers import serialize
@@ -546,3 +547,29 @@ class EmployeeTerminationUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView)
     serializer_class = hrm_serializers.EmployeeTerminationSerializer
     queryset = models.EmployeeTerminationModel.objects.all()
     lookup_field = 'id'
+    
+#employee resignation list view
+class EmployeeResignationView(generics.ListAPIView):
+    """
+    Employee resignation
+    """
+    permission_classes = [user_permissions.IsHrOrReadOnly]
+    serializer_class = hrm_serializers.EmployeeResignationSerializer
+    queryset = hrm_user_models.ResignationModel.objects.all()
+
+class EmployeeResignationUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Employee resignation update and delete
+    """
+    permission_classes = [user_permissions.IsHrOrReadOnly]
+    serializer_class = hrm_serializers.EmployeeResignationSerializer
+    queryset = hrm_user_models.ResignationModel.objects.all()
+    lookup_field = 'id'
+    
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.resignatioAcceptDate=datetime.date(datetime.now())
+        serializer = self.get_serializer(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return response.Response(serializer.data)

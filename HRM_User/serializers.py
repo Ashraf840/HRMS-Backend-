@@ -30,3 +30,15 @@ class EmployeeLeaveRequestSerializer(serializers.ModelSerializer):
             'approved_by': {'read_only': True},
             'employee': {'read_only': True},
         }
+
+#  ================= Employee Resignation Section =================
+class EmployeeResignationRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = hrm_user_model.ResignationModel
+        fields = '__all__'
+        extra_kwargs = {
+            'employee': {'read_only': True},
+            'resignationstaus': {'read_only': True},
+            'resignatioAcceptDate': {'read_only': True},
+            'exitInterview': {'read_only': True},
+        }

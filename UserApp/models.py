@@ -1,3 +1,4 @@
+from pyexpat import model
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.db.models.signals import post_save
@@ -10,9 +11,7 @@ from django_rest_passwordreset.signals import reset_password_token_created
 from django.shortcuts import HttpResponseRedirect
 from django.core.mail import send_mail
 from UserApp.utils import Util
-
-
-# from HRM_Admin import models as hrm_admin_model
+# from HRM_Admin import models as hr_models
 
 
 # Create your models here.
@@ -363,3 +362,7 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
             'email_subject': 'Password Reset for Techforing'}
 
     Util.send_email(data)
+'''
+Resignation model
+'''
+

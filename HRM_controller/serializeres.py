@@ -2,6 +2,7 @@ from rest_framework import serializers
 from HRM_controller import models
 from UserApp import models as user_models
 from HRM_Admin import models as hrm_models
+from HRM_User import models as user_models_hrm
 
 
 
@@ -166,4 +167,16 @@ class EmployeeTerminationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.EmployeeTerminationModel
         fields = '__all__'
-        
+# ============ Resignation Section ============
+class EmployeeResignationSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model= user_models_hrm.ResignationModel
+        fields= '__all__'
+        extra_kwargs = {
+            'employee': {'read_only': True},
+            'resignationDate': {'read_only': True},
+            'noticeDate': {'read_only': True},
+            'resignatioAcceptDate': {'read_only': True},
+            'reason': {'read_only': True},
+        }
