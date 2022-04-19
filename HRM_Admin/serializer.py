@@ -2,6 +2,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from RecruitmentManagementApp import serializer as recruitment_serializer, models as recruitment_model
 from HRM_Admin import models as hrm_admin
+from HRM_User import models as user_models_hrm
 from UserApp import models as user_model, serializer as user_serializer
 import re
 
@@ -359,3 +360,17 @@ class DesignationsSerializer(serializers.ModelSerializer):
         # extra_kwargs = {
         #     'department': {'write_only': True}
         # }
+        
+# ============ Resignation Section ============
+class EmployeeResignationSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model= user_models_hrm.ResignationModel
+        fields= '__all__'
+        extra_kwargs = {
+            'employee': {'read_only': True},
+            'resignationDate': {'read_only': True},
+            'noticeDate': {'read_only': True},
+            'resignatioAcceptDate': {'read_only': True},
+            'reason': {'read_only': True},
+        }

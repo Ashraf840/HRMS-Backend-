@@ -3,12 +3,14 @@ from django.db.models import Q
 from rest_framework.response import Response
 from rest_framework import generics, status
 from HRM_Admin import models as hrm_admin_model, serializer as hrm_admin_serializer
+from HRM_User import models as hrm_user_models
 from RecruitmentManagementApp import models as recruitment_model
 from UserApp import models as user_model, permissions as custom_permission, utils
 from AdminOperationApp import models as admin_operation_model
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
+from datetime import datetime
 
 # email formatting library file
 from django.template.loader import render_to_string
@@ -382,3 +384,37 @@ class DesignationUpdateView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = hrm_admin_serializer.DesignationsSerializer
     queryset = user_model.UserDesignationModel.objects.all()
     lookup_field = 'id'
+
+#employee resignation list view
+class EmployeeResignationView(generics.ListAPIView):
+    """
+    Employee resignation
+    """
+    permission_classes = [custom_permission.IsHrOrReadOnly]
+    serializer_class = hrm_admin_serializer.EmployeeResignationSerializer
+    def get_queryset(self):
+        try:
+            search = self.request.query_params.get('search')
+            queryset = hrm_user_models.ResignationModel.objects.all()
+            print(queryset.filter(Q(employee__user__full_name__icontains=search)))
+            return queryset.filter(Q(employee__user__full_name__icontains=search) |
+                                   Q(employee__emp_department__department__icontains=search))
+        except:
+            return hrm_user_models.ResignationModel.objects.all()
+
+class EmployeeResignationUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Employee resignation update and delete
+    """
+    permission_classes = [custom_permission.IsHrOrReadOnly]
+    serializer_class = hrm_admin_serializer.EmployeeResignationSerializer
+    queryset = hrm_user_models.ResignationModel.objects.all()
+    lookup_field = 'id'
+    
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.resignatioAcceptDate=datetime.date(datetime.now())
+        serializer = self.get_serializer(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)

@@ -58,16 +58,15 @@ class LeaveRequestModel(models.Model):
     def __str__(self):
         return f'{self.id} - {self.employee}, {self.leave_type}'
 
-# model for resignation
+#  ================= Employee Resignation Request Model =================
 
 class ResignationModel(models.Model):
     employee=models.OneToOneField(hrm_admin_model.EmployeeInformationModel, on_delete=models.CASCADE, related_name='resignation_employee')
     reason = models.TextField()
-    resignationDate = models.DateField()
+    resignationDate = models.DateField(auto_now_add=True)
     noticeDate = models.DateField()
     resignationstaus=models.BooleanField(default=False)
     resignatioAcceptDate=models.DateField(null=True,blank=True)
-    exitInterview=models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.employee}, {self.resignationDate}'

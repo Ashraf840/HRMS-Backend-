@@ -548,28 +548,3 @@ class EmployeeTerminationUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView)
     queryset = models.EmployeeTerminationModel.objects.all()
     lookup_field = 'id'
     
-#employee resignation list view
-class EmployeeResignationView(generics.ListAPIView):
-    """
-    Employee resignation
-    """
-    permission_classes = [user_permissions.IsHrOrReadOnly]
-    serializer_class = hrm_serializers.EmployeeResignationSerializer
-    queryset = hrm_user_models.ResignationModel.objects.all()
-
-class EmployeeResignationUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
-    """
-    Employee resignation update and delete
-    """
-    permission_classes = [user_permissions.IsHrOrReadOnly]
-    serializer_class = hrm_serializers.EmployeeResignationSerializer
-    queryset = hrm_user_models.ResignationModel.objects.all()
-    lookup_field = 'id'
-    
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        instance.resignatioAcceptDate=datetime.date(datetime.now())
-        serializer = self.get_serializer(instance, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        return response.Response(serializer.data)
