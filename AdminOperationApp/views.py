@@ -433,6 +433,25 @@ class AdminInterviewerListView(generics.ListAPIView):
         except:
             return queryset
 
+#update admin interviewer list
+class PolicySentUpdate(generics.RetrieveUpdateAPIView):
+    permission_classes = [customPermission.EmployeeAdminAuthenticated]
+    serializer_class = serializer.PolicySerializer
+    lookup_field= 'id' #applicant id
+  
+    def get_queryset(self):
+        applicationId=self.kwargs['id']
+        queryset = models.PolicySentModel.objects.filter(applicationId=applicationId)
+        return queryset
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.is_sent=True
+        serializer = self.get_serializer(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
+    
+    
 
 class MarkingDuringInterviewView(generics.ListCreateAPIView):
     permission_classes = [customPermission.Authenticated]

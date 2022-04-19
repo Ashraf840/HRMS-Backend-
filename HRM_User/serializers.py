@@ -40,5 +40,4 @@ class EmployeeResignationRequestSerializer(serializers.ModelSerializer):
             'employee': {'read_only': True},
             'resignationstaus': {'read_only': True},
             'resignatioAcceptDate': {'read_only': True},
-            'exitInterview': {'read_only': True},
         }

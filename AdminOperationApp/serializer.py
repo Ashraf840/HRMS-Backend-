@@ -309,6 +309,10 @@ class InterviewTimeScheduleSerializer(serializers.ModelSerializer):
             'scheduleBy': {'read_only': True}
         }
 
+class PolicySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.PolicySentModel
+        fields = '__all__'
 
 class AdminInterviewerListSerializer(serializers.ModelSerializer):
     """
@@ -322,6 +326,7 @@ class AdminInterviewerListSerializer(serializers.ModelSerializer):
     userId = UserSerializer()
     jobProgressStatus = JobStatusSerializer()
     jobPostId = JobSerializer()
+    policysent=PolicySerializer()
 
     class Meta:
         model = UserJobAppliedModel

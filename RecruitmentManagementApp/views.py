@@ -1119,9 +1119,9 @@ class CandidateJoiningFeedbackView(generics.ListCreateAPIView):
                             status=status.HTTP_401_UNAUTHORIZED)
         else:
             return Response({'detail': 'You dont have permission to access this page'},
-                            status=status.HTTP_400_BAD_REQUEST)
+                            status=status.HTTP_400_BAD_REQUEST)        
 
-
+    
 # Reference checking referee response functionality
 class ReferenceQuestionsView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
     """
@@ -1204,3 +1204,5 @@ class ReferenceInformationResponseListView(generics.ListAPIView):
             return Response(response)
         except:
             return Response({'detail': 'No response found.'}, status=status.HTTP_404_NOT_FOUND)
+        
+        
