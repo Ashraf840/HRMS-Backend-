@@ -74,3 +74,21 @@ class EmployeeLeaveRequestView(generics.ListCreateAPIView, generics.RetrieveUpda
             leaveReq.save()
         return response.Response(serializer.data)
 
+'''
+Resignation Request
+'''
+class EmployeeResignationRequestView(generics.ListCreateAPIView):
+    permission_classes = [custom_permission.EmployeeAuthenticated]
+    serializer_class = serializers.EmployeeResignationRequestSerializer
+    lookup_field = 'id'
+
+    def get_queryset(self):
+        if self.request.user.is_hr or self.request.user.is_superuser:
+            queryset = models.ResignationModel.objects.all()
+        else:
+            queryset = models.ResignationModel.objects.filter(employee__user=self.request.user)
+        return queryset
+    
+    def perform_create(self, serializer):
+        employee = hrm_admin_model.EmployeeInformationModel.objects.get(user=self.request.user)
+        serializer.save(employee=employee)
