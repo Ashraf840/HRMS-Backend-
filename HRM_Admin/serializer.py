@@ -367,7 +367,9 @@ class EmployeeResignationSerializer(serializers.ModelSerializer):
     image_url = serializers.SerializerMethodField()
     
     def get_image_url(self, obj):
-        return obj.employee.user.profile_pic.url if obj.employee.user.profile_pic else None
+        request = self.context.get('request')
+        profile_pic_url=obj.employee.user.profile_pic.url if obj.employee.user.profile_pic else None
+        return request.build_absolute_uri(profile_pic_url) if profile_pic_url else None
     class Meta:
         model= user_models_hrm.ResignationModel
         fields= ['id','employee','reason','resignationDate','noticeDate','resignationstaus','resignatioAcceptDate','image_url'] #,'emp_department','designation'
