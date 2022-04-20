@@ -117,7 +117,7 @@ class AddEmployeeInfoView(generics.CreateAPIView):
         token = RefreshToken.for_user(user).access_token
         current_site = get_current_site(request).domain
         relativeLink = reverse('tfhrm_api:employee-email-verify')
-        absurl = 'http://' + current_site + "?token=" + str(token)
+        absurl = 'http://' + current_site + relativeLink + "?token=" + str(token)
 
         email_body = f'Hi {user.full_name},\n' \
                      f'Congratulation You are officially appointed.To login please verify your account' \
