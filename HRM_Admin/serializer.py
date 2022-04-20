@@ -363,14 +363,13 @@ class DesignationsSerializer(serializers.ModelSerializer):
         
 # ============ Resignation Section ============
 class EmployeeResignationSerializer(serializers.ModelSerializer):
-    
+    employee=EmployeeInformationListSerializer(read_only=True) 
     class Meta:
         model= user_models_hrm.ResignationModel
-        fields= '__all__'
+        fields= ['id','employee','reason','resignationDate','noticeDate','resignationstaus','resignatioAcceptDate'] #,'emp_department','designation'
         extra_kwargs = {
             'employee': {'read_only': True},
             'resignationDate': {'read_only': True},
-            'noticeDate': {'read_only': True},
             'resignatioAcceptDate': {'read_only': True},
             'reason': {'read_only': True},
         }

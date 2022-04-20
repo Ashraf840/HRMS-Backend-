@@ -18,7 +18,7 @@ __pycache__/
 __pycache__
 media
 **/__pycache__/
-
+**/migrations/*
 # Backup files #
 *.bak
 
