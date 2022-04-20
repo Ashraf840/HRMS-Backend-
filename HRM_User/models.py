@@ -60,8 +60,8 @@ class LeaveRequestModel(models.Model):
 
 #  ================= Employee Resignation Request Model =================
 
-resignation_chooice=(('pending','Pending'),
-                     ('accepted','Accepted'))
+resignation_chooice=[('pending','Pending'),
+                     ('accepted','Accepted')]
 class ResignationModel(models.Model):
     employee=models.OneToOneField(hrm_admin_model.EmployeeInformationModel, on_delete=models.CASCADE, related_name='resignation_employee')
     reason = models.TextField()
