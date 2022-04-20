@@ -10,7 +10,6 @@ from AdminOperationApp import models as admin_operation_model
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
-from datetime import datetime
 
 # email formatting library file
 from django.template.loader import render_to_string
@@ -413,7 +412,7 @@ class EmployeeResignationUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView)
     
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
-        instance.resignatioAcceptDate=datetime.date(datetime.now())
+        instance.resignatioAcceptDate=datetime.date.today()
         serializer = self.get_serializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
