@@ -364,9 +364,13 @@ class DesignationsSerializer(serializers.ModelSerializer):
 # ============ Resignation Section ============
 class EmployeeResignationSerializer(serializers.ModelSerializer):
     employee=EmployeeInformationListSerializer(read_only=True) 
+    image_url = serializers.SerializerMethodField()
+    
+    def get_image_url(self, obj):
+        return obj.employee.user.profile_pic.url if obj.employee.user.profile_pic else None
     class Meta:
         model= user_models_hrm.ResignationModel
-        fields= ['id','employee','reason','resignationDate','noticeDate','resignationstaus','resignatioAcceptDate'] #,'emp_department','designation'
+        fields= ['id','employee','reason','resignationDate','noticeDate','resignationstaus','resignatioAcceptDate','image_url'] #,'emp_department','designation'
         extra_kwargs = {
             'employee': {'read_only': True},
             'resignationDate': {'read_only': True},
