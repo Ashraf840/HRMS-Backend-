@@ -67,7 +67,7 @@ class ResignationModel(models.Model):
     reason = models.TextField()
     resignationDate = models.DateField(auto_now_add=True)
     noticeDate = models.DateField()
-    resignationstaus=models.CharField(max_length=50,choices=resignation_chooice, default=resignation_chooice[0][0])
+    resignationstaus=models.CharField(max_length=50,choices=resignation_chooice, default=resignation_chooice[0][0],blank=True)
     resignatioAcceptDate=models.DateField(null=True,blank=True)
 
     def __str__(self):
