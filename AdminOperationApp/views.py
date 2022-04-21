@@ -437,10 +437,10 @@ class AdminInterviewerListView(generics.ListAPIView):
 class PolicySentUpdate(generics.RetrieveUpdateAPIView):
     permission_classes = [customPermission.EmployeeAdminAuthenticated]
     serializer_class = serializer.PolicySerializer
-    lookup_field= 'id' #applicant id
+    lookup_field= 'applicationId' #applicant id
   
     def get_queryset(self):
-        applicationId=self.kwargs['id']
+        applicationId=self.kwargs['applicationId']
         queryset = models.PolicySentModel.objects.filter(applicationId=applicationId)
         return queryset
     def update(self, request, *args, **kwargs):

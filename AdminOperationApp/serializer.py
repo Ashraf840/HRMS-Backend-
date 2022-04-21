@@ -326,7 +326,7 @@ class AdminInterviewerListSerializer(serializers.ModelSerializer):
     userId = UserSerializer()
     jobProgressStatus = JobStatusSerializer()
     jobPostId = JobSerializer()
-    policysent=PolicySerializer()
+    policysent=PolicySerializer(source='policy_sent_application_id')
 
     class Meta:
         model = UserJobAppliedModel

@@ -183,7 +183,7 @@ urlpatterns = [
 
     # candidate Feedback
     path('candidate_feedback/<application_id>/', CandidateJoiningFeedbackView.as_view(), name='candidate_feedback_joining'),
-    path('send_policy/<id>/', PolicySentUpdate.as_view(), name='send_policy_to_candidate'),
+    path('send_policy/<applicationId>/', PolicySentUpdate.as_view(), name='send_policy_to_candidate'),
     # signed Appointment submission
     path('signed_appointment_letter_submission/<applicationId>/', SignedAppointmentLetterSubmissionView.as_view(),
          name='signed_appointment'),
