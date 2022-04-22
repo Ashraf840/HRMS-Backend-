@@ -45,9 +45,9 @@ ALLOWED_HOSTS = [
     # 'career.techforing.com',
     # 'hrms.techforing.com',
     # ===Dev===
-    'devcareeradmin.techforing.com',
-    'devcareer.techforing.com',
-    'devhrms.techforing.com',
+    # 'devcareeradmin.techforing.com',
+    # 'devcareer.techforing.com',
+    # 'devhrms.techforing.com',
 ]
 
 # Initialise environment variables
@@ -172,7 +172,20 @@ Local server DB
 #     }
 # }
 
-
+# ============== Local Mysql Db ==============
+DATABASES={
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'dev_hrm_tf',
+        'USER': 'root',
+        'PASSWORD': '1234',
+        'HOST': 'localhost',
+        'PORT': '3306',
+        'OPTIONS': {
+            'sql_mode': 'traditional',
+        }
+    }
+}
 """
 Dev server DB
 """
@@ -191,21 +204,21 @@ Dev server DB
 # }
 # ============== mysql Db Development==============
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'dev_hrm_tf',
-        'USER': 'root',
-        'PASSWORD': 'smEPH23@z#&',
-        'OPTIONS': {
-            'sql_mode': 'traditional',
-        }
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'dev_hrm_tf',
+#         'USER': 'root',
+#         'PASSWORD': 'smEPH23@z#&',
+#         'OPTIONS': {
+#             'sql_mode': 'traditional',
+#         }
+#     }
+# }
 
 # ============== securing proxy for hosting ==============
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT = True
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# SECURE_SSL_REDIRECT = True
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -285,9 +298,9 @@ CORS_ALLOWED_ORIGINS = [
     # 'https://career.techforing.com',
     # 'https://hrms.techforing.com',
     # ===dev===
-    'https://devcareeradmin.techforing.com',
-    'https://devcareer.techforing.com',
-    'https://devhrms.techforing.com',
+    # 'https://devcareeradmin.techforing.com',
+    # 'https://devcareer.techforing.com',
+    # 'https://devhrms.techforing.com',
 ]
 
 import os

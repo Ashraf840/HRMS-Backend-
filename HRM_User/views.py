@@ -92,3 +92,29 @@ class EmployeeResignationRequestView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         employee = hrm_admin_model.EmployeeInformationModel.objects.get(user=self.request.user)
         serializer.save(employee=employee)
+        
+class EmployeeExitQuestionsView(generics.ListCreateAPIView):
+    permission_classes = [custom_permission.EmployeeAuthenticated]
+    serializer_class = serializers.ExitInterviewQuestionSerializer
+
+    def get_queryset(self):
+        queryset = models.ExitInterviewQuestionModel.objects.all()
+        return queryset
+
+class EmployeeExitAnswersView(generics.ListCreateAPIView):
+    permission_classes = [custom_permission.EmployeeAuthenticated]
+    serializer_class = serializers.ExitInterviewAnswerSerializer
+
+    def get_queryset(self):
+        queryset = models.ExitInterviewAnswerModel.objects.filter(employee__user=self.request.user)
+        return queryset
+    
+    def perform_create(self, serializer):
+        employee = hrm_admin_model.EmployeeInformationModel.objects.get(user=self.request.user)
+        serializer.save(employee=employee)
+    
+    #get a dictonary from the url and pass it to serializer
+    
+
+    
+    

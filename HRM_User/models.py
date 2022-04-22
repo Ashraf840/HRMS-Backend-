@@ -73,5 +73,24 @@ class ResignationModel(models.Model):
     def __str__(self):
         return f'{self.employee}, {self.resignationDate}'
 
+question_choices=[
+    ('text','Text'),
+    ('bool','Bool'),
+]
+class ExitInterviewQuestionModel(models.Model):
+    question = models.TextField()
+    question_type = models.CharField(max_length=50,choices=question_choices, default='text')
+    def __str__(self):
+        return f'{self.id} - {self.question}'
+
+class ExitInterviewAnswerModel(models.Model):
+    employee = models.ForeignKey(hrm_admin_model.EmployeeInformationModel, on_delete=models.CASCADE,
+                                 related_name='exit_interview_answer_employee')
+    question = models.ForeignKey(ExitInterviewQuestionModel, on_delete=models.CASCADE, blank=False, null=True,
+                                 related_name='exit_interview_answer_question')
+    answer = models.TextField(blank=True)
+
+    def __str__(self):
+        return f'{self.id} - {self.employee}, {self.question}'
 
 

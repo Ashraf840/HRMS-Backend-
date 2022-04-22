@@ -6,4 +6,8 @@ admin.site.register(models.EmployeeTrainingResponseResultModel)
 
 # Attendance leave request
 admin.site.register(models.LeaveRequestModel)
+#Resignation request model
 admin.site.register(models.ResignationModel)
+#Exit Interview model
+admin.site.register(models.ExitInterviewQuestionModel)
+admin.site.register(models.ExitInterviewAnswerModel)
