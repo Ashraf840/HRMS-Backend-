@@ -46,7 +46,7 @@ class PracticalTestMarkInputModel(models.Model):
                                           related_name='practical_test_application')
     markAssignBy = models.ForeignKey(User, on_delete=models.CASCADE, related_name='mark_assigned_by_user',
                                      blank=True, null=True)
-    testMark = models.CharField(choices=markingValue, max_length=2, blank=True, null=True)
+    testMark = models.CharField(choices=markingValue, max_length=50, blank=True, null=True)
 
     def __str__(self):
         return f'{self.id} {self.testMark}, {self.jobApplication}'
@@ -80,14 +80,14 @@ class MarkingDuringInterviewModel(models.Model):
                                    related_name='applied_job_user_applied_model')
     interviewer = models.ForeignKey(User, on_delete=models.CASCADE,
                                     related_name='marking_during_interview_interviewer_user')
-    behavior = models.CharField(max_length=10, choices=markingValue, blank=True, null=True)
-    personality = models.CharField(max_length=10, choices=markingValue, blank=True, null=True)
-    dressSense = models.CharField(max_length=10, choices=markingValue, blank=True, null=True)
-    professionalism = models.CharField(max_length=10, choices=markingValue, blank=True, null=True)
-    engSpeaking = models.CharField(max_length=10, choices=markingValue, blank=True, null=True)
-    eagerness = models.CharField(max_length=10, choices=markingValue, blank=True, null=True)
-    flexibility = models.CharField(max_length=10, choices=markingValue, blank=True, null=True)
-    technicalKnowledge = models.CharField(max_length=10, choices=markingValue, blank=True, null=True)
+    behavior = models.CharField(max_length=50, choices=markingValue, blank=True, null=True)
+    personality = models.CharField(max_length=50, choices=markingValue, blank=True, null=True)
+    dressSense = models.CharField(max_length=50, choices=markingValue, blank=True, null=True)
+    professionalism = models.CharField(max_length=50, choices=markingValue, blank=True, null=True)
+    engSpeaking = models.CharField(max_length=50, choices=markingValue, blank=True, null=True)
+    eagerness = models.CharField(max_length=50, choices=markingValue, blank=True, null=True)
+    flexibility = models.CharField(max_length=50, choices=markingValue, blank=True, null=True)
+    technicalKnowledge = models.CharField(max_length=50, choices=markingValue, blank=True, null=True)
     expSalary = models.CharField(max_length=255, blank=True, null=True)
     expectedJoiningData = models.DateField(blank=True)
     docsPermission = models.BooleanField(null=True, blank=True)
