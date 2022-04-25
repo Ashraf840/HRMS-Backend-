@@ -7,12 +7,12 @@ from RecruitmentManagementApp.models import PracticalTestModel, UserJobAppliedMo
 
 # Create your models here.
 markingValue = (
-    ('A', 'A'),
-    ('B', 'B'),
-    ('C', 'C'),
-    ('D', 'D'),
-    ('E', 'E'),
-    ('F', 'F'),
+    ('A (Extremely Well)', 'A (Extremely Well)'),
+    ('B  (Modeartely Good)', 'B  (Modeartely Good)'),
+    ('C (Not up to the Mark)', 'C (Not up to the Mark)'),
+    # ('D', 'D'),
+    # ('E', 'E'),
+    # ('F', 'F'),
 )
 
 
