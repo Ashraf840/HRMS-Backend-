@@ -434,7 +434,7 @@ class AdminInterviewerListView(generics.ListAPIView):
             return queryset
 
 #update admin interviewer list
-class PolicySentUpdate(generics.RetrieveUpdateAPIView):
+class PolicySentUpdate(generics.ListCreateAPIView):
     permission_classes = [customPermission.EmployeeAdminAuthenticated]
     serializer_class = serializer.PolicySerializer
     lookup_field= 'applicationId' #applicant id
