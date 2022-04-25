@@ -8,7 +8,7 @@ from AdminOperationApp.views import AppliedUserDetailsView, AdminJobListView, On
     RecruitmentNewApplicantView, TestAdminAppliedCandidateOnlineResView, \
     SelectedForDocumentView, InterviewTimeUpdateView, FinalSalaryView, RejectCandidateStatusView, \
     DocumentVerifiedView, CommentsOnDocumentsView, SelectedForOnboardView, OfficialDocStoreView, OfficialDocumentsView, \
-    ReferenceVerificationView, OnlineTestUpdateDeleteView,PolicySentUpdate
+    ReferenceVerificationView, OnlineTestUpdateDeleteView,PolicySentView
 # importing Views from RecruitmentManagementApp views
 from RecruitmentManagementApp.views import AllUserDetailView, AppliedForJobView, JobDescriptionView, \
     JobDescriptionUpdateDeleteView, JobListView, FilterQuestionResponseView, \
@@ -183,7 +183,7 @@ urlpatterns = [
 
     # candidate Feedback
     path('candidate_feedback/<application_id>/', CandidateJoiningFeedbackView.as_view(), name='candidate_feedback_joining'),
-    path('send_policy/<applicationId>/', PolicySentUpdate.as_view(), name='send_policy_to_candidate'),
+    path('send_policy/<applicationId>/', PolicySentView.as_view(), name='send_policy_to_candidate'),
     # signed Appointment submission
     path('signed_appointment_letter_submission/<applicationId>/', SignedAppointmentLetterSubmissionView.as_view(),
          name='signed_appointment'),

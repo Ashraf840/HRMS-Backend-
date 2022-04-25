@@ -434,7 +434,7 @@ class AdminInterviewerListView(generics.ListAPIView):
             return queryset
 
 #update admin interviewer list
-class PolicySentUpdate(generics.ListCreateAPIView):
+class PolicySentView(generics.ListCreateAPIView):
     permission_classes = [customPermission.EmployeeAdminAuthenticated]
     serializer_class = serializer.PolicySerializer
     lookup_field= 'applicationId' #applicant id
@@ -443,13 +443,9 @@ class PolicySentUpdate(generics.ListCreateAPIView):
         applicationId=self.kwargs['applicationId']
         queryset = models.PolicySentModel.objects.filter(applicationId=applicationId)
         return queryset
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        instance.is_sent=True
-        serializer = self.get_serializer(instance, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        return Response(serializer.data)
+    def perform_create(self, serializer):
+        applied=UserJobAppliedModel.objects.get(id=self.kwargs['applicationId'])
+        serializer.save(applicationId=applied)
     
     
 
