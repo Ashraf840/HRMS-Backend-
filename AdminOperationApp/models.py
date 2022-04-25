@@ -180,10 +180,10 @@ class CommentsOnDocumentsModel(models.Model):
     def __str__(self):
         return f'{self.applicationId} {self.comments}'
 
-class PolicySentModel(models.Model):
-    applicationId = models.OneToOneField(UserJobAppliedModel, on_delete=models.CASCADE,
-                                      related_name='policy_sent_application_id')
-    is_sent=models.BooleanField(default=False)
+# class PolicySentModel(models.Model):
+#     applicationId = models.OneToOneField(UserJobAppliedModel, on_delete=models.CASCADE,
+#                                       related_name='policy_sent_application_id')
+#     is_sent=models.BooleanField(default=False)
     
-    def __str__(self):
-        return f'{self.applicationId} {self.is_sent}'
+#     def __str__(self):
+#         return f'{self.applicationId} {self.is_sent}'

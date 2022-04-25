@@ -9,7 +9,7 @@ admin.site.register(models.InterviewTimeScheduleModel)
 admin.site.register(models.GenerateAppointmentLetterModel)
 admin.site.register(models.FinalSalaryNegotiationModel)
 admin.site.register(models.CommentsOnDocumentsModel)
-admin.site.register(models.PolicySentModel)
+# admin.site.register(models.PolicySentModel)
 
 
 
