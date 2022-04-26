@@ -98,12 +98,6 @@ class EmployeeResignationRequestView(generics.ListCreateAPIView):
         else:
             self.perform_create(ser)
             return response.Response(ser.data)
-    
-    # def create(self, request, *args, **kwargs):
-    #     ser = self.get_serializer(data=request.data)
-    #     ser.is_valid(raise_exception=True)
-    #     self.perform_create(ser)
-    #     return response.Response(ser.data)
         
 
 class EmployeeExitAnswersView(generics.ListCreateAPIView):
