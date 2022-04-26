@@ -77,6 +77,7 @@ class EmployeeResignationRequestSerializer(serializers.ModelSerializer):
             # hrm_user_model.ExitInterviewAnswerModel.objects.create(resignation=employee_resignation_request.employee,**answer_data)
         if counter!=total_len:
             hrm_user_model.ResignationModel.objects.filter(id=resignation_data.id).delete()
+            serializers.ValidationError("All the questions are not answered")
         return employee_resignation_request
     # def get_answers(self, obj):
     #         print(obj)
