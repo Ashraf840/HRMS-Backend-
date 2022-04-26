@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('RecruitmentManagementApp', '0063_delete_policysentmodel'),
-        ('AdminOperationApp', '0029_markingduringinterviewmodel_docspermission'),
+        #('AdminOperationApp', '0029_markingduringinterviewmodel_docspermission'),
     ]
 
     operations = [
