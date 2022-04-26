@@ -2,8 +2,9 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from RecruitmentManagementApp import serializer as recruitment_serializer, models as recruitment_model
 from HRM_Admin import models as hrm_admin
-from HRM_User import models as user_models_hrm
+from HRM_User import models as user_models_hrm, serializers as user_serializer_hrm
 from UserApp import models as user_model, serializer as user_serializer
+
 import re
 
 
@@ -365,7 +366,7 @@ class DesignationsSerializer(serializers.ModelSerializer):
 class EmployeeResignationSerializer(serializers.ModelSerializer):
     employee=EmployeeInformationListSerializer(read_only=True) 
     image_url = serializers.SerializerMethodField()
-    
+    # answers= user_serializer_hrm.ExitInterviewAnswerSerializer(many=True,read_only=True)
     def get_image_url(self, obj):
         request = self.context.get('request')
         profile_pic_url=obj.employee.user.profile_pic.url if obj.employee.user.profile_pic else None
