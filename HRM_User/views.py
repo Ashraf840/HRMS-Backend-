@@ -111,6 +111,14 @@ class EmployeeExitAnswersView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         employee = hrm_admin_model.EmployeeInformationModel.objects.get(user=self.request.user)
         serializer.save(employee=employee)
+
+class EmployeeExitQuestionsView(generics.ListCreateAPIView):
+    permission_classes = [custom_permission.EmployeeAuthenticated]
+    serializer_class = serializers.ExitInterviewQuestionSerializer
+
+    def get_queryset(self):
+        queryset = models.ExitInterviewQuestionModel.objects.all()
+        return queryset
     
     #get a dictonary from the url and pass it to serializer
     
