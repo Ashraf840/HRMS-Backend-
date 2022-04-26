@@ -1,6 +1,7 @@
 import calendar
 import datetime
 from django.db.models import Q
+from TFHRM.settings import BASE_DIR
 from rest_framework import generics, permissions, status, pagination
 from django.contrib.sites.shortcuts import get_current_site
 from rest_framework.exceptions import ValidationError
@@ -15,7 +16,9 @@ from UserApp.models import User, UserDepartmentModel
 from . import models
 from . import serializer
 from .utils import Util
-
+import os
+from django.conf import settings
+from django.templatetags.static import static
 
 class Pagination(pagination.PageNumberPagination):
     """
@@ -434,7 +437,7 @@ class AdminInterviewerListView(generics.ListAPIView):
             return queryset
 
 #update admin interviewer list
-class PolicySentUpdate(generics.RetrieveUpdateAPIView):
+class PolicySentView(generics.ListCreateAPIView):
     permission_classes = [customPermission.EmployeeAdminAuthenticated]
     serializer_class = serializer.PolicySerializer
     lookup_field= 'applicationId' #applicant id
@@ -443,13 +446,32 @@ class PolicySentUpdate(generics.RetrieveUpdateAPIView):
         applicationId=self.kwargs['applicationId']
         queryset = models.PolicySentModel.objects.filter(applicationId=applicationId)
         return queryset
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        instance.is_sent=True
-        serializer = self.get_serializer(instance, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        return Response(serializer.data)
+    def perform_create(self, serializer):
+        applied=UserJobAppliedModel.objects.get(id=self.kwargs['applicationId'])
+        serializer.save(applicationId=applied)
+    def create(self, request, *args, **kwargs):
+        #restriction for only one policy sent and send email to applicant
+        if models.PolicySentModel.objects.filter(applicationId=self.kwargs['applicationId']).exists():
+            return Response({'message':'Policy already sent'},status=status.HTTP_400_BAD_REQUEST)
+        else:
+            #send mail to applicant
+            #get applicant data
+            applicant=UserJobAppliedModel.objects.get(id=self.kwargs['applicationId'])
+            applicant_email=applicant.userId.email
+            applicant_name=applicant.userId.full_name
+            email_body = f'Hi {applicant_name},\n' \
+                     f'Congratulation we have moved you to the next phase. We have sent you an attachment pdf of our policy please\n' \
+                     f'have a careful look at the attachment.\n' \
+                     f'Regads,\n' \
+                     f'HR,\n' \
+                     f'Techforing,\n' \
+                         
+            data = {'email_body': email_body, 'to_email': applicant_email,
+                'email_subject': 'Policy of the company for your job application', 'file_path': BASE_DIR/'static/HR_Policy.pdf'}
+            #attach file to email 
+            Util.send_email_attach(data)
+            return super(PolicySentView, self).create(request, *args, **kwargs)
+
     
     
 
@@ -470,18 +492,17 @@ class MarkingDuringInterviewView(generics.ListCreateAPIView):
             self.perform_create(serializer)
             # Email integrations
             # HR policy and other documents agree
-            doc_permission = serializer.data['docsPermission']
-            if doc_permission:
-                email_body = 'Please chek your portal, if you are agree the plese send us ur feedback ASAP' \
-                             'Thanks & Regards,\n' \
-                             'HR Department\n' \
-                             'TechForing Limited.\n' \
-                             'www.techforing.com' \
-                             f'Office Address: House: 149 (4th floor), Lane: 1, Baridhara DOHS, Dhaka.\n'
-
-                data = {'email_body': email_body, 'to_email': checkStatus.userId.email,
-                        'email_subject': 'Techforing|Document check'}
-                Util.send_email(data)
+            # doc_permission = serializer.data['docsPermission']
+            # if doc_permission:
+            email_body = 'Please chek your portal, if you are agree the plese send us ur feedback ASAP' \
+                         'Thanks & Regards,\n' \
+                         'HR Department\n' \
+                         'TechForing Limited.\n' \
+                         'www.techforing.com' \
+                         f'Office Address: House: 149 (4th floor), Lane: 1, Baridhara DOHS, Dhaka.\n'
+            data = {'email_body': email_body, 'to_email': checkStatus.userId.email,
+                    'email_subject': 'Techforing|Document check'}
+            Util.send_email(data)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:

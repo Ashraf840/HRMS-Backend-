@@ -313,6 +313,9 @@ class PolicySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.PolicySentModel
         fields = '__all__'
+        extra_kwargs = {
+            'applicationId': {'read_only': True},
+        }
 
 class AdminInterviewerListSerializer(serializers.ModelSerializer):
     """
