@@ -77,50 +77,50 @@ class EmployeeLeaveRequestView(generics.ListCreateAPIView, generics.RetrieveUpda
 '''
 Resignation Request
 '''
-class EmployeeResignationRequestView(generics.ListCreateAPIView):
-    permission_classes = [custom_permission.EmployeeAuthenticated]
-    serializer_class = serializers.EmployeeResignationRequestSerializer
+# class EmployeeResignationRequestView(generics.ListCreateAPIView):
+#     permission_classes = [custom_permission.EmployeeAuthenticated]
+#     serializer_class = serializers.EmployeeResignationRequestSerializer
 
-    def get_queryset(self):
-        queryset = models.ResignationModel.objects.filter(employee__user=self.request.user)
-        return queryset
+#     def get_queryset(self):
+#         queryset = models.ResignationModel.objects.filter(employee__user=self.request.user)
+#         return queryset
     
-    def perform_create(self, serializer):
-        employee = hrm_admin_model.EmployeeInformationModel.objects.get(user=self.request.user)
-        serializer.save(employee=employee)
+#     def perform_create(self, serializer):
+#         employee = hrm_admin_model.EmployeeInformationModel.objects.get(user=self.request.user)
+#         serializer.save(employee=employee)
     
-    def create(self, request, *args, **kwargs):
-        ser = self.get_serializer(data=request.data)
-        ser.is_valid(raise_exception=True)
-        #check if employee already resigned
-        if models.ResignationModel.objects.filter(employee__user=self.request.user).count() > 0:
-            return response.Response({'message': 'You already submitted the resign request'})
-        else:
-            self.perform_create(ser)
-            return response.Response(ser.data)
+#     def create(self, request, *args, **kwargs):
+#         ser = self.get_serializer(data=request.data)
+#         ser.is_valid(raise_exception=True)
+#         #check if employee already resigned
+#         if models.ResignationModel.objects.filter(employee__user=self.request.user).count() > 0:
+#             return response.Response({'message': 'You already submitted the resign request'})
+#         else:
+#             self.perform_create(ser)
+#             return response.Response(ser.data)
         
 
-class EmployeeExitAnswersView(generics.ListCreateAPIView):
-    permission_classes = [custom_permission.EmployeeAuthenticated]
-    serializer_class = serializers.ExitInterviewAnswerSerializer
+# class EmployeeExitAnswersView(generics.ListCreateAPIView):
+#     permission_classes = [custom_permission.EmployeeAuthenticated]
+#     serializer_class = serializers.ExitInterviewAnswerSerializer
 
-    def get_queryset(self):
-        queryset = models.ExitInterviewAnswerModel.objects.filter(employee__user=self.request.user)
-        return queryset
+#     def get_queryset(self):
+#         queryset = models.ExitInterviewAnswerModel.objects.filter(employee__user=self.request.user)
+#         return queryset
     
-    def perform_create(self, serializer):
-        employee = hrm_admin_model.EmployeeInformationModel.objects.get(user=self.request.user)
-        serializer.save(employee=employee)
+#     def perform_create(self, serializer):
+#         employee = hrm_admin_model.EmployeeInformationModel.objects.get(user=self.request.user)
+#         serializer.save(employee=employee)
 
-class EmployeeExitQuestionsView(generics.ListCreateAPIView):
-    permission_classes = [custom_permission.EmployeeAuthenticated]
-    serializer_class = serializers.ExitInterviewQuestionSerializer
+# class EmployeeExitQuestionsView(generics.ListCreateAPIView):
+#     permission_classes = [custom_permission.EmployeeAuthenticated]
+#     serializer_class = serializers.ExitInterviewQuestionSerializer
 
-    def get_queryset(self):
-        queryset = models.ExitInterviewQuestionModel.objects.all()
-        return queryset
+#     def get_queryset(self):
+#         queryset = models.ExitInterviewQuestionModel.objects.all()
+#         return queryset
     
-    #get a dictonary from the url and pass it to serializer
+#     #get a dictonary from the url and pass it to serializer
     
 
     
