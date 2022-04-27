@@ -2,6 +2,7 @@
 Problem may occur just because of serializer name
 it may conflict
 """
+import email
 import jwt
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
@@ -16,7 +17,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from . import models
 from . import serializer
 from .permissions import EditPermission, IsAuthor, IsCandidateUser, Authenticated, CandidateAdminAuthenticated
-from .utils import Util
+from AdminOperationApp.utils import Util
+from django.template.loader import render_to_string
 
 
 # Custom JWT Authentication view
@@ -48,14 +50,14 @@ class RegisterView(generics.GenericAPIView):
         relativeLink = reverse('tfhrm_api:email-verify')
         absurl = 'http://' + current_site + relativeLink + "?token=" + str(token)
 
-        email_body = f'Hi {user.full_name},\n' \
-                     f'Were happy you signed up for Techforing Career. To start exploring the TechForing Career Please confirm your email address. \n' \
-                     f'Verification link: {absurl}'
-
+        # email_body = f'Hi {user.full_name},\n' \
+        #              f'Were happy you signed up for Techforing Career. To start exploring the TechForing Career Please confirm your email address. \n' \
+        #              f'Verification link: {absurl}'
+        email_body=render_to_string('emailTemplate/email_verification.html', {'absurl':absurl,})
         data = {'email_body': email_body, 'to_email': user.email,
-                'email_subject': 'Email Verification|TechForing'}
+                'email_subject': 'TechForing Career - Verification Mail '}
 
-        Util.send_email(data)
+        Util.send_email_body(data)
         return Response(user_data, status=status.HTTP_201_CREATED)
 
 

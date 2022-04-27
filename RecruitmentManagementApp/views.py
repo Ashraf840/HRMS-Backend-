@@ -9,14 +9,13 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 
 from SupportApp import sms
-from UserApp import utils
+from AdminOperationApp import utils
 from UserApp.models import User
 from UserApp.permissions import IsHrUser, EditPermission, IsAuthor, IsEmployee, IsCandidateUser, Authenticated, \
     EmployeeAdminAuthenticated, IsHrOrReadOnly, IsHrOrAllowReadOnly
 from . import models
 from . import serializer
-
-
+from django.template.loader import render_to_string
 # For Admin to view all Users Information
 class AllUserDetailView(generics.ListAPIView):
     permission_classes = [Authenticated]
@@ -137,14 +136,21 @@ class AppliedForJobView(generics.CreateAPIView, generics.RetrieveAPIView):
             for state in jobInfo:
                 if state.status.lower() != 'new':
                     jobApplication.jobProgressStatus = state
+                    
                     jobApplication.save()
-                    email_body = 'Hi ' + self.request.user.full_name + \
-                                 f' Congratulations you have been selected for the {state.status} stage.' \
-                                 'All the best in your job search!'
-
+                    # email_body = 'Hi ' + self.request.user.full_name + \
+                    #              f' Congratulations you have been selected for the {state.status} stage.' \
+                    #              'All the best in your job search!'
+                    
+                    applied_job = models.JobPostModel.objects.get(id=jobId)
+                    job=applied_job.jobTitle
+                    email_subject=f'TechForing Career- {job} + Online Test'
+                    applicant_name=self.request.user.full_name
+                    email_body=render_to_string('emailTemplate/online_test_status.html', 
+                                                {'applicant_name':applicant_name,'job':job})
                     data = {'email_body': email_body, 'to_email': self.request.user.email,
-                            'email_subject': 'Status of the Screening Test'}
-                    utils.Util.send_email(data)
+                            'email_subject': email_subject}
+                    utils.Util.send_email_body(data)
                     break
 
         # jobId = serializer.validated_data['jobPostId']

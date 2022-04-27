@@ -19,6 +19,7 @@ from .utils import Util
 import os
 from django.conf import settings
 from django.templatetags.static import static
+from django.template.loader import render_to_string
 
 class Pagination(pagination.PageNumberPagination):
     """
@@ -459,17 +460,19 @@ class PolicySentView(generics.ListCreateAPIView):
             applicant=UserJobAppliedModel.objects.get(id=self.kwargs['applicationId'])
             applicant_email=applicant.userId.email
             applicant_name=applicant.userId.full_name
-            email_body = f'Hi {applicant_name},\n' \
-                     f'Congratulation we have moved you to the next phase. We have sent you an attachment pdf of our policy please\n' \
-                     f'have a careful look at the attachment.\n' \
-                     f'Regads,\n' \
-                     f'HR,\n' \
-                     f'Techforing,\n' \
-                         
+            applicant_job=applicant.jobPostId.jobTitle
+            # email_body = f'Hi {applicant_name},\n' \
+            #          f'Congratulation we have moved you to the next phase. We have sent you an attachment pdf of our policy please\n' \
+            #          f'have a careful look at the attachment.\n' \
+            #          f'Regads,\n' \
+            #          f'HR,\n' \
+            #          f'Techforing,\n' \
+            email_body=render_to_string('emailTemplate/hrpolicy.html',{'applicant_name':applicant_name})
+            email_subject=f'TechForing Career- {applicant_job} + NDA & NCA'
             data = {'email_body': email_body, 'to_email': applicant_email,
-                'email_subject': 'Policy of the company for your job application', 'file_path': BASE_DIR/'static/HR_Policy.pdf'}
+                'email_subject': email_subject, 'file_path': BASE_DIR/'static/HR_Policy.pdf'}
             #attach file to email 
-            Util.send_email_attach(data)
+            Util.send_email_attach_body(data)
             return super(PolicySentView, self).create(request, *args, **kwargs)
 
     
