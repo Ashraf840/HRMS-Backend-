@@ -291,12 +291,16 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 import os
-
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'mail.techforing.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'noreply@techforing.com'
-EMAIL_HOST_PASSWORD = 'X=ne=7CY'
+EMAIL_USE_SSl = False
+# EMAIL_HOST_USER = 'pranto.techforing@gmail.com'
+# EMAIL_HOST_PASSWORD = 'tehctrahgvpjsuoz'
+EMAIL_HOST_USER = 'pranto.techforing@gmail.com'
+EMAIL_HOST_PASSWORD = 'tehctrahgvpjsuoz'
 
 # Plivo access
 # PLIVO_ID = 'MAOGQ0MZI1MTMZYZC4YW'
