@@ -5,6 +5,7 @@ from HRM_User import models as hrm_user_model
 from UserApp import permissions as custom_permission
 from serializer_permissions import serializers as permission_ser
 from HRM_Admin import serializer as hrm_admin_ser
+import time
 
 
 class EmployeeTrainingResponseResultSerializer(serializers.ModelSerializer):
@@ -64,6 +65,7 @@ class EmployeeResignationRequestSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         answers_data=validated_data.pop('answer_employee')
         employee_resignation_request=hrm_user_model.ResignationModel.objects.create(**validated_data)
+        time.sleep(1)
         resignation_data=hrm_user_model.ResignationModel.objects.filter().first()
         # check=set()
         #get the lentgh of the exitquestion data record
