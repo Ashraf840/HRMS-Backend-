@@ -397,6 +397,7 @@ class EmployeeResignationView(generics.ListAPIView):
             queryset = hrm_user_models.ResignationModel.objects.all()
             return queryset.filter(Q(employee__user__full_name__icontains=search) |
                                    Q(employee__emp_department__department__icontains=search)|
+                                    Q(employee__designation__designation__icontains=search)|
                                    Q(noticeDate__icontains=search))
         except:
             return hrm_user_models.ResignationModel.objects.all()
