@@ -385,35 +385,35 @@ class DesignationUpdateView(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
 
 #employee resignation list view
-class EmployeeResignationView(generics.ListAPIView):
-    """
-    Employee resignation
-    """
-    permission_classes = [custom_permission.IsHrOrReadOnly]
-    serializer_class = hrm_admin_serializer.EmployeeResignationSerializer
-    def get_queryset(self):
-        try:
-            search = self.request.query_params.get('search')
-            queryset = hrm_user_models.ResignationModel.objects.all()
-            print(queryset.filter(Q(employee__user__full_name__icontains=search)))
-            return queryset.filter(Q(employee__user__full_name__icontains=search) |
-                                   Q(employee__emp_department__department__icontains=search))
-        except:
-            return hrm_user_models.ResignationModel.objects.all()
+# class EmployeeResignationView(generics.ListAPIView):
+#     """
+#     Employee resignation
+#     """
+#     permission_classes = [custom_permission.IsHrOrReadOnly]
+#     serializer_class = hrm_admin_serializer.EmployeeResignationSerializer
+#     def get_queryset(self):
+#         try:
+#             search = self.request.query_params.get('search')
+#             queryset = hrm_user_models.ResignationModel.objects.all()
+#             print(queryset.filter(Q(employee__user__full_name__icontains=search)))
+#             return queryset.filter(Q(employee__user__full_name__icontains=search) |
+#                                    Q(employee__emp_department__department__icontains=search))
+#         except:
+#             return hrm_user_models.ResignationModel.objects.all()
 
-class EmployeeResignationUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
-    """
-    Employee resignation update and delete
-    """
-    permission_classes = [custom_permission.IsHrOrReadOnly]
-    serializer_class = hrm_admin_serializer.EmployeeResignationSerializer
-    queryset = hrm_user_models.ResignationModel.objects.all()
-    lookup_field = 'id'
+# class EmployeeResignationUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+#     """
+#     Employee resignation update and delete
+#     """
+#     permission_classes = [custom_permission.IsHrOrReadOnly]
+#     serializer_class = hrm_admin_serializer.EmployeeResignationSerializer
+#     queryset = hrm_user_models.ResignationModel.objects.all()
+#     lookup_field = 'id'
     
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        instance.resignatioAcceptDate=datetime.date.today()
-        serializer = self.get_serializer(instance, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        return Response(serializer.data)
+#     def update(self, request, *args, **kwargs):
+#         instance = self.get_object()
+#         instance.resignatioAcceptDate=datetime.date.today()
+#         serializer = self.get_serializer(instance, data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         self.perform_update(serializer)
+#         return Response(serializer.data)
