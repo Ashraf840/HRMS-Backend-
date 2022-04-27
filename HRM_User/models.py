@@ -88,7 +88,6 @@ class ExitInterviewAnswerModel(models.Model):
                                  related_name='answer_employee')
     question = models.ForeignKey(ExitInterviewQuestionModel, on_delete=models.CASCADE, blank=False, null=True,
                                  related_name='answer_question')
-    ok=models.BooleanField(default=False)
     answer = models.TextField(blank=True)
 
     def __str__(self):
