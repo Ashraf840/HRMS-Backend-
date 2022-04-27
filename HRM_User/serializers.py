@@ -65,19 +65,19 @@ class EmployeeResignationRequestSerializer(serializers.ModelSerializer):
         answers_data=validated_data.pop('answer_employee')
         employee_resignation_request=hrm_user_model.ResignationModel.objects.create(**validated_data)
         resignation_data=hrm_user_model.ResignationModel.objects.filter().first()
-        check=set()
+        # check=set()
         #get the lentgh of the exitquestion data record
-        total_len=hrm_user_model.ExitInterviewQuestionModel.objects.all().count()
-        counter=0
+        # total_len=hrm_user_model.ExitInterviewQuestionModel.objects.all().count()
+        # counter=0
         for answer_data in answers_data:
-            if answer_data['question'] not in check:
-                check.add(answer_data['question'])
-                counter+=1
-                hrm_user_model.ExitInterviewAnswerModel.objects.create(resignation=resignation_data,**answer_data)
+            # if answer_data['question'] not in check:
+            #     check.add(answer_data['question'])
+            #     counter+=1
+            hrm_user_model.ExitInterviewAnswerModel.objects.create(resignation=resignation_data,**answer_data)
             # hrm_user_model.ExitInterviewAnswerModel.objects.create(resignation=employee_resignation_request.employee,**answer_data)
-        if counter!=total_len:
-            hrm_user_model.ResignationModel.objects.filter(id=resignation_data.id).delete()
-            raise serializers.ValidationError("All the questions are not answered")
+        # if counter!=total_len:
+        #     hrm_user_model.ResignationModel.objects.filter(id=resignation_data.id).delete()
+        #     raise serializers.ValidationError("All the questions are not answered")
 
         return employee_resignation_request
    
