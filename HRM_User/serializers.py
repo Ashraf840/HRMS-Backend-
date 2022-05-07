@@ -65,11 +65,12 @@ class EmployeeResignationRequestSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         answers_data=validated_data.pop('answer_employee')
         employee_resignation_request=hrm_user_model.ResignationModel.objects.create(**validated_data)
-        resignation_data=hrm_user_model.ResignationModel.objects.filter().first()
         check=set()
         #get the lentgh of the exitquestion data record
         total_len=hrm_user_model.ExitInterviewQuestionModel.objects.all().count()
+        resignation_data=hrm_user_model.ResignationModel.objects.filter().last()
         counter=0
+        print(answers_data)
         for answer_data in answers_data:
             if answer_data['question'] not in check:
                 check.add(answer_data['question'])
