@@ -497,15 +497,15 @@ class MarkingDuringInterviewView(generics.ListCreateAPIView):
             # HR policy and other documents agree
             # doc_permission = serializer.data['docsPermission']
             # if doc_permission:
-            email_body = 'Please chek your portal, if you are agree the plese send us ur feedback ASAP' \
-                         'Thanks & Regards,\n' \
-                         'HR Department\n' \
-                         'TechForing Limited.\n' \
-                         'www.techforing.com' \
-                         f'Office Address: House: 149 (4th floor), Lane: 1, Baridhara DOHS, Dhaka.\n'
-            data = {'email_body': email_body, 'to_email': checkStatus.userId.email,
-                    'email_subject': 'Techforing|Document check'}
-            Util.send_email(data)
+            # email_body = 'Please chek your portal, if you are agree the plese send us ur feedback ASAP' \
+            #              'Thanks & Regards,\n' \
+            #              'HR Department\n' \
+            #              'TechForing Limited.\n' \
+            #              'www.techforing.com' \
+            #              f'Office Address: House: 149 (4th floor), Lane: 1, Baridhara DOHS, Dhaka.\n'
+            # data = {'email_body': email_body, 'to_email': checkStatus.userId.email,
+            #         'email_subject': 'Techforing|Document check'}
+            # Util.send_email(data)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
@@ -935,6 +935,7 @@ class ReferenceVerificationView(generics.RetrieveUpdateAPIView):
                 email_body = f'Hi  {refInfo.user.full_name},\n We have tried to verify your references. ' \
                                  f'Alas, we couldn\'t verify your reference named {refInfo.name}, You are requested to ' \
                                  f'change the reference details. Before updating please rech    eck the information\n\n' \
+                                '\n\n' \
                                  'Thanks & Regards,\n' \
                                  'HR Department\n' \
                                  'TechForing Limited.\n' \
