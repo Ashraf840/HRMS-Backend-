@@ -272,7 +272,7 @@ class AdminJobListView(generics.ListAPIView):
     serializer_class = serializer.AdminJobListSerializer
 
     def get_queryset(self):
-        queryset = JobPostModel.objects.all().order_by('id')
+        queryset = JobPostModel.objects.all().order_by('-postDate').order_by('-level')
         try:
             search = self.request.query_params.get('search')
             jobType = self.request.query_params.get('jobType')
