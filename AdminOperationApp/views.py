@@ -272,7 +272,7 @@ class AdminJobListView(generics.ListAPIView):
     serializer_class = serializer.AdminJobListSerializer
 
     def get_queryset(self):
-        queryset = JobPostModel.objects.all().order_by('-postDate').order_by('-level')
+        queryset = JobPostModel.objects.all().order_by('-postDate')
         try:
             search = self.request.query_params.get('search')
             jobType = self.request.query_params.get('jobType')
@@ -318,7 +318,7 @@ class AppliedUserDetailsView(generics.ListAPIView):
     queryset = UserJobAppliedModel.objects.all()
 
     def get_queryset(self):
-        queryset = UserJobAppliedModel.objects.all()
+        queryset = UserJobAppliedModel.objects.all().order_by('-appliedDate')
         search = self.request.query_params.get('search')
         department = self.request.query_params.get('department')
         shift = self.request.query_params.get('shift')

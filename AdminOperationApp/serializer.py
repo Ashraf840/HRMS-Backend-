@@ -46,10 +46,9 @@ class InterviewerSerializer(serializers.ModelSerializer):
 
 class JobSerializer(serializers.ModelSerializer):
     # filterQus = FilterQuestionSerializer()
-
     class Meta:
         model = JobPostModel
-        fields = ['id', 'jobTitle', 'jobType', 'shift']
+        fields = ['id', 'jobTitle', 'jobType', 'shift','level']
 
 
 class AdminOnlineTestLinkSerializer(serializers.ModelSerializer):
@@ -183,6 +182,11 @@ class AppliedUserDetailsSerializer(serializers.ModelSerializer):
             'jobProgressStatus': {'read_only': True}
         }
         # depth = 1
+    # def to_representation(self, instance):
+    #     response=super().to_representation(instance)
+    #     # response_sorted=sorted(response.items(), key=lambda x: x[1])
+    #     response['jobPostId']=sorted(response['jobPostId'])
+    #     return response
 
 
 class FilterQuestionResponseListSerializer(serializers.ModelSerializer):
