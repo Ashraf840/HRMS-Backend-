@@ -10,10 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
-from pathlib import Path
-from datetime import timedelta
 import os.path
 import sys
+from datetime import timedelta
+from pathlib import Path
 
 # import environ
 
@@ -295,8 +295,8 @@ import os
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'pranto.techforing@gmail.com'
-EMAIL_HOST_PASSWORD = 'tehctrahgvpjsuoz'
+EMAIL_HOST_USER = 'noreply@techforing.com'
+EMAIL_HOST_PASSWORD = '5Vzz5A7kuJK2*&-V'
 
 # Plivo access
 # PLIVO_ID = 'MAOGQ0MZI1MTMZYZC4YW'
