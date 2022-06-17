@@ -10,10 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
-from pathlib import Path
-from datetime import timedelta
 import os.path
 import sys
+from datetime import timedelta
+from pathlib import Path
 
 # import environ
 
@@ -164,7 +164,7 @@ ROOT_URLCONF = 'TFHRM.urls'
 """
 Local server DB
 """
-#
+
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
@@ -193,19 +193,18 @@ Dev server DB
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'dev_hrm_tf',
-        'USER': 'root',
-        'PASSWORD': 'smEPH23@z#&',
-        'OPTIONS': {
-            'sql_mode': 'traditional',
-        }
-    }
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'USV2dHfJS@d28GE',
+        'HOST': 'db.dejbitchxjrmaccalomw.supabase.co',
+        'PORT': 5432,
+    }, 
 }
 
 # ============== securing proxy for hosting ==============
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT = True
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# SECURE_SSL_REDIRECT = True
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
