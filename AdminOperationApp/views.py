@@ -479,7 +479,7 @@ class PolicySentView(generics.ListCreateAPIView):
             email_body=render_to_string('emailTemplate/hrpolicy.html',{'applicant_name':applicant_name})
             email_subject=f' NDA & NCA from TechForing Career | {applicant_job}'
             data = {'email_body': email_body, 'to_email': applicant_email,
-                'email_subject': email_subject, 'file_path': BASE_DIR/'static/HR_Policy.pdf'}
+                'email_subject': email_subject, 'file_path': BASE_DIR/'static/Terms_And_Conditions.pdf'}
             #attach file to email 
             Util.send_email_attach_body(data)
             return super(PolicySentView, self).create(request, *args, **kwargs)
