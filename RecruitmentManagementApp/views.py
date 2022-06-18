@@ -148,7 +148,7 @@ class AppliedForJobView(generics.CreateAPIView, generics.RetrieveAPIView):
                     
                     applied_job = models.JobPostModel.objects.get(id=jobId)
                     job=applied_job.jobTitle
-                    email_subject=f'TechForing Career- {job} + Online Test'
+                    email_subject=f'Online Test from TechForing Career | {job}'
                     applicant_name=self.request.user.full_name
                     email_body=render_to_string('emailTemplate/online_test_status.html', 
                                                 {'applicant_name':applicant_name,'job':job})
@@ -493,7 +493,7 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
                                 # utils.Util.send_email(data)
                                 applied_job = models.JobPostModel.objects.get(id=jobId)
                                 job=applied_job.jobTitle
-                                email_subject=f'TechForing Career | {job} | Online Test'
+                                email_subject=f'Online Test from TechForing Career | {job}'
                                 applicant_name=self.request.user.full_name
                                 email_body=render_to_string('emailTemplate/online_test_status.html', 
                                                             {'applicant_name':applicant_name,'job':job})
@@ -746,7 +746,7 @@ class OnlineTestResponseView(generics.CreateAPIView):
                                     #         'email_subject': f'Status of the {statusList[i]} Screening Test'}
                                     # utils.Util.send_email(data)
                                     job=jobApplication.jobPostId.jobTitle
-                                    email_subject=f'TechForing Career | {job} | {jobApplication.jobProgressStatus}'
+                                    email_subject=f'{jobApplication.jobProgressStatus} from TechForing Career | {job}'
                                     applicant_name=self.request.user.full_name
                                     email_body=render_to_string('emailTemplate/practical-test_status.html', 
                                                                 {'applicant_name':applicant_name,'job':job,"second_test":jobApplication.jobProgressStatus})
