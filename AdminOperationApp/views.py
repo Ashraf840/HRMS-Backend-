@@ -26,6 +26,8 @@ from TFHRM.settings import BASE_DIR
 from UserApp import permissions as customPermission
 from UserApp.models import User, UserDepartmentModel
 
+from AdminOperationApp import utils
+
 from . import models, serializer
 from .utils import Util
 
@@ -752,28 +754,22 @@ class FinalSalaryView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
-        jobApplicaion = UserJobAppliedModel.objects.get(id=serializer.data.get('jobApplication'))
-        # print(jobApplicaion)
-        jobStatus = jobApplicaion.jobPostId.jobProgressStatus.filter()
+        jobApplication = UserJobAppliedModel.objects.get(id=serializer.data.get('jobApplication'))
+        # print(jobApplication)
+        jobStatus = jobApplication.jobPostId.jobProgressStatus.filter()
         # print(jobStatus.filter(status='Document Submission').get())
-        jobApplicaion.jobProgressStatus = jobStatus.filter(status='Document Submission').get()
-        jobApplicaion.save()
+        jobApplication.jobProgressStatus = jobStatus.filter(status='Document Submission').get()
+        jobApplication.save()
 
         # Email sending functionality
         try:
-            email_body = f'Congratulations {jobApplicaion.userId.full_name}\n' \
-                         f'You have been selected for the position {jobApplicaion.jobPostId.jobTitle}.' \
-                         f' You are requested to submit your documents in the portal.\n' \
-                         f'Portal Link: https://career.techforing.com/my_jobs/{jobApplicaion.id}\n' \
-                         'Thanks & Regards,\n' \
-                         'HR Department\n' \
-                         'TechForing Limited.\n' \
-                         'www.techforing.com\n'\
-                         f'Office Address: House: 149 (4th floor), Lane: 1, Baridhara DOHS, Dhaka.' \
-
-            data = {'email_body': email_body, 'to_email': jobApplicaion.userId.email,
-                    'email_subject': 'Please Submit Your documents.'}
-            Util.send_email(data)
+            job=jobApplication.jobPostId.jobTitle
+            email_subject = f'{jobApplication.jobProgressStatus} from TechForing Career | {job}'
+            email_body=render_to_string('emailTemplate/documentsubmission.html', 
+                                                                {'applicant_name':jobApplication.userId.full_name,'job':jobApplication.jobPostId.jobTitle})
+            data = {'email_body': email_body, 'to_email': jobApplication.userId.email,
+                    'email_subject': email_subject}
+            Util.send_email_body(data)
             return Response({'detail': 'Email Sent.'})
         except:
             return Response({'detail': 'Email Sending failed.'})
