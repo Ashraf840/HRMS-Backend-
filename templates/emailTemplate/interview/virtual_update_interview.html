@@ -1,0 +1,66 @@
+<html>
+
+<head>
+    <style>
+        .applicant-title {
+            color: #00f;
+            font-weight: 600;
+        }
+        
+        .congrays {
+            color: #00f;
+        }
+        
+        .importent-text {
+            color: #274e13;
+            margin-left: 1px;
+        }
+        
+        .footer p {
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .footer {
+            margin-top: 35px;
+        }
+        
+        .img {
+            height: 60px;
+        }
+        
+        .web-link {
+            display: block;
+            color: #351c8b !important;
+            font-weight: 600 !important;
+        }
+        
+        .main p {
+            color: #000 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <p class="applicant-title"> <strong>Dear {{applicant_name}},</strong> </p>
+        <p>Thank you for your recent interview regarding the <strong class="importent-text">"{{jobPosition}}"</strong> position at <strong class="importent-text">TechForing Limited.</strong> We appreciate your dedication to the process and are pleased to
+            share that you have been selected for a next Interview on <strong class="importent-text">({{interview_date}}, {{interview_time}}),</strong> at Virtual!
+        </p>
+        <p><strong class="importent-text">Meeting Link:</strong> <strong class="importent-text">{{meeting_link}}</strong>
+        </p>
+        <p>
+            We believe, you are an excellent candidate for the position and we are excited to continue the conversation with you. If you have any questions in the meantime, feel free to reach out by this <strong class="importent-text"> Mail or "+8801318205752".</strong>
+        </p>
+    </div>
+    <div>
+        <div class="footer">
+            <p style="color: #000 !important">Best Regards,</p>
+            <p style="color: #bf9000 !important;">HR Department</p>
+            <p style="color: #20124d !important;">TechForing Limited</p>
+        </div>
+        <a href="https://www.techforing.com/" class="web-link">www.techforing.com</a>
+    </div>
+</body>
+
+</html>
