@@ -1,25 +1,34 @@
 import calendar
 import datetime
-from django.db.models import Q
-from TFHRM.settings import BASE_DIR
-from rest_framework import generics, permissions, status, pagination
+import os
+
+import HRM_Admin.models
+from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
+from django.db.models import Q
+from django.template.loader import render_to_string
+from django.templatetags.static import static
+from RecruitmentManagementApp.models import (CandidateJoiningFeedbackModel,
+                                             DocumentSubmissionModel,
+                                             FilterQuestionsResponseModelHR,
+                                             JobPostModel, JobStatusModel,
+                                             OfficialDocumentsModel,
+                                             OnlineTestModel,
+                                             OnlineTestResponseModel,
+                                             PracticalTestResponseModel,
+                                             ReferenceInformationModel,
+                                             UserJobAppliedModel)
+from rest_framework import generics, pagination, permissions, status
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-import HRM_Admin.models
-from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel, OnlineTestResponseModel, \
-    FilterQuestionsResponseModelHR, PracticalTestResponseModel, DocumentSubmissionModel, ReferenceInformationModel, \
-    JobStatusModel, OfficialDocumentsModel, CandidateJoiningFeedbackModel
+from TFHRM.settings import BASE_DIR
 from UserApp import permissions as customPermission
 from UserApp.models import User, UserDepartmentModel
-from . import models
-from . import serializer
+
+from . import models, serializer
 from .utils import Util
-import os
-from django.conf import settings
-from django.templatetags.static import static
-from django.template.loader import render_to_string
+
 
 class Pagination(pagination.PageNumberPagination):
     """
@@ -468,7 +477,7 @@ class PolicySentView(generics.ListCreateAPIView):
             #          f'HR,\n' \
             #          f'Techforing,\n' \
             email_body=render_to_string('emailTemplate/hrpolicy.html',{'applicant_name':applicant_name})
-            email_subject=f'TechForing Career- {applicant_job} + NDA & NCA'
+            email_subject=f' NDA & NCA from TechForing Career | {applicant_job}'
             data = {'email_body': email_body, 'to_email': applicant_email,
                 'email_subject': email_subject, 'file_path': BASE_DIR/'static/HR_Policy.pdf'}
             #attach file to email 
