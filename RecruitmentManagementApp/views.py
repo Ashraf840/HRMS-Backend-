@@ -728,23 +728,31 @@ class OnlineTestResponseView(generics.CreateAPIView):
                                     utils.Util.send_email(data)
                                 else:
 
-                                    email_body = f'Hi {self.request.user.full_name},\n' \
-                                                 f'Congratulations! We are happy to inform you that you have passed ' \
-                                                 f'the {sta.status} and have been selected for the second round of' \
-                                                 f' interview which consists of a {update.status}.' \
-                                                 f' Please read carefully and submit the task within the given' \
-                                                 f' deadline. We expect you to carry out the task with full honesty. ' \
-                                                 f'Follow the deadline and instructions easily.' \
-                                                 f'Deadline: {datetime.date.today() + datetime.timedelta(hours=72)}\n\n' \
-                                                 f'Go to our recruitment portal and follow the instruction\n' \
-                                                 f'Thanks & Regards,\n' \
-                                                 f'HR Department\n' \
-                                                 f'TechForing Limited.\n' \
-                                                 f'www.techforing.com'
+                                    # email_body = f'Hi {self.request.user.full_name},\n' \
+                                    #              f'Congratulations! We are happy to inform you that you have passed ' \
+                                    #              f'the {sta.status} and have been selected for the second round of' \
+                                    #              f' interview which consists of a {update.status}.' \
+                                    #              f' Please read carefully and submit the task within the given' \
+                                    #              f' deadline. We expect you to carry out the task with full honesty. ' \
+                                    #              f'Follow the deadline and instructions easily.' \
+                                    #              f'Deadline: {datetime.date.today() + datetime.timedelta(hours=72)}\n\n' \
+                                    #              f'Go to our recruitment portal and follow the instruction\n' \
+                                    #              f'Thanks & Regards,\n' \
+                                    #              f'HR Department\n' \
+                                    #              f'TechForing Limited.\n' \
+                                    #              f'www.techforing.com'
 
+                                    # data = {'email_body': email_body, 'to_email': self.request.user.email,
+                                    #         'email_subject': f'Status of the {statusList[i]} Screening Test'}
+                                    # utils.Util.send_email(data)
+                                    job=jobApplication.jobPostId.jobTitle
+                                    email_subject=f'TechForing Career | {job} | {jobApplication.jobProgressStatus}'
+                                    applicant_name=self.request.user.full_name
+                                    email_body=render_to_string('emailTemplate/practical-test_status.html', 
+                                                                {'applicant_name':applicant_name,'job':job,"second_test":jobApplication.jobProgressStatus})
                                     data = {'email_body': email_body, 'to_email': self.request.user.email,
-                                            'email_subject': f'Status of the {statusList[i]} Screening Test'}
-                                    utils.Util.send_email(data)
+                                            'email_subject': email_subject}
+                                    utils.Util.send_email_body(data)
                                 break
                         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
                     return Response({'testName': serializer.data['testName'], 'testMark': serializer.data['testMark']})
