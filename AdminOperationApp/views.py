@@ -882,23 +882,16 @@ class ReferenceVerificationView(generics.RetrieveUpdateAPIView):
             site_link = 'career.techforing.com'
         else:
             site_link = 'devcareer.techforing.com'
-        email_plaintext_message = f'{site_link}/add_reference_form/'
+        reference_verify_link = f'{site_link}/add_reference_form/{refInfo.slug_field}'
 
-        email_body = 'Dear Sir,\n' \
-                     'Salam and Greetings.\n' \
-                     f'{refInfo.applied_job.userId.full_name} applied to our organization and include you as reference.' \
-                     f'We would like to obtain your confirmation regarding the reference.' \
-                     f'Kindly, fill up the form attached with the mail as for written documents.' \
-                     f'We would really appreciate it if you kindly fill up the form given below,' \
-                     f'Form Link: {email_plaintext_message}{refInfo.slug_field} \n' \
-                     f'Thanks and Regards! \n' \
-                     f'HR Admin Dept. \n' \
-                     f'Techforing Limited \n' \
-                     f'House-149, Lane-1, DOHS, Baridhara, Dhaka'
+        email_body = render_to_string('emailTemplate/reference_verification.html',{
+            'reference_verify_link': reference_verify_link,
+            'applicant_name': refInfo.applied_job.userId.full_name,
+        })
 
         data = {'email_body': email_body, 'to_email': refInfo.email,
                 'email_subject': 'Reference Verification.'}
-        Util.send_email(data)
+        Util.send_email_body(data)
 
         refInfo.is_sent = True
         refInfo.save()
