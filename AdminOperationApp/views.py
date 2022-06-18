@@ -21,6 +21,8 @@ from django.conf import settings
 from django.templatetags.static import static
 from django.template.loader import render_to_string
 
+from AdminOperationApp import utils
+
 class Pagination(pagination.PageNumberPagination):
     """
     Pagination classes
@@ -597,77 +599,40 @@ class InterviewTimeScheduleView(generics.ListCreateAPIView):
         def send_email_office(interview_type, format):
             if interview_type == 'virtual':
                 if format == 'new':
-                    email_body = 'Hi ' + applicationData.userId.full_name + \
-                                 f' Congratulations! You have passed all tests  and qualified for a verbal interview. ' \
-                                 f'You are requested to join for and virtual meeting. Interview schedule and meeting link is given below-\n' \
-                                 f'Interview Schedule: \n' \
-                                 f'Interview Type: {interview_type.capitalize()}\n' \
-                                 f'Meeting Link: {serializer.data["interviewLocation"]}\n' \
-                                 f'Date: {serializer.data["interviewDate"]} \n' \
-                                 f'Time: {time_convert(serializer.data["interviewTime"])}\n\n' \
-                                 'Thanks & Regards,\n' \
-                                 'HR Department\n' \
-                                 'TechForing Limited.\n' \
-                                 'www.techforing.com' \
-                                 f'Office Address: House: 149 (4th floor), Lane: 1, Baridhara DOHS, Dhaka.\n'
-
+                    email_subject=f'Invitation For F2F Interview | ' + applicationData.jobPostId.jobTitle + ' | TechForing'
+                    applicant_name=applicationData.userId.full_name
+                    email_body=render_to_string('emailTemplate/interview/virtual_new_interview.html', 
+                                {'applicant_name':applicant_name, 'jobPosition': applicationData.jobPostId.jobTitle, 'interview_location': interview_type.capitalize(), 'interview_date': serializer.data["interviewDate"], 'interview_time': time_convert(serializer.data["interviewTime"]), 'meeting_link': serializer.data["interviewLocation"]})
                     data = {'email_body': email_body, 'to_email': applicationData.userId.email,
-                            'email_subject': 'Interview Schedule'}
-                    Util.send_email(data)
+                                'email_subject': email_subject}
+                    utils.Util.send_email_body(data)
 
                 else:
-                    email_body = 'Hi ' + applicationData.userId.full_name + \
-                                 f', New meeting schedule has been updated.' \
-                                 f'You are requested to join for and virtual meeting. Interview schedule and meeting link is given below\n' \
-                                 f'Interview Schedule: \n' \
-                                 f'Interview Type: {interview_type.capitalize()}\n' \
-                                 f'Meeting Link: {serializer.data["interviewLocation"]}\n' \
-                                 f'Date: {serializer.data["interviewDate"]} \n' \
-                                 f'Time: {time_convert(serializer.data["interviewTime"])}\n\n' \
-                                 'Thanks & Regards,\n' \
-                                 'HR Department\n' \
-                                 'TechForing Limited.\n' \
-                                 'www.techforing.com' \
-                                 f'Office Address: House: 149 (4th floor), Lane: 1, Baridhara DOHS, Dhaka.\n'
+                    email_subject=f'Invitation For F2F Interview | ' + applicationData.jobPostId.jobTitle + ' | TechForing'
+                    applicant_name=applicationData.userId.full_name
+                    email_body=render_to_string('emailTemplate/interview/virtual_update_interview.html', 
+                                {'applicant_name':applicant_name, 'jobPosition': applicationData.jobPostId.jobTitle, 'interview_location': interview_type.capitalize(), 'interview_date': serializer.data["interviewDate"], 'interview_time': time_convert(serializer.data["interviewTime"]), 'meeting_link': serializer.data["interviewLocation"]})
                     data = {'email_body': email_body, 'to_email': applicationData.userId.email,
-                            'email_subject': 'Interview Schedule'}
-                    Util.send_email(data)
+                                'email_subject': email_subject}
+                    utils.Util.send_email_body(data)
             else:
                 if format == 'new':
-                    email_body = 'Hi ' + applicationData.userId.full_name + \
-                                 f', Congratulations! You have passed all tests  and qualified for a verbal interview. ' \
-                                 f'You are requested to come to our office. Interview schedule and office location is given below-\n' \
-                                 f'Interview Schedule: \n' \
-                                 f'Interview location: {interview_type.capitalize()}\n' \
-                                 f'Date: {serializer.data["interviewDate"]} \n' \
-                                 f'Time: {time_convert(serializer.data["interviewTime"])}\n' \
-                                 f'Office Address: House: 149 (4th floor), Lane: 1, Baridhara DOHS, Dhaka.\n' \
-                                 'Thanks & Regards,\n' \
-                                 'HR Department\n' \
-                                 'TechForing Limited.\n' \
-                                 'www.techforing.com'
-
+                    email_subject=f'Invitation For F2F Interview | ' + applicationData.jobPostId.jobTitle + ' | TechForing'
+                    applicant_name=applicationData.userId.full_name
+                    email_body=render_to_string('emailTemplate/interview/office_new_interview.html', 
+                                {'applicant_name':applicant_name, 'jobPosition': applicationData.jobPostId.jobTitle, 'interview_location': interview_type.capitalize(), 'interview_date': serializer.data["interviewDate"], 'interview_time': time_convert(serializer.data["interviewTime"])})
                     data = {'email_body': email_body, 'to_email': applicationData.userId.email,
-                            'email_subject': 'Interview Schedule'}
-                    Util.send_email(data)
+                                'email_subject': email_subject}
+                    utils.Util.send_email_body(data)
 
                 else:
-                    email_body = 'Hi ' + applicationData.userId.full_name + \
-                                 f', New meeting schedule has been updated.' \
-                                 f'You are requested to come to our office. Interview schedule and office location is given below-\n' \
-                                 f'Interview Schedule: \n' \
-                                 f'Interview location: {interview_type.capitalize()}\n' \
-                                 f'Date: {serializer.data["interviewDate"]} \n' \
-                                 f'Time: {time_convert(serializer.data["interviewTime"])}\n' \
-                                 f'Office Address: House: 149 (4th floor), Lane: 1, Baridhara DOHS, Dhaka.\n' \
-                                 'Thanks & Regards,\n' \
-                                 'HR Department\n' \
-                                 'TechForing Limited.\n' \
-                                 'www.techforing.com'
-
+                    email_subject=f'Interview Schedule | ' + applicationData.jobPostId.jobTitle + ' | TechForing'
+                    applicant_name=applicationData.userId.full_name
+                    email_body=render_to_string('emailTemplate/interview/office_update_interview.html', 
+                                {'applicant_name':applicant_name, 'jobPosition': applicationData.jobPostId.jobTitle, 'interview_location': interview_type.capitalize(), 'interview_date': serializer.data["interviewDate"], 'interview_time': time_convert(serializer.data["interviewTime"])})
                     data = {'email_body': email_body, 'to_email': applicationData.userId.email,
-                            'email_subject': 'Interview Schedule'}
-                    Util.send_email(data)
+                                'email_subject': email_subject}
+                    utils.Util.send_email_body(data)
 
         applicantStatus = applicationData.jobProgressStatus.status
         if applicantStatus == 'Practical Test' or applicantStatus == 'Online Test' or applicantStatus == 'F2F Interview':
