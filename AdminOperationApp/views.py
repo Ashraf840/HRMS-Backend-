@@ -1,25 +1,36 @@
 import calendar
 import datetime
-from django.db.models import Q
-from TFHRM.settings import BASE_DIR
-from rest_framework import generics, permissions, status, pagination
+import os
+
+import HRM_Admin.models
+from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
+from django.db.models import Q
+from django.template.loader import render_to_string
+from django.templatetags.static import static
+from RecruitmentManagementApp.models import (CandidateJoiningFeedbackModel,
+                                             DocumentSubmissionModel,
+                                             FilterQuestionsResponseModelHR,
+                                             JobPostModel, JobStatusModel,
+                                             OfficialDocumentsModel,
+                                             OnlineTestModel,
+                                             OnlineTestResponseModel,
+                                             PracticalTestResponseModel,
+                                             ReferenceInformationModel,
+                                             UserJobAppliedModel)
+from rest_framework import generics, pagination, permissions, status
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-import HRM_Admin.models
-from RecruitmentManagementApp.models import UserJobAppliedModel, JobPostModel, OnlineTestModel, OnlineTestResponseModel, \
-    FilterQuestionsResponseModelHR, PracticalTestResponseModel, DocumentSubmissionModel, ReferenceInformationModel, \
-    JobStatusModel, OfficialDocumentsModel, CandidateJoiningFeedbackModel
+from TFHRM.settings import BASE_DIR
 from UserApp import permissions as customPermission
 from UserApp.models import User, UserDepartmentModel
-from . import models
-from . import serializer
+
+from AdminOperationApp import utils
+
+from . import models, serializer
 from .utils import Util
-import os
-from django.conf import settings
-from django.templatetags.static import static
-from django.template.loader import render_to_string
+
 
 from AdminOperationApp import utils
 
@@ -462,9 +473,9 @@ class PolicySentView(generics.ListCreateAPIView):
             #          f'HR,\n' \
             #          f'Techforing,\n' \
             email_body=render_to_string('emailTemplate/hrpolicy.html',{'applicant_name':applicant_name})
-            email_subject=f'TechForing Career- {applicant_job} + NDA & NCA'
+            email_subject=f' NDA & NCA from TechForing Career | {applicant_job}'
             data = {'email_body': email_body, 'to_email': applicant_email,
-                'email_subject': email_subject, 'file_path': BASE_DIR/'static/HR_Policy.pdf'}
+                'email_subject': email_subject, 'file_path': BASE_DIR/'static/Terms_And_Conditions.pdf'}
             #attach file to email 
             Util.send_email_attach_body(data)
             return super(PolicySentView, self).create(request, *args, **kwargs)
@@ -700,28 +711,22 @@ class FinalSalaryView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
-        jobApplicaion = UserJobAppliedModel.objects.get(id=serializer.data.get('jobApplication'))
-        # print(jobApplicaion)
-        jobStatus = jobApplicaion.jobPostId.jobProgressStatus.filter()
+        jobApplication = UserJobAppliedModel.objects.get(id=serializer.data.get('jobApplication'))
+        # print(jobApplication)
+        jobStatus = jobApplication.jobPostId.jobProgressStatus.filter()
         # print(jobStatus.filter(status='Document Submission').get())
-        jobApplicaion.jobProgressStatus = jobStatus.filter(status='Document Submission').get()
-        jobApplicaion.save()
+        jobApplication.jobProgressStatus = jobStatus.filter(status='Document Submission').get()
+        jobApplication.save()
 
         # Email sending functionality
         try:
-            email_body = f'Congratulations {jobApplicaion.userId.full_name}\n' \
-                         f'You have been selected for the position {jobApplicaion.jobPostId.jobTitle}.' \
-                         f' You are requested to submit your documents in the portal.\n' \
-                         f'Portal Link: https://career.techforing.com/my_jobs/{jobApplicaion.id}\n' \
-                         'Thanks & Regards,\n' \
-                         'HR Department\n' \
-                         'TechForing Limited.\n' \
-                         'www.techforing.com\n'\
-                         f'Office Address: House: 149 (4th floor), Lane: 1, Baridhara DOHS, Dhaka.' \
-
-            data = {'email_body': email_body, 'to_email': jobApplicaion.userId.email,
-                    'email_subject': 'Please Submit Your documents.'}
-            Util.send_email(data)
+            job=jobApplication.jobPostId.jobTitle
+            email_subject = f'{jobApplication.jobProgressStatus} from TechForing Career | {job}'
+            email_body=render_to_string('emailTemplate/documentsubmission.html', 
+                                                                {'applicant_name':jobApplication.userId.full_name,'job':jobApplication.jobPostId.jobTitle})
+            data = {'email_body': email_body, 'to_email': jobApplication.userId.email,
+                    'email_subject': email_subject}
+            Util.send_email_body(data)
             return Response({'detail': 'Email Sent.'})
         except:
             return Response({'detail': 'Email Sending failed.'})
@@ -834,23 +839,16 @@ class ReferenceVerificationView(generics.RetrieveUpdateAPIView):
             site_link = 'career.techforing.com'
         else:
             site_link = 'devcareer.techforing.com'
-        email_plaintext_message = f'{site_link}/add_reference_form/'
+        reference_verify_link = f'{site_link}/add_reference_form/{refInfo.slug_field}'
 
-        email_body = 'Dear Sir,\n' \
-                     'Salam and Greetings.\n' \
-                     f'{refInfo.applied_job.userId.full_name} applied to our organization and include you as reference.' \
-                     f'We would like to obtain your confirmation regarding the reference.' \
-                     f'Kindly, fill up the form attached with the mail as for written documents.' \
-                     f'We would really appreciate it if you kindly fill up the form given below,' \
-                     f'Form Link: {email_plaintext_message}{refInfo.slug_field} \n' \
-                     f'Thanks and Regards! \n' \
-                     f'HR Admin Dept. \n' \
-                     f'Techforing Limited \n' \
-                     f'House-149, Lane-1, DOHS, Baridhara, Dhaka'
+        email_body = render_to_string('emailTemplate/reference_verification.html',{
+            'reference_verify_link': reference_verify_link,
+            'applicant_name': refInfo.applied_job.userId.full_name,
+        })
 
         data = {'email_body': email_body, 'to_email': refInfo.email,
                 'email_subject': 'Reference Verification.'}
-        Util.send_email(data)
+        Util.send_email_body(data)
 
         refInfo.is_sent = True
         refInfo.save()
