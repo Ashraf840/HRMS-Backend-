@@ -847,7 +847,7 @@ class ReferenceVerificationView(generics.RetrieveUpdateAPIView):
         })
 
         data = {'email_body': email_body, 'to_email': refInfo.email,
-                'email_subject': 'Reference Verification.'}
+                'email_subject': 'Reference Verification | TechForing'}
         Util.send_email_body(data)
 
         refInfo.is_sent = True
