@@ -599,37 +599,37 @@ class InterviewTimeScheduleView(generics.ListCreateAPIView):
         def send_email_office(interview_type, format):
             if interview_type == 'virtual':
                 if format == 'new':
-                    email_subject=f'Invitation For F2F Interview | ' + applicationData.jobPostId.jobTitle + ' | TechForing'
+                    email_subject=f'Invitation For F2F Interview | ' + applicationData.jobPostId.jobTitle.capitalize() + ' | TechForing'
                     applicant_name=applicationData.userId.full_name
                     email_body=render_to_string('emailTemplate/interview/virtual_new_interview.html', 
-                                {'applicant_name':applicant_name, 'jobPosition': applicationData.jobPostId.jobTitle, 'interview_location': interview_type.capitalize(), 'interview_date': serializer.data["interviewDate"], 'interview_time': time_convert(serializer.data["interviewTime"]), 'meeting_link': serializer.data["interviewLocation"]})
+                                {'applicant_name':applicant_name, 'jobPosition': applicationData.jobPostId.jobTitle.capitalize(), 'interview_location': interview_type.capitalize(), 'interview_date': serializer.data["interviewDate"], 'interview_time': time_convert(serializer.data["interviewTime"]), 'meeting_link': serializer.data["interviewLocation"]})
                     data = {'email_body': email_body, 'to_email': applicationData.userId.email,
                                 'email_subject': email_subject}
                     utils.Util.send_email_body(data)
 
                 else:
-                    email_subject=f'Invitation For F2F Interview | ' + applicationData.jobPostId.jobTitle + ' | TechForing'
+                    email_subject=f'Interview Schedule | ' + applicationData.jobPostId.jobTitle.capitalize() + ' | TechForing'
                     applicant_name=applicationData.userId.full_name
                     email_body=render_to_string('emailTemplate/interview/virtual_update_interview.html', 
-                                {'applicant_name':applicant_name, 'jobPosition': applicationData.jobPostId.jobTitle, 'interview_location': interview_type.capitalize(), 'interview_date': serializer.data["interviewDate"], 'interview_time': time_convert(serializer.data["interviewTime"]), 'meeting_link': serializer.data["interviewLocation"]})
+                                {'applicant_name':applicant_name, 'jobPosition': applicationData.jobPostId.jobTitle.capitalize(), 'interview_location': interview_type.capitalize(), 'interview_date': serializer.data["interviewDate"], 'interview_time': time_convert(serializer.data["interviewTime"]), 'meeting_link': serializer.data["interviewLocation"]})
                     data = {'email_body': email_body, 'to_email': applicationData.userId.email,
                                 'email_subject': email_subject}
                     utils.Util.send_email_body(data)
             else:
                 if format == 'new':
-                    email_subject=f'Invitation For F2F Interview | ' + applicationData.jobPostId.jobTitle + ' | TechForing'
+                    email_subject=f'Invitation For F2F Interview | ' + applicationData.jobPostId.jobTitle.capitalize() + ' | TechForing'
                     applicant_name=applicationData.userId.full_name
                     email_body=render_to_string('emailTemplate/interview/office_new_interview.html', 
-                                {'applicant_name':applicant_name, 'jobPosition': applicationData.jobPostId.jobTitle, 'interview_location': interview_type.capitalize(), 'interview_date': serializer.data["interviewDate"], 'interview_time': time_convert(serializer.data["interviewTime"])})
+                                {'applicant_name':applicant_name, 'jobPosition': applicationData.jobPostId.jobTitle.capitalize(), 'interview_location': interview_type.capitalize(), 'interview_date': serializer.data["interviewDate"], 'interview_time': time_convert(serializer.data["interviewTime"])})
                     data = {'email_body': email_body, 'to_email': applicationData.userId.email,
                                 'email_subject': email_subject}
                     utils.Util.send_email_body(data)
 
                 else:
-                    email_subject=f'Interview Schedule | ' + applicationData.jobPostId.jobTitle + ' | TechForing'
+                    email_subject=f'Interview Schedule | ' + applicationData.jobPostId.jobTitle.capitalize() + ' | TechForing'
                     applicant_name=applicationData.userId.full_name
                     email_body=render_to_string('emailTemplate/interview/office_update_interview.html', 
-                                {'applicant_name':applicant_name, 'jobPosition': applicationData.jobPostId.jobTitle, 'interview_location': interview_type.capitalize(), 'interview_date': serializer.data["interviewDate"], 'interview_time': time_convert(serializer.data["interviewTime"])})
+                                {'applicant_name':applicant_name, 'jobPosition': applicationData.jobPostId.jobTitle.capitalize(), 'interview_location': interview_type.capitalize(), 'interview_date': serializer.data["interviewDate"], 'interview_time': time_convert(serializer.data["interviewTime"])})
                     data = {'email_body': email_body, 'to_email': applicationData.userId.email,
                                 'email_subject': email_subject}
                     utils.Util.send_email_body(data)
