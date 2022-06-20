@@ -1,0 +1,55 @@
+<html>
+
+<head>
+    <style>
+        .applicant-title {
+            font-weight: 600;
+        }
+        
+        .congrays {
+            color: #ff00ff;
+        }
+        
+        .importent-text {
+            color: #274e13;
+            margin-left: 1px;
+        }
+        
+        .footer p {
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .footer {
+            margin-top: 35px;
+        }
+        
+        .web-link {
+            display: block;
+            color: #351c8b !important;
+            font-weight: 600 !important;
+        }
+        
+        .main p,
+        ul li {
+            color: #000 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <p class="applicant-title"> <strong>Dear {{applicant_name}},</strong> </p>
+    <p>This email is to inform you that we have tried to communicate with the referee you have provided to verify. Unfortunately, we couldn't verify your reference named <strong class="importent-text">"{{ref_name}}"</strong>. You are advised to change your
+        reference details as early as possible and before hitting the <strong class="importent-text">"update"</strong> button, make sure you have put all the information correctly. Thanks!
+    </p>
+    <div>
+        <div class="footer">
+            <p style="color: #000 !important">Best Regards,</p>
+            <p style="color: #bf9000 !important;">HR Department</p>
+            <p style="color: #20124d !important;">TechForing Limited</p>
+        </div>
+        <a href="https://www.techforing.com/" class="web-link">www.techforing.com</a>
+    </div>
+</body>
+
+</html>

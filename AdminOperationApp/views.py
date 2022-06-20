@@ -887,17 +887,14 @@ class ReferenceVerificationView(generics.RetrieveUpdateAPIView):
                             'email_subject': 'Update'}
                     Util.send_email(data)
             if refInfo.is_rejected:
-                email_body = f'Hi  {refInfo.user.full_name},\n We have tried to verify your references. ' \
-                                 f'Alas, we couldn\'t verify your reference named {refInfo.name}, You are requested to ' \
-                                 f'change the reference details. Before updating please rech    eck the information\n\n' \
-                                '\n\n' \
-                                 'Thanks & Regards,\n' \
-                                 'HR Department\n' \
-                                 'TechForing Limited.\n' \
-                                 'www.techforing.com'
-                data = {'email_body': email_body, 'to_email': refInfo.user.email,
-                            'email_subject': 'Update'}
-                Util.send_email(data)
+                email_subject=f'Reference Update | TechForing Career'
+                refName=refInfo.name
+                email_body=render_to_string('emailTemplate/update_reference.html', 
+                                {'ref_name':refName, 'applicant_name': refInfo.user.full_name})
+                data = {'email_body': email_body, 'to_email': self.request.user.email,
+                                'email_subject': email_subject}
+                utils.Util.send_email_body(data)
+
         else:
             return Response({'message': 'Documents is not verified yet.'}, status=status.HTTP_400_BAD_REQUEST)
 
