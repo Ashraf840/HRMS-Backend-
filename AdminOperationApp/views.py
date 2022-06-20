@@ -116,7 +116,7 @@ class RejectCandidateStatusView(generics.RetrieveUpdateDestroyAPIView):
         applicantName=applicationData.userId.full_name
         email_body=render_to_string('emailTemplate/rejected_message.html', 
                                 {'applicantName':applicantName, 'jobPosition': applicationData.jobPostId.jobTitle.capitalize()})
-        data = {'email_body': email_body, 'to_email': applicationData.userId.email,
+        data = {'email_body': email_body, 'to_email': self.request.user.email,
                     'email_subject': email_subject}
         utils.Util.send_email_body(data)
 
@@ -606,7 +606,7 @@ class InterviewTimeScheduleView(generics.ListCreateAPIView):
                     applicant_name=applicationData.userId.full_name
                     email_body=render_to_string('emailTemplate/interview/virtual_new_interview.html', 
                                 {'applicant_name':applicant_name, 'jobPosition': applicationData.jobPostId.jobTitle.capitalize(), 'interview_location': interview_type.capitalize(), 'interview_date': serializer.data["interviewDate"], 'interview_time': time_convert(serializer.data["interviewTime"]), 'meeting_link': serializer.data["interviewLocation"]})
-                    data = {'email_body': email_body, 'to_email': applicationData.userId.email,
+                    data = {'email_body': email_body, 'to_email': self.request.user.email,
                                 'email_subject': email_subject}
                     utils.Util.send_email_body(data)
 
@@ -615,7 +615,7 @@ class InterviewTimeScheduleView(generics.ListCreateAPIView):
                     applicant_name=applicationData.userId.full_name
                     email_body=render_to_string('emailTemplate/interview/virtual_update_interview.html', 
                                 {'applicant_name':applicant_name, 'jobPosition': applicationData.jobPostId.jobTitle.capitalize(), 'interview_location': interview_type.capitalize(), 'interview_date': serializer.data["interviewDate"], 'interview_time': time_convert(serializer.data["interviewTime"]), 'meeting_link': serializer.data["interviewLocation"]})
-                    data = {'email_body': email_body, 'to_email': applicationData.userId.email,
+                    data = {'email_body': email_body, 'to_email': self.request.user.email,
                                 'email_subject': email_subject}
                     utils.Util.send_email_body(data)
             else:
@@ -624,7 +624,7 @@ class InterviewTimeScheduleView(generics.ListCreateAPIView):
                     applicant_name=applicationData.userId.full_name
                     email_body=render_to_string('emailTemplate/interview/office_new_interview.html', 
                                 {'applicant_name':applicant_name, 'jobPosition': applicationData.jobPostId.jobTitle.capitalize(), 'interview_location': interview_type.capitalize(), 'interview_date': serializer.data["interviewDate"], 'interview_time': time_convert(serializer.data["interviewTime"])})
-                    data = {'email_body': email_body, 'to_email': applicationData.userId.email,
+                    data = {'email_body': email_body, 'to_email': self.request.user.email,
                                 'email_subject': email_subject}
                     utils.Util.send_email_body(data)
 
@@ -633,7 +633,7 @@ class InterviewTimeScheduleView(generics.ListCreateAPIView):
                     applicant_name=applicationData.userId.full_name
                     email_body=render_to_string('emailTemplate/interview/office_update_interview.html', 
                                 {'applicant_name':applicant_name, 'jobPosition': applicationData.jobPostId.jobTitle.capitalize(), 'interview_location': interview_type.capitalize(), 'interview_date': serializer.data["interviewDate"], 'interview_time': time_convert(serializer.data["interviewTime"])})
-                    data = {'email_body': email_body, 'to_email': applicationData.userId.email,
+                    data = {'email_body': email_body, 'to_email': self.request.user.email,
                                 'email_subject': email_subject}
                     utils.Util.send_email_body(data)
 
@@ -720,10 +720,10 @@ class FinalSalaryView(generics.CreateAPIView):
 
         # Email sending functionality
         try:
-            job=jobApplication.jobPostId.jobTitle
-            email_subject = f'{jobApplication.jobProgressStatus} from TechForing Career | {job}'
+            job=jobApplication.jobPostId.jobTitle.capitalize()
+            email_subject = f'{jobApplication.jobProgressStatus} | {job} | TechForing Career'
             email_body=render_to_string('emailTemplate/documentsubmission.html', 
-                                                                {'applicant_name':jobApplication.userId.full_name,'job':jobApplication.jobPostId.jobTitle})
+                                                                {'applicant_name':jobApplication.userId.full_name,'job':job})
             data = {'email_body': email_body, 'to_email': jobApplication.userId.email,
                     'email_subject': email_subject}
             Util.send_email_body(data)
