@@ -1,25 +1,61 @@
 <html>
 
+<head>
+    <style>
+        .applicant-title {
+            font-weight: 600;
+        }
+        
+        .congrays {
+            color: #ff00ff;
+        }
+        
+        .importent-text {
+            color: #274e13;
+            margin-left: 1px;
+        }
+        
+        .footer p {
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .footer {
+            margin-top: 35px;
+        }
+        
+        .web-link {
+            display: block;
+            color: #351c8b !important;
+            font-weight: 600 !important;
+        }
+        
+        .main p,
+        ul li {
+            color: #000 !important;
+        }
+    </style>
+</head>
+
 <body>
-    <p>Dear Sir/Madam,</p>
-    <p><b>Salam and Greetings!</b> {{applicant_name}} applied to our organization and included you
-        as
-        reference.</p>
-    <p>
-        We would like to obtain your confirmation regarding the reference. Kindly, fill up the form as for written
-        documents. We would really appreciate it if you kindly fill up the form given below:
-    </p>
-    <p>Form Link: {{reference_verify_link}} </p>
+    <p class="applicant-title">Dear Sir/Madam,</p>
+    <div class="main">
+        <p><strong class="importent-text">Salam and Greetings!</strong> {{applicant_name}} applied to our organization and included you as reference.
+        </p>
+        <p>
+            We would like to obtain your confirmation regarding the reference. Kindly, fill up the form as for written documents. We would really appreciate it if you kindly fill up the form given below:
+        </p>
+    </div>
+    <p><strong class="importent-text">Form Link:</strong> {{reference_verify_link}} </p>
     <br>
-    <p>
-        With Best Regards,
-        <br>
-        <b>HR Department</b>
-        <br>
-        <b>TechForing Limited</b>
-        <br>
-        <a href="www.techforing.com">www.techforing.com</a>
-    </p>
+    <div>
+        <div class="footer">
+            <p style="color: #000 !important">Best Regards,</p>
+            <p style="color: #bf9000 !important;">HR Department</p>
+            <p style="color: #20124d !important;">TechForing Limited</p>
+        </div>
+        <a href="https://www.techforing.com/" class="web-link">www.techforing.com</a>
+    </div>
     </p>
 </body>
 
