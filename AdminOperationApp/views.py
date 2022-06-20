@@ -874,18 +874,17 @@ class ReferenceVerificationView(generics.RetrieveUpdateAPIView):
                     refInfo.applied_job.jobProgressStatus = JobStatusModel.objects.get(status='On Boarding')
                     refInfo.applied_job.save()
 
-                    email_body = f'Hi  {refInfo.applied_job.userId.full_name},\n We have verified your documents and ' \
-                                 f'references. As you documents and references verification is completed, You are requested to ' \
-                                 f'read our terms & conditions, if you are agree please submit you valuable feedback.\n\n' \
-                                 'Thanks & Regards,\n' \
-                                 'HR Department\n' \
-                                 'TechForing Limited.\n' \
-                                 'www.techforing.com'
-                    # f'Office Address: House: 149 (4th floor), Lane: 1, Baridhara DOHS, Dhaka.\n' \
-
+                    current_site = get_current_site(request).domain
+                    if current_site == 'careeradmin.techforing.com':
+                        site_link = 'career.techforing.com/my_jobs'
+                    else:
+                        site_link = 'devcareer.techforing.com/my_jobs'
+                    email_subject = f'On Boarding | {refInfo.applied_job.jobPostId.jobTitle.capitalize()} | TechForing Career'
+                    email_body=render_to_string('emailTemplate/doc_ref_verified.html', { 'applicant_name': refInfo.applied_job.userId.full_name, 'site_link': site_link })
                     data = {'email_body': email_body, 'to_email': refInfo.applied_job.userId.email,
-                            'email_subject': 'Update'}
-                    Util.send_email(data)
+                            'email_subject': email_subject}
+                    Util.send_email_body(data)
+
             if refInfo.is_rejected:
                 email_subject=f'Update Reference| TechForing Career'
                 refName=refInfo.name
