@@ -887,7 +887,7 @@ class ReferenceVerificationView(generics.RetrieveUpdateAPIView):
                             'email_subject': 'Update'}
                     Util.send_email(data)
             if refInfo.is_rejected:
-                email_subject=f'Reference Update | TechForing Career'
+                email_subject=f'Update Reference| TechForing Career'
                 refName=refInfo.name
                 email_body=render_to_string('emailTemplate/update_reference.html', 
                                 {'ref_name':refName, 'applicant_name': refInfo.user.full_name})
