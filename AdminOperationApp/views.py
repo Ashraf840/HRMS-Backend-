@@ -112,21 +112,13 @@ class RejectCandidateStatusView(generics.RetrieveUpdateDestroyAPIView):
         """
         Email functionality
         """
-        email_body = f'Dear {applicationData.userId.full_name.capitalize()} \n\n' \
-                     f'Thank you for your interest in the {applicationData.jobPostId.jobTitle.upper()} position. ' \
-                     f'We’ve reviewed your background and experience and unfortunately, ' \
-                     f'we have decided to move ahead with other candidates. ' \
-                     f'We appreciate the time you took to apply and encourage you not to let this be the end of your ' \
-                     f'exploration of Careers at TechForing! We’re growing and adding new roles on a regular basis. ' \
-                     f'So we invite you to explore careers for another great opportunity to pursue.\n\n' \
-                     'Thanks & Regards,\n' \
-                     'HR Department\n' \
-                     'TechForing Limited.\n\n' \
-                     'www.techforing.com'
-
+        email_subject=f'Status of the Screening Test | ' + applicationData.jobPostId.jobTitle.capitalize() + ' | TechForing'
+        applicantName=applicationData.userId.full_name
+        email_body=render_to_string('emailTemplate/rejected_message.html', 
+                                {'applicantName':applicantName, 'jobPosition': applicationData.jobPostId.jobTitle.capitalize()})
         data = {'email_body': email_body, 'to_email': applicationData.userId.email,
-                'email_subject': f'{applicationData.jobPostId.jobTitle.upper()}|Status of the Screening Test.'}
-        Util.send_email(data)
+                    'email_subject': email_subject}
+        utils.Util.send_email_body(data)
 
         return Response({'detail': 'rejected'})
 
