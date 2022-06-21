@@ -3,12 +3,7 @@
 <head>
     <style>
         .applicant-title {
-            color: #00f;
             font-weight: 600;
-        }
-        
-        .congrays {
-            color: #00f;
         }
         
         .importent-text {
@@ -25,33 +20,24 @@
             margin-top: 35px;
         }
         
-        .img {
-            height: 60px;
-        }
-        
         .web-link {
             display: block;
             color: #351c8b !important;
             font-weight: 600 !important;
         }
         
-        .main p {
+        .main p,
+        ul li {
             color: #000 !important;
         }
     </style>
 </head>
 
 <body>
+    <p class="applicant-title"> <strong>Dear {{applicant_name}},</strong> </p>
     <div class="main">
-        <p class="applicant-title"> <strong>Dear {{applicant_name}},</strong> </p>
-        <p> <strong class="congrays">Congratulations!</strong> You have been qualified for a <strong class="importent-text">F2F Interview</strong> for the position of <strong class="importent-text">"{{jobPosition}}"</strong>. You are requested to join our
-            {{interview_location}} Meeting at <strong class="importent-text">({{interview_date}},
-                {{interview_time}}).</strong>
-        </p>
-        <p><strong class="importent-text">Meeting Link:</strong> <strong class="importent-text">{{meeting_link}}</strong>
-        </p>
-        <p>If you have any questions in the meantime, feel free to reach out by this <strong class="importent-text">
-                Mail or "+8801318205752".</strong>
+        <p>This email is to inform you that we have tried to communicate with the referee you have provided to verify. Unfortunately, we couldn't verify your reference named <strong class="importent-text">"{{ref_name}}"</strong>. You are advised to change
+            your reference details as early as possible and before hitting the <strong class="importent-text">"update"</strong> button, make sure you have put all the information correctly. Thanks!
         </p>
     </div>
     <div>

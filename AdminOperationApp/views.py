@@ -112,21 +112,13 @@ class RejectCandidateStatusView(generics.RetrieveUpdateDestroyAPIView):
         """
         Email functionality
         """
-        email_body = f'Dear {applicationData.userId.full_name.capitalize()} \n\n' \
-                     f'Thank you for your interest in the {applicationData.jobPostId.jobTitle.upper()} position. ' \
-                     f'We’ve reviewed your background and experience and unfortunately, ' \
-                     f'we have decided to move ahead with other candidates. ' \
-                     f'We appreciate the time you took to apply and encourage you not to let this be the end of your ' \
-                     f'exploration of Careers at TechForing! We’re growing and adding new roles on a regular basis. ' \
-                     f'So we invite you to explore careers for another great opportunity to pursue.\n\n' \
-                     'Thanks & Regards,\n' \
-                     'HR Department\n' \
-                     'TechForing Limited.\n\n' \
-                     'www.techforing.com'
-
+        email_subject=f'Status of the Screening Test | ' + applicationData.jobPostId.jobTitle.capitalize() + ' | TechForing'
+        applicantName=applicationData.userId.full_name
+        email_body=render_to_string('emailTemplate/rejected_message.html', 
+                                {'applicantName':applicantName, 'jobPosition': applicationData.jobPostId.jobTitle.capitalize()})
         data = {'email_body': email_body, 'to_email': applicationData.userId.email,
-                'email_subject': f'{applicationData.jobPostId.jobTitle.upper()}|Status of the Screening Test.'}
-        Util.send_email(data)
+                    'email_subject': email_subject}
+        utils.Util.send_email_body(data)
 
         return Response({'detail': 'rejected'})
 
@@ -610,37 +602,37 @@ class InterviewTimeScheduleView(generics.ListCreateAPIView):
         def send_email_office(interview_type, format):
             if interview_type == 'virtual':
                 if format == 'new':
-                    email_subject=f'Invitation For F2F Interview | ' + applicationData.jobPostId.jobTitle + ' | TechForing'
+                    email_subject=f'Invitation For F2F Interview | ' + applicationData.jobPostId.jobTitle.capitalize() + ' | TechForing'
                     applicant_name=applicationData.userId.full_name
                     email_body=render_to_string('emailTemplate/interview/virtual_new_interview.html', 
-                                {'applicant_name':applicant_name, 'jobPosition': applicationData.jobPostId.jobTitle, 'interview_location': interview_type.capitalize(), 'interview_date': serializer.data["interviewDate"], 'interview_time': time_convert(serializer.data["interviewTime"]), 'meeting_link': serializer.data["interviewLocation"]})
+                                {'applicant_name':applicant_name, 'jobPosition': applicationData.jobPostId.jobTitle.capitalize(), 'interview_location': interview_type.capitalize(), 'interview_date': serializer.data["interviewDate"], 'interview_time': time_convert(serializer.data["interviewTime"]), 'meeting_link': serializer.data["interviewLocation"]})
                     data = {'email_body': email_body, 'to_email': applicationData.userId.email,
                                 'email_subject': email_subject}
                     utils.Util.send_email_body(data)
 
                 else:
-                    email_subject=f'Invitation For F2F Interview | ' + applicationData.jobPostId.jobTitle + ' | TechForing'
+                    email_subject=f'Interview Schedule | ' + applicationData.jobPostId.jobTitle.capitalize() + ' | TechForing'
                     applicant_name=applicationData.userId.full_name
                     email_body=render_to_string('emailTemplate/interview/virtual_update_interview.html', 
-                                {'applicant_name':applicant_name, 'jobPosition': applicationData.jobPostId.jobTitle, 'interview_location': interview_type.capitalize(), 'interview_date': serializer.data["interviewDate"], 'interview_time': time_convert(serializer.data["interviewTime"]), 'meeting_link': serializer.data["interviewLocation"]})
+                                {'applicant_name':applicant_name, 'jobPosition': applicationData.jobPostId.jobTitle.capitalize(), 'interview_location': interview_type.capitalize(), 'interview_date': serializer.data["interviewDate"], 'interview_time': time_convert(serializer.data["interviewTime"]), 'meeting_link': serializer.data["interviewLocation"]})
                     data = {'email_body': email_body, 'to_email': applicationData.userId.email,
                                 'email_subject': email_subject}
                     utils.Util.send_email_body(data)
             else:
                 if format == 'new':
-                    email_subject=f'Invitation For F2F Interview | ' + applicationData.jobPostId.jobTitle + ' | TechForing'
+                    email_subject=f'Invitation For F2F Interview | ' + applicationData.jobPostId.jobTitle.capitalize() + ' | TechForing'
                     applicant_name=applicationData.userId.full_name
                     email_body=render_to_string('emailTemplate/interview/office_new_interview.html', 
-                                {'applicant_name':applicant_name, 'jobPosition': applicationData.jobPostId.jobTitle, 'interview_location': interview_type.capitalize(), 'interview_date': serializer.data["interviewDate"], 'interview_time': time_convert(serializer.data["interviewTime"])})
+                                {'applicant_name':applicant_name, 'jobPosition': applicationData.jobPostId.jobTitle.capitalize(), 'interview_location': interview_type.capitalize(), 'interview_date': serializer.data["interviewDate"], 'interview_time': time_convert(serializer.data["interviewTime"])})
                     data = {'email_body': email_body, 'to_email': applicationData.userId.email,
                                 'email_subject': email_subject}
                     utils.Util.send_email_body(data)
 
                 else:
-                    email_subject=f'Interview Schedule | ' + applicationData.jobPostId.jobTitle + ' | TechForing'
+                    email_subject=f'Interview Schedule | ' + applicationData.jobPostId.jobTitle.capitalize() + ' | TechForing'
                     applicant_name=applicationData.userId.full_name
                     email_body=render_to_string('emailTemplate/interview/office_update_interview.html', 
-                                {'applicant_name':applicant_name, 'jobPosition': applicationData.jobPostId.jobTitle, 'interview_location': interview_type.capitalize(), 'interview_date': serializer.data["interviewDate"], 'interview_time': time_convert(serializer.data["interviewTime"])})
+                                {'applicant_name':applicant_name, 'jobPosition': applicationData.jobPostId.jobTitle.capitalize(), 'interview_location': interview_type.capitalize(), 'interview_date': serializer.data["interviewDate"], 'interview_time': time_convert(serializer.data["interviewTime"])})
                     data = {'email_body': email_body, 'to_email': applicationData.userId.email,
                                 'email_subject': email_subject}
                     utils.Util.send_email_body(data)
@@ -728,10 +720,10 @@ class FinalSalaryView(generics.CreateAPIView):
 
         # Email sending functionality
         try:
-            job=jobApplication.jobPostId.jobTitle
-            email_subject = f'{jobApplication.jobProgressStatus} from TechForing Career | {job}'
+            job=jobApplication.jobPostId.jobTitle.capitalize()
+            email_subject = f'{jobApplication.jobProgressStatus} | {job} | TechForing Career'
             email_body=render_to_string('emailTemplate/documentsubmission.html', 
-                                                                {'applicant_name':jobApplication.userId.full_name,'job':jobApplication.jobPostId.jobTitle})
+                                                                {'applicant_name':jobApplication.userId.full_name,'job':job})
             data = {'email_body': email_body, 'to_email': jobApplication.userId.email,
                     'email_subject': email_subject}
             Util.send_email_body(data)
@@ -855,7 +847,7 @@ class ReferenceVerificationView(generics.RetrieveUpdateAPIView):
         })
 
         data = {'email_body': email_body, 'to_email': refInfo.email,
-                'email_subject': 'Reference Verification.'}
+                'email_subject': 'Reference Verification | TechForing'}
         Util.send_email_body(data)
 
         refInfo.is_sent = True
@@ -882,30 +874,26 @@ class ReferenceVerificationView(generics.RetrieveUpdateAPIView):
                     refInfo.applied_job.jobProgressStatus = JobStatusModel.objects.get(status='On Boarding')
                     refInfo.applied_job.save()
 
-                    email_body = f'Hi  {refInfo.applied_job.userId.full_name},\n We have verified your documents and ' \
-                                 f'references. As you documents and references verification is completed, You are requested to ' \
-                                 f'read our terms & conditions, if you are agree please submit you valuable feedback.\n\n' \
-                                 'Thanks & Regards,\n' \
-                                 'HR Department\n' \
-                                 'TechForing Limited.\n' \
-                                 'www.techforing.com'
-                    # f'Office Address: House: 149 (4th floor), Lane: 1, Baridhara DOHS, Dhaka.\n' \
-
+                    current_site = get_current_site(request).domain
+                    if current_site == 'careeradmin.techforing.com':
+                        site_link = 'career.techforing.com/my_jobs'
+                    else:
+                        site_link = 'devcareer.techforing.com/my_jobs'
+                    email_subject = f'On Boarding | {refInfo.applied_job.jobPostId.jobTitle.capitalize()} | TechForing Career'
+                    email_body=render_to_string('emailTemplate/doc_ref_verified.html', { 'applicant_name': refInfo.applied_job.userId.full_name, 'site_link': site_link })
                     data = {'email_body': email_body, 'to_email': refInfo.applied_job.userId.email,
-                            'email_subject': 'Update'}
-                    Util.send_email(data)
+                            'email_subject': email_subject}
+                    Util.send_email_body(data)
+
             if refInfo.is_rejected:
-                email_body = f'Hi  {refInfo.user.full_name},\n We have tried to verify your references. ' \
-                                 f'Alas, we couldn\'t verify your reference named {refInfo.name}, You are requested to ' \
-                                 f'change the reference details. Before updating please rech    eck the information\n\n' \
-                                '\n\n' \
-                                 'Thanks & Regards,\n' \
-                                 'HR Department\n' \
-                                 'TechForing Limited.\n' \
-                                 'www.techforing.com'
+                email_subject=f'Update Reference| TechForing Career'
+                refName=refInfo.name
+                email_body=render_to_string('emailTemplate/update_reference.html', 
+                                {'ref_name':refName, 'applicant_name': refInfo.user.full_name})
                 data = {'email_body': email_body, 'to_email': refInfo.user.email,
-                            'email_subject': 'Update'}
-                Util.send_email(data)
+                                'email_subject': email_subject}
+                utils.Util.send_email_body(data)
+
         else:
             return Response({'message': 'Documents is not verified yet.'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -1020,18 +1008,14 @@ class OfficialDocumentsView(generics.CreateAPIView, generics.RetrieveUpdateDestr
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
 
-            email_body = f'Hi  {alreadyCreated.first().applicationId.userId.full_name},\n ' \
-                         f'Congratulations, Your appointment letter is Updated to your portal.' \
-                         f'please check you portal for further process.\n\n' \
-                         'Thanks & Regards,\n' \
-                         'HR Department\n' \
-                         'TechForing Limited.\n' \
-                         'www.techforing.com'
-            # f'Office Address: House: 149 (4th floor), Lane: 1, Baridhara DOHS, Dhaka.\n' \
-
+            email_subject=f'Update Appointment Letter | TechForing Career'
+            applicantName=alreadyCreated.first().applicationId.userId.full_name
+            email_body=render_to_string('emailTemplate/generate_appointment_letter.html', 
+                                {'applicant_name': applicantName})
             data = {'email_body': email_body, 'to_email': alreadyCreated.first().applicationId.userId.email,
-                    'email_subject': 'Update'}
-            Util.send_email(data)
+                                'email_subject': email_subject}
+            utils.Util.send_email_body(data)
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response({'detail': 'Already created Appointment letter for this candidate.'},
                         status=status.HTTP_208_ALREADY_REPORTED)
