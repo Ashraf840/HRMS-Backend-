@@ -718,12 +718,18 @@ class FinalSalaryView(generics.CreateAPIView):
         jobApplication.jobProgressStatus = jobStatus.filter(status='Document Submission').get()
         jobApplication.save()
 
+        currentSite = get_current_site(request).domain
+        if currentSite == 'careeradmin.techforing.com':
+            siteLink = 'career.techforing.com'
+        else:
+            siteLink = 'devcareer.techforing.com'
+
         # Email sending functionality
         try:
             job=jobApplication.jobPostId.jobTitle.capitalize()
             email_subject = f'{jobApplication.jobProgressStatus} | {job} | TechForing Career'
             email_body=render_to_string('emailTemplate/documentsubmission.html', 
-                                                                {'applicant_name':jobApplication.userId.full_name,'job':job})
+                                                                {'applicant_name':jobApplication.userId.full_name,'job':job, 'site_link': siteLink})
             data = {'email_body': email_body, 'to_email': jobApplication.userId.email,
                     'email_subject': email_subject}
             Util.send_email_body(data)
@@ -865,6 +871,12 @@ class ReferenceVerificationView(generics.RetrieveUpdateAPIView):
             refInfo = ReferenceInformationModel.objects.get(id=refId)
             refCheck = ReferenceInformationModel.objects.filter(applied_job=refInfo.applied_job)
 
+            current_site = get_current_site(request).domain
+            if current_site == 'careeradmin.techforing.com':
+                site_link = 'career.techforing.com/my_jobs'
+            else:
+                site_link = 'devcareer.techforing.com/my_jobs'
+
             count = 0
             for ref in refCheck:
                 if ref.is_verified:
@@ -874,11 +886,6 @@ class ReferenceVerificationView(generics.RetrieveUpdateAPIView):
                     refInfo.applied_job.jobProgressStatus = JobStatusModel.objects.get(status='On Boarding')
                     refInfo.applied_job.save()
 
-                    current_site = get_current_site(request).domain
-                    if current_site == 'careeradmin.techforing.com':
-                        site_link = 'career.techforing.com/my_jobs'
-                    else:
-                        site_link = 'devcareer.techforing.com/my_jobs'
                     email_subject = f'On Boarding | {refInfo.applied_job.jobPostId.jobTitle.capitalize()} | TechForing Career'
                     email_body=render_to_string('emailTemplate/doc_ref_verified.html', { 'applicant_name': refInfo.applied_job.userId.full_name, 'site_link': site_link })
                     data = {'email_body': email_body, 'to_email': refInfo.applied_job.userId.email,
@@ -889,7 +896,7 @@ class ReferenceVerificationView(generics.RetrieveUpdateAPIView):
                 email_subject=f'Update Reference| TechForing Career'
                 refName=refInfo.name
                 email_body=render_to_string('emailTemplate/update_reference.html', 
-                                {'ref_name':refName, 'applicant_name': refInfo.user.full_name})
+                                {'ref_name':refName, 'applicant_name': refInfo.user.full_name, 'site_link': site_link})
                 data = {'email_body': email_body, 'to_email': refInfo.user.email,
                                 'email_subject': email_subject}
                 utils.Util.send_email_body(data)
@@ -1008,12 +1015,18 @@ class OfficialDocumentsView(generics.CreateAPIView, generics.RetrieveUpdateDestr
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
 
+            currentSite = get_current_site(request).domain
+            if currentSite == 'careeradmin.techforing.com':
+                siteLink = 'career.techforing.com'
+            else:
+                siteLink = 'devcareer.techforing.com'
+
             email_subject=f'Update Appointment Letter | TechForing Career'
             applicantName=alreadyCreated.first().applicationId.userId.full_name
             email_body=render_to_string('emailTemplate/generate_appointment_letter.html', 
                                 {'applicant_name': applicantName})
             data = {'email_body': email_body, 'to_email': alreadyCreated.first().applicationId.userId.email,
-                                'email_subject': email_subject}
+                                'email_subject': email_subject, 'site_link': siteLink}
             utils.Util.send_email_body(data)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
