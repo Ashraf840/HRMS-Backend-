@@ -2,10 +2,6 @@
 
 <head>
     <style>
-        .applicant-title {
-            /* font-weight: 600; */
-        }
-        
         .congrays {
             color: #ff00ff;
         }
@@ -30,24 +26,20 @@
             font-weight: 600 !important;
         }
         
-        .main p,
-        ul li {
+        .main p {
             color: #000 !important;
         }
     </style>
 </head>
 
 <body>
-    <p class="applicant-title">Dear Sir/Madam,</p>
+    <p class="applicant-title"> Dear {{applicant_name}}, </p>
     <div class="main">
-        <p><strong class="importent-text">Salam and Greetings!</strong> {{applicant_name}} applied to our organization and included you as reference.
-        </p>
         <p>
-            We would like to obtain your confirmation regarding the reference. Kindly, fill up the form as for written documents. We would really appreciate it if you kindly fill up the form.
+            <strong class="congrays">Congratulations!</strong> Your Appointment Letter has been issued and updated on your portal to our <a href={{site_link}} style="color: #274e13;">career site</a>. To learn about further processing, please check your
+            portal. Thanks!
         </p>
     </div>
-    <p><strong class="importent-text">Form Link:</strong> {{reference_verify_link}} </p>
-    <br>
     <div>
         <div class="footer">
             <p style="color: #000 !important">Best Regards,</p>
@@ -56,7 +48,6 @@
         </div>
         <a href="https://www.techforing.com/" class="web-link">www.techforing.com</a>
     </div>
-    </p>
 </body>
 
 </html>

@@ -1,46 +1,76 @@
 <html>
 
+<head>
+    <style>
+        .congrays {
+            color: #ff00ff;
+        }
+        
+        .importent-text {
+            color: #274e13;
+            margin-left: 1px;
+        }
+        
+        .footer p {
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .footer {
+            margin-top: 35px;
+        }
+        
+        .web-link {
+            display: block;
+            color: #351c8b !important;
+            font-weight: 600 !important;
+        }
+        
+        .main p,
+        ul li {
+            color: #000 !important;
+        }
+    </style>
+</head>
+
 <body>
-    <p>Dear {{applicant_name}}</p>
-    <p><b>Congratulations!</b> You have been selected for the <b>"{{job}}"</b> position, and TechForing is excited to
-        bring you on board.</p>
+    <p class="applicant-title"> Dear {{applicant_name}}, </p>
+    <p><strong class="congrays">Congratulations!</strong> You have been selected for the <strong class="importent-text">"{{job}}"</strong> position, and TechForing is excited to bring you on board.</p>
     <p>
-        We're just a few formalities away from getting down to work. Please take the time to review our formal offer. It
-        includes important details about the terms and conditions of your anticipated employment with <b>TechForing</b>.
+        We're just a few formalities away from getting down to work. Please take the time to review our formal offer. It includes important details about the terms and conditions of your anticipated employment with <strong class="importent-text">TechForing.</strong>
     </p>
-    <p>Please submit the following <b>Documents</b> (Digital Copy) within <b>17th June 2022</b> for issuing your
-        <b>Appointment
-            Letter</b>
-        :
+    <p>Please submit the following <strong class="importent-text">Documents</strong> (Digital Copy) through our <a href={{site_link}}>career site</a> within <strong class="importent-text">17th June
+            2022</strong> for issuing your
+        <strong class="importent-text">Appointment
+            Letter :
     </p>
     <ul>
-        <li>Copy of all <b>Educational Certificates</b>.</li>
-        <li><b>NID</b> copy.</li>
-        <li><b>Two References</b> with an email address and contact number from <b>Past Companies</b>.</li>
-        <li><b>NOC</b> from your previous workplace.</li>
-        <li>One <b>Digital Photo</b> and two passport size <b>Physical Photos</b>.</li>
-        <li><b>Present</b> Address & <b>Permanent</b> Address.</li>
-        <li><b>COVID-19 Vaccination</b> Certificate.</li>
-    </ul>
-    <p>If you have any questions, please let us know by this email: <a href="mailto:career@techforing.com"
-            style="font-weight: bold;">
+        <li>Copy of all <strong class="importent-text">Educational Certificates.</strong></li>
+        <li><strong class="importent-text">NID</strong> copy.</li>
+        <li><strong class="importent-text">Two References</strong> with an email address and contact number from <strong class="importent-text">Past
+                Companies.</strong></li>
+        <li><strong class="importent-text">NOC</strong> from your previous workplace.</li>
+        <li>One <strong class="importent-text">Digital Photo</strong> and two passport size <strong class="importent-text">Physical Photos.</strong></li>
+        <li><strong class="importent-text">Present</strong> Address & <strong class="importent-text">Permanent</strong> Address.
+        </li>
+        <li><strong class="importent-text">COVID-19 Vaccination</strong> Certificate.</li>
+        </ul>
+        <p>If you have any questions, please let us know by this email: <a href="mailto:career@techforing.com" style="font-weight: bold; color: #351c8b">
             career@techforing.com
-        </a> or you can contact us through <a href="https://career.techforing.com/support"
-            style="font-weight: bold;">Support</a>.</p>
+        </a> or you can contact us through <a href="https://career.techforing.com/support" style="font-weight: bold; color: #351c8b">Support</a>.</p>
     </p>
     <p>
-        <b>Welcome to TechForing.</b> We are delighted to have you with our team.
+        <strong style="color: #00f;">Welcome to TechForing.</strong> We are delighted to have you with our team.
     </p>
     <br>
-    <p>
-        With Best Regards,
-        <br>
-        <b>HR Department</b>
-        <br>
-        <b>TechForing Limited</b>
-        <br>
-        <a href="www.techforing.com">www.techforing.com</a>
-    </p>
+    <div>
+        <div class="footer">
+            <p style="color: #000 !important">Best Regards,</p>
+            <p style="color: #bf9000 !important;">HR Department</p>
+            <p style="color: #20124d !important;">TechForing Limited</p>
+        </div>
+        <a href="https://www.techforing.com/" class="web-link">www.techforing.com</a>
+    </div>
 </body>
 
 </html>

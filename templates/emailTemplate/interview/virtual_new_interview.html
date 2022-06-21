@@ -2,12 +2,8 @@
 
 <head>
     <style>
-        .applicant-title {
-            /* font-weight: 600; */
-        }
-        
         .congrays {
-            color: #ff00ff;
+            color: #00f;
         }
         
         .importent-text {
@@ -24,30 +20,36 @@
             margin-top: 35px;
         }
         
+        .img {
+            height: 60px;
+        }
+        
         .web-link {
             display: block;
             color: #351c8b !important;
             font-weight: 600 !important;
         }
         
-        .main p,
-        ul li {
+        .main p {
             color: #000 !important;
         }
     </style>
 </head>
 
 <body>
-    <p class="applicant-title">Dear Sir/Madam,</p>
     <div class="main">
-        <p><strong class="importent-text">Salam and Greetings!</strong> {{applicant_name}} applied to our organization and included you as reference.
+        <p class="applicant-title">Dear {{applicant_name}},</p>
+        <p> <strong class="congrays">Congratulations!</strong> You have been qualified for a <strong class="importent-text">F2F Interview</strong> for the position of <strong class="importent-text">"{{jobPosition}}"</strong>. You are requested to join our
+            {{interview_location}} Meeting at <strong class="importent-text">({{interview_date}},
+                {{interview_time}}).</strong>
         </p>
-        <p>
-            We would like to obtain your confirmation regarding the reference. Kindly, fill up the form as for written documents. We would really appreciate it if you kindly fill up the form.
+        <p><strong class="importent-text">Meeting Link:</strong> <strong class="importent-text">{{meeting_link}}</strong>
+        </p>
+        <p>If you have any questions in the meantime, feel free to reach out by this: <a href="mailto:career@techforing.com" style="font-weight: bold;">
+                career@techforing.com
+            </a> or <strong class="importent-text">"+8801318205752".</strong>
         </p>
     </div>
-    <p><strong class="importent-text">Form Link:</strong> {{reference_verify_link}} </p>
-    <br>
     <div>
         <div class="footer">
             <p style="color: #000 !important">Best Regards,</p>
@@ -56,7 +58,6 @@
         </div>
         <a href="https://www.techforing.com/" class="web-link">www.techforing.com</a>
     </div>
-    </p>
 </body>
 
 </html>

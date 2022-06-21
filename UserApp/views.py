@@ -57,6 +57,7 @@ class RegisterView(generics.GenericAPIView):
         data = {'email_body': email_body, 'to_email': user.email,
                 'email_subject': 'TechForing Career - Verification Mail '}
 
+
         Util.send_email_body(data)
         return Response(user_data, status=status.HTTP_201_CREATED)
 

@@ -2,14 +2,6 @@
 
 <head>
     <style>
-        .applicant-title {
-            /* font-weight: 600; */
-        }
-        
-        .congrays {
-            color: #ff00ff;
-        }
-        
         .importent-text {
             color: #274e13;
             margin-left: 1px;
@@ -38,16 +30,17 @@
 </head>
 
 <body>
-    <p class="applicant-title">Dear Sir/Madam,</p>
+    <p class="applicant-title"> Dear {{applicant_name}}, </p>
     <div class="main">
-        <p><strong class="importent-text">Salam and Greetings!</strong> {{applicant_name}} applied to our organization and included you as reference.
+        <p>This email is to inform you that we have tried to communicate with the referee you have provided to verify. Unfortunately, we couldn't verify your reference named <strong class="importent-text">"{{ref_name}}"</strong>. You are advised to change
+            your reference details through our <a href={{site_link}}>career site</a> as early as possible and before hitting the <strong class="importent-text">"update"</strong> button, make sure you have put all the information correctly. Thanks!
         </p>
         <p>
-            We would like to obtain your confirmation regarding the reference. Kindly, fill up the form as for written documents. We would really appreciate it if you kindly fill up the form.
+            If you have any questions in the meantime, feel free to reach out by this: <a href="mailto:career@techforing.com" style="font-weight: bold;">
+                career@techforing.com
+            </a> or <strong class="importent-text">"+8801318205752".</strong>
         </p>
     </div>
-    <p><strong class="importent-text">Form Link:</strong> {{reference_verify_link}} </p>
-    <br>
     <div>
         <div class="footer">
             <p style="color: #000 !important">Best Regards,</p>
@@ -56,7 +49,6 @@
         </div>
         <a href="https://www.techforing.com/" class="web-link">www.techforing.com</a>
     </div>
-    </p>
 </body>
 
 </html>
