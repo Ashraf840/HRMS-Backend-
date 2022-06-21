@@ -1,28 +1,64 @@
 <html>
 
+<head>
+    <style>
+        .congrays {
+            color: #ff00ff;
+        }
+        
+        .importent-text {
+            color: #274e13;
+            margin-left: 1px;
+        }
+        
+        .footer p {
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .footer {
+            margin-top: 35px;
+        }
+        
+        .web-link {
+            display: block;
+            color: #351c8b !important;
+            font-weight: 600 !important;
+        }
+        
+        .main p,
+        ul li {
+            color: #000 !important;
+        }
+    </style>
+</head>
+
 <body>
-    <p>Dear {{applicant_name}},</p>
-    <p><b>Congratulations!</b> We have got positive feedback from the Department Manager.</p>
-    <p>
-        TechForing is a family of talented and exciting individuals. We are very concerned about our office culture and environment. Here are the <b>Terms and Conditions (NDA & NCA)</b> for every employee of TechForing Limited.</p>
-    <p><b>Please read the attachment carefully and give us your feedback by replying to this email with your
-            consent.</b></p>
-    <p>We appreciate your patience while your hiring process is going on.</p>
-    <p>If you have any questions, please let us know by this email: <a href="mailto:career@techforing.com" style="font-weight: bold;">
-            career@techforing.com
-        </a> or you can contact us through <a href="https://career.techforing.com/support" style="font-weight: bold;">Support</a>.</p>
-    </p>
-    <br>
-    <p>
-        With Best Regards,
-        <br>
-        <b>HR Department</b>
-        <br>
-        <b>TechForing Limited</b>
-        <br>
-        <a href="www.techforing.com">www.techforing.com</a>
-    </p>
-    </p>
+    <div class="main">
+        <p>Dear {{applicant_name}},</p>
+        <p><strong class="congrays">Congratulations!</strong> We have got positive feedback from the Department Manager.
+        </p>
+        <p>
+            TechForing is a family of talented and exciting individuals. We are very concerned about our office culture and environment. Here are the <strong class="importent-text">Terms and Conditions (NDA & NCA)</strong> for every employee of TechForing
+            Limited.
+        </p>
+        <p><strong class="importent-text">Please read the attachment carefully and give us your feedback by replying to
+                this email with your
+                consent.</strong></p>
+        <p>We appreciate your patience while your hiring process is going on.</p>
+        <p>If you have any questions, please let us know by this email: <a href="mailto:career@techforing.com" style="font-weight: bold; color: #351c8b">
+                career@techforing.com
+            </a> or you can contact us through <a href="https://career.techforing.com/support" style="font-weight: bold; color: #351c8b">Support</a>.</p>
+        </p>
+    </div>
+    <div>
+        <div class="footer">
+            <p style="color: #000 !important">Best Regards,</p>
+            <p style="color: #bf9000 !important;">HR Department</p>
+            <p style="color: #20124d !important;">TechForing Limited</p>
+        </div>
+        <a href="https://www.techforing.com/" class="web-link">www.techforing.com</a>
+    </div>
 </body>
 
 </html>

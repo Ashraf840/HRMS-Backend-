@@ -1,55 +1,89 @@
 <html>
 
+<head>
+    <style>
+        .congrays {
+            color: #ff00ff;
+        }
+        
+        .importent-text {
+            color: #274e13;
+            margin-left: 1px;
+        }
+        
+        .footer p {
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .footer {
+            margin-top: 35px;
+        }
+        
+        .web-link {
+            display: block;
+            color: #351c8b !important;
+            font-weight: 600 !important;
+        }
+        
+        .main p,
+        ul li {
+            color: #000 !important;
+        }
+    </style>
+</head>
+
 <body>
-    <p>
-        <b>
-            Dear {{applicant_name}},
-        </b>
-    </p>
-    <!-- <p>TechForing would like to acknowledge that we have received your application for the post of {{job}}.</p>
+    <div class="main">
+        <p>Dear {{applicant_name}},</p>
+        <!-- <p>TechForing would like to acknowledge that we have received your application for the post of {{job}}.</p>
+    
+        <p>At TechForing, we have a straightforward assessment procedure that consists of an <b>Online Test</b>.
+            The purpose of these tests is to understand your analytical ability and expertise related to the position.
+            Participation in these assessments is required to qualify for the next stage of the selection process.
+        </p> -->
 
-    <p>At TechForing, we have a straightforward assessment procedure that consists of an <b>Online Test</b>.
-        The purpose of these tests is to understand your analytical ability and expertise related to the position.
-        Participation in these assessments is required to qualify for the next stage of the selection process.
-    </p> -->
-
-    <p>
-        Thank you for your application at TechForing Limited for the <b>"{{job}}"</b> position. At TechForing, we have a straightforward recruitment procedure and these Online Tests are one of them. Please follow the <span>
-            Deadline &
-            Instructions
-        </span> strictly.
-    </p>
-    <p>
-        <b><u>ONLINE TEST:</u></b>
-        <br />
-        <span>
-            We take these tests to understand your values, analytical ability, and expertise related to the position.
-            This is a Crucial & Mandatory Step to qualify for the position. Please do not take the test more than
-            once.
-        </span>
-    </p>
-    <ul>
-        <li>Log in to your account on our <a href="https://career.techforing.com">Recruitment Portal</a>.</li>
-        <li>Then go to <b>“My Jobs”</b> from sidebar.</li>
-        <li>You should be able to see your progress for <b>"{{job}}"</b>. Click on <b>"View Progress"</b></li>
-        <li>You will see the <b>“Online Test”</b> tab. Click on the link beside test names to participate.</li>
-        <li><b>After completing the test, don't forget to take a screenshot of your score.</b></li>
-        <li>Submit your score and upload the screenshot as instructed in the site.</li>
-        <li>Deadline: <span style="color:red;">[DD/MM/YYYY]</span></li>
-    </ul>
-    <p>If you have any questions, please let us know by this email: <a href="mailto:career@techforing.com" style="font-weight: bold;">
-            career@techforing.com
-        </a> or you can contact us through <a href="https://career.techforing.com/support" style="font-weight: bold;">Support</a>.</p>
-    <br>
-    <p>
-        With Best Regards,
-        <br>
-        <b>HR Department</b>
-        <br>
-        <b>TechForing Limited</b>
-        <br>
-        <a href="www.techforing.com">www.techforing.com</a>
-    </p>
+        <p>
+            Thank you for your application at TechForing Limited for the <strong class="importent-text">"{{job}}"</strong> position. At TechForing, we have a straightforward recruitment procedure and these <strong class="importent-text">"Online Test"</strong>            are one of them. Please follow the
+            <span>
+                Deadline &
+                Instructions
+            </span> strictly.
+        </p>
+        <p>
+            <u><strong class="importent-text">Instructions:</strong></u>
+            <span style="display: block; margin-top: 5px;">
+                We take these tests to understand your values, analytical ability, and expertise related to the
+                position.
+                This is a Crucial & Mandatory Step to qualify for the position. Please do not take the test more than
+                once.
+            </span>
+        </p>
+        <ul>
+            <li>Log in to your account on our <a href="https://career.techforing.com" style="color: #351c8b">Recruitment
+                    Portal</a>.</li>
+            <li>Then go to <strong class="importent-text">"My Jobs"</strong> from sidebar.</li>
+            <li>You should be able to see your progress for <strong class="importent-text">"{{job}}".</strong> Click on
+                <strong class="importent-text">"View Progress"</strong>
+            </li>
+            <li>You will see the <strong class="importent-text">"Online Test"</strong> tab. Click on the link beside test names to participate.</li>
+            <li><strong class="importent-text">After completing the test, don't forget to take a screenshot of your
+                    score.</strong></li>
+            <li>Submit your score and upload the screenshot as instructed in the site.</li>
+            <!-- <li>Deadline: <span style="color:red;">[DD/MM/YYYY]</span></li> -->
+        </ul>
+        <p>If you have any questions, please let us know by this email: <a href="mailto:career@techforing.com" style="font-weight: bold; color: #351c8b">
+                career@techforing.com
+            </a> or you can contact us through <a href="https://career.techforing.com/support" style="font-weight: bold; color: #351c8b">Support</a>.</p>
+    </div>
+    <div>
+        <div class="footer">
+            <p style="color: #000 !important">Best Regards,</p>
+            <p style="color: #bf9000 !important;">HR Department</p>
+            <p style="color: #20124d !important;">TechForing Limited</p>
+        </div>
+        <a href="https://www.techforing.com/" class="web-link">www.techforing.com</a>
+    </div>
 </body>
 
 </html>
