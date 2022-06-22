@@ -296,6 +296,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'noreply@techforing.com'
 EMAIL_HOST_PASSWORD = '5Vzz5A7kuJK2*&-V'
+DEFAULT_FROM_EMAIL = 'TechForing Limited <noreply@techforing.com>'
 
 # Plivo access
 # PLIVO_ID = 'MAOGQ0MZI1MTMZYZC4YW'
