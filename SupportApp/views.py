@@ -1,14 +1,19 @@
 from urllib import request
-from rest_framework import generics, status, permissions
-from SupportApp import serializer, models
-from rest_framework.response import Response
-from UserApp.permissions import IsEmployee, IsCandidateUser, IsAuthor, Authenticated
-from UserApp.models import User
-from django.conf import settings
-from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
+
 import plivo
 from AdminOperationApp.utils import Util
+from django.conf import settings
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework import generics, permissions, status
+from rest_framework.response import Response
+from UserApp.models import User
+from UserApp.permissions import (Authenticated, IsAuthor, IsCandidateUser,
+                                 IsEmployee)
+
+from SupportApp import models, serializer
+
 
 # Create your views here.
 class TicketReasonView(generics.ListAPIView):
@@ -44,7 +49,7 @@ class SupportTicketView(generics.ListCreateAPIView):
                          f'TicketQuary is: {ticket_quary}'\
                          
 
-            data = {'email_body': email_body, 'to_email': 'faruk.techforing@gmail.com',
+            data = {'email_body': email_body, 'to_email': 'mofajjal.techforing@gmail.com',
                     'email_subject': 'New ticket.'}
             Util.send_email(data)
             return Response({'detail': 'Email Sent.'})
@@ -77,15 +82,27 @@ class SupportMessageView(generics.ListCreateAPIView):
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
             if self.request.user==ticket.user:
-                to_email='faruk.techforing@gmail.com'
+                to_email='mofajjal.techforing@gmail.com'
+                email_subject=f'New Support Message from {ticket.user.full_name}'
+                email_body = render_to_string('emailTemplate/support_request.html',{
+                    'name': self.request.user.full_name,
+                    'message': request.data.get('message'),
+                    'email': self.request.user.email,
+                    'portalLink': f'https://hrms.techforing.com/recruitment/support',
+                    })
             else:
                 to_email= ticket.user.email
-            email_body=request.data.get('message')
+                email_subject=f'New Support Message from HR'
+                email_body = render_to_string('emailTemplate/support_request.html',{
+                    'name': self.request.user.full_name,
+                    'message': request.data.get('message'),
+                    'email': 'career@techforing.com',
+                    'portalLink': f'https://career.techforing.com/support',
+                    })
             try:
-                # email_body = f'Your ticket has been closed'
                 data = {'email_body': email_body, 'to_email': to_email,
-                        'email_subject': 'New message.'}
-                Util.send_email(data)
+                        'email_subject': email_subject}
+                Util.send_email_body(data)
             except:
                 pass
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -137,7 +154,7 @@ class CloseTicketView(generics.RetrieveUpdateAPIView):
                     else:
                         email_body=f'Your ticket has been reopened {ticket.user}'
                         email_subject = 'Ticket reopened.'
-                    to_email='faruk.techforing@gmail.com'
+                    to_email='mofajjal.techforing@gmail.com'
             data = {'email_body': email_body, 'to_email': to_email,
                     'email_subject': email_subject}
             Util.send_email(data)
