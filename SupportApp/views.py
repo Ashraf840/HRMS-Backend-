@@ -44,14 +44,16 @@ class SupportTicketView(generics.ListCreateAPIView):
         ticket_reason=request.data.get('ticketReason')
         ticket_quary=request.data.get('query')
         try:
-            email_body = f'{request.user} has opend a new ticket\n' \
-                         f'TicketReason is: {ticket_reason}\n' \
-                         f'TicketQuary is: {ticket_quary}'\
-                         
-
+            email_subject=f'New Support Ticket from {request.user}'
+            email_body = render_to_string('emailTemplate/support/support_request_open.html', {
+                'applicantName': request.user,
+                'ticketReason': ticket_reason,
+                'ticketQuery': ticket_quary,
+            })
+            
             data = {'email_body': email_body, 'to_email': 'mofajjal.techforing@gmail.com',
-                    'email_subject': 'New ticket.'}
-            Util.send_email(data)
+                    'email_subject': email_subject}
+            Util.send_email_body(data)
             return Response({'detail': 'Email Sent.'})
         except:
             return Response({'detail': 'Email Sending failed.'})
@@ -93,7 +95,7 @@ class SupportMessageView(generics.ListCreateAPIView):
             else:
                 to_email= ticket.user.email
                 email_subject=f'New Support Message from HR'
-                email_body = render_to_string('emailTemplate/support_request.html',{
+                email_body = render_to_string('emailTemplate/support/support_request.html',{
                     'name': self.request.user.full_name,
                     'message': request.data.get('message'),
                     'email': 'career@techforing.com',
@@ -139,25 +141,31 @@ class CloseTicketView(generics.RetrieveUpdateAPIView):
         serializer.save()
         try:
             if self.request.user.is_employee:
-                if ticket_condition==True:
-                    email_body = f'Your ticket has been closed by Admin'
-                    email_subject = 'Ticket closed.'
-                else:
-                    email_body=f'Your ticket has been reopened Admin'
-                    email_subject = 'Ticket reopened.'
+                portal_link = f'https://career.techforing.com/support'
                 to_email=ticket.user.email
+                action_by = self.request.user.full_name
+
             else:
                 if self.request.user == ticket.user:
-                    if ticket_condition==True:
-                        email_body = f'Your ticket has been closed by {ticket.user}'
-                        email_subject = 'Ticket closed.'
-                    else:
-                        email_body=f'Your ticket has been reopened {ticket.user}'
-                        email_subject = 'Ticket reopened.'
+                    portal_link = f'https://hrms.techforing.com/recruitment/support'
                     to_email='mofajjal.techforing@gmail.com'
+                    action_by = ticket.user.full_name
+
+            if ticket_condition==True:
+                ticket_status = 'Closed'
+            else:
+                ticket_status = 'Reopened'
+
+            email_subject = f'Support Ticket {ticket_status} by {action_by}'
+            email_body = render_to_string('emailTemplate/support/support_request_close_reopen.html', {
+                'name': action_by,
+                'ticketStatus': ticket_status,
+                'portalLink': portal_link,  
+            })
+
             data = {'email_body': email_body, 'to_email': to_email,
                     'email_subject': email_subject}
-            Util.send_email(data)
+            Util.send_email_body(data)
             return Response({'detail': 'Email Sent.'})
         except:
             return Response({'detail': 'Email Sending failed.'})
