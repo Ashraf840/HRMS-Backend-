@@ -88,7 +88,7 @@ class SupportMessageView(generics.ListCreateAPIView):
             if self.request.user==ticket.user:
                 to_email=official_mail
                 email_subject=f'New Support Message from {ticket.user.full_name}'
-                email_body = render_to_string('emailTemplate/support_request.html',{
+                email_body = render_to_string('emailTemplate/support/support_request.html',{
                     'name': self.request.user.full_name,
                     'message': request.data.get('message'),
                     'email': self.request.user.email,
