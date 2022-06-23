@@ -299,7 +299,7 @@ EMAIL_HOST_PASSWORD = '5Vzz5A7kuJK2*&-V'
 DEFAULT_FROM_EMAIL = 'TechForing Limited <noreply@techforing.com>'
 
 # ============== official email to recieve notifications ==============
-OFFICIAL_MAIL = 'mofajjal.techforing@gmail.com'
+OFFICIAL_CAREER_MAIL = 'career@techforing.com'
 
 # Plivo access
 # PLIVO_ID = 'MAOGQ0MZI1MTMZYZC4YW'

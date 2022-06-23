@@ -15,7 +15,7 @@ from UserApp.permissions import (Authenticated, IsAuthor, IsCandidateUser,
 from SupportApp import models, serializer
 
 # Global Variables
-official_mail = settings.OFFICIAL_MAIL
+official_mail = settings.OFFICIAL_CAREER_MAIL
 
 # Create your views here.
 class TicketReasonView(generics.ListAPIView):
