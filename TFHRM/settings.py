@@ -298,6 +298,9 @@ EMAIL_HOST_USER = 'noreply@techforing.com'
 EMAIL_HOST_PASSWORD = '5Vzz5A7kuJK2*&-V'
 DEFAULT_FROM_EMAIL = 'TechForing Limited <noreply@techforing.com>'
 
+# ============== official email to recieve notifications ==============
+OFFICIAL_MAIL = 'mofajjal.techforing@gmail.com'
+
 # Plivo access
 # PLIVO_ID = 'MAOGQ0MZI1MTMZYZC4YW'
 # AUTH_TOKEN = 'N2JmMDljMjFmYmNkMDRjZDI5ODYwMzQ3OGU5NzRh'

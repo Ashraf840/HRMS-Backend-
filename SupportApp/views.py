@@ -14,6 +14,8 @@ from UserApp.permissions import (Authenticated, IsAuthor, IsCandidateUser,
 
 from SupportApp import models, serializer
 
+# Global Variables
+official_mail = settings.OFFICIAL_MAIL
 
 # Create your views here.
 class TicketReasonView(generics.ListAPIView):
@@ -51,7 +53,7 @@ class SupportTicketView(generics.ListCreateAPIView):
                 'ticketQuery': ticket_quary,
             })
             
-            data = {'email_body': email_body, 'to_email': 'mofajjal.techforing@gmail.com',
+            data = {'email_body': email_body, 'to_email': official_mail,
                     'email_subject': email_subject}
             Util.send_email_body(data)
             return Response({'detail': 'Email Sent.'})
@@ -84,7 +86,7 @@ class SupportMessageView(generics.ListCreateAPIView):
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
             if self.request.user==ticket.user:
-                to_email='mofajjal.techforing@gmail.com'
+                to_email=official_mail
                 email_subject=f'New Support Message from {ticket.user.full_name}'
                 email_body = render_to_string('emailTemplate/support_request.html',{
                     'name': self.request.user.full_name,
@@ -148,7 +150,7 @@ class CloseTicketView(generics.RetrieveUpdateAPIView):
             else:
                 if self.request.user == ticket.user:
                     portal_link = f'https://hrms.techforing.com/recruitment/support'
-                    to_email='mofajjal.techforing@gmail.com'
+                    to_email=official_mail
                     action_by = ticket.user.full_name
 
             if ticket_condition==True:
