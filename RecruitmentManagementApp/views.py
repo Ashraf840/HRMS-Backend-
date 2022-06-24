@@ -535,8 +535,14 @@ class FilterQuestionResponseView(generics.ListCreateAPIView):
 
                         data = {'email_body': email_body, 'to_email': self.request.user.email,
                                 'email_subject': 'Status of the Screening Test'}
-
                         utils.Util.send_email(data)
+
+                        email_subject=f'Status of the Screening Test | ' + candiate_job_application.jobPostId.jobTitle.capitalize() + ' | TechForing'
+                        email_body=render_to_string('emailTemplate/rejectedMessage_from_questions.html', 
+                                                {'applicantName':self.request.user.full_name, 'jobPosition': candiate_job_application.jobPostId.jobTitle.capitalize()})
+                        data = {'email_body': email_body, 'to_email': self.request.user.email,
+                                    'email_subject': email_subject}
+                        utils.Util.send_email_body(data)
                     except:
                         pass
 
