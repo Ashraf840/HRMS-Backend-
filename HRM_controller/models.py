@@ -39,11 +39,19 @@ class SurveyAnswerSheetModel(models.Model):
     def __str__(self):
         return self.answers
 
+now = datetime.datetime.now()
+
 
 class SurveyQuestionModel(models.Model):
     question = models.CharField(max_length=255)
-    answers = models.ManyToManyField(SurveyAnswerSheetModel, related_name='questions_answers')
-
+    # answers = models.ManyToManyField(SurveyAnswerSheetModel, related_name='questions_answers')
+    department= models.ManyToManyField(user_model.UserDepartmentModel, related_name='question_department')
+    created_date=models.DateField(auto_now_add=True)
+    # month=models.IntegerField(default=datetime.datetime.today().month)
+    # year=models.IntegerField(default=datetime.datetime.today().year)
+    month=models.CharField(max_length=255,default=now.strftime("%B"))
+    year=models.CharField(max_length=255,default=now.strftime("%Y"))
+    
     def __str__(self):
         return self.question
 
@@ -82,15 +90,17 @@ class EmployeeEvaluationModel(models.Model):
 
 # Announcement, Notice and Complain
 class AnnouncementModel(models.Model):
+    title=models.CharField(max_length=255)
     department = models.ManyToManyField(user_model.UserDepartmentModel, related_name='announcement_department')
-    message = models.CharField(max_length=255)
+    message = models.TextField()
 
 
 class NoticeModel(models.Model):
     department = models.ManyToManyField(user_model.UserDepartmentModel, related_name='notice_department')
     title = models.CharField(max_length=255)
     message = models.TextField()
-    attachment = models.FileField()
+    # attachment = models.FileField()
+    employee=models.ManyToManyField(user_model.User,related_name='notice_employee')
 
 
 class ComplainModel(models.Model):

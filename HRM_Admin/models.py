@@ -17,7 +17,20 @@ employee_shift = (
     ('roster', 'Roster'),
 )
 
+uploaded_person=(
+    ('hr', 'HR'),
+    ('gm', 'GM'),
+    ('ceo', 'CEO'),
+    ('pm', 'PM'),
+)
 
+
+purchase_type = (
+    ('bank', 'Bank'),
+    ('cash', 'Cash'),
+)
+
+#Model for Employee Information
 class EmployeeInformationModel(models.Model):
     """
     Employee information model, emp salary, personal email, dept, ect
@@ -35,6 +48,73 @@ class EmployeeInformationModel(models.Model):
 
     def __str__(self):
         return f'{self.id} - {self.user.full_name}, {self.emp_department.department} - {self.designation.designation}'
+
+# Model for PaidInvoice
+class PaidInvoicesModel(models.Model):
+    invoice_name=models.FileField(upload_to='paid_invoices',max_length=100)
+    Created_date=models.DateField()
+    item_name=models.CharField(max_length=100)
+    quantity=models.IntegerField()
+    uploaded_by=models.CharField(max_length=100,choices=uploaded_person)
+    amount=models.CharField(max_length=100)
+    month=models.CharField(max_length=100,default="")
+    year=models.CharField(max_length=100,default="")
+    purchase_type=models.CharField(max_length=200, choices=purchase_type)
+    expanse_type=models.CharField(max_length=100)
+
+    def __str__(self):
+        return f'{self.item_name}, {self.amount}'
+
+
+
+
+# Model for Warrenty
+class WarrentyListModel(models.Model):
+    # invoice_name=models.FileField(upload_to='paid_invoices',max_length=100)
+    item_name=models.CharField(max_length=100)
+    created_date=models.DateField()
+    warranty_end=models.DateField()
+    warranty_file=models.FileField(upload_to="warranty_items",max_length=100)
+    uploaded_by=models.CharField(max_length=100,choices=uploaded_person)
+    item_category=models.CharField(max_length=200)
+    expense_type=models.CharField(max_length=100)
+
+    def __str__(self):
+        return f'{self.item_name}'
+
+
+# # Employee Salary sheet :
+
+class EmployeeSalarySheetModel(models.Model):
+    employee=models.ForeignKey(userModel.User,on_delete=models.CASCADE,related_name='employee_sheet')
+    # shift=models.ForeignKey(EmployeeInformationModel,on_delete=models.CASCADE,related_name='employee_shift_sheet',default='')
+    shift=models.CharField(max_length=100,choices=employee_shift)
+    # full_name=models.ForeignKey(userModel.User,on_delete=models.CASCADE,related_name='employee_full_name')
+    emp_department = models.ForeignKey(userModel.UserDepartmentModel, on_delete=models.CASCADE,
+                                       related_name='employee_department_sheet')
+    designation = models.ForeignKey(userModel.UserDesignationModel, on_delete=models.CASCADE,
+                                    related_name='employee_designation_sheet')
+    #emp_salary=models.ForeignKey(hrmAdminModel.EmployeeSalaryModel,on_delete=models.CASCADE,related_name='employee_salary')
+    salary=models.CharField(max_length=100)
+    month=models.CharField(max_length=100)
+    paid_in=models.DateField()
+    absent=models.IntegerField(default=0)
+    total_late_hours=models.IntegerField(default=0)
+    status=models.CharField(max_length=100)
+    # signature=models.ForeignKey(userModel.User,on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.employee} {self.designation} {self.month}" 
+
+
+
+class NewSalarySheetModel(models.Model):
+    employee=models.ForeignKey(EmployeeInformationModel,on_delete=models.CASCADE,related_name='new_employee_sheet')
+    amount=models.IntegerField()
+    paid_in=models.DateField()
+    # shift=models.CharField(max_length=100)
+    def __str__(self):
+        return f"{self.employee} {self.paid_in}" 
 
 
 class EmployeeSalaryModel(models.Model):
