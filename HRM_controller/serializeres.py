@@ -8,8 +8,8 @@ from HRM_User import models as user_models_hrm
 
 # Survey Section
 class SurveyQuestionSerializer(serializers.ModelSerializer):
-    answers = serializers.SlugRelatedField(queryset=models.SurveyAnswerSheetModel.objects.all(), many=True,
-                                           slug_field='answers')
+    # answers = serializers.SlugRelatedField(queryset=models.SurveyAnswerSheetModel.objects.all(), many=True,
+    #                                        slug_field='answers')
 
     # answers = serializers.StringRelatedField(many=True)
 
@@ -86,12 +86,14 @@ class EmployeeEvaluationSerializer(serializers.ModelSerializer):
 
 # Announcement, Notice and Complain Section
 class AnnouncementSerializer(serializers.ModelSerializer):
+    # department=user_serializer.UserDepartmentSerializer(read_only=True,many=True)
     class Meta:
         model = models.AnnouncementModel
         fields = '__all__'
 
 
 class NoticeSerializer(serializers.ModelSerializer):
+    employee=serializers.SlugRelatedField(read_only=True,many=True,slug_field='full_name')
     class Meta:
         model = models.NoticeModel
         fields = '__all__'
@@ -132,6 +134,11 @@ class CreateHolidaySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.HolidayModel
         fields = '__all__'
+        extra_kwargs = {
+            'is_active': {
+                'read_only': True
+            }
+        }
 
 
 class AttendanceShiftSerializer(serializers.ModelSerializer):
