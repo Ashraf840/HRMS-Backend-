@@ -122,7 +122,7 @@ class EmployeeDocumentsSerializer(serializers.ModelSerializer):
 class EmployeeUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = user_model.User
-        fields = ['id', 'full_name']
+        fields = ['id', 'full_name','profile_pic']
 
 
 class EmployeeUserUpdateDeleteSerializer(serializers.ModelSerializer):
@@ -147,7 +147,7 @@ class EmployeeInformationListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = hrm_admin.EmployeeInformationModel
-        fields = ['id', 'user', 'designation', 'emp_department', 'phone_number', 'email', 'joining_date']
+        fields = ['id', 'user', 'designation', 'emp_department', 'phone_number', 'email', 'joining_date','shift']
 
 
 class EmployeeSerializer(serializers.ModelSerializer):

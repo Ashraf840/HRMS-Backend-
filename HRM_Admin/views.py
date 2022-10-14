@@ -224,6 +224,27 @@ class EmployeeInformationListView(generics.ListAPIView):
         }
         return Response(responseData)
 
+class EmployeeInformationFilterView(generics.ListAPIView):
+    permission_classes = [custom_permission.EmployeeAuthenticated]
+    serializer_class = hrm_admin_serializer.EmployeeInformationListSerializer
+    def get_queryset(self):
+        try:
+            searchByName = self.request.query_params.get('searchByName')
+            searchByPosition = self.request.query_params.get('searchByPosition')
+            searchByDepartment = self.request.query_params.get('searchByDepartment')
+            queryset=hrm_admin_model.EmployeeInformationModel.objects.all()
+            querysetName = queryset.filter(user__full_name__icontains=searchByName)
+            querysetPosition =querysetName.filter(designation__designation__icontains=searchByPosition)
+            querysetDepartment =querysetPosition.filter(emp_department__department__icontains=searchByDepartment)
+            return querysetDepartment
+            #return queryset.filter(user__full_name__icontains=search)
+            # return queryset.filter(Q(user__full_name__icontains=search) &
+            #                         Q(emp_department__department__icontains=search) &
+            #                         Q(designation__designation__icontains=search))
+        except:
+            return hrm_admin_model.EmployeeInformationModel.objects.all()
+
+
 
 class EmployeeInformationUpdateView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [custom_permission.EmployeeAdminAuthenticated]

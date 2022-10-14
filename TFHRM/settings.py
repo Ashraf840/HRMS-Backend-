@@ -14,7 +14,7 @@ import os.path
 import sys
 from datetime import timedelta
 from pathlib import Path
-
+from decouple import config
 # import environ
 
 
@@ -27,10 +27,10 @@ MEDIA_DIR = BASE_DIR.as_posix() + 'media'
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-^^fv-&)8of=nhg48zj7$u_=i$ju%br7@ioy39010nexw*k5+t='
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = [
     '0.0.0.0',
@@ -193,12 +193,12 @@ Dev server DB
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'dev_hrm_tf',
-        'USER': 'root',
-        'PASSWORD': 'smEPH23@z#&',
+        'ENGINE': config('ENGINE'),
+        'NAME': config('NAME'),
+        'USER': config('USER'),
+        'PASSWORD': config('PASSWORD'),
         'OPTIONS': {
-            'sql_mode': 'traditional',
+            'sql_mode': config('sql_mode'),
         }
     }
 }
@@ -295,8 +295,8 @@ import os
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'noreply@techforing.com'
-EMAIL_HOST_PASSWORD = '5Vzz5A7kuJK2*&-V'
+EMAIL_HOST_USER = 'shafayethossain777@gmail.com'
+EMAIL_HOST_PASSWORD = 'ssdmwfejzqynzofk'
 DEFAULT_FROM_EMAIL = 'TechForing Limited <noreply@techforing.com>'
 
 # ============== official email to recieve notifications ==============

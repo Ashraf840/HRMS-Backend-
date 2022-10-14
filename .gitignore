@@ -1,24 +1,12 @@
 .idea/
-requirement.txt
-TFHRM/settings.py
-desktop.ini
 venv/
-Academy/__pycache__
-Account/__pycache__
-BusinessSecurity/__pycache__
-Blog/__pycache__
-MainTechforing/__pycache__
-PersonalSecurity/__pycache__
+env/
 __pycache__/
 # Django #
 *.log
-*.pot
-*.pyc
 *.env
 __pycache__
-media
 **/__pycache__/
-**/migrations/*
 # Backup files #
 *.bak
 

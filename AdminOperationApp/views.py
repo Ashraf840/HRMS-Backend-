@@ -415,15 +415,25 @@ class RecruitmentPracticalTestResponseView(generics.ListAPIView):
     """
     Recruitment practical test response and marks
     """
+    #permission_classes = [customPermission.EmployeeAdminAuthenticated]
     serializer_class = serializer.RecruitmentPracticalTestResponseSerializer
 
     def get_queryset(self):
         job_id = self.kwargs['job_id']
         search = self.request.query_params.get('search')
-        queryset = PracticalTestResponseModel.objects.filter(appliedJob__jobPostId_id=job_id,
-                                                             appliedJob__jobProgressStatus__status='Practical Test')
-        return queryset.filter(Q(user__email__icontains=search) | Q(user__full_name__icontains=search))
+        #queryset = PracticalTestResponseModel.objects.filter(appliedJob__jobPostId_id=job_id,
+        #appliedJob__jobProgressStatus__status='F2F Interview')
+        queryset=PracticalTestResponseModel.objects.filter(appliedJob__jobPostId_id=job_id,
 
+         appliedJob__jobProgressStatus__status='Practical Test')
+        #queryset.extend(queryset1)
+        #queryset=UserJobAppliedModel.objects.filter(jobProgressStatus__status='F2F Interview',
+        #jobPostId_id=job_id)
+        #queryset = UserJobAppliedModel.objects.filter(jobProgressStatus__status='F2F Interview', jobPostId_id=job_id)
+        #return queryset
+
+        return queryset.filter(Q(user__email__icontains=search) | Q(user__full_name__icontains=search))
+        
 
 class AdminInterviewerListView(generics.ListAPIView):
     """

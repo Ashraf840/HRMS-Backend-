@@ -12,6 +12,7 @@ urlpatterns = [
     path('employee_bank_info/', hrm_admin_view.EmployeeBankInformationView.as_view(), name='employee_bank_info_add'),
     path('employee_bank_info/<id>/', hrm_admin_view.EmployeeBankInformationUpdateView.as_view(),
          name='employee_bank_info_update_delete'),
+    path('employee_filter/',hrm_admin_view.EmployeeInformationFilterView.as_view(),name='employee_filter'),
     path('employee_documents/<user>/', hrm_admin_view.EmployeeDocumentsListView.as_view(),
          name='employee_documents_list'),
     # set employee permission access section
