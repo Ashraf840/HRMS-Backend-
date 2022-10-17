@@ -40,6 +40,7 @@ ALLOWED_HOSTS = [
     '127.0.0.1:8000',
     'localhost:3001',
     'localhost:3000',
+    '192.168.1.74',
     # ===production===
     # 'careeradmin.techforing.com',
     # 'career.techforing.com',
@@ -259,6 +260,7 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
 
 AUTH_USER_MODEL = 'UserApp.User'
 

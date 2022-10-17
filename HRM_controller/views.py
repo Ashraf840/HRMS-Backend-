@@ -136,7 +136,7 @@ class SurveyDataView(generics.ListAPIView):
             queryByQuestion =queryset.filter(question__question__icontains=searchByQuestion)
             # month=models.SurveyUserResponseModel.objects.all().annotate(ExtractMonth(question.created_date))
             # queryByMonth =queryByQuestion.filter(question__created_date=ExtractMonth(searchByMonth))
-            queryByMonth =queryByQuestion.filter(question__new_month1__icontains=searchByMonth)
+            queryByMonth =queryByQuestion.filter(question__month__icontains=searchByMonth)
             queryByYear =queryByMonth.filter(question__year__icontains=searchByYear)
             return queryByYear
         except:
@@ -394,7 +394,7 @@ class AttendanceRegistrationView(generics.ListCreateAPIView, generics.RetrieveUp
 
         return response.Response({'message': posts.content.decode("utf-8")}, status=status.HTTP_404_NOT_FOUND)
 
-# Add Holiday
+# Add Holiday and view Holiday
 
 class CreateHolidaysView(generics.ListCreateAPIView):
     """
@@ -402,32 +402,26 @@ class CreateHolidaysView(generics.ListCreateAPIView):
     2. Update existing holiday
     3. Create new holiday
     """
-    serializer_class = hrm_serializers.CreateHolidaySerializer
     permission_classes = [user_permissions.IsHrOrReadOnly]
-    queryset = models.HolidayModel.objects.all()
+    serializer_class = hrm_serializers.CreateHolidaySerializer
 
     def get_queryset(self):
-        # year = datetime.now().year
-        # url = f'https://www.officeholidays.com/countries/bangladesh/{year}'
-        #
-        # ### Web Scraping ###
-        # full_page = requests.get(url)
-        # full_page = full_page.content
-        # soup = BeautifulSoup(full_page, "html.parser")
-        #
-        # holidays = soup.find_all('tr', {'class': ['country', 'govt']})
-        #
-        # total_holidays = []
-        # for holiday in holidays:
-        #     day = holiday.find_all('td')[2].find('a').text
-        #     h_date = holiday.find_all('td')[1].find('time')['datetime']
-        #     models.HolidayModel.objects.get_or_create(holiday_name=day, holiday_date=h_date)
-
-        # ls = [day, h_date]
-        # total_holidays.append(ls)
-
-        queryset = models.HolidayModel.objects.all()
-        return queryset
+        try:
+            searchByMonth =self.request.query_params.get('searchByMonth')
+            # searchByYear =self.request.query_params.get('searchByYear')
+            searchByDay =self.request.query_params.get('searchByDay')
+            # print(searchByDay)
+            # print(searchByMonth)
+            queryset=models.HolidayModel.objects.all()
+            
+            queryByMonth=queryset.filter(month__icontains=searchByMonth)
+            if searchByDay:
+                queryByDay=queryByMonth.filter(holiday_date__day=searchByDay)
+                return queryByDay
+            return queryByMonth
+        except:
+            return models.HolidayModel.objects.all()
+        # return queryset
 
 
 # update holiday

@@ -119,10 +119,11 @@ class ComplainModel(models.Model):
 class HolidayModel(models.Model):
     holiday_name = models.CharField(max_length=255)
     holiday_date = models.DateField()
+    month=models.CharField(max_length=255,default=now.strftime("%B"))
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return f'{self.holiday_name} - {self.holiday_date} - {self.is_active}'
+        return f'{self.holiday_name} - {self.holiday_date.strftime("%d-%B-%Y")} - {self.is_active}'
 
 
 # ==================Attendance Section ==================
