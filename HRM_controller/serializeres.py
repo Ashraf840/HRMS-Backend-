@@ -12,7 +12,7 @@ class SurveyQuestionSerializer(serializers.ModelSerializer):
     #                                        slug_field='answers')
 
     # answers = serializers.StringRelatedField(many=True)
-
+    # created_date = serializers.DateField(format='%m/%d/%Y')
     class Meta:
         model = models.SurveyQuestionModel
         fields = '__all__'
@@ -36,9 +36,11 @@ class SurveyUserResponseSerializer(serializers.ModelSerializer):
 
 
 class SurveyDataSerializer(serializers.ModelSerializer):
+    question=SurveyQuestionSerializer()
     class Meta:
         model = models.SurveyUserResponseModel
-        fields = '__all__'
+        # fields = ['id','question','answer','question_id','is_answered','ans_time']
+        fields='__all__'
 
 
 # Employee Evaluation Section
@@ -131,12 +133,16 @@ class ComplainResolvedSerializer(serializers.ModelSerializer):
 
 # ============ Attendance Section ============
 class CreateHolidaySerializer(serializers.ModelSerializer):
+    # holiday_date = serializers.DateField(format='%B-%d-%Y')
     class Meta:
         model = models.HolidayModel
         fields = '__all__'
         extra_kwargs = {
             'is_active': {
                 'read_only': True
+            },
+            'month':{
+                'read_only':True
             }
         }
 
