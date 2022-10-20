@@ -25,6 +25,7 @@ urlpatterns = [
     path('attendance_log/', views.EmployeeAttendanceLogView.as_view(), name='employee_attendance_log'),
     # Employee Promotion Section
     path('employee_promotion/', views.EmployeePromotionView.as_view(), name='employee_promotion'),
+    path('employee_promotion_list/', views.EmployeePromotionListView.as_view(), name='employee_promotion_list'),
     path('employee_promotion/<id>/', views.EmployeePromotionUpdateDeleteView.as_view(), name='employee_promotion'),
     #Temination Titel
     path('termination_title/', views.TerminationTitleView.as_view(), name='termination_title'),

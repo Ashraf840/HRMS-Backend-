@@ -166,9 +166,18 @@ class EmployeeAttendanceLogSerializer(serializers.ModelSerializer):
 
 # ============ Promotion Section ============
 class EmployeePromotionSerializer(serializers.ModelSerializer):
+    # promotion_to=serializers.StringRelatedField()
+    # employee=serializers
     class Meta:
         model = models.EmployeePromotionModel
         fields = '__all__'
+        # depth=1
+
+class EmployeePromotionListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.EmployeePromotionModel
+        fields = '__all__'
+        depth=2
 
 class TerminationTitleSerializer(serializers.ModelSerializer):
     class Meta:
