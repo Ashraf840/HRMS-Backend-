@@ -12,4 +12,7 @@ admin.site.register(hrm_admin.ProjectInformationModel)
 admin.site.register(hrm_admin.ModulePermissionModel)
 # Training information
 admin.site.register(hrm_admin.TrainingModel)
+admin.site.register(hrm_admin.PaidInvoicesModel)
+admin.site.register(hrm_admin.WarrentyListModel)
+admin.site.register(hrm_admin.EmployeeSalarySheetModel)
 

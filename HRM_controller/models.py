@@ -196,7 +196,7 @@ Promotion Section
 class EmployeePromotionModel(models.Model):
     employee = models.OneToOneField(hrm_models.EmployeeInformationModel, on_delete=models.CASCADE,
                                  related_name='promotion_employee')
-    promotion_form= models.CharField(max_length=255)
+    promotion_from= models.CharField(max_length=255)
     promotion_to = models.ForeignKey(user_model.UserDesignationModel, on_delete=models.CASCADE, related_name='promotion_to')
     promotion_date = models.DateField()
 

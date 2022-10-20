@@ -116,7 +116,7 @@ class NewSalarySheetModel(models.Model):
     def __str__(self):
         return f"{self.employee} {self.paid_in}" 
 
-
+# Employee salary
 class EmployeeSalaryModel(models.Model):
     """
     employee salary will store here

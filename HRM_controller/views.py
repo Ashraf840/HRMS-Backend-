@@ -14,6 +14,12 @@ from bs4 import BeautifulSoup
 import requests
 
 
+
+'''
+---------------------------- Survey Section--------------------------------
+
+'''
+
 # Create your views here.
 # Survey Section
 class SurveyQuestionView(generics.ListCreateAPIView):
@@ -249,7 +255,13 @@ class EmployeeEvaluationView(generics.ListCreateAPIView):
         })
 
 
+'''
+----------------------------Announcement, Notice and Complain Section ----------------------------------
+
+'''
+
 # Announcement, Notice and Complain Section
+
 class AnnouncementView(generics.ListCreateAPIView):
     """
     1. Section for creating announcement
@@ -394,6 +406,12 @@ class AttendanceRegistrationView(generics.ListCreateAPIView, generics.RetrieveUp
 
         return response.Response({'message': posts.content.decode("utf-8")}, status=status.HTTP_404_NOT_FOUND)
 
+
+'''
+---------------------------- Holiday Section ----------------------------------
+
+'''
+
 # Add Holiday and view Holiday
 
 class CreateHolidaysView(generics.ListCreateAPIView):
@@ -527,7 +545,18 @@ class EmployeeAttendanceLogView(generics.ListCreateAPIView):
                                                                                        out_time=out_time)
         return response.Response(log_data.get('log'))
 
-class EmployeePromotionView(generics.ListCreateAPIView):
+
+
+'''
+----------------------------Promotion Section--------------------------------
+
+'''
+class EmployeePromotionListView(generics.ListAPIView):
+    permission_classes = [user_permissions.IsHrOrReadOnly]
+    serializer_class = hrm_serializers.EmployeePromotionListSerializer
+    queryset = models.EmployeePromotionModel.objects.all()
+
+class EmployeePromotionView(generics.CreateAPIView):
     """
     Employee promotion
     """
@@ -543,7 +572,8 @@ class EmployeePromotionView(generics.ListCreateAPIView):
         employee.save()
         serializer.save()
 
-#employee promotion update and delete view
+
+# employee promotion update and delete view
 class EmployeePromotionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     """
     Employee promotion update and delete
@@ -552,6 +582,12 @@ class EmployeePromotionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = hrm_serializers.EmployeePromotionSerializer
     queryset = models.EmployeePromotionModel.objects.all()
     lookup_field = 'id'
+
+
+'''
+----------------------------Termination Section----------------------------------
+
+'''
 class TerminationTitleView(generics.ListCreateAPIView):
     """
     Termination tile

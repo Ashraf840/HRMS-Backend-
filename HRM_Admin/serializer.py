@@ -120,7 +120,7 @@ class EmployeeDocumentsSerializer(serializers.ModelSerializer):
 
 
 class EmployeeUserSerializer(serializers.ModelSerializer):
-    full_name=serializers.SlugRelatedField(queryset=user_model.User.objects.all(),slug_field='full_name')
+    # full_name=serializers.SlugRelatedField(queryset=user_model.User.objects.all(),slug_field='full_name')
     class Meta:
         model = user_model.User
         fields = ['id','full_name','profile_pic','signature_pic','date_joined',]
