@@ -556,7 +556,7 @@ class EmployeePromotionListView(generics.ListAPIView):
     serializer_class = hrm_serializers.EmployeePromotionListSerializer
     queryset = models.EmployeePromotionModel.objects.all()
 
-class EmployeePromotionView(generics.CreateAPIView):
+class EmployeePromotionView(generics.ListCreateAPIView):
     """
     Employee promotion
     """
@@ -571,6 +571,18 @@ class EmployeePromotionView(generics.CreateAPIView):
         employee.designation = promote_to
         employee.save()
         serializer.save()
+
+'''
+---------------------------- Birthday Section--------------------------------
+
+'''
+
+class EmployeeBirthdayListView(generics.ListAPIView):
+    permission_classes = [user_permissions.IsHrOrReadOnly]
+    serializer_class = hrm_serializers.EmployeeBirthdayListSerializer
+    queryset = hrm_models.EmployeeInformationModel.objects.all()
+
+
 
 
 # employee promotion update and delete view

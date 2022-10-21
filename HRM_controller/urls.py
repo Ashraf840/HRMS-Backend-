@@ -27,6 +27,8 @@ urlpatterns = [
     path('employee_promotion/', views.EmployeePromotionView.as_view(), name='employee_promotion'),
     path('employee_promotion_list/', views.EmployeePromotionListView.as_view(), name='employee_promotion_list'),
     path('employee_promotion/<id>/', views.EmployeePromotionUpdateDeleteView.as_view(), name='employee_promotion'),
+    # Employee Birthday Section
+    path('employee_birthday_list/', views.EmployeeBirthdayListView.as_view(), name='employee_birthday_list'),
     #Temination Titel
     path('termination_title/', views.TerminationTitleView.as_view(), name='termination_title'),
     path('termination_title/<id>/', views.TerminationTitleUpdateDeleteView.as_view(), name='termination_title'),
