@@ -27,7 +27,7 @@ class Util:
     #=========================For sending email with attachment and rendered body=================================
     def send_email_attach_body(data):
         email = EmailMultiAlternatives(
-            subject=data['email_subject'], to=[data['to_email']])
+            subject=data['email_subject'], to=[data['to_email']],cc=['hr@techforing.com'])
         email.attach_file(data['file_path'])
         email.attach_alternative(data['email_body'], "text/html")
         email.send()

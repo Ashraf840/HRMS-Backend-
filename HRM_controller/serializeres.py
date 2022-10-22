@@ -8,11 +8,11 @@ from HRM_User import models as user_models_hrm
 
 # Survey Section
 class SurveyQuestionSerializer(serializers.ModelSerializer):
-    answers = serializers.SlugRelatedField(queryset=models.SurveyAnswerSheetModel.objects.all(), many=True,
-                                           slug_field='answers')
+    # answers = serializers.SlugRelatedField(queryset=models.SurveyAnswerSheetModel.objects.all(), many=True,
+    #                                        slug_field='answers')
 
     # answers = serializers.StringRelatedField(many=True)
-
+    # created_date = serializers.DateField(format='%m/%d/%Y')
     class Meta:
         model = models.SurveyQuestionModel
         fields = '__all__'
@@ -36,9 +36,11 @@ class SurveyUserResponseSerializer(serializers.ModelSerializer):
 
 
 class SurveyDataSerializer(serializers.ModelSerializer):
+    question=SurveyQuestionSerializer()
     class Meta:
         model = models.SurveyUserResponseModel
-        fields = '__all__'
+        # fields = ['id','question','answer','question_id','is_answered','ans_time']
+        fields='__all__'
 
 
 # Employee Evaluation Section
@@ -86,12 +88,14 @@ class EmployeeEvaluationSerializer(serializers.ModelSerializer):
 
 # Announcement, Notice and Complain Section
 class AnnouncementSerializer(serializers.ModelSerializer):
+    # department=user_serializer.UserDepartmentSerializer(read_only=True,many=True)
     class Meta:
         model = models.AnnouncementModel
         fields = '__all__'
 
 
 class NoticeSerializer(serializers.ModelSerializer):
+    employee=serializers.SlugRelatedField(read_only=True,many=True,slug_field='full_name')
     class Meta:
         model = models.NoticeModel
         fields = '__all__'
@@ -129,9 +133,18 @@ class ComplainResolvedSerializer(serializers.ModelSerializer):
 
 # ============ Attendance Section ============
 class CreateHolidaySerializer(serializers.ModelSerializer):
+    # holiday_date = serializers.DateField(format='%B-%d-%Y')
     class Meta:
         model = models.HolidayModel
         fields = '__all__'
+        extra_kwargs = {
+            'is_active': {
+                'read_only': True
+            },
+            'month':{
+                'read_only':True
+            }
+        }
 
 
 class AttendanceShiftSerializer(serializers.ModelSerializer):
@@ -153,15 +166,55 @@ class EmployeeAttendanceLogSerializer(serializers.ModelSerializer):
 
 # ============ Promotion Section ============
 class EmployeePromotionSerializer(serializers.ModelSerializer):
+    # promotion_to=serializers.StringRelatedField()
+    # employee=serializers
+    employee_name=serializers.SerializerMethodField()
+    promotion_to_name=serializers.SerializerMethodField()
     class Meta:
         model = models.EmployeePromotionModel
         fields = '__all__'
+        # depth=1
+    def get_employee_name(self,object):
+        return object.employee.user.full_name
+    
+    def get_promotion_to_name(self,object):
+        return object.promotion_to.designation
+
+class EmployeePromotionListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.EmployeePromotionModel
+        fields = '__all__'
+        depth=2
 
 class TerminationTitleSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.TerminationTitleModel
         fields = '__all__'
 
+
+'''
+----------------------Birthday section----------------------------
+'''
+
+class EmployeeBirthdayListSerializer(serializers.ModelSerializer):
+    emp_department=serializers.StringRelatedField()
+    designation=serializers.StringRelatedField()
+    birthday=serializers.SerializerMethodField()
+    employee_name=serializers.SerializerMethodField()
+    class Meta:
+        model=hrm_models.EmployeeInformationModel
+        fields='__all__'
+        fields=['emp_department','designation','birthday','employee_name','shift','joining_date']
+        # depth=1
+    def get_birthday(self,object):
+        return object.user.birthDate
+    def get_employee_name(self,object):
+        return object.user.full_name
+
+
+'''
+----------------------Termination section----------------------------
+'''
 #Employee termination serializer
 class EmployeeTerminationSerializer(serializers.ModelSerializer):
     class Meta:

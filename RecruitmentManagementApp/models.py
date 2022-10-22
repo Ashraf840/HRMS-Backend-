@@ -57,6 +57,7 @@ class JobPostModel(models.Model):
     jobRequirements = models.TextField(null=True)
     jobProgressStatus = models.ManyToManyField(JobStatusModel, related_name='job_progress_statusM2M')
     is_active = models.BooleanField(default=True)
+    is_urgent= models.BooleanField(default=False)
 
     @property
     def total_applied(self):

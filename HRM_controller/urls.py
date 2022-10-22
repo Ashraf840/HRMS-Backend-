@@ -5,6 +5,7 @@ urlpatterns = [
     # Survey Section
     path('survey_questions/', views.SurveyQuestionView.as_view(), name='survey_questions'),
     path('survey_user_response/', views.SurveyUserResponseView.as_view(), name='survey_user_response'),
+    path('survey_user_response_all/', views.SurveyDataView.as_view(), name='survey_user_response_all'),
     # Employee Evaluation Section
     path('all_colleagues/', views.AllColleaguesView.as_view(), name='all_colleagues'),
     path('employee_evaluation_questions/', views.EmployeeEvaluationQuestionView.as_view(), name='employee_evaluation_questions'),
@@ -16,7 +17,7 @@ urlpatterns = [
     path('complain_resolved/<id>/', views.ComplainResolvedView.as_view(), name='complain_resolved'),
     # Attendance Section
     path('holiday/', views.CreateHolidaysView.as_view(), name='holiday'),
-    path('holiday/<id>/', views.CreateHolidaysView.as_view(), name='holiday'),
+    path('holiday/<id>/', views.UpdateDeleteHolidaysView.as_view(), name='holiday_update_delete'),
     path('attendance_shift/', views.AttendanceShiftView.as_view(), name='attendance_shift'),
     path('attendance_shift/<id>/', views.AttendanceShiftView.as_view(), name='attendance_shift'),
     path('attendance_registration/', views.AttendanceRegistrationView.as_view(), name='attendance_registration'),
@@ -24,7 +25,10 @@ urlpatterns = [
     path('attendance_log/', views.EmployeeAttendanceLogView.as_view(), name='employee_attendance_log'),
     # Employee Promotion Section
     path('employee_promotion/', views.EmployeePromotionView.as_view(), name='employee_promotion'),
+    path('employee_promotion_list/', views.EmployeePromotionListView.as_view(), name='employee_promotion_list'),
     path('employee_promotion/<id>/', views.EmployeePromotionUpdateDeleteView.as_view(), name='employee_promotion'),
+    # Employee Birthday Section
+    path('employee_birthday_list/', views.EmployeeBirthdayListView.as_view(), name='employee_birthday_list'),
     #Temination Titel
     path('termination_title/', views.TerminationTitleView.as_view(), name='termination_title'),
     path('termination_title/<id>/', views.TerminationTitleUpdateDeleteView.as_view(), name='termination_title'),
