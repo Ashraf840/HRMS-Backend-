@@ -120,9 +120,10 @@ class EmployeeDocumentsSerializer(serializers.ModelSerializer):
 
 
 class EmployeeUserSerializer(serializers.ModelSerializer):
+    # full_name=serializers.SlugRelatedField(queryset=user_model.User.objects.all(),slug_field='full_name')
     class Meta:
         model = user_model.User
-        fields = ['id', 'full_name','profile_pic']
+        fields = ['id','full_name','profile_pic','signature_pic','date_joined',]
 
 
 class EmployeeUserUpdateDeleteSerializer(serializers.ModelSerializer):
@@ -148,6 +149,57 @@ class EmployeeInformationListSerializer(serializers.ModelSerializer):
     class Meta:
         model = hrm_admin.EmployeeInformationModel
         fields = ['id', 'user', 'designation', 'emp_department', 'phone_number', 'email', 'joining_date','shift']
+
+
+# PaidInvoicesSerializer for Paid Invoices models
+
+class PaidInvoicesSerializer(serializers.ModelSerializer):
+    # uploaded_by=EmployeeSerializer()
+    class Meta:
+        model= hrm_admin.PaidInvoicesModel
+        fields= '__all__'
+
+
+# Warrenty Serializer
+class WarrantySerializer(serializers.ModelSerializer):
+    # uploaded_by=EmployeeSerializer()
+    class Meta:
+        model= hrm_admin.WarrentyListModel
+        fields= '__all__'
+
+# Employee Fixed Salary Serializer
+
+class FixedSalarySheetSerializer(serializers.ModelSerializer):
+    # uploaded_by=EmployeeSerializer()
+    class Meta:
+        model= user_model.User
+        fields= ['full_name','signature_pic','date_joined']
+
+
+# Employee desgination Salary Serializer
+class DesignationSerializer(serializers.ModelSerializer):
+    # uploaded_by=EmployeeSerializer()
+    department=serializers.StringRelatedField(read_only=True)
+    class Meta:
+        model= hrm_admin.EmployeeInformationModel
+        fields= ['department','designation']
+
+
+
+
+# Employee Salary Sheet Serializer
+class EmployeeSalaySheetSerializer(serializers.ModelSerializer):
+    employee = FixedSalarySheetSerializer(read_only=True)
+    # employee=serializers.SlugRelatedField(queryset=user_model.User.objects.all(),slug_field='full_name')
+    # shift=serializers.SlugRelatedField(queryset=user_model.User.objects.all(),slug_field='shift')
+    # designation = serializers.SlugRelatedField(queryset=user_model.UserDesignationModel.objects.all(),
+    #                                            slug_field='designation')
+    designation =DesignationSerializer(read_only=True)
+    class Meta:
+        model= hrm_admin.EmployeeSalarySheetModel
+        #fields= '__all__'
+        fields= ['id','employee','designation','shift','month','status','paid_in','absent','salary','total_late_hours']
+
 
 
 class EmployeeSerializer(serializers.ModelSerializer):

@@ -40,6 +40,7 @@ ALLOWED_HOSTS = [
     '127.0.0.1:8000',
     'localhost:3001',
     'localhost:3000',
+    '192.168.1.74',
     # ===production===
     # 'careeradmin.techforing.com',
     # 'career.techforing.com',
@@ -94,6 +95,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    # 'csp.middleware.CSPMiddleware',
     'django.middleware.security.SecurityMiddleware',
     # whitenoise for heroku hosting
     # 'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -260,6 +262,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+
 AUTH_USER_MODEL = 'UserApp.User'
 
 # Static files (CSS, JavaScript, Images)
@@ -317,3 +320,13 @@ CRONJOBS = [
     ('0 0 * * *', 'HRM_User.cron.attendance_data'),
     ('0 0 15 1 *', 'HRM_User.cron.create_holiday'),
 ]
+
+
+# # Content Security Policy
+#
+# CSP_IMG_SRC = ("'self'")
+#
+# CSP_STYLE_SRC = ("'self'")
+#
+# CSP_SCRIPT_SRC = ("'self'")
+

@@ -14,6 +14,12 @@ from bs4 import BeautifulSoup
 import requests
 
 
+
+'''
+---------------------------- Survey Section--------------------------------
+
+'''
+
 # Create your views here.
 # Survey Section
 class SurveyQuestionView(generics.ListCreateAPIView):
@@ -32,17 +38,17 @@ class SurveyQuestionView(generics.ListCreateAPIView):
         user_answer = models.SurveyUserResponseModel.objects.filter(user=current_user, ans_time__month=current_month,
                                                                     ans_time__year=current_year)
         questions = models.SurveyQuestionModel.objects.all()
-        answer_list = []
-        ans_queryset = models.SurveyAnswerSheetModel.objects.all()
-        for ans in ans_queryset:
-            answer_list.append({
-                'id': ans.id,
-                'answer': ans.answers
-            })
+        # answer_list = []
+        # ans_queryset = models.SurveyAnswerSheetModel.objects.all()
+        # for ans in ans_queryset:
+        #     answer_list.append({
+        #         'id': ans.id,
+        #         'answer': ans.answers
+        #     })
 
         data = hrm_serializers.SurveyQuestionSerializer(questions, many=True)
 
-        return response.Response({'data': data.data, 'answers': answer_list})
+        return response.Response({'data': data.data})
 
 
 class SurveyUserResponseView(generics.ListCreateAPIView):
@@ -81,8 +87,9 @@ class SurveyUserResponseView(generics.ListCreateAPIView):
         current_month = datetime.today().month
         current_year = datetime.today().year
         current_user = self.request.user
-        for item in request.data:
-            current_question = (item['question'])
+        print(request.data)
+        if request.data['question']:
+            current_question = (request.data['question'])
 
             questions_count = models.SurveyQuestionModel.objects.all()
             user_answer = models.SurveyUserResponseModel.objects.filter(user=current_user,
@@ -98,13 +105,49 @@ class SurveyUserResponseView(generics.ListCreateAPIView):
         return response.Response({
             'message': 'Evaluated'
         })
+        # for item in request.data:
+        #     current_question = (item['question'])
+
+        #     questions_count = models.SurveyQuestionModel.objects.all()
+        #     user_answer = models.SurveyUserResponseModel.objects.filter(user=current_user,
+        #                                                                 ans_time__month=current_month,
+        #                                                                 ans_time__year=current_year)
+
+        #     if (questions_count.count() <= user_answer.count()) or user_answer.filter(question_id=current_question):
+        #         return response.Response({
+        #             'message': 'Already Evaluated'
+        #         }, status=status.HTTP_400_BAD_REQUEST)
+
+        # self.perform_create(ser)
+        # return response.Response({
+        #     'message': 'Evaluated'
+        # })
 
 
 class SurveyDataView(generics.ListAPIView):
     """
     1. View for Users monthly survey data
     """
+    permission_classes = [user_permissions.IsHrOrReadOnly]
     serializer_class = hrm_serializers.SurveyDataSerializer
+    # queryset = models.SurveyUserResponseModel.objects.all()
+    def get_queryset(self):
+        try:
+            searchByQuestion =self.request.query_params.get('searchByQuestion')
+            searchByMonth =self.request.query_params.get('searchByMonth')
+            searchByYear =self.request.query_params.get('searchByYear')
+
+            # print(searchByYear)
+            queryset= models.SurveyUserResponseModel.objects.all()
+            queryByQuestion =queryset.filter(question__question__icontains=searchByQuestion)
+            # month=models.SurveyUserResponseModel.objects.all().annotate(ExtractMonth(question.created_date))
+            # queryByMonth =queryByQuestion.filter(question__created_date=ExtractMonth(searchByMonth))
+            queryByMonth =queryByQuestion.filter(question__month__icontains=searchByMonth)
+            queryByYear =queryByMonth.filter(question__year__icontains=searchByYear)
+            return queryByYear
+        except:
+            return models.SurveyUserResponseModel.objects.all()
+
 
 
 # Employee Evaluation Section
@@ -212,7 +255,13 @@ class EmployeeEvaluationView(generics.ListCreateAPIView):
         })
 
 
+'''
+----------------------------Announcement, Notice and Complain Section ----------------------------------
+
+'''
+
 # Announcement, Notice and Complain Section
+
 class AnnouncementView(generics.ListCreateAPIView):
     """
     1. Section for creating announcement
@@ -358,39 +407,48 @@ class AttendanceRegistrationView(generics.ListCreateAPIView, generics.RetrieveUp
         return response.Response({'message': posts.content.decode("utf-8")}, status=status.HTTP_404_NOT_FOUND)
 
 
-class CreateHolidaysView(generics.ListCreateAPIView, generics.RetrieveUpdateAPIView):
+'''
+---------------------------- Holiday Section ----------------------------------
+
+'''
+
+# Add Holiday and view Holiday
+
+class CreateHolidaysView(generics.ListCreateAPIView):
     """
     1. Scrap Holiday list from Internet (Example: https://www.officeholidays.com/countries/bangladesh/2022)
     2. Update existing holiday
     3. Create new holiday
     """
+    permission_classes = [user_permissions.IsHrOrReadOnly]
+    serializer_class = hrm_serializers.CreateHolidaySerializer
+
+    def get_queryset(self):
+        try:
+            searchByMonth =self.request.query_params.get('searchByMonth')
+            # searchByYear =self.request.query_params.get('searchByYear')
+            searchByDay =self.request.query_params.get('searchByDay')
+            # print(searchByDay)
+            # print(searchByMonth)
+            queryset=models.HolidayModel.objects.all()
+            
+            queryByMonth=queryset.filter(month__icontains=searchByMonth)
+            if searchByDay:
+                queryByDay=queryByMonth.filter(holiday_date__day=searchByDay)
+                return queryByDay
+            return queryByMonth
+        except:
+            return models.HolidayModel.objects.all()
+        # return queryset
+
+
+# update holiday
+
+class UpdateDeleteHolidaysView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = hrm_serializers.CreateHolidaySerializer
     permission_classes = [user_permissions.IsHrOrReadOnly]
     queryset = models.HolidayModel.objects.all()
     lookup_field = 'id'
-
-    def get_queryset(self):
-        # year = datetime.now().year
-        # url = f'https://www.officeholidays.com/countries/bangladesh/{year}'
-        #
-        # ### Web Scraping ###
-        # full_page = requests.get(url)
-        # full_page = full_page.content
-        # soup = BeautifulSoup(full_page, "html.parser")
-        #
-        # holidays = soup.find_all('tr', {'class': ['country', 'govt']})
-        #
-        # total_holidays = []
-        # for holiday in holidays:
-        #     day = holiday.find_all('td')[2].find('a').text
-        #     h_date = holiday.find_all('td')[1].find('time')['datetime']
-        #     models.HolidayModel.objects.get_or_create(holiday_name=day, holiday_date=h_date)
-
-        # ls = [day, h_date]
-        # total_holidays.append(ls)
-
-        queryset = models.HolidayModel.objects.all()
-        return queryset
 
 
 class EmployeeAttendanceLogView(generics.ListCreateAPIView):
@@ -487,6 +545,17 @@ class EmployeeAttendanceLogView(generics.ListCreateAPIView):
                                                                                        out_time=out_time)
         return response.Response(log_data.get('log'))
 
+
+
+'''
+----------------------------Promotion Section--------------------------------
+
+'''
+class EmployeePromotionListView(generics.ListAPIView):
+    permission_classes = [user_permissions.IsHrOrReadOnly]
+    serializer_class = hrm_serializers.EmployeePromotionListSerializer
+    queryset = models.EmployeePromotionModel.objects.all()
+
 class EmployeePromotionView(generics.ListCreateAPIView):
     """
     Employee promotion
@@ -503,7 +572,20 @@ class EmployeePromotionView(generics.ListCreateAPIView):
         employee.save()
         serializer.save()
 
-#employee promotion update and delete view
+'''
+---------------------------- Birthday Section--------------------------------
+
+'''
+
+class EmployeeBirthdayListView(generics.ListAPIView):
+    permission_classes = [user_permissions.IsHrOrReadOnly]
+    serializer_class = hrm_serializers.EmployeeBirthdayListSerializer
+    queryset = hrm_models.EmployeeInformationModel.objects.all()
+
+
+
+
+# employee promotion update and delete view
 class EmployeePromotionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     """
     Employee promotion update and delete
@@ -512,6 +594,12 @@ class EmployeePromotionUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = hrm_serializers.EmployeePromotionSerializer
     queryset = models.EmployeePromotionModel.objects.all()
     lookup_field = 'id'
+
+
+'''
+----------------------------Termination Section----------------------------------
+
+'''
 class TerminationTitleView(generics.ListCreateAPIView):
     """
     Termination tile
