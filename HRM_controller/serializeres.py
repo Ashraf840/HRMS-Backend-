@@ -168,10 +168,17 @@ class EmployeeAttendanceLogSerializer(serializers.ModelSerializer):
 class EmployeePromotionSerializer(serializers.ModelSerializer):
     # promotion_to=serializers.StringRelatedField()
     # employee=serializers
+    employee_name=serializers.SerializerMethodField()
+    promotion_to_name=serializers.SerializerMethodField()
     class Meta:
         model = models.EmployeePromotionModel
         fields = '__all__'
         # depth=1
+    def get_employee_name(self,object):
+        return object.employee.user.full_name
+    
+    def get_promotion_to_name(self,object):
+        return object.promotion_to.designation
 
 class EmployeePromotionListSerializer(serializers.ModelSerializer):
     class Meta:
@@ -184,6 +191,30 @@ class TerminationTitleSerializer(serializers.ModelSerializer):
         model = models.TerminationTitleModel
         fields = '__all__'
 
+
+'''
+----------------------Birthday section----------------------------
+'''
+
+class EmployeeBirthdayListSerializer(serializers.ModelSerializer):
+    emp_department=serializers.StringRelatedField()
+    designation=serializers.StringRelatedField()
+    birthday=serializers.SerializerMethodField()
+    employee_name=serializers.SerializerMethodField()
+    class Meta:
+        model=hrm_models.EmployeeInformationModel
+        fields='__all__'
+        fields=['emp_department','designation','birthday','employee_name','shift','joining_date']
+        # depth=1
+    def get_birthday(self,object):
+        return object.user.birthDate
+    def get_employee_name(self,object):
+        return object.user.full_name
+
+
+'''
+----------------------Termination section----------------------------
+'''
 #Employee termination serializer
 class EmployeeTerminationSerializer(serializers.ModelSerializer):
     class Meta:
