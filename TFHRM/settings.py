@@ -94,6 +94,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    # 'csp.middleware.CSPMiddleware',
     'django.middleware.security.SecurityMiddleware',
     # whitenoise for heroku hosting
     # 'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -317,3 +318,13 @@ CRONJOBS = [
     ('0 0 * * *', 'HRM_User.cron.attendance_data'),
     ('0 0 15 1 *', 'HRM_User.cron.create_holiday'),
 ]
+
+
+# # Content Security Policy
+#
+# CSP_IMG_SRC = ("'self'")
+#
+# CSP_STYLE_SRC = ("'self'")
+#
+# CSP_SCRIPT_SRC = ("'self'")
+
